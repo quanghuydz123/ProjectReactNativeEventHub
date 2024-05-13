@@ -1,9 +1,17 @@
 import { StyleSheet } from "react-native";
-import { color } from "../constrants/color";
+import { colors } from "../constrants/color";
+import { fontFamilies } from "../constrants/fontFamilies";
 
 export const globalStyles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:color.white,
+        backgroundColor:colors.white,
+
+    },
+
+    text:{
+        fontFamily:fontFamilies.regular,
+        fontSize:14,
+        color:colors.colorText 
     }
 })

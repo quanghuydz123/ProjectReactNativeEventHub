@@ -3,14 +3,16 @@ import React, { useState } from "react"
 import { globalStyles } from "../../styles/globalStyles";
 import Swiper from "react-native-swiper";
 import { appInfo } from "../../constrants/appInfo";
-import { color } from "../../constrants/color";
+import { colors } from "../../constrants/color";
+import { TextComponent } from "../../components";
+import { fontFamilies } from "../../constrants/fontFamilies";
 //{navigation}: any dùng để diều hướng
 const OnboardingScreen = ({navigation}: any)=>{
   const [index,setIndex] = useState(0)
   return (
     <View style={[globalStyles.container]}>
         <Swiper style={{}} loop={false} onIndexChanged={(num)=>setIndex(num)}
-        activeDotColor={color.white}
+        activeDotColor={colors.white}
         index={index}
         >
             <Image source={require('../../assets/images/Onboarding1.png')}
@@ -38,10 +40,10 @@ const OnboardingScreen = ({navigation}: any)=>{
         >
          
             <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-                <Text style={[styles.text,{color:color.gray2}]}>Skip</Text>
+              <TextComponent text="Skip" color={colors.gray2} font={fontFamilies.medium}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => index < 2 ? setIndex(prev => prev+1) : navigation.navigate('LoginScreen')}>
-                <Text style={[styles.text,{color:color.gray2}]}>Next</Text>
+              <TextComponent text="Next" color={colors.white} font={fontFamilies.medium}/>
             </TouchableOpacity>
         </View>
     </View>
@@ -52,8 +54,8 @@ export default OnboardingScreen;
 
 const styles = StyleSheet.create({
   text:{
-    color:color.white,
+    color:colors.white,
     fontSize:16,
-    fontWeight:'bold'
+    fontWeight:'500'
   }
 })

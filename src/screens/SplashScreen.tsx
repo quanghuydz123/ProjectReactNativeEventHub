@@ -2,7 +2,7 @@ import { ActivityIndicator, Image, ImageBackground, Text, View } from "react-nat
 import React from "react"
 import { appInfo } from "../constrants/appInfo";
 import { SpaceComponent } from "../components";
-import { color } from "../constrants/color";
+import { colors } from "../constrants/color";
 //ActivityIndicator hiện thị vòng quay quay (loading)
 const SplashScreen = ()=>{
   return (
@@ -13,7 +13,7 @@ const SplashScreen = ()=>{
         resizeMode:'contain'
       }}/>
       <SpaceComponent height={16}/>
-      <ActivityIndicator color={color.gray} size={22}/>
+      <ActivityIndicator color={colors.gray} size={22}/>
    </ImageBackground>
 
   )
