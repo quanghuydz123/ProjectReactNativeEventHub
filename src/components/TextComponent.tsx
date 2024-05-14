@@ -10,17 +10,18 @@ interface Props{
     size?: number,
     flex?: number,
     font?: string,
-    styles?: StyleProp<TextStyle>
+    styles?: StyleProp<TextStyle>,
+    title?: boolean
 }
 const TextComponent = (props:Props)=>{
-    const {text,size,flex,font,color,styles} = props
+    const {text,size,flex,font,color,styles,title} = props
   return <Text style={[
     globalStyles.text,
     {
     color: color ?? colors.colorText,
     flex: flex ?? 0,
-    fontSize: size ?? 14,
-    fontFamily: font ?? fontFamilies.regular
+    fontSize: size ?? title ? 24 : 14,
+    fontFamily: font ?? title ? fontFamilies.bold : fontFamilies.regular
   },styles]}>{text}</Text>
 }
 export default TextComponent;

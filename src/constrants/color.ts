@@ -3,5 +3,6 @@ export const colors ={
     white:'#FFFFFF',
     colorText:'#120D26',
     gray:'#3807A7A',
-    gray2:'#DADADA'
+    gray2:'#DADADA',
+    link:'#5669FF'
 }
