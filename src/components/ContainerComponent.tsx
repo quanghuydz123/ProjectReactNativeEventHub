@@ -18,12 +18,13 @@ const ContainerComponent = (props: Props) => {
             {children}
         </View>
     )
-    return isImageBackgound ? (<ImageBackground source={require('../assets/images/Splash-img.png')} style={{flex:1}} imageStyle={{flex:1}}>
+    return isImageBackgound ? 
+    (<ImageBackground source={require('../assets/images/Splash-img.png')} style={{flex:1}} imageStyle={{flex:1}}>
            <SafeAreaView style={{flex:1}}>{returnContainer}</SafeAreaView>
         </ImageBackground>) :
             (
-                <SafeAreaView>
-                    <View>
+                <SafeAreaView style={[globalStyles.container]}>
+                    <View style={{flex:1}}>
                         {returnContainer}
                     </View>
                 </SafeAreaView>

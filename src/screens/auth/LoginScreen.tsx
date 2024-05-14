@@ -20,7 +20,8 @@ const LoginScreen = ()=>{
         isPassword
         affix={<Lock size={22} color={colors.gray}/>}
         /> */}
-        <TextComponent text={"abc"}/>
+        <TextComponent text={"asdasdasdadsad"}/>
+
     </ContainerComponent>
   )
 }
