@@ -10,3 +10,4 @@ npm install react-native-swiper
 //icon
 npm i iconsax-react-native react-native-svg react-native-vector-icons
 npm i -D @types/react-native-vector-icons
+npm i react-native-svg-transformer
