@@ -20,6 +20,25 @@
 		B9C5360880424496B7B8BFC8 /* AirbnbCereal_W_Lt.otf in Resources */ = {isa = PBXBuildFile; fileRef = 66AEC14023E140C481CD6CDF /* AirbnbCereal_W_Lt.otf */; };
 		4FCB2521FB034CE0B4D15B48 /* AirbnbCereal_W_Md.otf in Resources */ = {isa = PBXBuildFile; fileRef = 780C04BB99FB4AA9859782F2 /* AirbnbCereal_W_Md.otf */; };
 		B0E63D6E345F491F81CC1693 /* AirbnbCereal_W_XBd.otf in Resources */ = {isa = PBXBuildFile; fileRef = E914B5F54FAE40F582388C9D /* AirbnbCereal_W_XBd.otf */; };
+		BD9C692BC2054DDE8BC7D15D /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D578E9379FE84920B138BB13 /* AntDesign.ttf */; };
+		81F8748003554E5AB82B218E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 883972791E814C65875C5B8D /* Entypo.ttf */; };
+		B45CA07DC48F44D2B24AF11F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3960B3A254E04B70889F4C20 /* EvilIcons.ttf */; };
+		2E696CC10B014E4694BB3737 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCE08C2F35F8471BBD3D318B /* Feather.ttf */; };
+		C3FB7876327E494AB63CC38E /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2F7CC44C75F4858804A5BAF /* FontAwesome.ttf */; };
+		027A44C22DEE49E9B80C32DC /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E5CB5A836644293BE5C6B8A /* FontAwesome5_Brands.ttf */; };
+		980A8A53FB834CDD93C35FDE /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E1CF1E07A644484B99882C2 /* FontAwesome5_Regular.ttf */; };
+		F9D6733B95F844E789842AD1 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F80064138AB549B19B883792 /* FontAwesome5_Solid.ttf */; };
+		4C0DFF8C01EC4A7785BAA2F0 /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6ED223BB2E84AD4884A408B /* FontAwesome6_Brands.ttf */; };
+		7B59CB9D9DF84BC4A481C32B /* FontAwesome6_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 91777C5CD5AC46E092011D01 /* FontAwesome6_Regular.ttf */; };
+		1184512EA3254044B50E54BA /* FontAwesome6_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 858C009B07B44BC3BA26C060 /* FontAwesome6_Solid.ttf */; };
+		170C4CE7DD7B45CEA2D44265 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D69A0E8B9F3A4B66B051AB38 /* Fontisto.ttf */; };
+		674DF270AAA84D9E8B77CC0D /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09EE5DB591C9439A97852094 /* Foundation.ttf */; };
+		16C1A2DCA17E43C7B3606908 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 149571AFF9594DC88829A05B /* Ionicons.ttf */; };
+		B3957B74CDE340F1870C9A3B /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 46E9C061A8714AA296D11CFC /* MaterialCommunityIcons.ttf */; };
+		80988000DC274EDF895D3193 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3911BA059CD49BDADF4A342 /* MaterialIcons.ttf */; };
+		12CAEF6E5E6942A29C362FF8 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4E190C452314A12932B67E9 /* Octicons.ttf */; };
+		40802B4D61C44E4099D3BFF9 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D20AD8C2AE34E389A9D0BC9 /* SimpleLineIcons.ttf */; };
+		A2FF5995636B4E91AFB31857 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D6592663EBB47A99EECDD10 /* Zocial.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +76,25 @@
 		66AEC14023E140C481CD6CDF /* AirbnbCereal_W_Lt.otf */ = {isa = PBXFileReference; name = "AirbnbCereal_W_Lt.otf"; path = "../assets/fonts/AirbnbCereal_W_Lt.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		780C04BB99FB4AA9859782F2 /* AirbnbCereal_W_Md.otf */ = {isa = PBXFileReference; name = "AirbnbCereal_W_Md.otf"; path = "../assets/fonts/AirbnbCereal_W_Md.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		E914B5F54FAE40F582388C9D /* AirbnbCereal_W_XBd.otf */ = {isa = PBXFileReference; name = "AirbnbCereal_W_XBd.otf"; path = "../assets/fonts/AirbnbCereal_W_XBd.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D578E9379FE84920B138BB13 /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../assets/fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		883972791E814C65875C5B8D /* Entypo.ttf */ = {isa = PBXFileReference; name = "Entypo.ttf"; path = "../assets/fonts/Entypo.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3960B3A254E04B70889F4C20 /* EvilIcons.ttf */ = {isa = PBXFileReference; name = "EvilIcons.ttf"; path = "../assets/fonts/EvilIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BCE08C2F35F8471BBD3D318B /* Feather.ttf */ = {isa = PBXFileReference; name = "Feather.ttf"; path = "../assets/fonts/Feather.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E2F7CC44C75F4858804A5BAF /* FontAwesome.ttf */ = {isa = PBXFileReference; name = "FontAwesome.ttf"; path = "../assets/fonts/FontAwesome.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0E5CB5A836644293BE5C6B8A /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Brands.ttf"; path = "../assets/fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2E1CF1E07A644484B99882C2 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Regular.ttf"; path = "../assets/fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F80064138AB549B19B883792 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; name = "FontAwesome5_Solid.ttf"; path = "../assets/fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E6ED223BB2E84AD4884A408B /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; name = "FontAwesome6_Brands.ttf"; path = "../assets/fonts/FontAwesome6_Brands.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		91777C5CD5AC46E092011D01 /* FontAwesome6_Regular.ttf */ = {isa = PBXFileReference; name = "FontAwesome6_Regular.ttf"; path = "../assets/fonts/FontAwesome6_Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		858C009B07B44BC3BA26C060 /* FontAwesome6_Solid.ttf */ = {isa = PBXFileReference; name = "FontAwesome6_Solid.ttf"; path = "../assets/fonts/FontAwesome6_Solid.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D69A0E8B9F3A4B66B051AB38 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../assets/fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		09EE5DB591C9439A97852094 /* Foundation.ttf */ = {isa = PBXFileReference; name = "Foundation.ttf"; path = "../assets/fonts/Foundation.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		149571AFF9594DC88829A05B /* Ionicons.ttf */ = {isa = PBXFileReference; name = "Ionicons.ttf"; path = "../assets/fonts/Ionicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		46E9C061A8714AA296D11CFC /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; name = "MaterialCommunityIcons.ttf"; path = "../assets/fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D3911BA059CD49BDADF4A342 /* MaterialIcons.ttf */ = {isa = PBXFileReference; name = "MaterialIcons.ttf"; path = "../assets/fonts/MaterialIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F4E190C452314A12932B67E9 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../assets/fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8D20AD8C2AE34E389A9D0BC9 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../assets/fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2D6592663EBB47A99EECDD10 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../assets/fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +210,25 @@
 				66AEC14023E140C481CD6CDF /* AirbnbCereal_W_Lt.otf */,
 				780C04BB99FB4AA9859782F2 /* AirbnbCereal_W_Md.otf */,
 				E914B5F54FAE40F582388C9D /* AirbnbCereal_W_XBd.otf */,
+				D578E9379FE84920B138BB13 /* AntDesign.ttf */,
+				883972791E814C65875C5B8D /* Entypo.ttf */,
+				3960B3A254E04B70889F4C20 /* EvilIcons.ttf */,
+				BCE08C2F35F8471BBD3D318B /* Feather.ttf */,
+				E2F7CC44C75F4858804A5BAF /* FontAwesome.ttf */,
+				0E5CB5A836644293BE5C6B8A /* FontAwesome5_Brands.ttf */,
+				2E1CF1E07A644484B99882C2 /* FontAwesome5_Regular.ttf */,
+				F80064138AB549B19B883792 /* FontAwesome5_Solid.ttf */,
+				E6ED223BB2E84AD4884A408B /* FontAwesome6_Brands.ttf */,
+				91777C5CD5AC46E092011D01 /* FontAwesome6_Regular.ttf */,
+				858C009B07B44BC3BA26C060 /* FontAwesome6_Solid.ttf */,
+				D69A0E8B9F3A4B66B051AB38 /* Fontisto.ttf */,
+				09EE5DB591C9439A97852094 /* Foundation.ttf */,
+				149571AFF9594DC88829A05B /* Ionicons.ttf */,
+				46E9C061A8714AA296D11CFC /* MaterialCommunityIcons.ttf */,
+				D3911BA059CD49BDADF4A342 /* MaterialIcons.ttf */,
+				F4E190C452314A12932B67E9 /* Octicons.ttf */,
+				8D20AD8C2AE34E389A9D0BC9 /* SimpleLineIcons.ttf */,
+				2D6592663EBB47A99EECDD10 /* Zocial.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -278,6 +335,25 @@
 				B9C5360880424496B7B8BFC8 /* AirbnbCereal_W_Lt.otf in Resources */,
 				4FCB2521FB034CE0B4D15B48 /* AirbnbCereal_W_Md.otf in Resources */,
 				B0E63D6E345F491F81CC1693 /* AirbnbCereal_W_XBd.otf in Resources */,
+				BD9C692BC2054DDE8BC7D15D /* AntDesign.ttf in Resources */,
+				81F8748003554E5AB82B218E /* Entypo.ttf in Resources */,
+				B45CA07DC48F44D2B24AF11F /* EvilIcons.ttf in Resources */,
+				2E696CC10B014E4694BB3737 /* Feather.ttf in Resources */,
+				C3FB7876327E494AB63CC38E /* FontAwesome.ttf in Resources */,
+				027A44C22DEE49E9B80C32DC /* FontAwesome5_Brands.ttf in Resources */,
+				980A8A53FB834CDD93C35FDE /* FontAwesome5_Regular.ttf in Resources */,
+				F9D6733B95F844E789842AD1 /* FontAwesome5_Solid.ttf in Resources */,
+				4C0DFF8C01EC4A7785BAA2F0 /* FontAwesome6_Brands.ttf in Resources */,
+				7B59CB9D9DF84BC4A481C32B /* FontAwesome6_Regular.ttf in Resources */,
+				1184512EA3254044B50E54BA /* FontAwesome6_Solid.ttf in Resources */,
+				170C4CE7DD7B45CEA2D44265 /* Fontisto.ttf in Resources */,
+				674DF270AAA84D9E8B77CC0D /* Foundation.ttf in Resources */,
+				16C1A2DCA17E43C7B3606908 /* Ionicons.ttf in Resources */,
+				B3957B74CDE340F1870C9A3B /* MaterialCommunityIcons.ttf in Resources */,
+				80988000DC274EDF895D3193 /* MaterialIcons.ttf in Resources */,
+				12CAEF6E5E6942A29C362FF8 /* Octicons.ttf in Resources */,
+				40802B4D61C44E4099D3BFF9 /* SimpleLineIcons.ttf in Resources */,
+				A2FF5995636B4E91AFB31857 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
