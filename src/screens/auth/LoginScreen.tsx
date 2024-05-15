@@ -6,11 +6,20 @@ import { FolderMinus, Lock, Sms } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
 import { fontFamilies } from "../../constrants/fontFamilies";
 import SocialLogin from "./components/SocialLogin";
+import authenticationAPI from "../../apis/authApi";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isRemember, setIsReMember] = useState(true)
+  const handleLogin = async ()=>{
+    try {
+        const res = await authenticationAPI.HandleAuthentication('/');
+        console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <ContainerComponent isScroll>
       <SectionComponent styles={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
@@ -45,7 +54,7 @@ const LoginScreen = ({ navigation }: any) => {
       </SectionComponent>
       <SpaceComponent height={16} />
       <SectionComponent>
-        <ButtonComponent text={'Đăng nhập'} type={'primary'} />
+        <ButtonComponent onPress={handleLogin} text={'Đăng nhập'} type={'primary'} />
       </SectionComponent>
       <SocialLogin />
       <SectionComponent>
