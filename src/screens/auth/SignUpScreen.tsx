@@ -9,6 +9,9 @@ import SocialLogin from "./components/SocialLogin";
 import { LoadingModal } from "../../../modals";
 import authenticationAPI from "../../apis/authApi";
 import { Validate } from "../../utils/validate";
+import { useDispatch } from "react-redux";
+import { addAuth } from "../../reduxs/reducers/authReducers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const initValue = {
   username: '',
   email: '',
@@ -19,6 +22,7 @@ const SignUpScreen = ({ navigation }: any) => {
   const [values, setValues] = useState(initValue)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const dispatch = useDispatch()
   //ẩn thông báo lổi
   useEffect(() => {
     if (values.email || values.password) {
@@ -41,7 +45,10 @@ const SignUpScreen = ({ navigation }: any) => {
         setIsLoading(true)
         try {
           const res = await authenticationAPI.HandleAuthentication('/register', values, 'post')
-          console.log(res)
+          //nên kiểm tra các lỗi trước khi thêm vào redux (sau này làm)
+          console.log("abc",res)
+          dispatch(addAuth(res.data))
+          await AsyncStorage.setItem('auth',JSON.stringify(res.data))
           setIsLoading(true)
         }
         catch (error) {

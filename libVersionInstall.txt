@@ -13,4 +13,4 @@ npm i -D @types/react-native-vector-icons
 npm i react-native-svg-transformer
  npm install axios
  npm install query-string
-    
+npm install @reduxjs/toolkit react-redux redux
