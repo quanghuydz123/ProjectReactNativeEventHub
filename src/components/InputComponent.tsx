@@ -21,7 +21,8 @@ interface Props {
 //secureTextEntry chuyển thành ****
 //ReactNode Có thẻ đóng thẻ mở ví dụ <Text />
 //keyboardType gợi tý thay đổi bản phím
-//autoCapitalize bỏ tự động viết hoa
+//autoCapitalize bỏ tự động viết 
+//onEndEditing khi ngừng nhập
 const InputComponent = (props: Props) => {
   const { value, onChange, affix, placeholder, suffix, allowClear, isPassword, type,onEnd } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
@@ -37,6 +38,7 @@ const InputComponent = (props: Props) => {
         placeholderTextColor={'#747688'}
         keyboardType={type ?? 'default'}
         autoCapitalize="none"
+        onEndEditing={onEnd}
       />
       {suffix && suffix}
       <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>

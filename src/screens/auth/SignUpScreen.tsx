@@ -13,11 +13,11 @@ import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //Object.keys(errorMessage).map duyệt object
-interface ErrorMessage {
-  email:string,
-  password:string,
-  comfirmPassword:string
-}
+// interface ErrorMessage {
+//   email:string,
+//   password:string,
+//   comfirmPassword:string
+// }
 const initValue = {
   username: '',
   email: '',
@@ -27,20 +27,73 @@ const initValue = {
 const SignUpScreen = ({ navigation }: any) => {
   const [values, setValues] = useState(initValue)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage>()
-  const dispatch = useDispatch()
+  const [errorMessage, setErrorMessage] = useState<any>()
+  const [isDisable,setIsDisable] = useState(true)
+  const dispatch = useDispatch()  
   //ẩn thông báo lổi
-  useEffect(() => {
-    if (values.email || values.password) {
-      // setErrorMessage('')
+ useEffect(()=>{  
+    const { email, password, comfirmPassword, username } = values
+    if(!errorMessage || errorMessage && (errorMessage.email || errorMessage.password || errorMessage.comfirmPassword)){
+      setIsDisable(true)
+
+    }else{
+      if(email && password && comfirmPassword){
+        setIsDisable(false)
+      }else{
+        setIsDisable(true)
+      }
     }
-  }, [values.email, values.comfirmPassword, values.password, values.username])
+ },[errorMessage])
   const handleOnchangeValue = (key: string, value: string) => {
     const data: any = { ...values }
     data[`${key}`] = value
     setValues(data)
   }
+  const formValidator = (key:string) =>{
+    let message = ''
+    const data = {...errorMessage}
+    switch (key){
+      case 'email':{
+        if(!values.email){
+            message = 'Hãy nhập email!!!'
+        }else if(!Validate.email(values.email)){
+            message = 'Email không đúng định dạng!!!'
+        }else{
+          message=''
+        }
+        break;
+      }
+      case 'password':{
+        if(!values.password){
+          message = 'Hãy nhập mật khẩu!!!'
+        }else if(values.comfirmPassword !== values.password){
+          message = 'Mật khẩu nhập lai không giống nhau!!!'
+        }else{
+          message = ''
+        }
+        break
+      }
+      case 'comfirmPassword':{
+        if(!values.comfirmPassword){
+          message = 'Hãy nhập lại mật khẩu!!!'
+        }else if(values.comfirmPassword !== values.password){
+          message = 'Mật khẩu nhập lai không giống nhau!!!'
+        }else{
+          message = ''
+        }
+        break;
+      }
+    }
+    data[`${key}`] = message
+    setErrorMessage(data)
+  }
   const handleRegister = async () => {
+    const api = '/verification'
+    try {
+      const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
+    } catch (error) {
+      console.log(error)
+    }
     // const { email, password, comfirmPassword, username } = values
     // if (email && password && comfirmPassword && username) 
     //   {
@@ -81,32 +134,37 @@ const SignUpScreen = ({ navigation }: any) => {
         <InputComponent value={values.email} onChange={(val) => handleOnchangeValue('email', val)}
           placeholder={'abc@gmail.com'}
           affix={<Sms size={22} color={colors.gray} />}
+          onEnd={()=> formValidator('email')}
         />
 
         <InputComponent value={values.password} onChange={(val) => handleOnchangeValue('password', val)}
           placeholder={'Mật khẩu'}
           isPassword
           affix={<Lock size={22} color={colors.gray} />}
+          onEnd={()=> formValidator('password')}
+
         />
 
         <InputComponent value={values.comfirmPassword} onChange={(val) => handleOnchangeValue('comfirmPassword', val)}
           placeholder={'Nhập lại mật khẩu'}
           isPassword
           affix={<Lock size={22} color={colors.gray} />}
+          onEnd={()=> formValidator('comfirmPassword')}
+
         />
       </SectionComponent>
       {
         errorMessage &&
         <SectionComponent>
           {
-            Object.keys(errorMessage).map((error,index)=>(
-              <TextComponent text={error} color={colors.danger} />
+            Object.keys(errorMessage).map((error,index)=> errorMessage[`${error}`] && (
+              <TextComponent text={errorMessage[`${error}`]} key={`error${index}`} color={colors.danger} />
             ))
           }
         </SectionComponent>
       }
       <SectionComponent>
-        <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'} />
+        <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'} disable={isDisable}/>
       </SectionComponent>
       <SocialLogin />
       <SectionComponent>
