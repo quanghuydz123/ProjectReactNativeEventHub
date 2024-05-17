@@ -1,19 +1,28 @@
 import { Button, Text, View } from "react-native"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import MainNavigator from "./MainNavigator";
 import AuthNavigator from "./AuthNavigator";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuth, authSelector } from "../reduxs/reducers/authReducers";
+import { SplashScreen } from "../screens";
 
 const AppRouters = ()=>{
     const {getItem} = useAsyncStorage('auth')
+    const [isShowSlash,setIsShowSlash] = useState(true)
     const dispatch = useDispatch()
     const auth = useSelector(authSelector)
     console.log("auth",auth)
     useEffect(()=>{
-        checkLogin()
+      checkLogin()
+      const timeout = setTimeout(()=>{
+        setIsShowSlash(false)
+      },1500)
+  
+      return ()=>clearTimeout(timeout)
     },[])
+
+    
     const checkLogin = async ()=>{
         const res = await getItem()
 
@@ -21,7 +30,7 @@ const AppRouters = ()=>{
     }
   return (
     <> 
-        {auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
+        {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
     </>
   )
 }

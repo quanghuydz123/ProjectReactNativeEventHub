@@ -15,12 +15,13 @@ interface Props {
     children: ReactNode,
     back?: boolean
 }
+//showsVerticalScrollIndicator ẩn thanh trượt xuống
 const ContainerComponent = (props: Props) => {
     const { children, isScroll, isImageBackgound, title,back } = props
     const navigation:any = useNavigation()  
     
     const returnContainer = isScroll ? (
-        <ScrollView style={{flex:1}}>
+        <ScrollView style={{flex:1}} showsVerticalScrollIndicator={false}>
             {children}
         </ScrollView>
     ) : (

@@ -12,6 +12,12 @@ import { Validate } from "../../utils/validate";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+//Object.keys(errorMessage).map duyệt object
+interface ErrorMessage {
+  email:string,
+  password:string,
+  comfirmPassword:string
+}
 const initValue = {
   username: '',
   email: '',
@@ -21,12 +27,12 @@ const initValue = {
 const SignUpScreen = ({ navigation }: any) => {
   const [values, setValues] = useState(initValue)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage>()
   const dispatch = useDispatch()
   //ẩn thông báo lổi
   useEffect(() => {
     if (values.email || values.password) {
-      setErrorMessage('')
+      // setErrorMessage('')
     }
   }, [values.email, values.comfirmPassword, values.password, values.username])
   const handleOnchangeValue = (key: string, value: string) => {
@@ -35,33 +41,32 @@ const SignUpScreen = ({ navigation }: any) => {
     setValues(data)
   }
   const handleRegister = async () => {
-    const { email, password, comfirmPassword, username } = values
-    if (email && password && comfirmPassword && username) 
-      {
-      const emailValidation = Validate.email(email)
-      const passwordValidation = Validate.Password(password)
-      if (emailValidation && passwordValidation) {
-        setErrorMessage('')
-        setIsLoading(true)
-        try {
-          const res = await authenticationAPI.HandleAuthentication('/register', values, 'post')
-          //nên kiểm tra các lỗi trước khi thêm vào redux (sau này làm)
-          console.log("abc",res)
-          dispatch(addAuth(res.data))
-          await AsyncStorage.setItem('auth',JSON.stringify(res.data))
-          setIsLoading(true)
-        }
-        catch (error) {
-          console.log("error", error)
-          setIsLoading(true)
-        }
-      } else {
-        setErrorMessage('Hãy nhập đúng định dạng email')
-      }
+    // const { email, password, comfirmPassword, username } = values
+    // if (email && password && comfirmPassword && username) 
+    //   {
+    //   const emailValidation = Validate.email(email)
+    //   const passwordValidation = Validate.Password(password)
+    //   if (emailValidation && passwordValidation) {
+    //     setErrorMessage('')
+    //     setIsLoading(true)
+    //     try {
+    //       const res = await authenticationAPI.HandleAuthentication('/register', values, 'post')
+    //       //nên kiểm tra các lỗi trước khi thêm vào redux (sau này làm)
+    //       dispatch(addAuth(res.data))
+    //       await AsyncStorage.setItem('auth',JSON.stringify(res.data))
+    //       setIsLoading(true)
+    //     }
+    //     catch (error) {
+    //       console.log("error", error)
+    //       setIsLoading(true)
+    //     }
+    //   } else {
+    //     setErrorMessage('Hãy nhập đúng định dạng email')
+    //   }
 
-    } else {
-      setErrorMessage('Vui lòng nhập đầy đủ thông tin!')
-    }
+    // } else {
+    //   setErrorMessage('Vui lòng nhập đầy đủ thông tin!')
+    // }
   }
   return (
     <ContainerComponent isScroll back>
@@ -93,7 +98,11 @@ const SignUpScreen = ({ navigation }: any) => {
       {
         errorMessage &&
         <SectionComponent>
-          <TextComponent text={errorMessage} color={colors.danger} />
+          {
+            Object.keys(errorMessage).map((error,index)=>(
+              <TextComponent text={error} color={colors.danger} />
+            ))
+          }
         </SectionComponent>
       }
       <SectionComponent>

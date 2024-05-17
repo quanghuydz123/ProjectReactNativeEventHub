@@ -10,26 +10,14 @@ import store from "./src/reduxs/store"
 import AppRouters from "./src/navigators/AppRouters"
 
 const App = ()=>{
-  const [isShowSlash,setIsShowSlash] = useState(true)
 
-
-  useEffect(()=>{
-    const timeout = setTimeout(()=>{
-      setIsShowSlash(false)
-    },1500)
-
-    return ()=>clearTimeout(timeout)
-  },[])
- 
   return <>
     {/* //hiện thi thanh giờ,pin,... */}
     <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent/>
     <Provider store={store}>
-      {isShowSlash ? <SplashScreen /> : 
           <NavigationContainer>
            <AppRouters />
         </NavigationContainer> 
-      }
     </Provider>
   </>
 }

@@ -14,7 +14,8 @@ interface Props {
   suffix?: ReactNode,
   isPassword?: boolean,
   allowClear?: boolean,
-  type?: KeyboardType
+  type?: KeyboardType,
+  onEnd?: ()=>void
 
 }
 //secureTextEntry chuyển thành ****
@@ -22,7 +23,7 @@ interface Props {
 //keyboardType gợi tý thay đổi bản phím
 //autoCapitalize bỏ tự động viết hoa
 const InputComponent = (props: Props) => {
-  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword, type } = props
+  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword, type,onEnd } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
 
   return (

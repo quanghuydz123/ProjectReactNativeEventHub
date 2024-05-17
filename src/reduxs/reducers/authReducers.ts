@@ -3,14 +3,16 @@ interface AuthState {
     id:string,
     email:string,
     accesstoken:string,
-    fullname:string
+    fullname:string,
+    isAdmin:boolean
 }
 
 const initalState:AuthState={
     id:'',
     email:'',
     accesstoken:'',
-    fullname:'  '
+    fullname:'',
+    isAdmin:false
 }
 const authSlide = createSlice({
     name:'auth',
