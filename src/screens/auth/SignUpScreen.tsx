@@ -66,8 +66,10 @@ const SignUpScreen = ({ navigation }: any) => {
       case 'password':{
         if(!values.password){
           message = 'Hãy nhập mật khẩu!!!'
-        }else if(values.comfirmPassword !== values.password){
+        }else if(values.password !== values.comfirmPassword){
           message = 'Mật khẩu nhập lai không giống nhau!!!'
+        }else if(values.password === values.comfirmPassword){
+          data['comfirmPassword'] = ''
         }else{
           message = ''
         }
@@ -78,8 +80,10 @@ const SignUpScreen = ({ navigation }: any) => {
           message = 'Hãy nhập lại mật khẩu!!!'
         }else if(values.comfirmPassword !== values.password){
           message = 'Mật khẩu nhập lai không giống nhau!!!'
+        }else if(values.comfirmPassword ===  values.password){
+          data['password'] = ''
         }else{
-          message = ''
+          message = '' 
         }
         break;
       }
@@ -87,12 +91,23 @@ const SignUpScreen = ({ navigation }: any) => {
     data[`${key}`] = message
     setErrorMessage(data)
   }
+
+
   const handleRegister = async () => {
     const api = '/verification'
+    setIsLoading(true)
     try {
       const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
+      navigation.navigate('VerificationScreen',{
+        code:res?.data?.code,
+        email:values.email,
+        password:values.password
+      })
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
+      setIsLoading(false)
+
     }
     // const { email, password, comfirmPassword, username } = values
     // if (email && password && comfirmPassword && username) 

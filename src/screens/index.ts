@@ -4,7 +4,7 @@ import SplashScreen from "./SplashScreen"
 import OnboardingScreen from "./auth/OnboardingScreen"
 import SignUpScreen from "./auth/SignUpScreen"
 import ForgotPasswordScreen from "./auth/ForgotPasswordScreen"
-import VerticationScreen from "./auth/VerticationScreen"
+import VerificationScreen from "./auth/VerificationScreen"
 export {
     HomeScreen,
     LoginScreen,
@@ -12,5 +12,5 @@ export {
     OnboardingScreen,
     SignUpScreen,
     ForgotPasswordScreen,
-    VerticationScreen
+    VerificationScreen
 }
