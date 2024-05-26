@@ -101,7 +101,8 @@ const SignUpScreen = ({ navigation }: any) => {
       navigation.navigate('VerificationScreen',{
         code:res?.data?.code,
         email:values.email,
-        password:values.password
+        password:values.password,
+        username:values.username
       })
       setIsLoading(false)
     } catch (error) {
