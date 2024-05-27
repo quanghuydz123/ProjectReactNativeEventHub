@@ -16,6 +16,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isRemember, setIsReMember] = useState(true)
+  const [errorMessage,setErrorMessage] = useState('')
   const { getItem } = useAsyncStorage('auth')
   const dispatch = useDispatch()
 
@@ -31,16 +32,22 @@ const LoginScreen = ({ navigation }: any) => {
     if(email && password){
       if (emailValidation) {
         try {
-          const res = await authenticationAPI.HandleAuthentication('/login', { email, password }, 'post');
-          console.log("123123", res)
+          const res:any = await authenticationAPI.HandleAuthentication('/login', { email, password }, 'post');
           dispatch(addAuth(res.data))
           if (isRemember) {
+            await AsyncStorage.setItem('isRemember', 'true')
             await AsyncStorage.setItem('auth', JSON.stringify(res.data))
           } else {
+            await AsyncStorage.setItem('isRemember', 'false')
             await AsyncStorage.setItem('auth', JSON.stringify(res.data))
           }
-        } catch (error) {
-          console.log("123123", JSON.stringify(error))
+        } catch (error:any) {
+          console.log(error.message)
+          if(error.message === '403'){
+            setErrorMessage('Tài khoản hoặc mặt khẩu không chính xác')
+          }else{
+            setErrorMessage('Đăng nhập thất bại')
+          }
         }
       }
       else {
@@ -95,11 +102,18 @@ const LoginScreen = ({ navigation }: any) => {
           <RowComponent onPress={() => setIsReMember(!isRemember)}>
             <Switch thumbColor={colors.white} trackColor={{ true: colors.primary }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
             <SpaceComponent width={4} />
-            <TextComponent text={'Nhớ mật khẩu'} />
+            <TextComponent text={'Lưu thông tin đăng nhập'} />
           </RowComponent>
           <ButtonComponent text="Quên mật khẩu?" onPress={() => navigation.navigate('ForgotPasswordScreen')} type={'link'} />
         </RowComponent>
       </SectionComponent>
+      {
+        errorMessage && (
+          <>
+            <TextComponent text={errorMessage} styles={{textAlign:'center'}} color={colors.danger}/>
+          </>
+        )
+      }
       <SpaceComponent height={16} />
       <SectionComponent>
         <ButtonComponent onPress={handleLogin} text={'Đăng nhập'} type={'primary'} />
