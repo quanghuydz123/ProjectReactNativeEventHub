@@ -36,6 +36,7 @@ const ButtonComponent = (props: Props) => {
         type === 'primary' ?
             <View style={{ alignItems: 'center' }}>
                 <TouchableOpacity
+                    disabled={disable}
                     onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,

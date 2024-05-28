@@ -28,7 +28,11 @@ axiosClient.interceptors.response.use(res => {
     throw new Error('Lỗi rồi')
 }, error =>{
     console.log(`Error api: " ${JSON.stringify(error)}}`)
-    throw new Error(JSON.stringify(error.response.data.statusCode))
+    const messageError = {
+        message:error.response.data.message,
+        statusCode:error.response.data.statusCode
+    }
+    throw new Error(JSON.stringify(messageError))
 })
 
 

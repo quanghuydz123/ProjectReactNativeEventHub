@@ -29,6 +29,7 @@ const SignUpScreen = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<any>()
   const [isDisable,setIsDisable] = useState(true)
+  const [error,setError] = useState('')
   const dispatch = useDispatch()  
   //ẩn thông báo lổi
  useEffect(()=>{  
@@ -44,6 +45,9 @@ const SignUpScreen = ({ navigation }: any) => {
       }
     }
  },[errorMessage])
+ useEffect(()=>{
+  setError('')
+ },[values.email])
   const handleOnchangeValue = (key: string, value: string) => {
     const data: any = { ...values }
     data[`${key}`] = value
@@ -105,8 +109,13 @@ const SignUpScreen = ({ navigation }: any) => {
         username:values.username
       })
       setIsLoading(false)
-    } catch (error) {
-      console.log(error)
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 402){
+        setError(errorMessage.message)
+      }else{
+        setErrorMessage('Đăng ký thất bại')
+      }
       setIsLoading(false)
 
     }
@@ -174,10 +183,18 @@ const SignUpScreen = ({ navigation }: any) => {
         <SectionComponent>
           {
             Object.keys(errorMessage).map((error,index)=> errorMessage[`${error}`] && (
-              <TextComponent text={errorMessage[`${error}`]} key={`error${index}`} color={colors.danger} />
+              <TextComponent styles={{textAlign:'center'}} text={errorMessage[`${error}`]} key={`error${index}`} color={colors.danger} />
             ))
           }
         </SectionComponent>
+      }
+      {
+        error && (
+          <>
+            <TextComponent text={error} styles={{textAlign:'center'}} color={colors.danger}/>
+            <SpaceComponent height={8} />
+          </>
+        )
       }
       <SectionComponent>
         <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'} disable={isDisable}/>

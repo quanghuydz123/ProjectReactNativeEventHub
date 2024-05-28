@@ -27,6 +27,9 @@ const LoginScreen = ({ navigation }: any) => {
     const res = await getItem()
     res && setEmail(res)
   }
+  useEffect(()=>{
+    setErrorMessage('')
+  },[email,password])
   const handleLogin = async () => {
     const emailValidation = Validate.email(email)
     if(email && password){
@@ -42,34 +45,20 @@ const LoginScreen = ({ navigation }: any) => {
             await AsyncStorage.setItem('auth', JSON.stringify(res.data))
           }
         } catch (error:any) {
-          console.log(error.message)
-          if(error.message === '403'){
-            setErrorMessage('Tài khoản hoặc mặt khẩu không chính xác')
+          const errorMessage = JSON.parse(error.message)
+          if(errorMessage.statusCode === 403){
+            setErrorMessage(errorMessage.message)
           }else{
             setErrorMessage('Đăng nhập thất bại')
           }
         }
       }
       else {
-        Alert.alert('Thông báo', 'Email không đúng dịnh dạng!!!', [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ]);
+        setErrorMessage('Email không đúng dịnh dạng!!!')
       }
     }
     else {
-      Alert.alert('Thông báo', 'Hãy nhập đầy đủ thông tin', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ]);
+      setErrorMessage('Hãy nhập đầy đủ thông tin')
     }
     
 
@@ -108,7 +97,8 @@ const LoginScreen = ({ navigation }: any) => {
         </RowComponent>
       </SectionComponent>
       {
-        errorMessage && (
+        errorMessage && 
+        (
           <>
             <TextComponent text={errorMessage} styles={{textAlign:'center'}} color={colors.danger}/>
           </>
