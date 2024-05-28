@@ -5,6 +5,11 @@ import OnboardingScreen from "./auth/OnboardingScreen"
 import SignUpScreen from "./auth/SignUpScreen"
 import ForgotPasswordScreen from "./auth/ForgotPasswordScreen"
 import VerificationScreen from "./auth/VerificationScreen"
+import AddNewScreen from "./AddNewScreen"
+import EventsScreen from "./events/EventsScreen"
+import MapScreen from "./maps/MapScreen"
+import ProfileScreen from "./profiles/ProfileScreen"
+
 export {
     HomeScreen,
     LoginScreen,
@@ -12,5 +17,10 @@ export {
     OnboardingScreen,
     SignUpScreen,
     ForgotPasswordScreen,
-    VerificationScreen
+    VerificationScreen,
+    AddNewScreen,
+    EventsScreen,
+    MapScreen,
+    ProfileScreen
+    
 }
