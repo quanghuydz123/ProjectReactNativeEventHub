@@ -5,6 +5,8 @@ import InputComponent from "./InputComponent"
 import ContainerComponent from "./ContainerComponent"
 import SectionComponent from "./SectionComponent"
 import RowComponent from "./RowComponent"
+import CricleComponent from "./CricleComponent"
+
 export {
     SpaceComponent,
     TextComponent,
@@ -12,5 +14,6 @@ export {
     InputComponent,
     ContainerComponent,
     SectionComponent,
-    RowComponent
+    RowComponent,
+    CricleComponent
 }
