@@ -13,10 +13,12 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { globalStyles } from "../styles/globalStyles";
+import DrawerNavigate from "./DrawerNavigate";
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return <Tab.Navigator
+  
     screenOptions={({route})=>({
       headerShown: false,
       tabBarStyle: {

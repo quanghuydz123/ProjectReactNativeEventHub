@@ -4,7 +4,8 @@ interface AuthState {
     email:string,
     accesstoken:string,
     fullname:string,
-    isAdmin:boolean
+    isAdmin:boolean,
+    photoUrl:string
 }
 
 const initalState:AuthState={
@@ -12,7 +13,8 @@ const initalState:AuthState={
     email:'',
     accesstoken:'',
     fullname:'',
-    isAdmin:false
+    isAdmin:false,
+    photoUrl:''
 }
 const authSlide = createSlice({
     name:'auth',

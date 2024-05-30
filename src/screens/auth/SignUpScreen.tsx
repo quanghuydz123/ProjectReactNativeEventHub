@@ -103,7 +103,7 @@ const SignUpScreen = ({ navigation }: any) => {
     try {
       const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
       navigation.navigate('VerificationScreen',{
-        code:res?.data?.code,
+        code:res?.data?.code, // truyền qua route
         email:values.email,
         password:values.password,
         username:values.username

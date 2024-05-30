@@ -9,7 +9,7 @@ import { CricleComponent, RowComponent, TextComponent } from "../../components"
 import { ArrowDown, HambergerMenu, Notification } from "iconsax-react-native"
 import { fontFamilies } from "../../constrants/fontFamilies"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-const HomeScreen = ()=>{
+const HomeScreen = ({navigation}:any)=>{
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
   const [isRemember,setIsReMember] = useState<boolean>(false)
@@ -43,7 +43,7 @@ const HomeScreen = ()=>{
           paddingHorizontal:16
         }}>
           <RowComponent>
-              <TouchableOpacity >
+              <TouchableOpacity onPress={()=>navigation.openDrawer()} >
                 <HambergerMenu size={24} color={colors.white}/>
               </TouchableOpacity>
               <View style={[{flex:1,alignItems:'center'}]}>
