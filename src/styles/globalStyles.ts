@@ -52,5 +52,17 @@ export const globalStyles = StyleSheet.create({
         width:30,
         height:30,
         borderRadius:100
+    },
+    tab:{
+        paddingHorizontal:12,
+        paddingVertical:6,
+        borderRadius:50
+    },
+    card:{
+        borderRadius:12,
+        backgroundColor:colors.white,
+        padding:12,
+        marginVertical:6,
+        marginHorizontal:12
     }
 })

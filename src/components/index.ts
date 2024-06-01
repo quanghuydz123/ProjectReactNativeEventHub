@@ -6,6 +6,10 @@ import ContainerComponent from "./ContainerComponent"
 import SectionComponent from "./SectionComponent"
 import RowComponent from "./RowComponent"
 import CricleComponent from "./CricleComponent"
+import TagComponent from "./TagComponent"
+import CategoriesList from "./CategoriesList"
+import TabBarComponent from "./TabBarComponent"
+import EventItem from "./EventItem"
 
 export {
     SpaceComponent,
@@ -15,5 +19,8 @@ export {
     ContainerComponent,
     SectionComponent,
     RowComponent,
-    CricleComponent
+    CricleComponent,
+    TagComponent,
+    CategoriesList,
+    TabBarComponent
 }
