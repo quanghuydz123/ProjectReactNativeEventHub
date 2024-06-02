@@ -70,7 +70,7 @@ const TabNavigator = () => {
 
     <Tab.Screen name="Explore" component={ExploreNavigator}/>
     <Tab.Screen name="Events" component={EventsNavigator} />
-    <Tab.Screen name="Add" component={AddNewScreen}/>
+    <Tab.Screen name="Add" component={AddNewScreen}/>    
     <Tab.Screen name="Map" component={MapNavigator} />
     <Tab.Screen name="Profile" component={ProfileNavigator} />
 

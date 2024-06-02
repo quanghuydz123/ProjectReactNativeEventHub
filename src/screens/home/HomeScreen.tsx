@@ -109,14 +109,14 @@ const HomeScreen = ({ navigation }: any) => {
           </RowComponent>
         </View>
         <SpaceComponent height={20} />
-        <View style={{ marginTop: 16 }}>
+        <View style={{ marginTop: 10 ,}}>
           <CategoriesList isFill />
         </View>
       </View>
       <ScrollView style={[{ 
         flex: 1, 
         backgroundColor: colors.white,
-        marginTop: Platform.OS === 'android' ? 0 : 4
+        marginTop: Platform.OS === 'android' ? 18 : 22
         }]}>
         <SectionComponent styles={{paddingHorizontal:0,paddingTop:20}}>
            <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={()=>console.log("abc")}/>
