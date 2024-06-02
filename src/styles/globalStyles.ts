@@ -36,14 +36,14 @@ export const globalStyles = StyleSheet.create({
         
     },
     shadow:{
-        shadowColor:'rgba(0,0,0,0.5)',
+        shadowColor:'rgba(0,0,0,0.5)',       // Màu của bóng đổ, sử dụng giá trị RGBA để xác định màu và độ trong suốt.
         shadowOffset:{
-            width:0,
-            height:4
+            width:0,                         // Độ lệch bóng đổ theo trục X. Giá trị 0 nghĩa là bóng đổ không lệch theo chiều ngang.
+            height:6                         // Độ lệch bóng đổ theo trục Y. Giá trị 4 nghĩa là bóng đổ sẽ lệch xuống dưới 4 đơn vị.
         },
-        shadowOpacity:0.25,
-        shadowRadius:8,
-        elevation:6
+        shadowOpacity:0.25,                  // Độ mờ của bóng đổ, giá trị từ 0 đến 1. Giá trị 0.25 nghĩa là bóng đổ sẽ có độ mờ 25%.
+        shadowRadius:8,                      // Bán kính mờ của bóng đổ, giá trị lớn hơn sẽ làm bóng đổ trở nên mờ hơn và mềm hơn.
+        elevation:8                         // Độ cao của phần tử trên Android, ảnh hưởng đến độ mờ và kích thước của bóng đổ.
     },
     iconContainer:{
         justifyContent:'center',
@@ -63,6 +63,17 @@ export const globalStyles = StyleSheet.create({
         backgroundColor:colors.white,
         padding:12,
         marginVertical:6,
-        marginHorizontal:12
+        marginHorizontal:12,
+        marginBottom:16
+    },
+    noSpaceCard:{
+        justifyContent:'center',
+        alignItems:'center',
+        width:45,
+        height:45,
+        margin:0,
+        padding:0,
+        marginVertical:0,
+        marginHorizontal:0
     }
 })

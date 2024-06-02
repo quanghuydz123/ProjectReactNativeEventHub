@@ -43,17 +43,7 @@ const TabNavigator = () => {
             icon = <CricleComponent size={60} styles={{marginBottom:Platform.OS === 'ios' ? 50 : 66}}>
               <AddSquare size={30} color={colors.white} variant="Bold" />
             </CricleComponent>
-            // icon = <View style={[globalStyles.shadow,{
-            //   height:52,
-            //   width:52,
-            //   borderRadius:100,
-            //   backgroundColor:colors.primary,
-            //   justifyContent:'center',
-            //   alignItems:'center',
-            //   marginBottom:Platform.OS === 'ios' ? 50 : 66
-            // }]}>
-            //   <AddSquare size={24} color={colors.white} variant="Bold" />
-            // </View>
+            
             break
           case "Map":
             icon = <MaterialCommunityIcons name="map-marker" size={size} color={color}/>

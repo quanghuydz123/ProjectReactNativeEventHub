@@ -10,6 +10,7 @@ import EventsScreen from "./events/EventsScreen"
 import MapScreen from "./maps/MapScreen"
 import ProfileScreen from "./profiles/ProfileScreen"
 import SearchEventsScreen from "./events/SearchEventsScreen"
+import EventDetails from "./events/EventDetails"
 
 export {
     HomeScreen,
@@ -23,6 +24,7 @@ export {
     EventsScreen,
     MapScreen,
     ProfileScreen,
-    SearchEventsScreen
+    SearchEventsScreen,
+    EventDetails
     
 }

@@ -32,6 +32,20 @@ const HomeScreen = ({ navigation }: any) => {
       dispatch(removeAuth({}))
     }
   }
+  const itemEvent = {
+    title:'Blackpink World Tour',
+    description:'Đối với cộng đồng fan yêu thích Kpop, tin tức nhóm nhạc nổi tiếng Blackpink lần đầu tiên biểu diễn tại Việt Nam chắc hẳn đã làm cộng đồng fan Kpop, fan nhóm nhạc Blackpink “chao đảo”, hào hứng chờ ngày săn vé.',
+    location:{
+      title:'Sân vận động Mỹ Đình',
+      address:'1 Đ. Lê Đức Thọ, Mỹ Đình, Nam Từ Liêm, Hà Nội'
+    },
+    imageUrl:'',
+    users:'',
+    authorId:'',
+    startAt:Date.now(),
+    endAt:Date.now(),
+    date:Date.now()
+  }
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -102,17 +116,19 @@ const HomeScreen = ({ navigation }: any) => {
       <ScrollView style={[{ 
         flex: 1, 
         backgroundColor: colors.white,
-
+        marginTop: Platform.OS === 'android' ? 0 : 4
         }]}>
         <SectionComponent styles={{paddingHorizontal:0,paddingTop:20}}>
            <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={()=>console.log("abc")}/>
            <FlatList 
-           
+           showsHorizontalScrollIndicator={false}
            horizontal
            data={Array.from({length:5})}
-           renderItem={({item,index})=> <EventItem item={item} key={index} type="card"/>}
+           renderItem={({item,index})=> <EventItem item={itemEvent} key={index} type="card"/>}
            />
+          <TabBarComponent title="Gần chỗ bạn" onPress={()=>console.log("abc")}/>
         </SectionComponent>
+        
 
       </ScrollView>
     </View>

@@ -33,13 +33,13 @@ const CategoriesList = (props:Props)=>{
         },
         {
             key:'food',
-            label:'Đồ ăn',
+            label:'Ẩm thực',
             icon:<FoodWhite color={isFill ? colors.white :'#29d697' }/>,
             color:'#29d697'
         },
         {
             key:'art',
-            label:'Nghệ thuật',
+            label:'Vân hóa và Nghệ thuật',
             icon:<Ionicons name="color-palette-outline" color={isFill ? colors.white :'#46CDFB' } size={20}/>,
             color:'#46CDFB'
         },
