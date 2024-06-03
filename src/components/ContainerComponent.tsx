@@ -32,7 +32,8 @@ const ContainerComponent = (props: Props) => {
 
     const headerComponent = ()=>{
         return <View style={{flex:1,paddingTop:30}}>
-            {(title || back) &&  <RowComponent styles={{paddingHorizontal:16
+            {(title || back) &&  
+            <RowComponent styles={{paddingHorizontal:16
                 ,paddingVertical:10,
                 minWidth:48,
                 minHeight:48

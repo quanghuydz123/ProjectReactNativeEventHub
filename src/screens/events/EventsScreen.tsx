@@ -1,11 +1,12 @@
 import { Button, Text, View } from "react-native"
 import React from "react"
+import { ContainerComponent } from "../../components";
 
 const EventsScreen = ()=>{
   return (
-    <View>
+    <ContainerComponent back title="abvc">
       <Text>EventsScreen</Text>
-    </View>
+    </ContainerComponent>
   )
 }
 export default EventsScreen;

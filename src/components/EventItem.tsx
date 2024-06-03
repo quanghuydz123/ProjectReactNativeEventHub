@@ -27,7 +27,7 @@ const EventItem = (props:Props)=>{
           resizeMode:'stretch',
         }}>
           <RowComponent justify="space-between">
-            <CardComponent isShadow styles={{alignItems:'center',padding:10,marginHorizontal:0,marginVertical:0,position:'absolute',top:-20,left:-30}} color={'#ffffff'}>
+            <CardComponent isShadow styles={{alignItems:'center',padding:10,marginHorizontal:0,marginVertical:0,position:'absolute',top:-22,left:-30}} color={'#ffffff'}>
               <TextComponent text="10" font={fontFamilies.semiBold} color={colors.danger2} size={18}/>
               <TextComponent text="Tháng 6" color={colors.danger2} size={12} />
             </CardComponent>

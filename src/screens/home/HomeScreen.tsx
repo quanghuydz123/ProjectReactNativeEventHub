@@ -76,14 +76,14 @@ const HomeScreen = ({ navigation }: any) => {
                 <Notification size={18} color={colors.white} />
                 <View style={{
                   backgroundColor: '#02E9FE',
-                  width: 8,
-                  height: 8,
+                  width: 6,
+                  height: 6,
                   borderRadius: 4,
                   borderWidth: 1,
                   borderColor: '#02E9FE',
                   position: 'absolute',
                   top: 0,
-                  right: 0
+                  right: 3
                 }} />
               </View>
             </CricleComponent>
