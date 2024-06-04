@@ -11,11 +11,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import AvatarGroup from "../../components/AvatarGroup";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { fontFamilies } from "../../constrants/fontFamilies";
-
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 const EventDetails = ({ navigation, route }: any) => {
   const { item } = route.params
 
-  console.log("item", item)
   return (
     <View style={{
       flex: 1,
@@ -69,6 +68,21 @@ const EventDetails = ({ navigation, route }: any) => {
           <ScrollView showsHorizontalScrollIndicator={false}>
             <SectionComponent>
               <TextComponent text={item.title} title size={34} font={fontFamilies.regular} />
+            </SectionComponent>
+            <SectionComponent>
+              <RowComponent>
+                <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
+                  <MaterialIcons size={30} color={colors.primary} name="attach-money" />
+                </CardComponent>
+                <SpaceComponent width={16} />
+                <View style={{
+                  justifyContent: 'space-around',
+                  height: 48
+                }}>
+                  <TextComponent text="200.000 VNĐ" font={fontFamilies.medium} size={16} />
+                  <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} />
+                </View>
+              </RowComponent>
             </SectionComponent>
             <SectionComponent>
               <RowComponent>

@@ -32,7 +32,9 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Tìm sự kiện đang diễn ra</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Tìm sự kiện đang diễn ra</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -48,6 +50,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIAppFonts</key>
+	
 	<array>
 		<string>AirbnbCereal_W_Bd.otf</string>
 		<string>AirbnbCereal_W_Bk.otf</string>

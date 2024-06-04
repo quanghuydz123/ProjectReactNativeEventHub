@@ -10,28 +10,50 @@ import { ArrowDown, Filter, HambergerMenu, Notification, SearchNormal, Sort } fr
 import { fontFamilies } from "../../constrants/fontFamilies"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import EventItem from "../../components/EventItem"
+import Geolocation from '@react-native-community/geolocation';
+import axios from "axios"
+import { AddressModel } from "../../models/AddressModel"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
   const [isRemember, setIsReMember] = useState<boolean>(false)
+  const [address,setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
   useEffect(() => {
     handleGetItem()
   }, [])
-
+  useEffect(()=>{
+    Geolocation.getCurrentPosition(position => {
+      if(position.coords){
+        reverseGeoCode(position.coords.latitude,position.coords.longitude)
+      }
+    });
+  },[])
+  const reverseGeoCode = async (lat:number,long:number)=>{
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=UMbvsJK9MTuBpfXAo9aHukRrGdiJ0BW_dQVaYU8prSA`
+    try {
+      const res = await axios(api)
+      if(res && res.data && res.status === 200){
+        setAddress(res.data.items[0])
+      }
+    } catch (error:any) {
+      console.log(error)
+    }
+  }
+  console.log("reaaas",address)
   const handleGetItem = async () => {
     const res = await getItem()
     setIsReMember(res === 'true')
   }
-  const handleLogout = async () => {
-    if (isRemember === true) {
-      await AsyncStorage.setItem('auth', auth.email)
-      dispatch(removeAuth({}))
-    } else {
-      await AsyncStorage.removeItem('auth')
-      dispatch(removeAuth({}))
-    }
-  }
+  // const handleLogout = async () => {
+  //   if (isRemember === true) {
+  //     await AsyncStorage.setItem('auth', auth.email)
+  //     dispatch(removeAuth({}))
+  //   } else {
+  //     await AsyncStorage.removeItem('auth')
+  //     dispatch(removeAuth({}))
+  //   }
+  // }
   const itemEvent = {
     title:'Blackpink World Tour',
     description:'Đối với cộng đồng fan yêu thích Kpop, tin tức nhóm nhạc nổi tiếng Blackpink lần đầu tiên biểu diễn tại Việt Nam chắc hẳn đã làm cộng đồng fan Kpop, fan nhóm nhạc Blackpink “chao đảo”, hào hứng chờ ngày săn vé.',
@@ -66,10 +88,19 @@ const HomeScreen = ({ navigation }: any) => {
             </TouchableOpacity>
             <View style={[{ flex: 1, alignItems: 'center' }]}>
               <RowComponent>
-                <TextComponent text="Chọn địa chỉ" color={colors.white2} size={12} />
+                {
+                  address ?
+                  <TextComponent text="Chỉnh sửa địa chỉ" color={colors.white2} size={12} />
+                  :
+                  <TextComponent text="Chọn địa chỉ" color={colors.white2} size={12} />
+                }
                 <MaterialIcons name="arrow-drop-down" size={18} color={colors.white2} />
               </RowComponent>
-              <TextComponent text={'Ho Chi Minh'} size={13} color={colors.white2} font={fontFamilies.medium} />
+              {
+                address &&
+                <TextComponent text={`${address.address?.district}, ${address.address?.city}, ${address.address?.county}`} numberOfLine={1} 
+                size={13} color={colors.white2} font={fontFamilies.medium} />
+              }
             </View>
             <CricleComponent color={'#524CE0'} size={36}>
               <View>
