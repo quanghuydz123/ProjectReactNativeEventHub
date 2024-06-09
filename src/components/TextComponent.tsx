@@ -1,5 +1,5 @@
 import { Button, Platform, StyleProp, Text, TextStyle, View } from "react-native"
-import React from "react"
+import React, { RefObject } from "react"
 import { colors } from "../constrants/color";
 import { fontFamilies } from "../constrants/fontFamilies";
 import { globalStyles } from "../styles/globalStyles";
@@ -12,18 +12,21 @@ interface Props{
     font?: string,
     styles?: StyleProp<TextStyle>,
     title?: boolean,
-    numberOfLine?:number
+    numberOfLine?:number,
+  
 }
 const TextComponent = (props:Props)=>{
     const {text,size,flex,font,color,styles,title,numberOfLine} = props
     const fontSizeDefault = Platform.OS === 'ios' ? 16 : 14
+    const lineHeight = size && size + 6
   return <Text style={[
     globalStyles.text,
     {
     color: color ?? colors.colorText,
     flex: flex ?? 0,
     fontSize: size ? size : title ? 24 : fontSizeDefault,
-    fontFamily: font ? font : title ? fontFamilies.medium : fontFamilies.regular
+    fontFamily: font ? font : title ? fontFamilies.medium : fontFamilies.regular,
+    lineHeight:lineHeight ? lineHeight : title ? 30 : Platform.OS === 'ios' ? 20 : 18
   },styles]} numberOfLines={numberOfLine}>{text}</Text>
 }
 export default TextComponent;

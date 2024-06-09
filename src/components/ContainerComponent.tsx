@@ -1,4 +1,4 @@
-import { Button, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import React, { ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import { useNavigation } from "@react-navigation/native"
@@ -45,7 +45,7 @@ const ContainerComponent = (props: Props) => {
                     <ArrowLeft size={24} color={colors.colorText}/>
                 </TouchableOpacity>
                 }
-                {title && <TextComponent text={title} font={fontFamilies.medium} size={16}/>}
+                {title && <TextComponent text={title} font={fontFamilies.medium} size={20   }/>}
             </RowComponent>}
             {returnContainer}
             </View>
@@ -56,6 +56,7 @@ const ContainerComponent = (props: Props) => {
         </ImageBackground>) :
             (
                 <SafeAreaView style={[globalStyles.container]}>
+                    <StatusBar barStyle={'dark-content'} />
                     <View style={{flex:1}}>
                         {headerComponent()}
                     </View>

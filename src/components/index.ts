@@ -10,7 +10,8 @@ import TagComponent from "./TagComponent"
 import CategoriesList from "./CategoriesList"
 import TabBarComponent from "./TabBarComponent"
 import EventItem from "./EventItem"
-
+import ChoiceLocationComponent from "./ChoiceLocationComponent"
+import DateTimePickerComponent from "./DateTimePickerComponent"
 export {
     SpaceComponent,
     TextComponent,
@@ -22,5 +23,7 @@ export {
     CricleComponent,
     TagComponent,
     CategoriesList,
-    TabBarComponent
+    TabBarComponent,
+    ChoiceLocationComponent,
+    DateTimePickerComponent
 }

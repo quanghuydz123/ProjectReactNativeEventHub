@@ -11,6 +11,7 @@ import { Validate } from "../../utils/validate";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducers";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import { LoadingModal } from "../../../modals";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('')
@@ -18,14 +19,16 @@ const LoginScreen = ({ navigation }: any) => {
   const [isRemember, setIsReMember] = useState(true)
   const [errorMessage,setErrorMessage] = useState('')
   const { getItem } = useAsyncStorage('auth')
+  const [isLoading,setIsLoading] = useState(false)
   const dispatch = useDispatch()
-
+  console.log("i",isRemember)
   useEffect(() => {
     saveEmail()
   }, [])
   const saveEmail = async () => {
-    const res = await getItem()
-    res && setEmail(res)
+    const res:any = await getItem()
+    const resParse = JSON.parse(res)
+    res && (setEmail(resParse?.email) , setPassword(resParse?.password))
   }
   useEffect(()=>{
     setErrorMessage('')
@@ -34,17 +37,21 @@ const LoginScreen = ({ navigation }: any) => {
     const emailValidation = Validate.email(email)
     if(email && password){
       if (emailValidation) {
+        setIsLoading(true)
         try {
           const res:any = await authenticationAPI.HandleAuthentication('/login', { email, password }, 'post');
-          dispatch(addAuth(res.data))
           if (isRemember) {
             await AsyncStorage.setItem('isRemember', 'true')
             await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+            await AsyncStorage.setItem('password', password)
           } else {
             await AsyncStorage.setItem('isRemember', 'false')
             await AsyncStorage.setItem('auth', JSON.stringify(res.data))
           }
+          dispatch(addAuth(res.data))
+          setIsLoading(false)
         } catch (error:any) {
+          setIsLoading(false)
           const errorMessage = JSON.parse(error.message)
           if(errorMessage.statusCode === 403){
             setErrorMessage(errorMessage.message)
@@ -115,7 +122,7 @@ const LoginScreen = ({ navigation }: any) => {
           <ButtonComponent text="Đăng ký" type="link" onPress={() => navigation.navigate('SignUpScreen')} />
         </RowComponent>
       </SectionComponent>
-
+      <LoadingModal visible={isLoading}/>
     </ContainerComponent>
   )
 }

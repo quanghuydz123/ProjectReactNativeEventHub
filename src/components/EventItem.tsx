@@ -22,7 +22,7 @@ const EventItem = (props:Props)=>{
     const navigation:any = useNavigation()
   return (
     <CardComponent isShadow styles={{width:appInfo.sizes.WIDTH*0.7}} onPress={()=>{navigation.navigate('EventDetails',{item}) }} color={colors.white}>
-        <ImageBackground style={{flex:1,height:131,padding:10,marginBottom:12}} source={require('../assets/images/blackPink.png')} imageStyle={{
+        <ImageBackground style={{flex:1,height:150,padding:10,marginBottom:12}} source={require('../assets/images/blackPink.png')} imageStyle={{
           borderRadius:12,
           resizeMode:'stretch',
         }}>

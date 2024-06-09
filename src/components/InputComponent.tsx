@@ -1,4 +1,4 @@
-import { Button, KeyboardType, StyleSheet, Text, TextInput, TextInputProps, View } from "react-native"
+import { Button, KeyboardType, StyleProp, StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from "react-native"
 import React, { ReactNode, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { EyeSlash } from "iconsax-react-native"
@@ -6,6 +6,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { colors } from "../constrants/color"
 import { globalStyles } from "../styles/globalStyles"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import TextComponent from "./TextComponent"
+import SpaceComponent from "./SpaceComponent"
+import { fontFamilies } from "../constrants/fontFamilies"
 interface Props {
   value: string,
   onChange: (val: string) => void,
@@ -15,8 +18,12 @@ interface Props {
   isPassword?: boolean,
   allowClear?: boolean,
   type?: KeyboardType,
-  onEnd?: ()=>void,
-  disabled?:boolean
+  onEnd?: () => void,
+  disabled?: boolean,
+  multiline?: boolean,
+  numberOfLines?: number,
+  styles?: StyleProp<ViewStyle>,
+  title?:string
 }
 //secureTextEntry chuyển thành ****
 //ReactNode Có thẻ đóng thẻ mở ví dụ <Text />
@@ -24,53 +31,45 @@ interface Props {
 //autoCapitalize bỏ tự động viết 
 //onEndEditing khi ngừng nhập
 const InputComponent = (props: Props) => {
-  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword, type,onEnd,disabled } = props
+  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
 
   return (
-    <View style={[styles.inputContainer]}>
-      {affix && affix}
-      <TextInput style={[styles.input, globalStyles.text]}
-        placeholder={placeholder ?? ''}
-        onChangeText={val => onChange(val)}
-        secureTextEntry={isShowPassword}
-        value={value}
-        placeholderTextColor={'#747688'}
-        keyboardType={type ?? 'default'}
-        autoCapitalize="none"
-        onEndEditing={onEnd}
-        editable={disabled}
-      />
-      {suffix && suffix}
-      <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>
-        {isPassword ? (
-          <FontAwesome name={isShowPassword ? 'eye-slash' : 'eye'} size={22} color={colors.gray} />
-        ) : value && allowClear && <AntDesign name="close" size={22} color={colors.colorText} />}
-      </TouchableOpacity>
+    <View>
+      {
+        title && (
+          <>
+            <TextComponent text={title} />
+            <SpaceComponent height={8} />
+          </>
+        )
+      }
+      <View style={[globalStyles.inputContainer, {
+        alignItems: multiline ? 'flex-start' : 'center'
+      }, styles]}>
+        {affix && affix}
+        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 }]}
+          placeholder={placeholder ?? ''}
+          multiline={multiline}
+          onChangeText={val => onChange(val)}
+          secureTextEntry={isShowPassword}
+          value={value}
+          placeholderTextColor={'#747688'}
+          keyboardType={type ?? 'default'}
+          autoCapitalize="none"
+          onEndEditing={onEnd}
+          editable={disabled}
+          numberOfLines={numberOfLines}
+        />
+        {suffix && suffix}
+        <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>
+          {isPassword ? (
+            <FontAwesome name={isShowPassword ? 'eye-slash' : 'eye'} size={22} color={colors.gray} />
+          ) : value && allowClear && <AntDesign style={{ marginTop: multiline ? 10 : 0 }} name="close" size={22} color={colors.colorText} />}
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
 export default InputComponent;
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: 'row',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.gray3,
-    width: '100%',
-    minHeight: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    backgroundColor: colors.white,
-    marginBottom: 19
-  },
-  input: {
-    padding: 0,
-    margin: 0,
-    flex: 1,
-    paddingHorizontal: 14,
-
-  }
-})

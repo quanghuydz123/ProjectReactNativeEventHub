@@ -76,5 +76,26 @@ export const globalStyles = StyleSheet.create({
         marginVertical:0,
         marginHorizontal:0,
         marginBottom:0
-    }
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.gray3,
+        width: '100%',
+        minHeight: 56,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        backgroundColor: colors.white,
+        marginBottom: 19
+      },
+      input: {
+        padding: 0,
+        margin: 0,
+        flex: 1,
+        // paddingHorizontal: 14,
+        color:colors.colorText
+    
+      }
 })

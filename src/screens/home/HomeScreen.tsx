@@ -16,12 +16,9 @@ import { AddressModel } from "../../models/AddressModel"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
-  const [isRemember, setIsReMember] = useState<boolean>(false)
   const [address,setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
-  useEffect(() => {
-    handleGetItem()
-  }, [])
+  
   useEffect(()=>{
     Geolocation.getCurrentPosition(position => {
       if(position.coords){
@@ -29,7 +26,8 @@ const HomeScreen = ({ navigation }: any) => {
       }
     });
   },[])
-  const reverseGeoCode = async (lat:number,long:number)=>{
+  const reverseGeoCode = async (lat:number,long:number)=>
+  {
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=UMbvsJK9MTuBpfXAo9aHukRrGdiJ0BW_dQVaYU8prSA`
     try {
       const res = await axios(api)
@@ -40,11 +38,7 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
-  console.log("reaaas",address)
-  const handleGetItem = async () => {
-    const res = await getItem()
-    setIsReMember(res === 'true')
-  }
+  
   // const handleLogout = async () => {
   //   if (isRemember === true) {
   //     await AsyncStorage.setItem('auth', auth.email)
@@ -157,7 +151,14 @@ const HomeScreen = ({ navigation }: any) => {
            data={Array.from({length:5})}
            renderItem={({item,index})=> <EventItem item={itemEvent} key={index} type="card"/>}
            />
+
           <TabBarComponent title="Gần chỗ bạn" onPress={()=>console.log("abc")}/>
+          <FlatList 
+           showsHorizontalScrollIndicator={false}
+           horizontal
+           data={Array.from({length:5})}
+           renderItem={({item,index})=> <EventItem item={itemEvent} key={index} type="card"/>}
+           />
         </SectionComponent>
         
 

@@ -18,7 +18,9 @@ import {removeAuth } from "../reduxs/reducers/authReducers";
 const DrawerCustom = ({navigation}:any)=>{
   const user = useSelector(authSelector)
 const [isRemember,setIsReMember] = useState<boolean>(false)
-const { getItem } = useAsyncStorage('isRemember')
+const [password,setPasswored] = useState('')
+const { getItem: getRememberItem } = useAsyncStorage('isRemember');
+const { getItem: getPasswordItem } = useAsyncStorage('password');
 const auth = useSelector(authSelector)
 const dispatch = useDispatch()
   const size = 24
@@ -34,19 +36,24 @@ const dispatch = useDispatch()
     {key:'SignOut',title:'Đăng xuất',icon:<Logout size={size} color={color}/>},
   ]
   useEffect(()=>{
+    console.log("handleGetItem")
     handleGetItem()
   },[])
-
   const handleGetItem = async ()=>{
-    const res = await getItem()
+    const res = await getRememberItem()
+    console.log("res",res)
+    const resPassword = await getPasswordItem()
+    resPassword && setPasswored(resPassword)
     setIsReMember(res === 'true')
   }
   const handleLogout = async ()=> {
     if(isRemember===true){
-      await AsyncStorage.setItem('auth',auth.email)
+      await AsyncStorage.setItem('auth',JSON.stringify({email:auth.email,password:password}))
       dispatch(removeAuth({}))
     }else{
-      await AsyncStorage.removeItem('auth')
+      await AsyncStorage.setItem('auth',JSON.stringify({email:'',password:''}))
+      await AsyncStorage.removeItem('isRemember')
+      await AsyncStorage.removeItem('password')
       dispatch(removeAuth({}))    
     }
   }
