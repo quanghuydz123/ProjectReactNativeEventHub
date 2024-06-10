@@ -17,3 +17,5 @@ npm install @reduxjs/toolkit react-redux redux
 npm install react-native-linear-gradient
 npm install @react-native-community/geolocation // lay dia chi nguoi dung
 npm install react-native-date-picker
+ npm install react-native-modalize react-native-gesture-handler
+ npm install react-native-portalize

@@ -18,7 +18,6 @@ const HomeScreen = ({ navigation }: any) => {
   const auth = useSelector(authSelector)
   const [address,setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
-  
   useEffect(()=>{
     Geolocation.getCurrentPosition(position => {
       if(position.coords){

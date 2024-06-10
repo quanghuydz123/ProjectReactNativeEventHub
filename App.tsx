@@ -8,17 +8,23 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage"
 import { Provider } from "react-redux"
 import store from "./src/reduxs/store"
 import AppRouters from "./src/navigators/AppRouters"
-
-const App = ()=>{
-
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Host } from "react-native-portalize";
+const App = () => {
+//GestureHandlerRootView, Host khai báo để sử dụng modalize
   return <>
     {/* //hiện thi thanh giờ,pin,... */}
-    <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent/>
-    <Provider store={store}>
-          <NavigationContainer>
-           <AppRouters />
-        </NavigationContainer> 
-    </Provider>
+    <GestureHandlerRootView>
+      
+        <Provider store={store}>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+          <Host>
+            <NavigationContainer>
+              <AppRouters />
+            </NavigationContainer>
+          </Host>
+        </Provider>
+    </GestureHandlerRootView>
   </>
 }
 export default App;

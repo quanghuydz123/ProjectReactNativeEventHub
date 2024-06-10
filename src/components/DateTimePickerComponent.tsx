@@ -50,9 +50,9 @@ const DateTimePickerComponent = (props: Props) => {
         {
           type === 'time' 
           ? 
-          <Calendar size={22} color={colors.gray} />
-          :
           <Clock size={22} color={colors.gray} />
+          :
+          <Calendar size={22} color={colors.gray} />
         }
       </RowComponent>
       <DatePicker mode={type} date={new Date()} modal open={isShowDatePicker} onCancel={() => setIsShowDatePicker(false)}

@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { ButtonComponent, InputComponent, RowComponent, SpaceComponent, TextComponent } from "../src/components"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { colors } from "../src/constrants/color"
-import { SearchNormal } from "iconsax-react-native"
+import { ArrowLeft, SearchNormal } from "iconsax-react-native"
 import axios from "axios"
 import { LocationModel } from "../src/models/LocationModel"
 
@@ -46,6 +46,8 @@ const LocationModal = (props:Props)=>{
         flex:1
       }}>
         <RowComponent justify="flex-end">
+        <ArrowLeft color={colors.gray}  onPress={() => handleClose()} />
+                        <SpaceComponent width={10} />
           <View style={{
             flex:1
           }}>
@@ -62,11 +64,9 @@ const LocationModal = (props:Props)=>{
             />
             
           </View>
-          <SpaceComponent width={12} />
             {/* <TouchableOpacity onPress={onClose}>
                 <AntDesign name="close" color={colors.colorText} size={22}/>
             </TouchableOpacity> */}
-            <ButtonComponent text="Hủy" type="link" onPress={handleClose}/>
         </RowComponent>
         <View style={{
           marginTop:20

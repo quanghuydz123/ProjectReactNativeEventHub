@@ -21,7 +21,6 @@ const LoginScreen = ({ navigation }: any) => {
   const { getItem } = useAsyncStorage('auth')
   const [isLoading,setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  console.log("i",isRemember)
   useEffect(() => {
     saveEmail()
   }, [])

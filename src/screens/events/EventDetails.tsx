@@ -31,7 +31,7 @@ const EventDetails = ({ navigation, route }: any) => {
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
           <RowComponent styles={{
             padding: 16,
-            paddingTop: 42,
+            paddingTop: 30  ,
           }} justify="space-between" >
             <RowComponent styles={{ flex: 1 }}>
               <TouchableOpacity onPress={() => navigation.goBack()}
