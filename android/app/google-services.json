@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "989926603372",
+    "project_id": "eventapp-1cfef",
+    "storage_bucket": "eventapp-1cfef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989926603372:android:e743addc6ba0c44a98f649",
+        "android_client_info": {
+          "package_name": "com.evenhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJYxU5S0bbxtaKM8UL6_55mtiTRXeX07E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

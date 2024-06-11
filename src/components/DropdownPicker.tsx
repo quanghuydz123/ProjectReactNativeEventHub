@@ -45,7 +45,7 @@ const DropdownPicker = (props: Props) => {
          key={item.value} styles={[
             localStyles.listItem,
             {
-                paddingVertical:12,
+                paddingVertical:10,
                 borderBottomWidth:1,
                 borderBlockColor:colors.gray5,
                 paddingHorizontal:20,
@@ -113,8 +113,10 @@ const DropdownPicker = (props: Props) => {
                 </RowComponent>
                 <ArrowDown2 size={22} color={colors.gray} />
             </RowComponent>
+            {/* Portal chiếm hết chiều rộng màn hình*/}
             <Portal>
                 <Modalize
+                
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
                     <RowComponent styles={{
@@ -122,7 +124,7 @@ const DropdownPicker = (props: Props) => {
                         paddingTop: 40
                     }}>
                         <ArrowLeft color={colors.gray}  onPress={() => modalieRef.current?.close()} />
-                        <SpaceComponent width={10} />
+                        <SpaceComponent width={6} />
                         <View style={{
                             flex: 1
                         }}>

@@ -1,11 +1,12 @@
-import { Button, ScrollView, Text, View } from "react-native"
+import { Button, Image, ScrollView, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import { ButtonComponent, ChoiceLocationComponent, ContainerComponent, DateTimePickerComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../components"
+import { ButtonComponent, ChoiceLocationComponent, ContainerComponent, DateTimePickerComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent, UploadImagePicker } from "../components"
 import { useSelector } from "react-redux"
 import { authSelector } from "../reduxs/reducers/authReducers"
 import userAPI from "../apis/userApi"
 import DropdownPicker from "../components/DropdownPicker"
 import { SelectModel } from "../models/SelectModel"
+import { ImageOrVideo } from "react-native-image-crop-picker"
 const initValues = {
   title:'',
   description:'',
@@ -13,8 +14,8 @@ const initValues = {
     title:'',
     address:''
   },
-  imageUrl:'',
-  price:0,
+  photoUrl:'',
+  price:'',
   users:[],
   authorId:'',
   startAt:Date.now(),
@@ -25,10 +26,11 @@ const AddNewScreen = ()=>{
   const auth = useSelector(authSelector)
   const [eventData,setEventData] = useState<any>({...initValues,authorId:auth?.id})
   const [allUser,setAllUser] = useState<SelectModel[]>([])
+  const [fileSelected,setFileSelected] = useState<ImageOrVideo>()
   useEffect(()=>{
     handleGetAllUsers()
   },[])
-  const handleOnchageValue = (key:string, value:string | Date | string[]) => {
+  const handleOnchageValue = (key:string, value:string | Date | string[] | number) => {
     const item:any = {...eventData}
     item[`${key}`] = value
     setEventData(item)
@@ -60,9 +62,26 @@ const AddNewScreen = ()=>{
       console.log(errorMessage)
     }
   }
+  const handleFileSelected = (val:ImageOrVideo) =>
+  {
+    setFileSelected(val)
+    handleOnchageValue('photoUrl',val.path)
+  }
+  const handleChoiceImage = (val:any)=>{
+
+    val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
+  }
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
+        {eventData.photoUrl || fileSelected ? <Image style={{
+          width:'100%',
+          height:250,
+          resizeMode:'contain',
+          marginBottom:12
+        }} source={{uri:eventData.photoUrl ? eventData.photoUrl : fileSelected?.path}}/> : <></>}
+        <UploadImagePicker onSelected={val => handleChoiceImage(val)} />
+        <SpaceComponent height={20}/>
         <InputComponent  value={eventData.title} title="Tiêu đề" allowClear onChange={val => handleOnchageValue('title',val)}/>
 
         <InputComponent  
@@ -73,6 +92,17 @@ const AddNewScreen = ()=>{
         numberOfLines={5}
         onChange={val => handleOnchageValue('description',val)}
         />
+
+        <InputComponent  
+        value={eventData.price} 
+        title="Giá" 
+        allowClear
+        type="number-pad"
+        onChange={val => handleOnchageValue('price',val)}
+
+        />
+
+        
         <DateTimePickerComponent title="Ngày diễn ra" selected={eventData.date} 
           type="date" 
           onSelect={(val) => handleOnchageValue('date',val)}
@@ -89,12 +119,13 @@ const AddNewScreen = ()=>{
           onSelect={(val) => handleOnchageValue('endAt',val)}
           />
         </RowComponent>
-        <DropdownPicker  label="Mời tham gia" values={allUser} 
+        <DropdownPicker label="Mời tham gia" values={allUser} 
         selected={eventData.users} 
         multibale
         onSelected={(val:string | string[]) => handleOnchageValue('users',val)}
         />
         <ChoiceLocationComponent />
+        
       </SectionComponent>
       <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent}/>
     </ContainerComponent>

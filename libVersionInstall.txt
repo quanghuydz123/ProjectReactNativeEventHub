@@ -17,5 +17,15 @@ npm install @reduxjs/toolkit react-redux redux
 npm install react-native-linear-gradient
 npm install @react-native-community/geolocation // lay dia chi nguoi dung
 npm install react-native-date-picker
- npm install react-native-modalize react-native-gesture-handler
+
+ npm install react-native-modalize 
+ react-native-gesture-handler
  npm install react-native-portalize
+
+ npm install --save @react-native-firebase/app
+ npm install  npm install --save @react-native-firebase/app
+ npm install @react-native-firebase/messaging
+ npm install @react-native-firebase/storage
+
+ npm install react-native-image-crop-picker//tu dong resize hình ảnh khi updateload file
+ npm install --save rn-fetch-blob //chinh sua url ve chinh xac nhat

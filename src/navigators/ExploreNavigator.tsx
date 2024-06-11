@@ -8,7 +8,6 @@ const Stack = createNativeStackNavigator();
     <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="SearchEventsScreen" component={SearchEventsScreen} />
-        <Stack.Screen name="EventDetails" component={EventDetails} />
     </Stack.Navigator>
   )
 }

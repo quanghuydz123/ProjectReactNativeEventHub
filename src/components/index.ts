@@ -12,6 +12,8 @@ import TabBarComponent from "./TabBarComponent"
 import EventItem from "./EventItem"
 import ChoiceLocationComponent from "./ChoiceLocationComponent"
 import DateTimePickerComponent from "./DateTimePickerComponent"
+import UploadImagePicker from "./UploadImagePicker"
+
 export {
     SpaceComponent,
     TextComponent,
@@ -25,5 +27,6 @@ export {
     CategoriesList,
     TabBarComponent,
     ChoiceLocationComponent,
-    DateTimePickerComponent
+    DateTimePickerComponent,
+    UploadImagePicker
 }
