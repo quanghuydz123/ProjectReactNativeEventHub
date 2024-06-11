@@ -1,5 +1,5 @@
 import { Button, Image, ImageBackground, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
-import React from "react"
+import React, { Ref, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Location } from "iconsax-react-native";
@@ -14,7 +14,20 @@ import { fontFamilies } from "../../constrants/fontFamilies";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 const EventDetails = ({ navigation, route }: any) => {
   const { item } = route.params
+  const [isAtEnd, setIsAtEnd] = useState(false);
+  const [heightButton, setHeightButton] = useState(0);
 
+  const handleScroll = (event:any) => {//khi scroll tới cuối cùng thì bằng true
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const paddingToBottom = 20; // Khoảng cách từ cuối mà bạn muốn nhận biết
+    const y = isAtEnd ? layoutMeasurement.height + contentOffset.y + heightButton : layoutMeasurement.height + contentOffset.y
+    const isScrollEnd = y  >= contentSize.height - paddingToBottom;
+    setIsAtEnd(isScrollEnd);
+  };
+  const onLayout = (event:any) => {//Lấy ra height
+    const { height,width } = event.nativeEvent.layout;
+    setHeightButton(height)
+  };
   return (
     <View style={{
       flex: 1,
@@ -65,7 +78,9 @@ const EventDetails = ({ navigation, route }: any) => {
               </RowComponent>
             </View>
           </SectionComponent>
-          <ScrollView showsHorizontalScrollIndicator={false}>
+          <ScrollView 
+          onScroll={handleScroll}
+          showsVerticalScrollIndicator={false}>
             <SectionComponent>
               <TextComponent text={item.title} title size={34} font={fontFamilies.regular} />
             </SectionComponent>
@@ -137,27 +152,50 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent text={item.description} />
               <TextComponent text={item.description} />
               <TextComponent text={item.description} />
+              <TextComponent text={item.description} />
+              <TextComponent text={item.description} />
+              <TextComponent text={item.description} />
+              <TextComponent text={item.description} />
 
             </SectionComponent>
           </ScrollView>
         </View>
       </ImageBackground>
 
-      <LinearGradient colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']} style={{
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        left: 0,
-        padding:12
-      }}>
-        <ButtonComponent text="Mua vé ngay" type="primary"
-          icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
-            <ArrowRight
-              size={18}
-              color={colors.white}
-            /></View>}
-          iconFlex="right" />
-      </LinearGradient>
+      {
+        isAtEnd ? 
+          <View onLayout={onLayout} style={{
+            padding:12
+          }}>
+            <ButtonComponent text="Mua vé ngay" type="primary"
+            icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
+              <ArrowRight
+                size={18}
+                color={colors.white}
+              /></View>}
+            iconFlex="right" 
+            onPress={()=>console.log("mua vé")}
+            />
+          </View>
+        :
+        <LinearGradient colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']} style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          left: 0,
+          padding:12
+        }}>
+          <ButtonComponent text="Mua vé ngay" type="primary"
+            icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
+              <ArrowRight
+                size={18}
+                color={colors.white}
+              /></View>}
+            iconFlex="right" 
+            onPress={()=>console.log("mua vé")}
+            />
+        </LinearGradient>
+      }
     </View>
   )
 }
