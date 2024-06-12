@@ -19,7 +19,7 @@ const EventDetails = ({ navigation, route }: any) => {
 
   const handleScroll = (event:any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const paddingToBottom = 20; // Khoảng cách từ cuối mà bạn muốn nhận biết
+    const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
     const y = isAtEnd ? layoutMeasurement.height + contentOffset.y + heightButton : layoutMeasurement.height + contentOffset.y
     const isScrollEnd = y  >= contentSize.height - paddingToBottom;
     setIsAtEnd(isScrollEnd);

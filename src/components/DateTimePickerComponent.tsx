@@ -55,7 +55,7 @@ const DateTimePickerComponent = (props: Props) => {
           <Calendar size={22} color={colors.gray} />
         }
       </RowComponent>
-      <DatePicker mode={type} date={new Date()} modal open={isShowDatePicker} onCancel={() => setIsShowDatePicker(false)}
+      <DatePicker title={title} cancelText="Hủy" confirmText="Xác nhận" mode={type} date={new Date()} modal open={isShowDatePicker} onCancel={() => setIsShowDatePicker(false)}
         onConfirm={(val) => handleComfirm(val)}
       />
     </View>

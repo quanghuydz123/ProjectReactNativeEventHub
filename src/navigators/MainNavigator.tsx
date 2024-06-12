@@ -10,7 +10,6 @@ const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="Main" component={DrawerNavigate} />
-        <Stack.Screen name="EventDetails" component={EventDetails} />
     </Stack.Navigator>
   )
 }

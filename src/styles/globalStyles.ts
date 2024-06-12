@@ -88,7 +88,7 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 15,
         backgroundColor: colors.white,
-        marginBottom: 19
+        marginBottom: 19,
       },
       input: {
         padding: 0,

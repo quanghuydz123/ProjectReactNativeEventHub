@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }: any) => {
               })}>
               <SearchNormal size={20} variant="TwoTone" color={colors.white} />
               <View style={{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }} />
-              <TextComponent text="Search..." flex={1} color={colors.gray2} size={18} />
+              <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} />
             </RowComponent>
             <TagComponent
               onPress={() => navigation.navigate('SearchEventsScreen', {

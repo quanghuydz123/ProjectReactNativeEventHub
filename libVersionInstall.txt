@@ -29,3 +29,6 @@ npm install react-native-date-picker
 
  npm install react-native-image-crop-picker//tu dong resize hình ảnh khi updateload file
  npm install --save rn-fetch-blob //chinh sua url ve chinh xac nhat
+
+npm install react-native-picker-select
+npm install @react-native-picker/picker

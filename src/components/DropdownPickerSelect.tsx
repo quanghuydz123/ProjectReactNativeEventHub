@@ -1,5 +1,5 @@
 import { Button, FlatList, Modal, StyleSheet, Text, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import RNPickerSelect from 'react-native-picker-select';
 import { colors } from "../constrants/color";
 import TextComponent from "./TextComponent";
@@ -10,6 +10,8 @@ import { ArrowDown2, ArrowLeft, ArrowLeft2, CloseCircle, SearchNormal } from "ic
 import SpaceComponent from "./SpaceComponent";
 import InputComponent from "./InputComponent";
 import { CategoryModel } from "../models/CategoryModel";
+import { BackHandler } from "react-native";
+
 interface Props {
     title?: string,
     selected: string,
@@ -35,13 +37,14 @@ const DropdownPickerSelect = (props:Props) => {
         onSelect(val.key)
         setIsVisibleModal(false)
     }
+    
     return (
         <View>
             <TextComponent text="Thể loại" />
             <SpaceComponent height={8} />
             <RowComponent styles={[globalStyles.inputContainer, { justifyContent: 'flex-start' }]} onPress={() => setIsVisibleModal(true)} >
                 <RowComponent>
-                    <TextComponent text={`${values.find((item)=>item.key===selected)?.label}`} flex={1} />
+                    <TextComponent text={selected ? `${values.find((item)=>item.key===selected)?.label}` : ''} flex={1} />
                     <ArrowDown2 size={22} color={colors.gray} />
                 </RowComponent>
             </RowComponent>
@@ -72,9 +75,7 @@ const DropdownPickerSelect = (props:Props) => {
                                     placeholder="Tìm kiếm..."
                                     value={searchKey}
                                     onChange={val => setSearchKey(val)}
-                                    styles={{
-                                        marginBottom: 0
-                                    }}
+                                    
                                     affix={<SearchNormal size={20} color={colors.gray} />}
                                     allowClear
                                 />

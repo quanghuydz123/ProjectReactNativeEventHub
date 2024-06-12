@@ -12,15 +12,17 @@ import { fontFamilies } from "../constrants/fontFamilies";
 import ImageCropPicker from "react-native-image-crop-picker";
 import { globalStyles } from "../styles/globalStyles";
 import InputComponent from "./InputComponent";
+import Ionicons from "react-native-vector-icons/Ionicons"
 interface Props {
   onSelected:(val:{
     type:'url' | 'file',
     value:any
-  }) => void
+  }) => void,
+  seleted:string
 
 }
 const UploadImagePicker = (props: Props) => {
-  const {onSelected} = props
+  const {onSelected,seleted} = props
   const modalizeRef = useRef<Modalize>()
   const [imageUrl, setImageUrl] = useState('')
   const [isVisibleModalAddUrl, setIsVisibleModalAddUrl] = useState(false)
@@ -81,7 +83,21 @@ const UploadImagePicker = (props: Props) => {
   }
   return (
     <View>
-      <ButtonComponent text={"Tải hình ảnh"} type="link" onPress={() => modalizeRef.current?.open()} />
+      
+      {
+        seleted ? <ButtonComponent text={'Chỉnh sửa hình ảnh'} 
+        type="link" 
+        onPress={() => modalizeRef.current?.open()} />
+        :
+        <TouchableOpacity onPress={() => modalizeRef.current?.open()} activeOpacity={0.9} style={[
+          globalStyles.inputContainer,{minHeight:250,flexDirection:'column',backgroundColor:colors.gray6}
+        ]}>
+          <Ionicons name="image" size={30} color={colors.gray}/>
+          <SpaceComponent height={8}/>
+          <TextComponent text="Chọn hình ảnh"/>
+        </TouchableOpacity>
+      }
+      
       <Portal>
         <Modalize adjustToContentHeight ref={modalizeRef} handlePosition="inside">
           <View style={{
@@ -93,6 +109,7 @@ const UploadImagePicker = (props: Props) => {
             }
           </View>
         </Modalize>
+        
       </Portal>
       <Modal transparent statusBarTranslucent animationType="slide" visible={isVisibleModalAddUrl} style={{
         flex: 1
@@ -110,7 +127,7 @@ const UploadImagePicker = (props: Props) => {
             padding:20
           }]}>
            <RowComponent justify="flex-end">
-                <TouchableOpacity onPress={()=>setIsVisibleModalAddUrl(false)}>
+                <TouchableOpacity onPress={()=>{setIsVisibleModalAddUrl(false),setImageUrl('')}}>
                     <CloseCircle size={22} color={colors.gray}/>
                 </TouchableOpacity>
            </RowComponent>
@@ -121,6 +138,7 @@ const UploadImagePicker = (props: Props) => {
               <ButtonComponent text="Thêm" type="link"  onPress={()=>{
                 setIsVisibleModalAddUrl(false),
                 onSelected({type:'url',value:imageUrl})
+                setImageUrl('')
                 }}
                 />
            </RowComponent>

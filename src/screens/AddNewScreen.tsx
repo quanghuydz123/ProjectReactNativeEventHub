@@ -7,16 +7,25 @@ import userAPI from "../apis/userApi"
 import DropdownPicker from "../components/DropdownPicker"
 import { SelectModel } from "../models/SelectModel"
 import { ImageOrVideo } from "react-native-image-crop-picker"
+import DropdownPickerSelect from "../components/DropdownPickerSelect"
+import { CategoryModel } from "../models/CategoryModel"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import { Food, FoodWhite } from "../assets/svgs"
+
 const initValues = {
   title:'',
   description:'',
-  location:{
-    title:'',
-    address:''
+  locationTitle:'',
+  locationAddress:'',
+  position:{
+    lat:'',
+    long:''
   },
   photoUrl:'',
   price:'',
   users:[],
+  category:'',
   authorId:'',
   startAt:Date.now(),
   endAt:Date.now(),
@@ -27,6 +36,32 @@ const AddNewScreen = ()=>{
   const [eventData,setEventData] = useState<any>({...initValues,authorId:auth?.id})
   const [allUser,setAllUser] = useState<SelectModel[]>([])
   const [fileSelected,setFileSelected] = useState<ImageOrVideo>()
+  const categories:CategoryModel[] = [
+    {
+        key:'sports',
+        label:'Thể thao',
+        color:'#F0635A'
+    },
+    {
+        key:'music',
+        label:'Âm nhạc',
+        icon:<MaterialIcons name="library-music" color={'white' } size={20}/>,
+        color:'#f59762'
+    },
+    {
+        key:'food',
+        label:'Ẩm thực',
+        icon:<FoodWhite color={'white' }/>,
+        color:'#29d697'
+    },
+    {
+        key:'art',
+        label:'Vân hóa và Nghệ thuật',
+        icon:<Ionicons name="color-palette-outline" color={'white' } size={20}/>,
+        color:'#46CDFB'
+    },
+    
+]
   useEffect(()=>{
     handleGetAllUsers()
   },[])
@@ -74,15 +109,15 @@ const AddNewScreen = ()=>{
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
-        {eventData.photoUrl || fileSelected ? <Image style={{
-          width:'100%',
-          height:250,
-          resizeMode:'contain',
-          marginBottom:12
-        }} source={{uri:eventData.photoUrl ? eventData.photoUrl : fileSelected?.path}}/> : <></>}
-        <UploadImagePicker onSelected={val => handleChoiceImage(val)} />
-        <SpaceComponent height={20}/>
+        
         <InputComponent  value={eventData.title} title="Tiêu đề" allowClear onChange={val => handleOnchageValue('title',val)}/>
+
+        <DropdownPickerSelect 
+        title="Thể loại" 
+        values={categories} 
+        selected={eventData.category} 
+        onSelect={val => handleOnchageValue('category',val)}
+        />
 
         <InputComponent  
         allowClear
@@ -125,7 +160,17 @@ const AddNewScreen = ()=>{
         onSelected={(val:string | string[]) => handleOnchageValue('users',val)}
         />
         <ChoiceLocationComponent />
-        
+
+        <TextComponent text="Hình ảnh"/>
+        <SpaceComponent height={8}/>
+        {eventData.photoUrl ? <Image style={{
+          width:'100%',
+          height:250,
+          resizeMode:'contain',
+          marginBottom:12
+        }} source={{uri:eventData.photoUrl ? eventData.photoUrl : fileSelected?.path}}/> : <></>}
+        <UploadImagePicker onSelected={val => handleChoiceImage(val)} seleted={eventData?.photoUrl}/>
+          
       </SectionComponent>
       <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent}/>
     </ContainerComponent>

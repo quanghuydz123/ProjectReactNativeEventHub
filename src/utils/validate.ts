@@ -9,4 +9,8 @@ export class Validate{
     static Password = (val:string)=>{
         return val.length >=6
     }
+
+    static EventValidate = (val:any) =>{
+
+    }
 }
