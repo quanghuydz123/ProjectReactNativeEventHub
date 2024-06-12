@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation }: any) => {
   },[])
   const reverseGeoCode = async (lat:number,long:number)=>
   {
-    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=UMbvsJK9MTuBpfXAo9aHukRrGdiJ0BW_dQVaYU8prSA`
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {
       const res = await axios(api)
       if(res && res.data && res.status === 200){

@@ -8,6 +8,7 @@ import axios from "axios"
 import { Address, LocationModel } from "../src/models/LocationModel"
 import { fontFamilies } from "../src/constrants/fontFamilies"
 import SearchComponent from "../src/components/SearchComponent"
+import { BackHandler } from 'react-native';
 
 interface Props {
     visible:boolean
@@ -20,12 +21,11 @@ const LocationModal = (props:Props)=>{
     const [searchKey,setSearchKey] = useState('')
     const [isLoading,setIsLoading] = useState(false)
     const [locations,setLocations] = useState<LocationModel>()
-
     const handleClose = () =>{
       onClose()
     }
     const handleSearchLocation = async ()=>{
-      const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=7Y47aqh1ZSjVIQoK1XfAYpJHWggUcTOmSuxfYq3Dz3M`
+      const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_AUTOCOMPLE}`
       try {
         setIsLoading(true)
         const res = await axios.get(api)

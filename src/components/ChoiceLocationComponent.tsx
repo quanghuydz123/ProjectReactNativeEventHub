@@ -13,14 +13,15 @@ import { Address } from "../models/LocationModel";
 interface Props {
     onPress?:() => void,
     value:string,
-    onSelect:(val:any)=> void
+    onSelect:(val:any)=> void,
+    title:string
 }
 const ChoiceLocationComponent = (props:Props) => {
     const [showModal, setShowModal] = useState(false)
-    const {onPress,value,onSelect} = props
+    const {onPress,value,onSelect,title} = props
     return (
         <>
-            <TextComponent text={'Địa chỉ'}/>
+            <TextComponent text={title}/>
             <SpaceComponent height={8} />
             <RowComponent 
             onPress={()=>setShowModal(true)}

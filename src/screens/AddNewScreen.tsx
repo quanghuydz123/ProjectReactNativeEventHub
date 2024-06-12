@@ -17,7 +17,7 @@ import { Address } from "../models/LocationModel"
 const initValues = {
   title:'',
   description:'',
-  locationAddress:'',
+  Address:'',
   addressDetals:{
     city: '',
     county: '',
@@ -26,6 +26,7 @@ const initValues = {
     postalCode: '',
     street: ''
   },
+  Location:'',
   position:{
     lat:'',
     long:''
@@ -78,6 +79,13 @@ const AddNewScreen = ()=>{
     item[`${key}`] = value
     setEventData(item)
   }
+  const handleOnchangeAddressDetails = (key:string,value:any)=>{
+    const item:any = {...eventData}
+    Object.keys(eventData.addressDetals).forEach((keyChild)=> {
+      item[`${key}`][`${keyChild}`] = value[`${keyChild}`]
+    })
+    setEventData(item)
+  }
   const handleAddEvent = async ()=>{
    
 
@@ -114,9 +122,11 @@ const AddNewScreen = ()=>{
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }
   const handleOnSelectLocation = (val:Address)=>{
-    handleOnchageValue('locationAddress',val.label)
+    handleOnchangeAddressDetails('addressDetals',val)
+    handleOnchageValue('Address',val?.label) 
+
   }
-  console.log("event",eventData['city'])
+  console.log("event",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -170,7 +180,13 @@ const AddNewScreen = ()=>{
         multibale
         onSelected={(val:string | string[]) => handleOnchageValue('users',val)}
         />
-        <ChoiceLocationComponent value={eventData.locationAddress} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
+        <InputComponent  
+        allowClear
+        value={eventData.Location} 
+        title="Địa điểm tổ chức" 
+        onChange={val => handleOnchageValue('Location',val)}
+        />
+        <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
         <TextComponent text="Hình ảnh"/>
         <SpaceComponent height={8}/>
