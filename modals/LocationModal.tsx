@@ -1,19 +1,22 @@
-import { Button, FlatList, Modal, Text, TouchableOpacity, View } from "react-native"
+import { Button, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { useState } from "react"
 import { ButtonComponent, InputComponent, RowComponent, SpaceComponent, TextComponent } from "../src/components"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { colors } from "../src/constrants/color"
 import { ArrowLeft, SearchNormal } from "iconsax-react-native"
 import axios from "axios"
-import { LocationModel } from "../src/models/LocationModel"
+import { Address, LocationModel } from "../src/models/LocationModel"
+import { fontFamilies } from "../src/constrants/fontFamilies"
+import SearchComponent from "../src/components/SearchComponent"
 
 interface Props {
     visible:boolean
     onClose:()=>void
-    onSelect:(val:string)=>void
+    onSelect:(val:Address)=>void,
+    onConfirm:()=>void
 }
 const LocationModal = (props:Props)=>{
-    const {visible,onClose,onSelect} = props
+    const {visible,onClose,onSelect,onConfirm} = props
     const [searchKey,setSearchKey] = useState('')
     const [isLoading,setIsLoading] = useState(false)
     const [locations,setLocations] = useState<LocationModel>()
@@ -22,7 +25,7 @@ const LocationModal = (props:Props)=>{
       onClose()
     }
     const handleSearchLocation = async ()=>{
-      const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=10&lang=vi-VI&apiKey=7Y47aqh1ZSjVIQoK1XfAYpJHWggUcTOmSuxfYq3Dz3M`
+      const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=7Y47aqh1ZSjVIQoK1XfAYpJHWggUcTOmSuxfYq3Dz3M`
       try {
         setIsLoading(true)
         const res = await axios.get(api)
@@ -34,7 +37,41 @@ const LocationModal = (props:Props)=>{
         setIsLoading(false)
       }
     }
-    console.log(locations?.items.length)
+    const handleSelectedLocation = (address:Address)=>{
+      onSelect(address)
+      onConfirm()
+    }
+    const handleRenderLocationSearch = (address:Address)=>{
+      return <RowComponent
+      onPress={()=>handleSelectedLocation(address)}
+       key={address.label} styles={[
+          localStyles.listItem,
+          {
+              paddingVertical:10,
+              borderBottomWidth:1,
+              borderBlockColor:colors.gray6,
+              paddingHorizontal:10,
+          }
+      ]}
+      >
+         
+          <SpaceComponent width={8}/>
+         <View style={{
+          flex:1,
+
+         }}>
+              <TextComponent 
+              color={colors.colorText} 
+              text={address.label} 
+              flex={1} 
+              font={fontFamilies.regular}
+                  styles={{
+                      textAlignVertical:'center'
+                  }}
+               />
+         </View>
+      </RowComponent>
+    }
   return (
     <Modal visible={visible} animationType="slide" style={{
       flex:1,
@@ -42,48 +79,65 @@ const LocationModal = (props:Props)=>{
       <View 
       style={{
         paddingVertical:30,
-        paddingHorizontal:20,
         flex:1
       }}>
-        <RowComponent justify="flex-end">
-        <ArrowLeft color={colors.gray}  onPress={() => handleClose()} />
-                        <SpaceComponent width={10} />
-          <View style={{
-            flex:1
-          }}>
-            <InputComponent 
-            styles={{
-              marginBottom:0
-            }}
-            affix={<SearchNormal size={20} color={colors.gray}/>}
-            value={searchKey} 
-            placeholder="Tìm kiếm"
-            allowClear
-            onChange={val => setSearchKey(val)}
-            onEnd={handleSearchLocation}
-            />
-            
-          </View>
-            {/* <TouchableOpacity onPress={onClose}>
-                <AntDesign name="close" color={colors.colorText} size={22}/>
-            </TouchableOpacity> */}
-        </RowComponent>
+        <View style={{
+          paddingHorizontal:10
+        }}>
+        {/* <RowComponent justify="flex-end">
+          <ArrowLeft color={colors.gray}  onPress={() => handleClose()} />
+                          <SpaceComponent width={6} />
+            <View style={{
+              flex:1
+            }}>
+              <InputComponent 
+              styles={{
+                marginBottom:0
+              }}
+              affix={<SearchNormal size={20} color={colors.gray}/>}
+              value={searchKey} 
+              placeholder="Tìm kiếm"
+              allowClear
+              onChange={val => setSearchKey(val)}
+              />
+              
+            </View>
+           
+        </RowComponent> */}
+        <SearchComponent value={searchKey} onPressArrow={()=>handleClose()} onSearch={(val)=> setSearchKey(val)}/>
+        </View>
         <View style={{
           marginTop:20
         }}>
             {
               locations && (
                 <FlatList 
+                showsVerticalScrollIndicator={false}
                 data={locations.items}
-                renderItem={({item,index}) => (
-                  <TextComponent text={`${item?.address?.city}, ${item?.address?.county}`}/>
-                  )}
+                renderItem={({item,index}) => handleRenderLocationSearch(item.address)}
                 />
               )
             }
         </View>
       </View>
+      <ButtonComponent text="Tìm kiếm" type="primary" onPress={handleSearchLocation}/>
     </Modal >
   )
 }
 export default LocationModal;
+const localStyles = StyleSheet.create({
+    
+  avartar:{
+    width:30,
+    height:30,
+    borderRadius:100,
+    justifyContent:'center',alignItems:'center'
+
+  },
+  listItem:{
+    paddingVertical:12
+  },
+  listItemText:{
+    paddingLeft:12
+  }
+})

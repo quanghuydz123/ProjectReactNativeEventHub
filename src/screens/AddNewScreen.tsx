@@ -12,12 +12,20 @@ import { CategoryModel } from "../models/CategoryModel"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { Food, FoodWhite } from "../assets/svgs"
+import { Address } from "../models/LocationModel"
 
 const initValues = {
   title:'',
   description:'',
-  locationTitle:'',
   locationAddress:'',
+  addressDetals:{
+    city: '',
+    county: '',
+    district: '',
+    houseNumber: '',
+    postalCode: '',
+    street: ''
+  },
   position:{
     lat:'',
     long:''
@@ -70,7 +78,6 @@ const AddNewScreen = ()=>{
     item[`${key}`] = value
     setEventData(item)
   }
-  console.log("eventData",eventData)
   const handleAddEvent = async ()=>{
    
 
@@ -106,6 +113,10 @@ const AddNewScreen = ()=>{
 
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }
+  const handleOnSelectLocation = (val:Address)=>{
+    handleOnchageValue('locationAddress',val.label)
+  }
+  console.log("event",eventData['city'])
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -159,7 +170,7 @@ const AddNewScreen = ()=>{
         multibale
         onSelected={(val:string | string[]) => handleOnchageValue('users',val)}
         />
-        <ChoiceLocationComponent />
+        <ChoiceLocationComponent value={eventData.locationAddress} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
         <TextComponent text="Hình ảnh"/>
         <SpaceComponent height={8}/>
@@ -170,9 +181,9 @@ const AddNewScreen = ()=>{
           marginBottom:12
         }} source={{uri:eventData.photoUrl ? eventData.photoUrl : fileSelected?.path}}/> : <></>}
         <UploadImagePicker onSelected={val => handleChoiceImage(val)} seleted={eventData?.photoUrl}/>
-          
+
       </SectionComponent>
-      <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent}/>
+      <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent} />
     </ContainerComponent>
   )
 }

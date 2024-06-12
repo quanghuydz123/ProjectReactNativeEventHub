@@ -32,3 +32,6 @@ npm install react-native-date-picker
 
 npm install react-native-picker-select
 npm install @react-native-picker/picker
+
+npm install -D react-native-dotenv
+react-native-geocoding

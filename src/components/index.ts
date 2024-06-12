@@ -13,6 +13,7 @@ import EventItem from "./EventItem"
 import ChoiceLocationComponent from "./ChoiceLocationComponent"
 import DateTimePickerComponent from "./DateTimePickerComponent"
 import UploadImagePicker from "./UploadImagePicker"
+import SearchComponent from "./SearchComponent"
 
 export {
     SpaceComponent,

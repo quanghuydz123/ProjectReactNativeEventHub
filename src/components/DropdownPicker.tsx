@@ -14,6 +14,7 @@ import ButtonComponent from "./ButtonComponent";
 import { fontFamilies } from "../constrants/fontFamilies";
 import AvatarGroup from "./AvatarGroup";
 import Feather from "react-native-vector-icons/Feather"
+import SearchComponent from "./SearchComponent";
 interface Props {
     label?: string,
     values: SelectModel[],
@@ -47,8 +48,8 @@ const DropdownPicker = (props: Props) => {
             {
                 paddingVertical:10,
                 borderBottomWidth:1,
-                borderBlockColor:colors.gray5,
-                paddingHorizontal:20,
+                borderBlockColor:colors.gray6,
+                paddingHorizontal:10,
             }
         ]}
         >
@@ -119,31 +120,35 @@ const DropdownPicker = (props: Props) => {
                 
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
-                    <RowComponent styles={{
-                        paddingHorizontal: 12,
-                        paddingTop: 40
-                    }}>
-                        <ArrowLeft color={colors.gray}  onPress={() => modalieRef.current?.close()} />
-                        <SpaceComponent width={6} />
-                        <View style={{
-                            flex: 1
-                        }}>
-                            <InputComponent
-                                placeholder="Tìm kiếm..."
-                                value={searchKey}
-                                onChange={val => setSearchKey(val)}
-                                styles={{
-                                    marginBottom: 0
-                                }}
-                                affix={<SearchNormal size={20} color={colors.gray} />}
-                                allowClear
-                            />
-                        </View>
-                    </RowComponent>
+                    // <RowComponent styles={{
+                    //     paddingHorizontal: 12,
+                    //     paddingTop: 40
+                    // }}>
+                    //     <ArrowLeft color={colors.gray}  onPress={() => modalieRef.current?.close()} />
+                    //     <SpaceComponent width={6} />
+                    //     <View style={{
+                    //         flex: 1
+                    //     }}>
+                    //         <InputComponent
+                    //             placeholder="Tìm kiếm..."
+                    //             value={searchKey}
+                    //             onChange={val => setSearchKey(val)}
+                    //             styles={{
+                    //                 marginBottom: 0
+                    //             }}
+                    //             affix={<SearchNormal size={20} color={colors.gray} />}
+                    //             allowClear
+                    //         />
+                    //     </View>
+                    // </RowComponent>
+                    <SearchComponent value={searchKey} onSearch={(val)=>setSearchKey(val)} onPressArrow={()=>modalieRef.current?.close()} styles={{
+                        paddingTop:40,
+                        paddingHorizontal:12
+                    }} />
                     }
                     FooterComponent={
                         multibale && <View style={{
-                            paddingHorizontal:20,
+                            paddingHorizontal:10,
                             paddingBottom:30
                         }}>
                             <ButtonComponent text="Thêm" type="primary" onPress={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}/>

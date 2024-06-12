@@ -11,6 +11,7 @@ import SpaceComponent from "./SpaceComponent";
 import InputComponent from "./InputComponent";
 import { CategoryModel } from "../models/CategoryModel";
 import { BackHandler } from "react-native";
+import SearchComponent from "./SearchComponent";
 
 interface Props {
     title?: string,
@@ -65,22 +66,7 @@ const DropdownPickerSelect = (props:Props) => {
                         paddingHorizontal:12,
                         paddingVertical:20
                     }]}>
-                        <RowComponent>
-                            <ArrowLeft color={colors.gray} onPress={() => setIsVisibleModal(false)} />
-                            <SpaceComponent width={6} />
-                            <View style={{
-                                flex: 1
-                            }}>
-                                <InputComponent
-                                    placeholder="Tìm kiếm..."
-                                    value={searchKey}
-                                    onChange={val => setSearchKey(val)}
-                                    
-                                    affix={<SearchNormal size={20} color={colors.gray} />}
-                                    allowClear
-                                />
-                            </View>
-                        </RowComponent>
+                        <SearchComponent value={searchKey} onSearch={(val)=>setSearchKey(val)} onPressArrow={()=>setIsVisibleModal(false)}/>
                         <View style={{
                             flex:1,
                             paddingVertical:10

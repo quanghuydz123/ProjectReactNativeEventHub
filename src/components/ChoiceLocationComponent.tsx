@@ -9,12 +9,15 @@ import CardComponent from "./CardComponent";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import SpaceComponent from "./SpaceComponent";
 import LocationModal from "../../modals/LocationModal";
+import { Address } from "../models/LocationModel";
 interface Props {
-    onPress?:() => void
+    onPress?:() => void,
+    value:string,
+    onSelect:(val:any)=> void
 }
 const ChoiceLocationComponent = (props:Props) => {
     const [showModal, setShowModal] = useState(false)
-    const {onPress} = props
+    const {onPress,value,onSelect} = props
     return (
         <>
             <TextComponent text={'Địa chỉ'}/>
@@ -33,10 +36,10 @@ const ChoiceLocationComponent = (props:Props) => {
                     </CardComponent>
                 </CardComponent>
                 <SpaceComponent width={4} />
-                <TextComponent text="Ho Chi Minh" flex={1} />
+                <TextComponent text={value} flex={1} numberOfLine={2} />
                 <ArrowRight2 size={22} color={colors.primary} />
             </RowComponent>
-            <LocationModal visible={showModal} onClose={()=>setShowModal(false)} onSelect={(val)=>console.log(val)}/>
+            <LocationModal visible={showModal} onClose={()=>setShowModal(false)} onConfirm={()=>setShowModal(false)} onSelect={(val)=>onSelect(val)}/>
         </>
     )
 }
