@@ -15,6 +15,8 @@ import { Food, FoodWhite } from "../assets/svgs"
 import { Address } from "../models/LocationModel"
 import storage from  "@react-native-firebase/storage"
 import axios from "axios"
+import eventAPI from "../apis/eventAPI"
+import { LoadingModal } from "../../modals"
 const initValues = {
   title:'',
   description:'',
@@ -27,7 +29,7 @@ const initValues = {
     postalCode: '',
     street: '',
   },
-  AddressLocation:'',
+  Location:'',
   position:{
     lat:'',
     lng:''
@@ -46,6 +48,7 @@ const AddNewScreen = ()=>{
   const [eventData,setEventData] = useState<any>({...initValues,authorId:auth?.id})
   const [allUser,setAllUser] = useState<SelectModel[]>([])
   const [fileSelected,setFileSelected] = useState<ImageOrVideo>()
+  const [isLoading,setIsLoading] = useState(false)
   const categories:CategoryModel[] = [
     {
         key:'sports',
@@ -53,7 +56,7 @@ const AddNewScreen = ()=>{
         color:'#F0635A'
     },
     {
-        key:'music',
+        key:'666ad89ad08fd9c8bec5bd61',
         label:'Âm nhạc',
         icon:<MaterialIcons name="library-music" color={'white' } size={20}/>,
         color:'#f59762'
@@ -112,6 +115,7 @@ const AddNewScreen = ()=>{
     setEventData(item)
   }
   const handleAddEvent = async ()=>{
+    setIsLoading(true)
     if(fileSelected){
       const fileName = `${fileSelected.filename ?? `image-${Date.now()}`}.${fileSelected.path.split('.')[1]}`
       const path = `/images/${fileName}`
@@ -130,11 +134,28 @@ const AddNewScreen = ()=>{
     )
     }
     else{
-      console.log(eventData)
+      handleCallAPIAddEvent(eventData)
     }
+
   }
-  const handleCallAPIAddEvent = (eventData:any)=>{
-    console.log(eventData)
+  const handleCallAPIAddEvent = async (eventData:any)=>{
+    const api = '/add-event'
+    try {
+      const res = await eventAPI.HandleEvent(api,{...eventData},'post')
+      if(res?.status===200)
+      {
+        setEventData({...initValues,authorId:auth?.id})
+      }
+      setIsLoading(false)
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+      setIsLoading(false)
+    }
   }
   const handleGetAllUsers = async () => {
     const api = '/get-all'
@@ -164,7 +185,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('photoUrl',val.path)
   }
   const handleChoiceImage = (val:any)=>{
-
+    setFileSelected(undefined)
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }
   const handleOnSelectLocation = (val:Address)=>{
@@ -172,6 +193,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
+  console.log(isLoading)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -227,9 +249,9 @@ const AddNewScreen = ()=>{
         />
         <InputComponent  
         allowClear
-        value={eventData.AddressLocation} 
+        value={eventData.Location} 
         title="Địa điểm tổ chức" 
-        onChange={val => handleOnchageValue('AddressLocation',val)}
+        onChange={val => handleOnchageValue('Location',val)}
         />
         <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
@@ -247,6 +269,7 @@ const AddNewScreen = ()=>{
      <SectionComponent>
      <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent} />
      </SectionComponent>
+     <LoadingModal visible={isLoading}/>
     </ContainerComponent>
   )
 }

@@ -15,7 +15,7 @@ const SearchComponent = (props:Props)=>{
     const {value,onSearch,onPressArrow,styles} = props
   return <RowComponent styles={[styles]} justify="flex-end">
     <ArrowLeft color={colors.gray}  onPress={() => onPressArrow()} />
-                    <SpaceComponent width={6} />
+                    <SpaceComponent width={8} />
       <View style={{
         flex:1
       }}>

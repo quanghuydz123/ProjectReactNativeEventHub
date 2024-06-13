@@ -18,7 +18,8 @@ import SearchComponent from "./SearchComponent";
 interface Props {
     label?: string,
     values: SelectModel[],
-    selected?: string | string[],
+    // selected?: string | string[],
+    selected?:string[],
     onSelected: (val: string | string[]) => void,
     multibale?: boolean
 }
@@ -28,6 +29,9 @@ const DropdownPicker = (props: Props) => {
     const modalieRef = useRef<Modalize>()
     const [searchKey, setSearchKey] = useState('')
     const [selectedItems, setSelectItems] = useState<string[]>([])
+    useEffect(()=>{
+        selected && setSelectItems(selected)
+    },[selected])
     useEffect(() => {
         if (isVisibleModalize) {
             modalieRef.current?.open()
@@ -109,7 +113,7 @@ const DropdownPicker = (props: Props) => {
 
                 >
                  {
-                    selectedItems.length > 0 ? <AvatarGroup /> : <TextComponent text="Chọn người tham gia"/>
+                    selected && selected?.length > 0 ? <AvatarGroup /> : <TextComponent text="Chưa có ai..."/>
                  }
                 </RowComponent>
                 <ArrowDown2 size={22} color={colors.gray} />
@@ -117,7 +121,7 @@ const DropdownPicker = (props: Props) => {
             {/* Portal chiếm hết chiều rộng màn hình*/}
             <Portal>
                 <Modalize
-                
+                    onClosed={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
                     // <RowComponent styles={{
