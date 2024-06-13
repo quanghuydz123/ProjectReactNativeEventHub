@@ -13,7 +13,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { Food, FoodWhite } from "../assets/svgs"
 import { Address } from "../models/LocationModel"
-
+import storage from  "@react-native-firebase/storage"
+import axios from "axios"
 const initValues = {
   title:'',
   description:'',
@@ -24,12 +25,12 @@ const initValues = {
     district: '',
     houseNumber: '',
     postalCode: '',
-    street: ''
+    street: '',
   },
-  Location:'',
+  AddressLocation:'',
   position:{
     lat:'',
-    long:''
+    lng:''
   },
   photoUrl:'',
   price:'',
@@ -74,6 +75,23 @@ const AddNewScreen = ()=>{
   useEffect(()=>{
     handleGetAllUsers()
   },[])
+
+  useEffect(()=>{//call api get lat and long
+    const api = `https://geocode.search.hereapi.com/v1/geocode?q=${eventData.Address}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
+    handleCallApiGetLatAndLong(api)
+  },[eventData.Address])
+  const handleCallApiGetLatAndLong = async (api:string)=>{
+    try {
+      const res = await axios(api)
+      if(res && res.data && res.status === 200){
+        handleOnchangePosition('position',res.data.items[0].position)
+      }else{
+        console.log("vị trí chọn không hợp lệ")
+      }
+    } catch (error:any) {
+      console.log(error)
+    }
+  }
   const handleOnchageValue = (key:string, value:string | Date | string[] | number) => {
     const item:any = {...eventData}
     item[`${key}`] = value
@@ -86,9 +104,37 @@ const AddNewScreen = ()=>{
     })
     setEventData(item)
   }
+  const handleOnchangePosition = (key:string,value:any) =>{
+    const item:any = {...eventData}
+    Object.keys(eventData.position).forEach((keyChild)=> {
+      item[`${key}`][`${keyChild}`] = value[`${keyChild}`]
+    })
+    setEventData(item)
+  }
   const handleAddEvent = async ()=>{
-   
+    if(fileSelected){
+      const fileName = `${fileSelected.filename ?? `image-${Date.now()}`}.${fileSelected.path.split('.')[1]}`
+      const path = `/images/${fileName}`
+      const res = storage().ref(path).putFile(fileSelected.path)
 
+      res.on('state_changed', snap=>{
+        console.log(snap)
+      },error=> console.log(error),
+      ()=>//khi thành công
+      {
+        storage().ref(path).getDownloadURL().then(url => {
+          handleOnchageValue('photoUrl',url)
+          handleCallAPIAddEvent(eventData)
+        })
+      }
+    )
+    }
+    else{
+      console.log(eventData)
+    }
+  }
+  const handleCallAPIAddEvent = (eventData:any)=>{
+    console.log(eventData)
   }
   const handleGetAllUsers = async () => {
     const api = '/get-all'
@@ -126,7 +172,6 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log("event",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -182,9 +227,9 @@ const AddNewScreen = ()=>{
         />
         <InputComponent  
         allowClear
-        value={eventData.Location} 
+        value={eventData.AddressLocation} 
         title="Địa điểm tổ chức" 
-        onChange={val => handleOnchageValue('Location',val)}
+        onChange={val => handleOnchageValue('AddressLocation',val)}
         />
         <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
@@ -199,7 +244,9 @@ const AddNewScreen = ()=>{
         <UploadImagePicker onSelected={val => handleChoiceImage(val)} seleted={eventData?.photoUrl}/>
 
       </SectionComponent>
-      <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent} />
+     <SectionComponent>
+     <ButtonComponent text="Thêm"  type="primary" onPress={handleAddEvent} />
+     </SectionComponent>
     </ContainerComponent>
   )
 }
