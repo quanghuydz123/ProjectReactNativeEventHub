@@ -2,7 +2,7 @@ import { Button, Image, ImageBackground, Platform, ScrollView, StatusBar, Text, 
 import React, { Ref, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
-import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Location } from "iconsax-react-native";
+import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
 import CardComponent from "../../components/CardComponent";
 import { globalStyles } from "../../styles/globalStyles";
@@ -12,8 +12,12 @@ import AvatarGroup from "../../components/AvatarGroup";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { fontFamilies } from "../../constrants/fontFamilies";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { EventModelNew } from "../../models/EventModelNew";
+import { DateTime } from "../../utils/DateTime";
+import { convertMoney } from "../../utils/convertMoney";
 const EventDetails = ({ navigation, route }: any) => {
-  const { item } = route.params
+  
+  const { item }:{item:EventModelNew} = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
 
@@ -35,12 +39,12 @@ const EventDetails = ({ navigation, route }: any) => {
     }}>
       <ImageBackground style={{
         flex: 1,
-        height: 244,
+        height: 260,
       }} imageStyle={{
         resizeMode: 'stretch',
-        height: 244,
+        height: 260,
         width: appInfo.sizes.WIDTH,
-      }} source={require('../../assets/images/blackPink.png')}>
+      }} source={{uri:item.photoUrl}}>
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
           <RowComponent styles={{
             padding: 16,
@@ -61,7 +65,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </LinearGradient>
         <View style={{
           flex: 1,
-          paddingTop: 244 - 130,
+          paddingTop: 244 - 110,
         }}>
           <SectionComponent>
             <View style={{
@@ -74,15 +78,16 @@ const EventDetails = ({ navigation, route }: any) => {
                 backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: 12,
                 width: '96%'
               }, globalStyles.shadow]}>
-                <AvatarGroup size={36} isShowButton />
+                <AvatarGroup size={36} isShowButton users={item.users} />
               </RowComponent>
             </View>
           </SectionComponent>
           <ScrollView 
           onScroll={handleScroll}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          >
             <SectionComponent>
-              <TextComponent text={item.title} title size={34} font={fontFamilies.regular} />
+              <TextComponent text={item.title} title size={30} font={fontFamilies.semiBold} />
             </SectionComponent>
             <SectionComponent>
               <RowComponent>
@@ -94,7 +99,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text="200.000 VNĐ" font={fontFamilies.medium} size={16} />
+                  <TextComponent text={convertMoney(item.price)} font={fontFamilies.medium} size={16} />
                   <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} />
                 </View>
               </RowComponent>
@@ -109,8 +114,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text="14 Tháng 2, 2024" font={fontFamilies.medium} size={16} />
-                  <TextComponent text="Thứ ba, 4:00PM - 9:00PM" color={colors.gray} />
+                  <TextComponent text={DateTime.GetDate(new Date(item.date))} font={fontFamilies.medium} size={16} />
+                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item.date).getDay())}, ${DateTime.GetTime(new Date(item.startAt))} - ${DateTime.GetTime(new Date(item.endAt))}`} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -122,10 +127,10 @@ const EventDetails = ({ navigation, route }: any) => {
                 <SpaceComponent width={16} />
                 <View style={{
                   justifyContent: 'space-around',
-                  height: 48
+                  height: 48,
                 }}>
-                  <TextComponent text="Sân vân động Mỹ Đình" font={fontFamilies.medium} size={16} />
-                  <TextComponent numberOfLine={1} text={item.location.address} color={colors.gray} />
+                  <TextComponent text={item.Location} numberOfLine={1} font={fontFamilies.medium} size={16} />
+                  <TextComponent numberOfLine={1} text={item.Address} color={colors.gray}/>
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -141,21 +146,14 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text="Nguyễn Quang Huy" font={fontFamilies.medium} size={16} />
+                  <TextComponent text={item.authorId.fullname} font={fontFamilies.medium} size={16} />
                   <TextComponent text="Người chủ trì" color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
             <TabBarComponent title={'Thông tin sự kiện'} />
             <SectionComponent>
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
-              <TextComponent text={item.description} />
+              <TextComponent text={item.description ? item.description : ''} />
 
             </SectionComponent>
           </ScrollView>

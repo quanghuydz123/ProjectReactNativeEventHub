@@ -127,8 +127,7 @@ const AddNewScreen = ()=>{
       ()=>//khi thành công
       {
         storage().ref(path).getDownloadURL().then(url => {
-          handleOnchageValue('photoUrl',url)
-          handleCallAPIAddEvent(eventData)
+          handleCallAPIAddEvent(eventData,url)
         })
       }
     )
@@ -138,10 +137,10 @@ const AddNewScreen = ()=>{
     }
 
   }
-  const handleCallAPIAddEvent = async (eventData:any)=>{
+  const handleCallAPIAddEvent = async (eventData:any,url?:string)=>{
     const api = '/add-event'
     try {
-      const res = await eventAPI.HandleEvent(api,{...eventData},'post')
+      const res = await eventAPI.HandleEvent(api,{...eventData,photoUrl:url ? url : eventData.photoUrl},'post')
       if(res?.status===200)
       {
         setEventData({...initValues,authorId:auth?.id})
@@ -193,7 +192,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log(isLoading)
+  console.log("event",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -232,13 +231,13 @@ const AddNewScreen = ()=>{
           />
           
         <RowComponent>
-          <DateTimePickerComponent title="Thời gian bắt đầu" selected={eventData.startAt} 
-          type="time" 
+          <DateTimePickerComponent minimumDate={eventData.date}  title="Thời gian bắt đầu" selected={eventData.startAt} 
+          type="datetime" 
           onSelect={(val) => handleOnchageValue('startAt',val)}
           />
           <SpaceComponent width={20}/>
-          <DateTimePickerComponent title="Thời gian kết thúc" selected={eventData.endAt} 
-          type="time" 
+          <DateTimePickerComponent minimumDate={eventData.date}  title="Thời gian kết thúc" selected={eventData.endAt} 
+          type="datetime" 
           onSelect={(val) => handleOnchageValue('endAt',val)}
           />
         </RowComponent>

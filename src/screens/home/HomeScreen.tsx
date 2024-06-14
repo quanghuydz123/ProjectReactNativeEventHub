@@ -1,7 +1,7 @@
 import { Button, FlatList, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { authSelector, removeAuth } from "../../reduxs/reducers/authReducers"
+import { addPositionUser, authSelector, removeAuth } from "../../reduxs/reducers/authReducers"
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage"
 import { globalStyles } from "../../styles/globalStyles"
 import { colors } from "../../constrants/color"
@@ -13,18 +13,64 @@ import EventItem from "../../components/EventItem"
 import Geolocation from '@react-native-community/geolocation';
 import axios from "axios"
 import { AddressModel } from "../../models/AddressModel"
+import eventAPI from "../../apis/eventAPI"
+import { EventModelNew } from "../../models/EventModelNew"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
   const [address,setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
+  const [allEvent,setAllEvent] = useState<EventModelNew[]>([])
+  const [allEventNear,setAllEventNear] = useState<EventModelNew[]>([])
   useEffect(()=>{
     Geolocation.getCurrentPosition(position => {
       if(position.coords){
-        reverseGeoCode(position.coords.latitude,position.coords.longitude)
+        // reverseGeoCode(position.coords.latitude,position.coords.longitude)
+        dispatch(addPositionUser({lat:position?.coords?.latitude,long:position?.coords?.longitude}))
       }
-    });
+    },(error)=>{
+      console.log('Lấy vị trí bị lỗi',error)
+    },{});
   },[])
+  useEffect(()=>{
+    handleCallApiGetAllEvent()
+  },[])
+
+  useEffect(()=>{
+    handleCallApiGetEventsNearYou()
+  },[auth.position])
+
+  const handleCallApiGetAllEvent = async() =>{
+    const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}` 
+    try {
+      const res:any = await eventAPI.HandleEvent(api, {}, 'get');
+      if(res && res.data && res.status===200){
+        setAllEvent(res.data.events)
+      }
+
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log(errorMessage)
+    }
+  }
+  
+  const handleCallApiGetEventsNearYou = async()=>{
+    if(auth.position){
+      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`  
+      try {
+        const res:any = await eventAPI.HandleEvent(api, {}, 'get');
+        if(res && res.data && res.status === 200){
+          setAllEventNear(res.data.events)
+        }
+
+      } catch (error:any) {
+        const errorMessage = JSON.parse(error.message)
+        console.log(errorMessage)
+      }
+    }else{
+      console.log("Không lấy được vị trí hiện tại để lấy event")
+    }
+  }
   const reverseGeoCode = async (lat:number,long:number)=>
   {
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
@@ -38,29 +84,7 @@ const HomeScreen = ({ navigation }: any) => {
     }
   }
   
-  // const handleLogout = async () => {
-  //   if (isRemember === true) {
-  //     await AsyncStorage.setItem('auth', auth.email)
-  //     dispatch(removeAuth({}))
-  //   } else {
-  //     await AsyncStorage.removeItem('auth')
-  //     dispatch(removeAuth({}))
-  //   }
-  // }
-  const itemEvent = {
-    title:'Blackpink World Tour',
-    description:'Đối với cộng đồng fan yêu thích Kpop, tin tức nhóm nhạc nổi tiếng Blackpink lần đầu tiên biểu diễn tại Việt Nam chắc hẳn đã làm cộng đồng fan Kpop, fan nhóm nhạc Blackpink “chao đảo”, hào hứng chờ ngày săn vé.',
-    location:{
-      title:'Sân vận động Mỹ Đình',
-      address:'1 Đ. Lê Đức Thọ, Mỹ Đình, Nam Từ Liêm, Hà Nội'
-    },
-    imageUrl:'',
-    users:'',
-    authorId:'',
-    startAt:Date.now(),
-    endAt:Date.now(),
-    date:Date.now()
-  }
+  
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -75,7 +99,8 @@ const HomeScreen = ({ navigation }: any) => {
         <View style={{
           paddingHorizontal: 16
         }}>
-          <RowComponent>
+          
+          <RowComponent onPress={()=>handleCallApiGetEventsNearYou()}>
             <TouchableOpacity onPress={() => navigation.openDrawer()} >
               <HambergerMenu size={24} color={colors.white} />
             </TouchableOpacity>
@@ -85,7 +110,7 @@ const HomeScreen = ({ navigation }: any) => {
                   address ?
                   <TextComponent text="Chỉnh sửa địa chỉ" color={colors.white2} size={12} />
                   :
-                  <TextComponent text="Chọn địa chỉ" color={colors.white2} size={12} />
+                  <TextComponent text="Lấy địa chỉ hiện tại" color={colors.white2} size={12} />
                 }
                 <MaterialIcons name="arrow-drop-down" size={18} color={colors.white2} />
               </RowComponent>
@@ -113,6 +138,7 @@ const HomeScreen = ({ navigation }: any) => {
             </CricleComponent>
           </RowComponent>
           <SpaceComponent height={20} />
+          
           <RowComponent>
             <RowComponent styles={{ flex: 1 }}
               onPress={() => navigation.navigate('SearchEventsScreen', {
@@ -147,16 +173,16 @@ const HomeScreen = ({ navigation }: any) => {
            <FlatList 
            showsHorizontalScrollIndicator={false}
            horizontal
-           data={Array.from({length:5})}
-           renderItem={({item,index})=> <EventItem item={itemEvent} key={index} type="card"/>}
+           data={allEvent}
+           renderItem={({item,index})=> <EventItem item={item} key={index} type="card"/>}
            />
 
           <TabBarComponent title="Gần chỗ bạn" onPress={()=>console.log("abc")}/>
           <FlatList 
            showsHorizontalScrollIndicator={false}
            horizontal
-           data={Array.from({length:5})}
-           renderItem={({item,index})=> <EventItem item={itemEvent} key={index} type="card"/>}
+           data={allEventNear}
+           renderItem={({item,index})=> <EventItem item={item} key={index} type="card"/>}
            />
         </SectionComponent>
         

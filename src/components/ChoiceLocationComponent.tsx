@@ -9,7 +9,6 @@ import CardComponent from "./CardComponent";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import SpaceComponent from "./SpaceComponent";
 import LocationModal from "../../modals/LocationModal";
-import { Address } from "../models/LocationModel";
 interface Props {
     onPress?:() => void,
     value:string,
