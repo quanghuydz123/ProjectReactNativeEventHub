@@ -36,12 +36,10 @@ const dispatch = useDispatch()
     {key:'SignOut',title:'Đăng xuất',icon:<Logout size={size} color={color}/>},
   ]
   useEffect(()=>{
-    console.log("handleGetItem")
     handleGetItem()
   },[])
   const handleGetItem = async ()=>{
     const res = await getRememberItem()
-    console.log("res",res)
     const resPassword = await getPasswordItem()
     resPassword && setPasswored(resPassword)
     setIsReMember(res === 'true')
@@ -49,12 +47,12 @@ const dispatch = useDispatch()
   const handleLogout = async ()=> {
     if(isRemember===true){
       await AsyncStorage.setItem('auth',JSON.stringify({email:auth.email,password:password}))
-      dispatch(removeAuth({}))
+      dispatch(removeAuth())
     }else{
       await AsyncStorage.setItem('auth',JSON.stringify({email:'',password:''}))
       await AsyncStorage.removeItem('isRemember')
       await AsyncStorage.removeItem('password')
-      dispatch(removeAuth({}))    
+      dispatch(removeAuth())    
     }
   }
   const handleClickItemMenu = (key:string) => {

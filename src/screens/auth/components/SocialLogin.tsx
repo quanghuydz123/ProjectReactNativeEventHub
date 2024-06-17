@@ -4,6 +4,7 @@ import { ButtonComponent, SectionComponent, SpaceComponent, TextComponent } from
 import { colors } from "../../../constrants/color";
 import { fontFamilies } from "../../../constrants/fontFamilies";
 import { Facebook,Google } from "../../../assets/svgs";
+import { AlertComponent } from "../../../components/Alert";
 
 const SocialLogin = ()=>{
   return (

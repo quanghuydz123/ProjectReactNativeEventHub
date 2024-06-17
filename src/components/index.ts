@@ -29,5 +29,5 @@ export {
     TabBarComponent,
     ChoiceLocationComponent,
     DateTimePickerComponent,
-    UploadImagePicker
+    UploadImagePicker,
 }

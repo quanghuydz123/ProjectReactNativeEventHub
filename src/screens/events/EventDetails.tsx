@@ -65,7 +65,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </LinearGradient>
         <View style={{
           flex: 1,
-          paddingTop: 244 - 110,
+          paddingTop: 244 - 100,
         }}>
           <SectionComponent>
             <View style={{

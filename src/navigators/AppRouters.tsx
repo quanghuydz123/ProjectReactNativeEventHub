@@ -6,31 +6,33 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuth, authSelector } from "../reduxs/reducers/authReducers";
 import { SplashScreen } from "../screens";
+import { jwtDecode } from "jwt-decode";
 
-const AppRouters = ()=>{
-    const {getItem} = useAsyncStorage('auth')
-    const [isShowSlash,setIsShowSlash] = useState(true)
-    const dispatch = useDispatch()
-    const auth = useSelector(authSelector)
-    console.log("auth",auth)
-    useEffect(()=>{
-      checkLogin()
-      const timeout = setTimeout(()=>{
-        setIsShowSlash(false)
-      },1500)
-  
-      return ()=>clearTimeout(timeout)
-    },[])
+const AppRouters = () => {
+  const { getItem } = useAsyncStorage('auth')
+  const [isShowSlash, setIsShowSlash] = useState(true)
+  const dispatch = useDispatch()
+  const auth = useSelector(authSelector)
 
-    
-    const checkLogin = async ()=>{
-        const res = await getItem()
+  useEffect(() => {
+    checkLogin()
+    const timeout = setTimeout(() => {
+      setIsShowSlash(false)
+    }, 1500)
 
-        res && dispatch(addAuth(JSON.parse(res)))
-    }
+    return () => clearTimeout(timeout)
+  }, [])
+
+ 
+
+  const checkLogin = async () => {
+    const res = await getItem()
+
+    res && dispatch(addAuth(JSON.parse(res)))
+  }
   return (
-    <> 
-        {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
+    <>
+      {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
     </>
   )
 }

@@ -17,7 +17,6 @@ interface Props {
 const AvatarGroup = (props: Props) => {
   const photoUrl = 'https://gamek.mediacdn.vn/133514250583805952/2021/5/3/kai4-1620038475845741932232.jpg'
   const { size, isShowButton, users } = props
-  console.log("users",users && users.length)
   return (
     <RowComponent styles={{ marginVertical: (users && users.length > 0) ? 10 : 4 }}>
       {
@@ -55,7 +54,7 @@ const AvatarGroup = (props: Props) => {
           <View style={{flex:(users && users.length > 0) ? 0 : 1}}>
             <TouchableOpacity style={{
               backgroundColor: colors.primary,
-              borderRadius: 12,
+              borderRadius: 100,
               paddingHorizontal: 20,
               paddingVertical: 10
             }}>

@@ -22,6 +22,8 @@ const HomeScreen = ({ navigation }: any) => {
   const { getItem } = useAsyncStorage('isRemember')
   const [allEvent,setAllEvent] = useState<EventModelNew[]>([])
   const [allEventNear,setAllEventNear] = useState<EventModelNew[]>([])
+  const [isLoading,setIsLoading] = useState(false)
+  const [isLoadingNearEvent,setIsLoadingNearEvent] = useState(false)
   useEffect(()=>{
     Geolocation.getCurrentPosition(position => {
       if(position.coords){
@@ -42,13 +44,16 @@ const HomeScreen = ({ navigation }: any) => {
 
   const handleCallApiGetAllEvent = async() =>{
     const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}` 
+    setIsLoading(true)
     try {
       const res:any = await eventAPI.HandleEvent(api, {}, 'get');
       if(res && res.data && res.status===200){
         setAllEvent(res.data.events)
       }
+      setIsLoading(false)
 
     } catch (error:any) {
+      setIsLoading(false)
       const errorMessage = JSON.parse(error.message)
       console.log(errorMessage)
     }
@@ -56,14 +61,17 @@ const HomeScreen = ({ navigation }: any) => {
   
   const handleCallApiGetEventsNearYou = async()=>{
     if(auth.position){
-      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`  
+      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}` 
+      setIsLoading(true) 
       try {
         const res:any = await eventAPI.HandleEvent(api, {}, 'get');
         if(res && res.data && res.status === 200){
           setAllEventNear(res.data.events)
         }
+        setIsLoading(false)
 
       } catch (error:any) {
+        setIsLoading(false)
         const errorMessage = JSON.parse(error.message)
         console.log(errorMessage)
       }
