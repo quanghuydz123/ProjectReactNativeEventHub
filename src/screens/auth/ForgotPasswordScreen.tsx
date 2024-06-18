@@ -72,7 +72,6 @@ const ForgotPasswordScreen = () => {
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email }, 'post')
-      console.log("res", res)
       setCurrentCode(res?.data?.code)
       setTime(60)
       setEmailSendVerifition(email)
@@ -127,7 +126,6 @@ const ForgotPasswordScreen = () => {
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email,password,comfirmPassword }, 'post')
-      console.log("res",res)
       setIsLoading(false)
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)

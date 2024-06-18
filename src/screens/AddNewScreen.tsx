@@ -160,7 +160,6 @@ const AddNewScreen = ()=>{
     const api = '/get-all'
     try {
       const res:any = await userAPI.HandleUser(api, {}, 'get');
-      console.log("res",res)
       if(res && res.data){
         const items:SelectModel[] = []
         res.data.users.forEach((item:any)=>{

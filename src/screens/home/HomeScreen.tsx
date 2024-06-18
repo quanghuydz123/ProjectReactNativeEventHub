@@ -15,84 +15,100 @@ import axios from "axios"
 import { AddressModel } from "../../models/AddressModel"
 import eventAPI from "../../apis/eventAPI"
 import { EventModelNew } from "../../models/EventModelNew"
+import { FollowerModel } from "../../models/FollowerModel"
+import followerAPI from "../../apis/followerAPI"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
-  const [address,setAddress] = useState<AddressModel>()
+  const [address, setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
-  const [allEvent,setAllEvent] = useState<EventModelNew[]>([])
-  const [allEventNear,setAllEventNear] = useState<EventModelNew[]>([])
-  const [isLoading,setIsLoading] = useState(false)
-  const [isLoadingNearEvent,setIsLoadingNearEvent] = useState(false)
-  useEffect(()=>{
+  const [allEvent, setAllEvent] = useState<EventModelNew[]>([])
+  const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
+  const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
+  useEffect(() => {
     Geolocation.getCurrentPosition(position => {
-      if(position.coords){
+      if (position.coords) {
         // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        dispatch(addPositionUser({lat:position?.coords?.latitude,long:position?.coords?.longitude}))
+        dispatch(addPositionUser({ lat: position?.coords?.latitude, long: position?.coords?.longitude }))
       }
-    },(error)=>{
-      console.log('Lấy vị trí bị lỗi',error)
-    },{});
-  },[])
-  useEffect(()=>{
+    }, (error) => {
+      console.log('Lấy vị trí bị lỗi', error)
+    }, {});
+  }, [])
+  useEffect(() => {
     handleCallApiGetAllEvent()
-  },[])
+    handleCallApiGetAllFollower()
+  }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     handleCallApiGetEventsNearYou()
-  },[auth.position])
+  }, [auth.position])
+  const handleCallApiGetAllFollower = async () => {
+    const api = `/get-all`
+    try {
+      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setAllFollower(res.data.followers)
+      }
 
-  const handleCallApiGetAllEvent = async() =>{
-    const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}` 
+    } catch (error: any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+
+    }
+  }
+  const handleCallApiGetAllEvent = async () => {
+    const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}`
     setIsLoading(true)
     try {
-      const res:any = await eventAPI.HandleEvent(api, {}, 'get');
-      if(res && res.data && res.status===200){
+      const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
         setAllEvent(res.data.events)
       }
       setIsLoading(false)
 
-    } catch (error:any) {
+    } catch (error: any) {
       setIsLoading(false)
       const errorMessage = JSON.parse(error.message)
-      console.log(errorMessage)
+      console.log("HomeScreen", errorMessage)
     }
   }
-  
-  const handleCallApiGetEventsNearYou = async()=>{
-    if(auth.position){
-      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}` 
-      setIsLoading(true) 
+
+  const handleCallApiGetEventsNearYou = async () => {
+    if (auth.position) {
+      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
+      setIsLoading(true)
       try {
-        const res:any = await eventAPI.HandleEvent(api, {}, 'get');
-        if(res && res.data && res.status === 200){
+        const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+        if (res && res.data && res.status === 200) {
           setAllEventNear(res.data.events)
         }
         setIsLoading(false)
 
-      } catch (error:any) {
+      } catch (error: any) {
         setIsLoading(false)
         const errorMessage = JSON.parse(error.message)
-        console.log(errorMessage)
+        console.log("HomeScreen", errorMessage)
+
       }
-    }else{
+    } else {
       console.log("Không lấy được vị trí hiện tại để lấy event")
     }
   }
-  const reverseGeoCode = async (lat:number,long:number)=>
-  {
+  const reverseGeoCode = async (lat: number, long: number) => {
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {
       const res = await axios(api)
-      if(res && res.data && res.status === 200){
+      if (res && res.data && res.status === 200) {
         setAddress(res.data.items[0])
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error)
     }
   }
-  
-  
+
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -107,8 +123,8 @@ const HomeScreen = ({ navigation }: any) => {
         <View style={{
           paddingHorizontal: 16
         }}>
-          
-          <RowComponent onPress={()=>handleCallApiGetEventsNearYou()}>
+
+          <RowComponent onPress={() => handleCallApiGetEventsNearYou()}>
             <TouchableOpacity onPress={() => navigation.openDrawer()} >
               <HambergerMenu size={24} color={colors.white} />
             </TouchableOpacity>
@@ -116,16 +132,16 @@ const HomeScreen = ({ navigation }: any) => {
               <RowComponent>
                 {
                   address ?
-                  <TextComponent text="Chỉnh sửa địa chỉ" color={colors.white2} size={12} />
-                  :
-                  <TextComponent text="Lấy địa chỉ hiện tại" color={colors.white2} size={12} />
+                    <TextComponent text="Chỉnh sửa địa chỉ" color={colors.white2} size={12} />
+                    :
+                    <TextComponent text="Lấy địa chỉ hiện tại" color={colors.white2} size={12} />
                 }
                 <MaterialIcons name="arrow-drop-down" size={18} color={colors.white2} />
               </RowComponent>
               {
                 address &&
-                <TextComponent text={`${address.address?.district}, ${address.address?.city}, ${address.address?.county}`} numberOfLine={1} 
-                size={13} color={colors.white2} font={fontFamilies.medium} />
+                <TextComponent text={`${address.address?.district}, ${address.address?.city}, ${address.address?.county}`} numberOfLine={1}
+                  size={13} color={colors.white2} font={fontFamilies.medium} />
               }
             </View>
             <CricleComponent color={'#524CE0'} size={36}>
@@ -146,7 +162,7 @@ const HomeScreen = ({ navigation }: any) => {
             </CricleComponent>
           </RowComponent>
           <SpaceComponent height={20} />
-          
+
           <RowComponent>
             <RowComponent styles={{ flex: 1 }}
               onPress={() => navigation.navigate('SearchEventsScreen', {
@@ -167,33 +183,33 @@ const HomeScreen = ({ navigation }: any) => {
           </RowComponent>
         </View>
         <SpaceComponent height={20} />
-        <View style={{ marginTop: 10 ,}}>
+        <View style={{ marginTop: 10, }}>
           <CategoriesList isFill />
         </View>
       </View>
-      <ScrollView style={[{ 
-        flex: 1, 
+      <ScrollView style={[{
+        flex: 1,
         backgroundColor: colors.white,
         marginTop: Platform.OS === 'android' ? 18 : 22
-        }]}>
-        <SectionComponent styles={{paddingHorizontal:0,paddingTop:20}}>
-           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={()=>console.log("abc")}/>
-           <FlatList 
-           showsHorizontalScrollIndicator={false}
-           horizontal
-           data={allEvent}
-           renderItem={({item,index})=> <EventItem item={item} key={index} type="card"/>}
-           />
+      }]}>
+        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
+          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => console.log("abc")} />
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={allEvent}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={index} type="card" />}
+          />
 
-          <TabBarComponent title="Gần chỗ bạn" onPress={()=>console.log("abc")}/>
-          <FlatList 
-           showsHorizontalScrollIndicator={false}
-           horizontal
-           data={allEventNear}
-           renderItem={({item,index})=> <EventItem item={item} key={index} type="card"/>}
-           />
+          <TabBarComponent title="Gần chỗ bạn" onPress={() => console.log("abc")} />
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={allEventNear}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={index} type="card" />}
+          />
         </SectionComponent>
-        
+
 
       </ScrollView>
     </View>

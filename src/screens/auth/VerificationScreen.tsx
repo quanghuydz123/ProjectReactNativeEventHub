@@ -59,7 +59,6 @@ const VerificationScreen = ({ navigation, route }: any) => {
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email }, 'post')
-      console.log("res", res)
       setTime(60)
       setCurrentCode(res?.data?.code)
       setIsLoading(false)

@@ -16,16 +16,18 @@ import { EventModelNew } from "../models/EventModelNew"
 import { numberToString } from "../utils/numberToString"
 import { useSelector } from "react-redux"
 import { authSelector } from "../reduxs/reducers/authReducers"
+import { FollowerModel } from "../models/FollowerModel"
 interface Props {
     item:EventModelNew,
-    type: 'card' | 'list'
+    type: 'card' | 'list',
+    followers:FollowerModel[]
 }
 const EventItem = (props:Props)=>{
-    const {item,type} = props
+    const {item,type,followers} = props
     const navigation:any = useNavigation()
     const auth = useSelector(authSelector)
   return (
-    <CardComponent isShadow styles={{width:appInfo.sizes.WIDTH*0.7}} onPress={()=>{navigation.navigate('EventDetails',{item}) }} color={colors.white}>
+    <CardComponent isShadow styles={{width:appInfo.sizes.WIDTH*0.7}} onPress={()=>{navigation.navigate('EventDetails',{item,followers}) }} color={colors.white}>
         <ImageBackground style={{height:150,padding:10,marginBottom:12}}  source={{uri:item.photoUrl}} imageStyle={{
           borderRadius:12,
           resizeMode:'stretch',
@@ -36,7 +38,7 @@ const EventItem = (props:Props)=>{
               <TextComponent text={`Tháng ${new Date(item.date).getMonth()+1}`} color={colors.danger2} size={12} />
             </CardComponent>
             {
-              item.followers && item.followers.length > 0 && item.followers.some(follower => follower._id === auth.id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard,{position:'absolute',top:0,right:0}]} color={'#ffffffB3'}>
+              followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) && <CardComponent isShadow styles={[globalStyles.noSpaceCard,{position:'absolute',top:0,right:0}]} color={'#ffffff4D'}>
               <FontAwesome name="bookmark" size={22} color={'white'} /> 
             </CardComponent>
             }

@@ -8,6 +8,7 @@ import CricleComponent from "./CricleComponent";
 import SpaceComponent from "./SpaceComponent";
 import ButtonComponent from "./ButtonComponent";
 import { UserModel } from "../models/UserModel"
+import { globalStyles } from "../styles/globalStyles";
 
 interface Props {
   size?: number,
@@ -51,13 +52,13 @@ const AvatarGroup = (props: Props) => {
         isShowButton && (
          <>
           <SpaceComponent width={(users && users.length > 0) ? 8 : 0} />
-          <View style={{flex:(users && users.length > 0) ? 0 : 1}}>
-            <TouchableOpacity style={{
+          <View style={[{flex:(users && users.length > 0) ? 0 : 1}]}>
+            <TouchableOpacity style={[globalStyles.shadow,{
               backgroundColor: colors.primary,
               borderRadius: 100,
               paddingHorizontal: 20,
-              paddingVertical: 10
-            }}>
+              paddingVertical: 12
+            }]}>
               <TextComponent textAlign="center" size={12} color={colors.white} text="Mời thêm" />
             </TouchableOpacity>
           </View>

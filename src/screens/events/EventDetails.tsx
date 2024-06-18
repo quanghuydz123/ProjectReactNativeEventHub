@@ -1,5 +1,5 @@
 import { Button, Image, ImageBackground, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
-import React, { Ref, useRef, useState } from "react"
+import React, { Ref, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
@@ -15,12 +15,27 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { EventModelNew } from "../../models/EventModelNew";
 import { DateTime } from "../../utils/DateTime";
 import { convertMoney } from "../../utils/convertMoney";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../reduxs/reducers/authReducers";
+import { UserModel } from "../../models/UserModel";
+import { LoadingModal } from "../../../modals";
+import eventAPI from "../../apis/eventAPI";
+import followerAPI from "../../apis/followerAPI";
+import { FollowerModel } from "../../models/FollowerModel";
 const EventDetails = ({ navigation, route }: any) => {
   
-  const { item }:{item:EventModelNew} = route.params
+  const { item,followers }:{item:EventModelNew,followers:FollowerModel[]} = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
-
+  const auth = useSelector(authSelector)
+  const [isLoading,setIsLoading] = useState(false)
+  const [follower,setFollower] = useState<FollowerModel[]>([])
+  useEffect(()=>{
+    if(followers){
+      setFollower(followers)
+    }
+    
+  },[item])
   const handleScroll = (event:any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
@@ -32,6 +47,20 @@ const EventDetails = ({ navigation, route }: any) => {
     const { height,width } = event.nativeEvent.layout;
     setHeightButton(height)
   };
+  const handleFlowerEvent = async ()=>{
+    const api = '/update-follower-event'
+    try {
+      const res = await followerAPI.HandleFollwer(api,{idUser:auth.id,idEvent:item._id},'post')
+      console.log(res)
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi EventDetails')
+      }
+    }
+  }
   return (
     <View style={{
       flex: 1,
@@ -58,14 +87,15 @@ const EventDetails = ({ navigation, route }: any) => {
               </TouchableOpacity>
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
-            <CardComponent isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-              <FontAwesome name="bookmark-o" size={22} color={'black'} />
+            <CardComponent onPress={()=>handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+              <FontAwesome name={followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ?  "bookmark" : 'bookmark-o'} 
+              size={22} color={followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ? colors.white : colors.black} />
             </CardComponent>
           </RowComponent>
         </LinearGradient>
         <View style={{
           flex: 1,
-          paddingTop: 244 - 100,
+          paddingTop: 244 - 102,
         }}>
           <SectionComponent>
             <View style={{
@@ -194,6 +224,7 @@ const EventDetails = ({ navigation, route }: any) => {
             />
         </LinearGradient>
       }
+      <LoadingModal visible={isLoading}/>
     </View>
   )
 }

@@ -28,7 +28,6 @@ const LoginScreen = ({ navigation }: any) => {
   const saveEmail = async () => {
     const res:any = await getItem()
     const resParse = JSON.parse(res)
-    console.log("reslogin",res)
     res && (setEmail(resParse?.email) , setPassword(resParse?.password))
   }
   useEffect(()=>{

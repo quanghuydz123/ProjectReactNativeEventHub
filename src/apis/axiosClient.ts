@@ -4,7 +4,6 @@ import { appInfo } from "../constrants/appInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const getAccessToken = async () =>{
     const res = await AsyncStorage.getItem('auth')
-    console.log("Res",res)
     return res ? JSON.parse(res).accesstoken : ''
 }
 const axiosClient = axios.create({
