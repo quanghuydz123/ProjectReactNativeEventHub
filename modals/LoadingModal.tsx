@@ -6,13 +6,16 @@ import { colors } from "../src/constrants/color";
 interface Props {
     visible:boolean,
     mess?:string,
+    notShowContent?:boolean
 }
 const LoadingModal = (props:Props)=>{
-    const {visible,mess} = props
+    const {visible,mess,notShowContent} = props
   return <Modal visible={visible} style={[globalStyles.container]} transparent statusBarTranslucent>
-        <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.5)',justifyContent:'center',alignItems:'center'}}>
-            <ActivityIndicator color={colors.white} size={32}/>
-            <TextComponent text="Loading..." flex={0} color={colors.white}/>
+        <View style={{flex:1,backgroundColor:notShowContent ? 'rgba(0,0,0,0)' : 'rgba(0,0,0,0.5)',justifyContent:'center',alignItems:'center'}}>
+            {
+                notShowContent ? <></> :<><ActivityIndicator color={colors.white} size={32}/>
+                <TextComponent text="Loading..." flex={0} color={colors.white}/></>
+            }
         </View>
   </Modal>
 }

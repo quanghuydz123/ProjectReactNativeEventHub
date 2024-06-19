@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import {removeAuth } from "../reduxs/reducers/authReducers";
 
 const DrawerCustom = ({navigation}:any)=>{
-  const user = useSelector(authSelector)
+const user = useSelector(authSelector)
 const [isRemember,setIsReMember] = useState<boolean>(false)
 const [password,setPasswored] = useState('')
 const { getItem: getRememberItem } = useAsyncStorage('isRemember');
@@ -61,6 +61,7 @@ const dispatch = useDispatch()
         handleLogout()
       }
   }
+  console.log("abc",user)
   return (
     <View style={[localStyles.container]}>
         <TouchableOpacity 

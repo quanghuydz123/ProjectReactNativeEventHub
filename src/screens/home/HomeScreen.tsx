@@ -1,7 +1,7 @@
 import { Button, FlatList, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addPositionUser, authSelector, removeAuth } from "../../reduxs/reducers/authReducers"
+import { addAuth, addPositionUser, authSelector, removeAuth } from "../../reduxs/reducers/authReducers"
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage"
 import { globalStyles } from "../../styles/globalStyles"
 import { colors } from "../../constrants/color"
@@ -17,6 +17,8 @@ import eventAPI from "../../apis/eventAPI"
 import { EventModelNew } from "../../models/EventModelNew"
 import { FollowerModel } from "../../models/FollowerModel"
 import followerAPI from "../../apis/followerAPI"
+import socket from "../../utils/socket"
+import userAPI from "../../apis/userApi"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
@@ -27,15 +29,11 @@ const HomeScreen = ({ navigation }: any) => {
   const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
+  const { getItem: getItemAuth } = useAsyncStorage('auth')
+  const [refreshList, setRefreshList] = useState(false);
+
   useEffect(() => {
-    Geolocation.getCurrentPosition(position => {
-      if (position.coords) {
-        // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        dispatch(addPositionUser({ lat: position?.coords?.latitude, long: position?.coords?.longitude }))
-      }
-    }, (error) => {
-      console.log('Lấy vị trí bị lỗi', error)
-    }, {});
+    getLocationUser()
   }, [])
   useEffect(() => {
     handleCallApiGetAllEvent()
@@ -45,6 +43,51 @@ const HomeScreen = ({ navigation }: any) => {
   useEffect(() => {
     handleCallApiGetEventsNearYou()
   }, [auth.position])
+  useEffect(() => {
+    setRefreshList(prev => !prev);
+  }, [allFollower])
+  useEffect(() => {
+    socket.on('followers', data => {
+      handleCallApiGetAllFollower()
+      console.log('follower chạy lại')
+    })
+
+    socket.on('events', data => {
+      handleCallApiGetAllEvent()
+      handleCallApiGetEventsNearYou()
+      console.log('events chạy lại')
+    })
+    return () => {
+      socket.disconnect();
+    };
+  }, [])
+  const getLocationUser = async () => {
+    Geolocation.getCurrentPosition(position => {
+      if (position.coords) {
+        // reverseGeoCode(position.coords.latitude,position.coords.longitude)
+        handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+      }
+    }, (error) => {
+      console.log('Lấy vị trí bị lỗi', error)
+    }, {});
+  }
+
+
+
+  const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
+    const api = '/update-position-user'
+    try {
+      const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
+      const authItem: any = await getItemAuth()
+      if (res && res.data && res.status === 200) {
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), position: res.data.user.position }))
+      }
+      dispatch(addPositionUser({ lat: res.data.user.position.lat, lng: res.data.user.position.lng }))
+    } catch (error: any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+    }
+  }
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
@@ -59,6 +102,7 @@ const HomeScreen = ({ navigation }: any) => {
 
     }
   }
+
   const handleCallApiGetAllEvent = async () => {
     const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}`
     setIsLoading(true)
@@ -77,8 +121,9 @@ const HomeScreen = ({ navigation }: any) => {
   }
 
   const handleCallApiGetEventsNearYou = async () => {
+    // console.log("auth.position",auth.position)
     if (auth.position) {
-      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.long}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
+      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
       setIsLoading(true)
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
@@ -108,7 +153,7 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
-
+  console.log("abc",refreshList)
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -198,7 +243,8 @@ const HomeScreen = ({ navigation }: any) => {
             showsHorizontalScrollIndicator={false}
             horizontal
             data={allEvent}
-            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={index} type="card" />}
+            extraData={refreshList}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
           />
 
           <TabBarComponent title="Gần chỗ bạn" onPress={() => console.log("abc")} />
@@ -206,6 +252,7 @@ const HomeScreen = ({ navigation }: any) => {
             showsHorizontalScrollIndicator={false}
             horizontal
             data={allEventNear}
+            extraData={refreshList}
             renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={index} type="card" />}
           />
         </SectionComponent>
