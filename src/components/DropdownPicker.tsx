@@ -14,6 +14,8 @@ import ButtonComponent from "./ButtonComponent";
 import { fontFamilies } from "../constrants/fontFamilies";
 import AvatarGroup from "./AvatarGroup";
 import Feather from "react-native-vector-icons/Feather"
+import AntDesign from "react-native-vector-icons/AntDesign"
+
 import SearchComponent from "./SearchComponent";
 interface Props {
     label?: string,
@@ -71,7 +73,7 @@ const DropdownPicker = (props: Props) => {
                 <TextComponent 
                 color={selectedItems.includes(item.value) ? 
                 colors.primary : colors.colorText} 
-                text={item.name} 
+                text={`${item.name} (${item.email})`} 
                 flex={1} 
                 font={fontFamilies.regular}
                     styles={{
@@ -79,7 +81,7 @@ const DropdownPicker = (props: Props) => {
                     }}
                  />
            </View>
-           {selectedItems.includes(item.value) && <Feather color={colors.primary} size={18} name="check-circle" />}
+           {selectedItems.includes(item.value) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
         </RowComponent>
     }
 

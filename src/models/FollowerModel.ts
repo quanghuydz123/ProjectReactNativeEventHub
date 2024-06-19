@@ -4,7 +4,6 @@ import { EventModelNew } from "./EventModelNew";
 
 export interface FollowerModel {
     _id: string,
-    status:boolean,
     user:UserModel,
-    event:EventModelNew
+    events:EventModelNew[]
 }

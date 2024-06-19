@@ -10,8 +10,10 @@ import store from "./src/reduxs/store"
 import AppRouters from "./src/navigators/AppRouters"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Host } from "react-native-portalize";
+import socket from "./src/utils/socket"
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
+
   return <>
     {/* //hiện thi thanh giờ,pin,... */}
     <GestureHandlerRootView>

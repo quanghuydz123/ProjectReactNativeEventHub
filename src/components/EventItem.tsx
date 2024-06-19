@@ -38,7 +38,7 @@ const EventItem = (props:Props)=>{
               <TextComponent text={`Tháng ${new Date(item.date).getMonth()+1}`} color={colors.danger2} size={12} />
             </CardComponent>
             {
-              followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) && <CardComponent isShadow styles={[globalStyles.noSpaceCard,{position:'absolute',top:0,right:0}]} color={'#ffffff4D'}>
+              followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard,{position:'absolute',top:0,right:0}]} color={'#ffffff4D'}>
               <FontAwesome name="bookmark" size={22} color={'white'} /> 
             </CardComponent>
             }

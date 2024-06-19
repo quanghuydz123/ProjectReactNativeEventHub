@@ -9,7 +9,7 @@ interface AuthState {
     photoUrl: string,
     position: {
         lat: number,
-        long: number
+        lng: number
     }
 }
 
@@ -22,7 +22,7 @@ const initialState: AuthState = {
     photoUrl: '',
     position: {
         lat: 0,
-        long: 0
+        lng: 0
     }
 }
 
@@ -39,11 +39,11 @@ const authSlice = createSlice({
             state.authData = initialState;
         },
         addPositionUser: (state, action) => {
-            const { lat, long } = action.payload;
+            const { lat, lng } = action.payload;
             // Kiểm tra và gán giá trị mới cho position
             state.authData.position = {
                 lat: lat ?? state.authData.position.lat,
-                long: long ?? state.authData.position.long
+                lng: lng ?? state.authData.position.lng
             };
         }
     }

@@ -17,6 +17,7 @@ import storage from  "@react-native-firebase/storage"
 import axios from "axios"
 import eventAPI from "../apis/eventAPI"
 import { LoadingModal } from "../../modals"
+import socket from "../utils/socket"
 const initValues = {
   title:'',
   description:'',
@@ -144,6 +145,8 @@ const AddNewScreen = ()=>{
       if(res?.status===200)
       {
         setEventData({...initValues,authorId:auth?.id})
+        socket.emit('events')
+
       }
       setIsLoading(false)
     } catch (error:any) {
@@ -156,7 +159,7 @@ const AddNewScreen = ()=>{
       setIsLoading(false)
     }
   }
-  const handleGetAllUsers = async () => {
+    const handleGetAllUsers = async () => {
     const api = '/get-all'
     try {
       const res:any = await userAPI.HandleUser(api, {}, 'get');

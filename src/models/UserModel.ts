@@ -4,6 +4,10 @@ export interface UserModel {
     email: string
     password: string
     isAdmin: boolean
+    position?:{
+      lat:number,
+      lng:number
+    }
     createAt: string
     updateAt: string
     __v: number

@@ -22,6 +22,8 @@ import { LoadingModal } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
 import followerAPI from "../../apis/followerAPI";
 import { FollowerModel } from "../../models/FollowerModel";
+import socket from "../../utils/socket";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 const EventDetails = ({ navigation, route }: any) => {
   
   const { item,followers }:{item:EventModelNew,followers:FollowerModel[]} = route.params
@@ -29,13 +31,18 @@ const EventDetails = ({ navigation, route }: any) => {
   const [heightButton, setHeightButton] = useState(0);
   const auth = useSelector(authSelector)
   const [isLoading,setIsLoading] = useState(false)
-  const [follower,setFollower] = useState<FollowerModel[]>([])
+  const [isLLoadingNotShow,setIsLLoadingNotShow] = useState(false)
+
+  const [followerEvent,setFollowerEvent] = useState<FollowerModel[]>([])
+  const { getItem:getItemAuth } = useAsyncStorage('auth')
+
   useEffect(()=>{
     if(followers){
-      setFollower(followers)
+      setFollowerEvent(followers)
     }
     
-  },[item])
+  },[followers])
+  
   const handleScroll = (event:any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
@@ -48,10 +55,15 @@ const EventDetails = ({ navigation, route }: any) => {
     setHeightButton(height)
   };
   const handleFlowerEvent = async ()=>{
+    
     const api = '/update-follower-event'
+    setIsLLoadingNotShow(true)
     try {
       const res = await followerAPI.HandleFollwer(api,{idUser:auth.id,idEvent:item._id},'post')
-      console.log(res)
+      if(res && res.data.event && res.status===200){
+        socket.emit("followers");
+      }
+      setIsLLoadingNotShow(false)
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)
       if(errorMessage.statusCode === 403){
@@ -59,6 +71,7 @@ const EventDetails = ({ navigation, route }: any) => {
       }else{
         console.log('Lỗi rồi EventDetails')
       }
+      setIsLLoadingNotShow(false)
     }
   }
   return (
@@ -88,8 +101,8 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
             <CardComponent onPress={()=>handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-              <FontAwesome name={followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ?  "bookmark" : 'bookmark-o'} 
-              size={22} color={followers && followers.length > 0 && followers.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ? colors.white : colors.black} />
+              <FontAwesome name={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ?  "bookmark" : 'bookmark-o'} 
+              size={22} color={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black} />
             </CardComponent>
           </RowComponent>
         </LinearGradient>
@@ -225,6 +238,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </LinearGradient>
       }
       <LoadingModal visible={isLoading}/>
+      <LoadingModal visible={isLLoadingNotShow} notShowContent/>
     </View>
   )
 }
