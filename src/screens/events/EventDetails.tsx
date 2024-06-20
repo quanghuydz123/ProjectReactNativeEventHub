@@ -101,8 +101,13 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
             <CardComponent onPress={()=>handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+<<<<<<< HEAD
               <FontAwesome name={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ?  "bookmark" : 'bookmark-o'} 
               size={22} color={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black} />
+=======
+              <FontAwesome name={followerEvent && followerEvent.length > 0 && followerEvent.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ?  "bookmark" : 'bookmark-o'} 
+              size={22} color={followerEvent && followerEvent.length > 0 && followerEvent.some(follower => follower.user._id === auth.id && follower.event._id === item._id && follower.status===true) ? colors.white : colors.black} />
+>>>>>>> 2fe3180ae90cb62e3e2a423785ecf2964c33361d
             </CardComponent>
           </RowComponent>
         </LinearGradient>
