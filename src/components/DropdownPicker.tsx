@@ -62,7 +62,7 @@ const DropdownPicker = (props: Props) => {
             {
               !item?.photoUrl 
               ? <View style={[localStyles.avartar,{backgroundColor:colors.gray}]}><TextComponent title color={colors.white} size={16} text="H"/></View> 
-              : <Image style={[localStyles.avartar]} source={{uri:'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745'}}/>
+              : <Image style={[localStyles.avartar]} source={{uri:item.photoUrl}}/>
 
             }
             <SpaceComponent width={8}/>
@@ -115,7 +115,7 @@ const DropdownPicker = (props: Props) => {
 
                 >
                  {
-                    selected && selected?.length > 0 ? <AvatarGroup /> : <TextComponent text="Chưa có ai..."/>
+                    selected && selected?.length > 0 ? <AvatarGroup  /> : <TextComponent text="Chưa có ai..."/>
                  }
                 </RowComponent>
                 <ArrowDown2 size={22} color={colors.gray} />

@@ -97,5 +97,13 @@ export const globalStyles = StyleSheet.create({
         // paddingHorizontal: 14,
         color:colors.colorText
     
-      }
+      },
+      avartar:{
+        width:24,
+        height:24,
+        borderRadius:100,
+        justifyContent:'center',alignItems:'center',
+        borderWidth:1,
+        borderColor:colors.white
+      },
 })

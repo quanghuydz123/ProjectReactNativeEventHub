@@ -4,6 +4,7 @@ export interface UserModel {
     email: string
     password: string
     isAdmin: boolean
+    photoUrl?:string
     position?:{
       lat:number,
       lng:number

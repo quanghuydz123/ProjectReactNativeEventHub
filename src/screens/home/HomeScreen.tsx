@@ -153,7 +153,6 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
-
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />

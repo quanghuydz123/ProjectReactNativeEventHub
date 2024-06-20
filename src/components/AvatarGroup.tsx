@@ -9,60 +9,61 @@ import SpaceComponent from "./SpaceComponent";
 import ButtonComponent from "./ButtonComponent";
 import { UserModel } from "../models/UserModel"
 import { globalStyles } from "../styles/globalStyles";
+import AvatarItem from "./AvatarItem";
 
 interface Props {
   size?: number,
   isShowButton?: boolean,
-  users?:UserModel[]
+  users?: UserModel[]
 }
 const AvatarGroup = (props: Props) => {
   const photoUrl = 'https://gamek.mediacdn.vn/133514250583805952/2021/5/3/kai4-1620038475845741932232.jpg'
   const { size, isShowButton, users } = props
   return (
-    <RowComponent styles={{ marginVertical: (users && users.length > 0) ? 10 : 4 }}>
+    <RowComponent styles={{ marginVertical: (users && users.length > 0) ? 10 : 4,flex:1 }}>
       {
         users && users.length > 0 && (
           <>
-            {Array.from({ length: 3 }).map((item, index) => (
-              <Image
-                key={index}
-                source={{ uri: photoUrl }}
-                style={{
-                  width: size ?? 24,
-                  height: size ?? 24,
-                  borderRadius: 100,
-                  borderWidth: 1,
-                  borderColor: 'white',
-                  marginLeft: index !== 0 ? -12 : 0,
-                }}
-              />
-            ))}
+            {
+              users.slice(0, 3).map((user, index) => (
+               <AvatarItem key={user._id} index={index} photoUrl={user.photoUrl} size={size}/>
+              ))
+            }
             <SpaceComponent width={4} />
-            <TextComponent
-              text="+20 người đã tham gia"
-              size={12 + (size ? (size - 24) / 12 : 0)}
-              color={colors.primary}
-              font={fontFamilies.semiBold}
-            />
+            {
+              users && users.length && users.length < 99 ?
+                <TextComponent
+                  text={`${users.length} người đã tham gia`}
+                  size={12 + (size ? (size - 24) / 12 : 0)}
+                  color={colors.primary}
+                  font={fontFamilies.semiBold}
+                /> :
+                <TextComponent
+                  text={`+${99} người đã tham gia`}
+                  size={12 + (size ? (size - 24) / 12 : 0)}
+                  color={colors.primary}
+                  font={fontFamilies.semiBold}
+                />
+            }
           </>
         )
       }
-      
+
       {
         isShowButton && (
-         <>
-          <SpaceComponent width={(users && users.length > 0) ? 8 : 0} />
-          <View style={[{flex:(users && users.length > 0) ? 0 : 1}]}>
-            <TouchableOpacity style={[globalStyles.shadow,{
-              backgroundColor: colors.primary,
-              borderRadius: 100,
-              paddingHorizontal: 20,
-              paddingVertical: 12
-            }]}>
-              <TextComponent textAlign="center" size={12} color={colors.white} text="Mời thêm" />
-            </TouchableOpacity>
-          </View>
-         </>
+          <>
+            <SpaceComponent width={(users && users.length > 0) ? 8 : 0} />
+            <View style={[{ flex: (users && users.length > 0) ? 0 : 1}]}>
+              <TouchableOpacity style={[globalStyles.shadow, {
+                backgroundColor: colors.primary,
+                borderRadius: 100,
+                paddingHorizontal: 20,
+                paddingVertical: 12
+              }]}>
+                <TextComponent textAlign="center" size={12} color={colors.white} text="Mời thêm" />
+              </TouchableOpacity>
+            </View>
+          </>
         )
       }
     </RowComponent>

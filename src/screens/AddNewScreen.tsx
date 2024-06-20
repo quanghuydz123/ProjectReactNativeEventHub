@@ -195,6 +195,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
+  console.log(allUser)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
