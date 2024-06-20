@@ -101,6 +101,7 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
             <CardComponent onPress={()=>handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+
               <FontAwesome name={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ?  "bookmark" : 'bookmark-o'} 
               size={22} color={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black} />
             </CardComponent>
