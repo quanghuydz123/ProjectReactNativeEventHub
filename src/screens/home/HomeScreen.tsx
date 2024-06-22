@@ -11,7 +11,7 @@ import { fontFamilies } from "../../constrants/fontFamilies"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import EventItem from "../../components/EventItem"
 import Geolocation from '@react-native-community/geolocation';
-import axios from "axios"
+import axios, { all } from "axios"
 import { AddressModel } from "../../models/AddressModel"
 import eventAPI from "../../apis/eventAPI"
 import { EventModelNew } from "../../models/EventModelNew"
@@ -19,6 +19,8 @@ import { FollowerModel } from "../../models/FollowerModel"
 import followerAPI from "../../apis/followerAPI"
 import socket from "../../utils/socket"
 import userAPI from "../../apis/userApi"
+import { HandleNotification } from "../../utils/handleNotification"
+import LoadingComponent from "../../components/LoadingComponent"
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
@@ -31,10 +33,12 @@ const HomeScreen = ({ navigation }: any) => {
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [refreshList, setRefreshList] = useState(false);
-
   useEffect(() => {
     getLocationUser()
   }, [])
+  useEffect(()=>{
+    HandleNotification.checkNotifitionPersion()
+  },[])
   useEffect(() => {
     handleCallApiGetAllEvent()
     handleCallApiGetAllFollower()
@@ -124,16 +128,13 @@ const HomeScreen = ({ navigation }: any) => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
       const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
-      setIsLoading(true)
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
           setAllEventNear(res.data.events)
         }
-        setIsLoading(false)
 
       } catch (error: any) {
-        setIsLoading(false)
         const errorMessage = JSON.parse(error.message)
         console.log("HomeScreen", errorMessage)
 
@@ -238,13 +239,15 @@ const HomeScreen = ({ navigation }: any) => {
       }]}>
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => console.log("abc")} />
-          <FlatList
+          {
+            isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal
             data={allEvent}
             extraData={refreshList}
             renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
           />
+          }
 
           <TabBarComponent title="Gần chỗ bạn" onPress={() => console.log("abc")} />
           <FlatList
@@ -252,7 +255,7 @@ const HomeScreen = ({ navigation }: any) => {
             horizontal
             data={allEventNear}
             extraData={refreshList}
-            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={index} type="card" />}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
           />
         </SectionComponent>
 

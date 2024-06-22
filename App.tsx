@@ -11,9 +11,12 @@ import AppRouters from "./src/navigators/AppRouters"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Host } from "react-native-portalize";
 import socket from "./src/utils/socket"
+import { HandleNotification } from "./src/utils/handleNotification"
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
-
+  useEffect(()=>{
+    HandleNotification.checkNotifitionPersion()
+  },[])
   return <>
     {/* //hiện thi thanh giờ,pin,... */}
     <GestureHandlerRootView>

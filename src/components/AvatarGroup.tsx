@@ -1,4 +1,4 @@
-import { Button, Image, Text, TouchableOpacity, View } from "react-native"
+import { Button, Image, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
 import React from "react"
 import RowComponent from "./RowComponent";
 import TextComponent from "./TextComponent";
@@ -14,13 +14,14 @@ import AvatarItem from "./AvatarItem";
 interface Props {
   size?: number,
   isShowButton?: boolean,
-  users?: UserModel[]
+  users?: UserModel[],
+  styles?:StyleProp<ViewStyle>,
+
 }
 const AvatarGroup = (props: Props) => {
-  const photoUrl = 'https://gamek.mediacdn.vn/133514250583805952/2021/5/3/kai4-1620038475845741932232.jpg'
-  const { size, isShowButton, users } = props
+  const { size, isShowButton, users,styles } = props
   return (
-    <RowComponent styles={{ marginVertical: (users && users.length > 0) ? 10 : 4,flex:1 }}>
+    <RowComponent styles={[{ marginVertical: (users && users.length > 0) ? 6 : 0 },styles]}>
       {
         users && users.length > 0 && (
           <>

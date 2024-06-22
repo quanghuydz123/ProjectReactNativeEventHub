@@ -121,7 +121,7 @@ const EventDetails = ({ navigation, route }: any) => {
 
             }}>
               <RowComponent styles={[{
-                backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: 12,
+                backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: item.users && item.users?.length > 0 ? 12 : 0,
                 width: '96%'
               }, globalStyles.shadow]}>
                 <AvatarGroup size={36} isShowButton users={item.users} />

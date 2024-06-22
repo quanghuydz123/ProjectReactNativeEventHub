@@ -7,13 +7,14 @@ import { globalStyles } from "../styles/globalStyles";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import SpaceComponent from "./SpaceComponent";
 import { useSelector } from "react-redux";
-import { authSelector } from "../reduxs/reducers/authReducers";
+import { AuthState, authSelector } from "../reduxs/reducers/authReducers";
 import { colors } from "../constrants/color";
 import { Bookmark2, Calendar, Logout, Message2, MessageQuestion, Setting2, Sms, User } from "iconsax-react-native";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {removeAuth } from "../reduxs/reducers/authReducers";
+import { HandleNotification } from "../utils/handleNotification";
 
 const DrawerCustom = ({navigation}:any)=>{
 const user = useSelector(authSelector)
@@ -21,7 +22,7 @@ const [isRemember,setIsReMember] = useState<boolean>(false)
 const [password,setPasswored] = useState('')
 const { getItem: getRememberItem } = useAsyncStorage('isRemember');
 const { getItem: getPasswordItem } = useAsyncStorage('password');
-const auth = useSelector(authSelector)
+const auth:AuthState = useSelector(authSelector)
 const dispatch = useDispatch()
   const size = 24
   const color = colors.gray
@@ -45,6 +46,19 @@ const dispatch = useDispatch()
     setIsReMember(res === 'true')
   }
   const handleLogout = async ()=> {
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
+    console.log(fcmtoken)
+    if(fcmtoken){
+      if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
+        const items = [...auth.fcmTokens]
+        const index = items.findIndex(item => item === fcmtoken)
+        if(index !== -1){
+          items.splice(index,1)
+          console.log(items)
+        }
+        await HandleNotification.Update(auth.id,items)
+      }
+    }
     if(isRemember===true){
       await AsyncStorage.setItem('auth',JSON.stringify({email:auth.email,password:password}))
       dispatch(removeAuth())
@@ -57,11 +71,19 @@ const dispatch = useDispatch()
   }
   const handleClickItemMenu = (key:string) => {
       console.log(key)
-      if(key === 'SignOut'){
-        handleLogout()
+      switch (key){
+        case 'SignOut':
+          handleLogout()
+          break
+        case 'MyProfile':
+          navigation.navigate('Profile',{
+            screen:'ProfileScreen'
+          })
+          break
+        default:
+          console.log("key123")
       }
   }
-  console.log("abc",user)
   return (
     <View style={[localStyles.container]}>
         <TouchableOpacity 
@@ -77,7 +99,7 @@ const dispatch = useDispatch()
             {
               !user?.photoUrl 
               ? <View style={[localStyles.avartar,{backgroundColor:colors.gray}]}><TextComponent title color={colors.white} text="H"/></View> 
-              : <Image style={[localStyles.avartar]} source={{uri:'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745'}}/>
+              : <Image style={[localStyles.avartar]} source={{uri:user?.photoUrl}}/>
 
             }
             <TextComponent text={user?.fullname} title size={18}/>

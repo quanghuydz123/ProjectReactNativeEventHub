@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector, removeAuth } from "../reduxs/reducers/authReducers";
 import { AlertComponent } from "../components/Alert";
+import { HandleNotification } from "../utils/handleNotification";
 
 const MainNavigator = () => {
   const { getItem } = useAsyncStorage('auth')
@@ -23,7 +24,7 @@ const MainNavigator = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       checkToken()
-    }, 30000);
+    }, 60000);
     setIntervalId(interval);
     return () => clearInterval(interval);
   }, [])
@@ -46,6 +47,19 @@ const MainNavigator = () => {
     } 
   }
   const handleLogout = async () => {
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
+    console.log(fcmtoken)
+    if(fcmtoken){
+      if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
+        const items = [...auth.fcmTokens]
+        const index = items.findIndex(item => item === fcmtoken)
+        if(index !== -1){
+          items.splice(index,1)
+          console.log(items)
+        }
+        await HandleNotification.Update(auth.id,items)
+      }
+    }
     if (isRemember === true) {
       await AsyncStorage.setItem('auth', JSON.stringify({ email: auth.email, password: password }))
       dispatch(removeAuth())

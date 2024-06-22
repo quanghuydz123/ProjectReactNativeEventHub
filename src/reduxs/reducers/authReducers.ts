@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface AuthState {
+export interface AuthState {
     id: string,
     email: string,
     accesstoken: string,
     fullname: string,
     isAdmin: boolean,
     photoUrl: string,
+    fcmTokens:string[],
     position: {
         lat: number,
         lng: number
@@ -20,6 +21,7 @@ const initialState: AuthState = {
     fullname: '',
     isAdmin: false,
     photoUrl: '',
+    fcmTokens:[],
     position: {
         lat: 0,
         lng: 0

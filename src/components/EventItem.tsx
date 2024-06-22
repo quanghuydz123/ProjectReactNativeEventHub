@@ -46,7 +46,9 @@ const EventItem = (props:Props)=>{
           </RowComponent>
         </ImageBackground>
         <TextComponent numberOfLine={2} text={item.title} title size={18}/>
-        <AvatarGroup users={item.users} />
+        {
+           <AvatarGroup users={item.users} />
+        }
         <RowComponent>
           <Location size={18} color={colors.gray2} variant="Bold"/>
           <SpaceComponent width={4} />
