@@ -24,6 +24,7 @@ import followerAPI from "../../apis/followerAPI";
 import { FollowerModel } from "../../models/FollowerModel";
 import socket from "../../utils/socket";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AvatarItem from "../../components/AvatarItem";
 const EventDetails = ({ navigation, route }: any) => {
   
   const { item,followers }:{item:EventModelNew,followers:FollowerModel[]} = route.params
@@ -181,12 +182,8 @@ const EventDetails = ({ navigation, route }: any) => {
               </RowComponent>
             </SectionComponent>
             <SectionComponent>
-              <RowComponent>
-                <Image source={require('../../assets/images/huy.jpg')} style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 12
-                }} />
+              <RowComponent onPress={()=>navigation.navigate("AboutProfile")}>
+                <AvatarItem photoUrl={item.authorId.photoUrl} size={48} bdRadius={12}/>
                 <SpaceComponent width={16} />
                 <View style={{
                   justifyContent: 'space-around',

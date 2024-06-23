@@ -5,7 +5,7 @@ import ExploreNavigator from "./ExploreNavigator"
 import DrawerCustom from "../components/DrawerCustom"
 import TabNavigator from "./TabNavigator"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { EventDetails } from "../screens"
+import { AboutProfile, EventDetails } from "../screens"
 
 const DrawerNavigate = ()=>{
     const Drawer = createDrawerNavigator()
@@ -18,8 +18,7 @@ const DrawerNavigate = ()=>{
     drawerContent={props => <DrawerCustom {...props}/>} // cấu hình giao diện cho drawer
     >
         <Drawer.Screen name="HomeNavigator" component={TabNavigator}/>
-        <Stack.Screen name="EventDetails" component={EventDetails} />
-
+        
     </Drawer.Navigator>
   )
 }

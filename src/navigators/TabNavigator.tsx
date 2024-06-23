@@ -27,6 +27,7 @@ const TabNavigator = () => {
         alignItems: 'center',
         backgroundColor:colors.white
       },
+      tabBarHideOnKeyboard:true,
       //focused khi click nào
       tabBarIcon: ({ focused, color, size }) => {//Chỉnh sửa hiện thị icon
         let icon: ReactNode;

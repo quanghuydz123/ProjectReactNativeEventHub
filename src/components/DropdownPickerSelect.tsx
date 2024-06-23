@@ -41,7 +41,7 @@ const DropdownPickerSelect = (props:Props) => {
     
     return (
         <View>
-            <TextComponent text="Thể loại" />
+            <TextComponent text="Thể loại" title size={14}/>
             <SpaceComponent height={8} />
             <RowComponent styles={[globalStyles.inputContainer, { justifyContent: 'flex-start' }]} onPress={() => setIsVisibleModal(true)} >
                 <RowComponent>

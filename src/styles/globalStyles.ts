@@ -106,4 +106,8 @@ export const globalStyles = StyleSheet.create({
         borderWidth:1,
         borderColor:colors.white
       },
+      center:{
+        justifyContent:'center',
+        alignItems:'center'
+      }
 })

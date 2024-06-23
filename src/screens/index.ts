@@ -11,6 +11,9 @@ import MapScreen from "./maps/MapScreen"
 import ProfileScreen from "./profiles/ProfileScreen"
 import SearchEventsScreen from "./events/SearchEventsScreen"
 import EventDetails from "./events/EventDetails"
+import AboutProfile from "./profiles/Component/AboutProfile"
+import EditProfile from "./profiles/Component/EditProfile"
+import EditProfileScreen from "./profiles/EditProfileScreen"
 
 export {
     HomeScreen,
@@ -25,6 +28,8 @@ export {
     MapScreen,
     ProfileScreen,
     SearchEventsScreen,
-    EventDetails
-    
+    EventDetails,
+    AboutProfile,
+    EditProfile,
+    EditProfileScreen
 }

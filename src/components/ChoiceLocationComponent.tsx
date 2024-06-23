@@ -20,7 +20,7 @@ const ChoiceLocationComponent = (props:Props) => {
     const {onPress,value,onSelect,title} = props
     return (
         <>
-            <TextComponent text={title}/>
+            <TextComponent text={title} title size={14}/>
             <SpaceComponent height={8} />
             <RowComponent 
             onPress={()=>setShowModal(true)}

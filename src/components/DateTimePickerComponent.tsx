@@ -31,7 +31,7 @@ const DateTimePickerComponent = (props: Props) => {
       {
         title && (
           <>
-          <TextComponent text={title}/>
+          <TextComponent text={title} title size={14}/>
           <SpaceComponent height={8} />
           </>
         )

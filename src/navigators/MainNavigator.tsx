@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { EventDetails } from "../screens";
+import { AboutProfile, EventDetails } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,6 +76,8 @@ const MainNavigator = () => {
 
     >
       <Stack.Screen name="Main" component={DrawerNavigate} />
+      <Stack.Screen name="EventDetails" component={EventDetails} />
+      <Stack.Screen name="AboutProfile" component={AboutProfile} />
     </Stack.Navigator>
   )
 }

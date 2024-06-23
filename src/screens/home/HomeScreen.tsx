@@ -61,6 +61,12 @@ const HomeScreen = ({ navigation }: any) => {
       handleCallApiGetEventsNearYou()
       console.log('events chạy lại')
     })
+
+    socket.on('updateUser', data => {
+      handleCallApiGetAllEvent()
+      handleCallApiGetEventsNearYou()
+      console.log('updateUser chạy lại')
+    })
     return () => {
       socket.disconnect();
     };
@@ -127,16 +133,19 @@ const HomeScreen = ({ navigation }: any) => {
   const handleCallApiGetEventsNearYou = async () => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
+      setIsLoadingNearEvent(true)
       const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
           setAllEventNear(res.data.events)
         }
+        setIsLoadingNearEvent(false)
 
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
         console.log("HomeScreen", errorMessage)
+        setIsLoadingNearEvent(false)
 
       }
     } else {
@@ -250,13 +259,15 @@ const HomeScreen = ({ navigation }: any) => {
           }
 
           <TabBarComponent title="Gần chỗ bạn" onPress={() => console.log("abc")} />
-          <FlatList
+          {
+            isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal
             data={allEventNear}
             extraData={refreshList}
             renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
           />
+          }
         </SectionComponent>
 
 

@@ -7,6 +7,8 @@ export interface AuthState {
     fullname: string,
     isAdmin: boolean,
     photoUrl: string,
+    numberPhone:string,
+    bio:string,
     fcmTokens:string[],
     position: {
         lat: number,
@@ -20,6 +22,8 @@ const initialState: AuthState = {
     accesstoken: '',
     fullname: '',
     isAdmin: false,
+    numberPhone:'',
+    bio:'',
     photoUrl: '',
     fcmTokens:[],
     position: {

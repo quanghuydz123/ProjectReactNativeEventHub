@@ -36,3 +36,5 @@ npm install @react-native-picker/picker
 npm install -D react-native-dotenv
 react-native-geocoding
 npm install react-native-maps
+
+npm install --save react-native-toast-message

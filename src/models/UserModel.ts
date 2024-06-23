@@ -5,6 +5,9 @@ export interface UserModel {
     password: string
     isAdmin: boolean
     photoUrl?:string
+    phoneNumber?:string,
+    bio?:string
+    fcmTokens?:[]
     position?:{
       lat:number,
       lng:number

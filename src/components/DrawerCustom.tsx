@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {removeAuth } from "../reduxs/reducers/authReducers";
 import { HandleNotification } from "../utils/handleNotification";
+import AvatarItem from "./AvatarItem";
 
 const DrawerCustom = ({navigation}:any)=>{
 const user = useSelector(authSelector)
@@ -77,13 +78,15 @@ const dispatch = useDispatch()
           break
         case 'MyProfile':
           navigation.navigate('Profile',{
-            screen:'ProfileScreen'
+            screen:'ProfileScreen',
+            // params: { id: auth.id } 
           })
           break
         default:
-          console.log("key123")
+          console.log("key",key)
       }
   }
+
   return (
     <View style={[localStyles.container]}>
         <TouchableOpacity 
@@ -92,15 +95,13 @@ const dispatch = useDispatch()
           {
             navigation.closeDrawer()
             navigation.navigate('Profile',{
-              screen:'ProfileScreen'
+              screen:'ProfileScreen',
+              // params: { id: auth.id } 
             })// screen chọn màn hỉnh để chuyển qua trong ProfileNavigator
           }
           }>
-            {
-              !user?.photoUrl 
-              ? <View style={[localStyles.avartar,{backgroundColor:colors.gray}]}><TextComponent title color={colors.white} text="H"/></View> 
-              : <Image style={[localStyles.avartar]} source={{uri:user?.photoUrl}}/>
-
+             {
+              <AvatarItem size={52} photoUrl={user.photoUrl} notBorderWidth styles={{marginBottom:8}}/>
             }
             <TextComponent text={user?.fullname} title size={18}/>
         </TouchableOpacity >

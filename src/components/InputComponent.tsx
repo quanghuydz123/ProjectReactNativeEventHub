@@ -39,7 +39,7 @@ const InputComponent = (props: Props) => {
       {
         title && (
           <>
-            <TextComponent text={title} />
+            <TextComponent text={title} title size={14} />
             <SpaceComponent height={8} />
           </>
         )
@@ -48,7 +48,7 @@ const InputComponent = (props: Props) => {
         alignItems: multiline ? 'flex-start' : 'center'
       }, styles]}>
         {affix && affix}
-        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 }]}
+        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto'}]}
           placeholder={placeholder ?? ''}
           multiline={multiline}
           onChangeText={val => onChange(val)}
@@ -65,7 +65,7 @@ const InputComponent = (props: Props) => {
         <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>
           {isPassword ? (
             <FontAwesome name={isShowPassword ? 'eye-slash' : 'eye'} size={22} color={colors.gray} />
-          ) : value && allowClear && <AntDesign style={{ marginTop: multiline ? 10 : 0,backgroundColor:colors.gray2,borderRadius:100,padding:4 }} name="close" size={12} color={colors.white} />}
+          ) : value && allowClear && <AntDesign style={{ marginTop: multiline ? 4 : 0,backgroundColor:colors.gray2,borderRadius:100,padding:4 }} name="close" size={12} color={colors.white} />}
         </TouchableOpacity>
       </View>
     </View>

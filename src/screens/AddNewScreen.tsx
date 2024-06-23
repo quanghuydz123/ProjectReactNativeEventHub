@@ -257,9 +257,9 @@ const AddNewScreen = ()=>{
         />
         <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
-        <TextComponent text="Hình ảnh"/>
+        <TextComponent text="Hình ảnh" title size={14}/>
         <SpaceComponent height={8}/>
-        {eventData.photoUrl ? <Image style={{
+        {eventData.photoUrl ? <Image style={{ 
           width:'100%',
           height:250,
           resizeMode:'contain',

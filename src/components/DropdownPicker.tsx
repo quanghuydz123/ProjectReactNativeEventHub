@@ -100,7 +100,7 @@ const DropdownPicker = (props: Props) => {
             {
                 label &&
                 <>
-                    <TextComponent text={label} />
+                    <TextComponent text={label} title size={14}/>
                     <SpaceComponent height={8} />
                 </>
             }

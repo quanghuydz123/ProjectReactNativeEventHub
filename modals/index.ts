@@ -1,4 +1,7 @@
 import LoadingModal from "./LoadingModal"
+import SelectedImageModal from "./SelectedImageModal"
+
 export {
-    LoadingModal
+    LoadingModal,
+    SelectedImageModal
 }

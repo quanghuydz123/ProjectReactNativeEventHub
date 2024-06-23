@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Host } from "react-native-portalize";
 import socket from "./src/utils/socket"
 import { HandleNotification } from "./src/utils/handleNotification"
+import Toast from "react-native-toast-message"
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
   useEffect(()=>{
@@ -30,6 +31,7 @@ const App = () => {
           </Host>
         </Provider>
     </GestureHandlerRootView>
+    <Toast />
   </>
 }
 export default App;
