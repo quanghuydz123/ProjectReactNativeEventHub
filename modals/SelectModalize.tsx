@@ -1,4 +1,4 @@
-import { Button, Image, Platform, StatusBar, StyleSheet, Text, View } from "react-native"
+import { Button, Image, Platform, StatusBar, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
 import React, { ReactNode, lazy, useEffect, useRef, useState } from "react"
 
 import { ArrowDown2, ArrowLeft, ArrowLeft2, SearchNormal } from "iconsax-react-native";
@@ -30,10 +30,14 @@ interface Props {
     hidenHeader?:boolean,
     adjustToContentHeight?:boolean,
     onSearch:(val:string)=>void,
-    valueSearch:string
+    valueSearch:string,
+    title?:string,
+    styles?: StyleProp<ViewStyle>,
+    footerComponent?:ReactNode
+
 }
 const DropdownPicker = (props: Props) => {
-    const {multibale,visible,onClose,onCofirm,data,renderItem,hidenHeader,adjustToContentHeight,onSearch ,valueSearch} = props
+    const {multibale,visible,onClose,onCofirm,data,renderItem,hidenHeader,styles,adjustToContentHeight,onSearch ,valueSearch,title,footerComponent} = props
     // const [isVisibleModalize, setIsVisibleModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
     // const [selectedItems, setSelectItems] = useState<string[]>([])
@@ -104,7 +108,7 @@ const DropdownPicker = (props: Props) => {
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
                         <View style={{paddingTop:20,paddingHorizontal:12}}>
-                            <TextComponent text="Danh sách thể loại"  title size={15}/>
+                            <TextComponent text={title ?? 'Danh sách'}  title size={15}/>
                             <SpaceComponent height={8}/>
                        {
                          !hidenHeader && <SearchComponent value={valueSearch} onSearch={(val)=>onSearch(val)} onPressArrow={()=>modalieRef.current?.close()}  />
@@ -112,20 +116,15 @@ const DropdownPicker = (props: Props) => {
                         </View>
                     }
                     FooterComponent={
-                        multibale && <View style={{
-                            paddingHorizontal:10,
-                            paddingBottom:30
-                        }}>
-                            <ButtonComponent text="Thêm" type="primary" onPress={()=>{onCofirm()}}/>
-                        </View>
+                        footerComponent
                     }
                     handlePosition="inside" ref={modalieRef} onClose={() => onClose()}>
-                    <View style={{
+                    <View style={[{
                         paddingVertical: 10,
-                        paddingHorizontal:12
-                    }}>
+                        paddingHorizontal:12,
+                    },styles]}>
                         {
-                            data.filter((item)=>item.name.toLowerCase().includes(valueSearch.toLowerCase())).map((item)=>renderItem(item))
+                            data.map((item)=>renderItem(item))
                         }
                     </View>
                 </Modalize>
@@ -134,19 +133,19 @@ const DropdownPicker = (props: Props) => {
 }
 export default DropdownPicker;
 
-const localStyles = StyleSheet.create({
+// const localStyles = StyleSheet.create({
     
-    avartar:{
-      width:30,
-      height:30,
-      borderRadius:100,
-      justifyContent:'center',alignItems:'center'
+//     avartar:{
+//       width:30,
+//       height:30,
+//       borderRadius:100,
+//       justifyContent:'center',alignItems:'center'
   
-    },
-    listItem:{
-      paddingVertical:12
-    },
-    listItemText:{
-      paddingLeft:12
-    }
-  })
+//     },
+//     listItem:{
+//       paddingVertical:12
+//     },
+//     listItemText:{
+//       paddingLeft:12
+//     }
+//   })

@@ -41,12 +41,13 @@ const DropdownPickerSelect = (props:Props) => {
                 </RowComponent>
             </RowComponent>
             <SelectModalize 
+            title="Danh sách thể loại"
             onSearch={val => setSearchKey(val)}
             valueSearch={searchKey}
             visible={isOpenModalize} 
             onClose={()=>{setIsOpenModalize(false),setSearchKey('')}} 
             onCofirm={()=>setIsOpenModalize(false)}
-            data={values}
+            data={values.filter((item)=>item.name.toLowerCase().includes(searchKey.toLowerCase()))}
             renderItem={(item:CategoryModel)=><RowComponent onPress={()=>handleSelect(item)} key={item._id} styles={{
                 flex:1,
                 padding:10,

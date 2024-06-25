@@ -11,19 +11,21 @@ interface Props {
     icon?:ReactNode,
     textColor?:string,
     bgColor?:string,
-    styles?:StyleProp<ViewStyle>
+    styles?:StyleProp<ViewStyle>,
+    font?:string
 }
 const TagComponent = (props:Props)=>{
-    const {onPress,label,icon,textColor,bgColor, styles} = props
+    const {onPress,label,icon,textColor,bgColor, styles,font} = props
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.row,globalStyles.tab, {
       backgroundColor:bgColor ?? colors.white,
-      minWidth:82
+      minWidth:82,
+      justifyContent:'center'
       
     },styles]}>
         {icon && icon}
         {icon && <SpaceComponent width={8}/>}
-        <TextComponent font={fontFamilies.medium} text={label} color={textColor ? textColor : bgColor ? colors.white : colors.gray}/>
+        <TextComponent font={font ?? fontFamilies.medium} text={label} color={textColor ? textColor : bgColor ? colors.white : colors.gray}/>
     </TouchableOpacity>
   )
 }

@@ -21,7 +21,8 @@ interface Props {
 const AvatarGroup = (props: Props) => {
   const { size, isShowButton, users,styles } = props
   return (
-    <RowComponent styles={[{ marginVertical: (users && users.length > 0) ? 6 : 0 },styles]}>
+    <RowComponent styles={[{ marginVertical: (users && users.length > 0) ? 6 : 0 ,flex:1},styles]} justify="space-between">
+      <RowComponent>
       {
         users && users.length > 0 && (
           <>
@@ -49,6 +50,7 @@ const AvatarGroup = (props: Props) => {
           </>
         )
       }
+      </RowComponent>
 
       {
         isShowButton && (

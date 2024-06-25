@@ -127,10 +127,14 @@ const DropdownPicker = (props: Props) => {
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
                   
-                    <SearchComponent value={searchKey} onSearch={(val)=>setSearchKey(val)} onPressArrow={()=>modalieRef.current?.close()} styles={{
-                        paddingTop:40,
-                        paddingHorizontal:12
-                    }} />
+                   <View style={{
+                    paddingTop:20,
+                    paddingHorizontal:12
+                }} >
+                    <TextComponent text="Danh sách người dùng"  title size={15}/>
+                    <SpaceComponent height={8}/>
+                     <SearchComponent value={searchKey} onSearch={(val)=>setSearchKey(val)} onPressArrow={()=>modalieRef.current?.close()} />
+                   </View>
                     }
                     FooterComponent={
                         multibale && <View style={{
