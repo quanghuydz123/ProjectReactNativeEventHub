@@ -12,6 +12,7 @@ import InputComponent from "./InputComponent";
 import { CategoryModel } from "../models/CategoryModel";
 import { BackHandler } from "react-native";
 import SearchComponent from "./SearchComponent";
+import { SelectModalize } from "../../modals";
 
 interface Props {
     title?: string,
@@ -21,35 +22,43 @@ interface Props {
 }
 const DropdownPickerSelect = (props:Props) => {
     const {title,selected,onSelect,values} = props
-    const [isVisibleModal, setIsVisibleModal] = useState(false)
-    const [searchKey, setSearchKey] = useState('')
-    const renderItemCategory = (val:CategoryModel,index:number)=>{
-        return <RowComponent key={index} styles={{
-            flex:1,
-            padding:4,
-            marginBottom:8
-        }}
-        onPress={()=>handleSelect(val)}
-        >
-            <TextComponent text={val.label} color={selected === val.key ? colors.primary : colors.colorText}/>
-        </RowComponent>
-    }
+    const [searchKey, setSearchKey] = useState<string>('')
+    const [isOpenModalize,setIsOpenModalize] = useState(false)
+   
     const handleSelect = (val:CategoryModel) =>{
-        onSelect(val.key)
-        setIsVisibleModal(false)
+        onSelect(val._id)
+        setIsOpenModalize(false)
     }
     
     return (
         <View>
             <TextComponent text="Thể loại" title size={14}/>
             <SpaceComponent height={8} />
-            <RowComponent styles={[globalStyles.inputContainer, { justifyContent: 'flex-start' }]} onPress={() => setIsVisibleModal(true)} >
+            <RowComponent styles={[globalStyles.inputContainer, { justifyContent: 'flex-start' }]} onPress={() => setIsOpenModalize(true)} >
                 <RowComponent>
-                    <TextComponent text={selected ? `${values.find((item)=>item.key===selected)?.label}` : ''} flex={1} />
+                    <TextComponent text={selected ? `${values.find((item)=>item._id===selected)?.name}` : ''} flex={1} />
                     <ArrowDown2 size={22} color={colors.gray} />
                 </RowComponent>
             </RowComponent>
-            <Modal transparent statusBarTranslucent animationType="fade" visible={isVisibleModal} style={{
+            <SelectModalize 
+            onSearch={val => setSearchKey(val)}
+            valueSearch={searchKey}
+            visible={isOpenModalize} 
+            onClose={()=>{setIsOpenModalize(false),setSearchKey('')}} 
+            onCofirm={()=>setIsOpenModalize(false)}
+            data={values}
+            renderItem={(item:CategoryModel)=><RowComponent onPress={()=>handleSelect(item)} key={item._id} styles={{
+                flex:1,
+                padding:10,
+                borderBottomWidth:1,
+                borderBlockColor:colors.gray6,
+            }}
+            
+            >
+                <TextComponent text={item.name} color={selected === item._id ? colors.primary : colors.colorText}/>
+            </RowComponent>}
+            />
+            {/* <Modal transparent statusBarTranslucent animationType="fade" visible={isVisibleModal} style={{
                 flex: 1
             }}>
                 <View style={[globalStyles.container, {
@@ -80,7 +89,7 @@ const DropdownPickerSelect = (props:Props) => {
                         </View>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
         </View>
     );
 };

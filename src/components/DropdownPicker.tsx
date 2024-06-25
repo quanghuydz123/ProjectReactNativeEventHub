@@ -126,27 +126,7 @@ const DropdownPicker = (props: Props) => {
                     onClosed={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
-                    // <RowComponent styles={{
-                    //     paddingHorizontal: 12,
-                    //     paddingTop: 40
-                    // }}>
-                    //     <ArrowLeft color={colors.gray}  onPress={() => modalieRef.current?.close()} />
-                    //     <SpaceComponent width={6} />
-                    //     <View style={{
-                    //         flex: 1
-                    //     }}>
-                    //         <InputComponent
-                    //             placeholder="Tìm kiếm..."
-                    //             value={searchKey}
-                    //             onChange={val => setSearchKey(val)}
-                    //             styles={{
-                    //                 marginBottom: 0
-                    //             }}
-                    //             affix={<SearchNormal size={20} color={colors.gray} />}
-                    //             allowClear
-                    //         />
-                    //     </View>
-                    // </RowComponent>
+                  
                     <SearchComponent value={searchKey} onSearch={(val)=>setSearchKey(val)} onPressArrow={()=>modalieRef.current?.close()} styles={{
                         paddingTop:40,
                         paddingHorizontal:12

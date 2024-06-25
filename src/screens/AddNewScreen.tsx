@@ -18,6 +18,7 @@ import axios from "axios"
 import eventAPI from "../apis/eventAPI"
 import { LoadingModal } from "../../modals"
 import socket from "../utils/socket"
+import categoryAPI from "../apis/categoryAPI"
 const initValues = {
   title:'',
   description:'',
@@ -50,36 +51,12 @@ const AddNewScreen = ()=>{
   const [allUser,setAllUser] = useState<SelectModel[]>([])
   const [fileSelected,setFileSelected] = useState<ImageOrVideo>()
   const [isLoading,setIsLoading] = useState(false)
-  const categories:CategoryModel[] = [
-    {
-        key:'sports',
-        label:'Thể thao',
-        color:'#F0635A'
-    },
-    {
-        key:'666ad89ad08fd9c8bec5bd61',
-        label:'Âm nhạc',
-        icon:<MaterialIcons name="library-music" color={'white' } size={20}/>,
-        color:'#f59762'
-    },
-    {
-        key:'food',
-        label:'Ẩm thực',
-        icon:<FoodWhite color={'white' }/>,
-        color:'#29d697'
-    },
-    {
-        key:'art',
-        label:'Vân hóa và Nghệ thuật',
-        icon:<Ionicons name="color-palette-outline" color={'white' } size={20}/>,
-        color:'#46CDFB'
-    },
-    
-]
+  const [allCategory,setAllCategory] = useState<CategoryModel[]>([])
   useEffect(()=>{
     handleGetAllUsers()
+    handleGetAllCategory()
   },[])
-
+  
   useEffect(()=>{//call api get lat and long
     const api = `https://geocode.search.hereapi.com/v1/geocode?q=${eventData.Address}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
     handleCallApiGetLatAndLong(api)
@@ -114,6 +91,22 @@ const AddNewScreen = ()=>{
       item[`${key}`][`${keyChild}`] = value[`${keyChild}`]
     })
     setEventData(item)
+  }
+  const handleGetAllCategory = async ()=>{
+    const api = '/get-all'
+    try {
+      const res:any = await categoryAPI.HandleCategory(api)
+      if(res && res.data && res.statusCode===200){
+        setAllCategory(res.data.categories)
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+    }
   }
   const handleAddEvent = async ()=>{
     setIsLoading(true)
@@ -195,7 +188,6 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log(allUser)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -204,7 +196,7 @@ const AddNewScreen = ()=>{
 
         <DropdownPickerSelect 
         title="Thể loại" 
-        values={categories} 
+        values={allCategory} 
         selected={eventData.category} 
         onSelect={val => handleOnchageValue('category',val)}
         />
