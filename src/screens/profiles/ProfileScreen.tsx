@@ -1,6 +1,6 @@
 import { Button, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import { ButtonComponent, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
+import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuth, authSelector } from "../../reduxs/reducers/authReducers";
@@ -22,6 +22,7 @@ import { CategoryModel } from "../../models/CategoryModel";
 import { fontFamilies } from "../../constrants/fontFamilies";
 import { FollowerModel } from "../../models/FollowerModel";
 import followerAPI from "../../apis/followerAPI";
+import { apis } from "../../constrants/apis";
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth = useSelector(authSelector)
@@ -36,6 +37,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [follower, setFollower] = useState<FollowerModel[]>([])
   const [idsFollowerCategory,setIdsFollowerCategory] = useState<string[]>([])
   const [searchCategory, setSearchCategory] = useState('')
+  const [numberOfFollowers,setNumberOfFollowers] = useState(0)
+
   const dispatch = useDispatch()
   useEffect(() => {
     handleCallApiGetProfile()
@@ -84,6 +87,10 @@ const ProfileScreen = ({ navigation, route }: any) => {
       console.log('updateUser chạy lại')
       handleCallApiGetProfile()
     })
+    socket.on('followUser', data => {
+      console.log('followUser chạy lại')
+      handleCallApiGetFollowerById()
+    })
     return () => {
       socket.disconnect();
     };
@@ -105,11 +112,12 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetFollowerById = async () => {
-    const api = `/get-byId?uid  =${auth.id}`
+    const api = apis.follow.getById(auth.id)
     try {
       const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollower(res.data.followers)
+        setNumberOfFollowers(res.data.numberOfFollowers)
       }
 
     } catch (error: any) {
@@ -211,7 +219,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
       setIsLoading(false)
     }
   }
-  console.log("idsFollowerCategory",idsFollowerCategory)
   return (
     <ContainerComponent title="Hồ sơ người dùng">
       <SectionComponent styles={[globalStyles.center]}>
@@ -223,16 +230,19 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </RowComponent>
         <SpaceComponent height={8} />
         <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
-        <TextComponent text={profile?.phoneNumber ?? ''} size={14} color={colors.gray} />
-        <SpaceComponent height={8} />
+        {profile?.phoneNumber && <>
+          <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
+          <SpaceComponent height={8} />
+          </>}
         <RowComponent>
           <View style={[globalStyles.center, { flex: 1 }]}>
-            <TextComponent text="0" size={20} />
+            <TextComponent text={`${numberOfFollowers}`} size={20} />
             <TextComponent text="Người theo dõi" />
           </View>
+          <View style={{height:'100%', width:1,backgroundColor:colors.gray2}}/>
           <View style={[globalStyles.center, { flex: 1 }]}>
-            <TextComponent text="330" size={20} />
-            <TextComponent text="Theo dõi" />
+          <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.length}` : '0'} size={20} />
+            <TextComponent text="Đang theo dõi" />
           </View>
         </RowComponent>
       </SectionComponent>
@@ -269,12 +279,11 @@ const ProfileScreen = ({ navigation, route }: any) => {
           }}>
             {
               
-              follower[0]?.categories ? follower[0]?.categories.map((category)=><><TagComponent key={category._id} label={category.name} 
+              follower[0]?.categories ? follower[0]?.categories.map((category)=><View key={category._id} style={{paddingBottom:4,paddingHorizontal:2}}><TagComponent key={category._id} label={category.name} 
               bgColor={colors.primary} 
               textColor={colors.white} 
               styles={[globalStyles.shadow,{borderWidth:1,borderColor:colors.primary}]} />
-              <SpaceComponent width={8}/>
-              </>) : ''
+              </View>) : ''
             }              
           </RowComponent>
         </View>

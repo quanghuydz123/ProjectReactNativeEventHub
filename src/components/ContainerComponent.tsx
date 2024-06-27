@@ -13,11 +13,12 @@ interface Props {
     isScroll?: boolean,
     title?: string,
     children: ReactNode,
-    back?: boolean
+    back?: boolean,
+    right?:ReactNode
 }
 //showsVerticalScrollIndicator ẩn thanh trượt xuống
 const ContainerComponent = (props: Props) => {
-    const { children, isScroll, isImageBackgound, title,back } = props
+    const { children, isScroll, isImageBackgound, title,back ,right} = props
     const navigation:any = useNavigation()  
     
     const returnContainer = isScroll ? (
@@ -32,7 +33,7 @@ const ContainerComponent = (props: Props) => {
 
     const headerComponent = ()=>{
         return <View style={{flex:1,paddingTop:30}}>
-            {(title || back) &&  
+            {(title || back || right) &&  
             <RowComponent styles={{paddingHorizontal:16
                 ,paddingVertical:10,
                 minWidth:48,
@@ -45,7 +46,8 @@ const ContainerComponent = (props: Props) => {
                     <ArrowLeft size={24} color={colors.colorText}/>
                 </TouchableOpacity>
                 }
-                {title && <TextComponent text={title} font={fontFamilies.medium} size={20   }/>}
+                <View style={{flex:1}}>{title && <TextComponent text={title} font={fontFamilies.medium} size={20   }/>}</View>
+                {right && right}
             </RowComponent>}
             {returnContainer}
             </View>

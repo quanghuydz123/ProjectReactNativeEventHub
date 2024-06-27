@@ -1,5 +1,5 @@
-import { Button, Image, Platform, StatusBar, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
-import React, { ReactNode, lazy, useEffect, useRef, useState } from "react"
+import { Button, FlatList, Image, Platform, StatusBar, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import React, { ReactElement, ReactNode, lazy, useEffect, useRef, useState } from "react"
 
 import { ArrowDown2, ArrowLeft, ArrowLeft2, SearchNormal } from "iconsax-react-native";
 
@@ -26,7 +26,7 @@ interface Props {
     onClose:()=>void,
     onCofirm:()=>void,
     data:any[],
-    renderItem:(val:any)=>ReactNode,
+    renderItem:(val:any)=>ReactElement,
     hidenHeader?:boolean,
     adjustToContentHeight?:boolean,
     onSearch:(val:string)=>void,
@@ -115,6 +115,7 @@ const DropdownPicker = (props: Props) => {
                        }
                         </View>
                     }
+                    
                     FooterComponent={
                         footerComponent
                     }
@@ -126,6 +127,7 @@ const DropdownPicker = (props: Props) => {
                         {
                             data.map((item)=>renderItem(item))
                         }
+                        
                     </View>
                 </Modalize>
             </Portal>

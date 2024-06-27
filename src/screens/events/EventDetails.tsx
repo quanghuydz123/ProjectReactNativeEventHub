@@ -182,7 +182,15 @@ const EventDetails = ({ navigation, route }: any) => {
               </RowComponent>
             </SectionComponent>
             <SectionComponent>
-              <RowComponent onPress={()=>navigation.navigate("AboutProfile")}>
+              <RowComponent onPress={()=>{if(item.authorId._id===auth.id){
+               navigation.navigate('Profile',{
+                screen:'ProfileScreen'
+               })
+              }
+              else{
+                navigation.navigate("AboutProfileScreen",{uid:item.authorId._id})
+              }}}
+              >
                 <AvatarItem photoUrl={item.authorId.photoUrl} size={48} bdRadius={12}/>
                 <SpaceComponent width={16} />
                 <View style={{

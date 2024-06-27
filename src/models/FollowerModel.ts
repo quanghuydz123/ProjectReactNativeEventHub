@@ -7,5 +7,6 @@ export interface FollowerModel {
     _id: string,
     user:UserModel,
     events:EventModelNew[],
-    categories:CategoryModel[]
+    categories:CategoryModel[],
+    users:UserModel[]
 }

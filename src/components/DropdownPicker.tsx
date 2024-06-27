@@ -47,9 +47,9 @@ const DropdownPicker = (props: Props) => {
     //     }
     // },[isVisibleModalize,selected])
     const renderSelectItem = (item: SelectModel) => {
-        return <RowComponent
+        return <RowComponent 
         onPress={multibale ? ()=>handleSelectItem(item.value) : () => onSelected(item.value)}
-         key={item.value} styles={[
+         key={item.email} styles={[
             localStyles.listItem,
             {
                 paddingVertical:10,

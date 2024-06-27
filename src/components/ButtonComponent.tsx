@@ -7,7 +7,7 @@ import { fontFamilies } from "../constrants/fontFamilies"
 
 interface Props {
     icon?: ReactNode,
-    text: string,
+    text?: string,
     type?: 'primary' | 'text' | 'link',
     color?: string,
     styles?: StyleProp<ViewStyle>,
@@ -16,7 +16,7 @@ interface Props {
     onPress?: () => void,
     iconFlex?: 'right' | 'left',
     textFont?: string,
-    disable?:boolean,
+    disable?: boolean,
 }
 const ButtonComponent = (props: Props) => {
     const {
@@ -45,18 +45,26 @@ const ButtonComponent = (props: Props) => {
 
                     }, styles]}>
                     {icon && iconFlex === 'left' && icon}
-                    <TextComponent text={text} color={textColor ?? colors.white}
-                        styles={[{ marginLeft: icon ? 12 : 0, fontSize: 16,textAlign:'center'},textStyles]}
-                        flex={icon && iconFlex === 'right' ? 1 : 0
-                        }
-                        font={textFont ?? fontFamilies.medium}
-                    />
+                    {
+                        text && <TextComponent text={text} color={textColor ?? colors.white}
+                            styles={[{ marginLeft: icon ? 12 : 0, fontSize: 16, textAlign: 'center' }, textStyles]}
+                            flex={icon && iconFlex === 'right' ? 1 : 0
+                            }
+                            font={textFont ?? fontFamilies.medium}
+                        />
+                    }
                     {icon && iconFlex === 'right' && icon}
                 </TouchableOpacity>
             </View>
             :
-            <TouchableOpacity onPress={onPress}>
-                <TextComponent text={text} color={type === 'link' ? colors.link : colors.colorText} />
+            <TouchableOpacity onPress={onPress} >
+                {icon && iconFlex === 'left' && icon}
+
+                {
+                    text && <TextComponent text={text} color={type === 'link' ? colors.link : colors.colorText} />
+                }
+                {icon && iconFlex === 'right' && icon}
+
             </TouchableOpacity>
     )
 }
