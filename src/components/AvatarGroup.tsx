@@ -16,10 +16,10 @@ interface Props {
   isShowButton?: boolean,
   users?: UserModel[],
   styles?:StyleProp<ViewStyle>,
-
+  onPressInvity?:(event:any)=>void
 }
 const AvatarGroup = (props: Props) => {
-  const { size, isShowButton, users,styles } = props
+  const { size, isShowButton, users,styles,onPressInvity} = props
   return (
     <RowComponent styles={[{ marginVertical: (users && users.length > 0) ? 6 : 0 ,flex:1},styles]} justify="space-between">
       <RowComponent>
@@ -57,11 +57,13 @@ const AvatarGroup = (props: Props) => {
           <>
             <SpaceComponent width={(users && users.length > 0) ? 8 : 0} />
             <View style={[{ flex: (users && users.length > 0) ? 0 : 1}]}>
-              <TouchableOpacity style={[globalStyles.shadow, {
+              <TouchableOpacity 
+              onPress={onPressInvity}
+              style={[globalStyles.shadow, {
                 backgroundColor: colors.primary,
                 borderRadius: 100,
                 paddingHorizontal: 20,
-                paddingVertical: 12
+                paddingVertical: 12,
               }]}>
                 <TextComponent textAlign="center" size={12} color={colors.white} text="Mời thêm" />
               </TouchableOpacity>

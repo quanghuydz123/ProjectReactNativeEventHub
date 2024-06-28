@@ -12,10 +12,12 @@ interface Props {
     textColor?:string,
     bgColor?:string,
     styles?:StyleProp<ViewStyle>,
-    font?:string
+    font?:string,
+    textStyles?:StyleProp<ViewStyle>,
+
 }
 const TagComponent = (props:Props)=>{
-    const {onPress,label,icon,textColor,bgColor, styles,font} = props
+    const {onPress,label,icon,textColor,bgColor, styles,font,textStyles} = props
   return (
     <TouchableOpacity onPress={onPress} style={[globalStyles.row,globalStyles.tab, {
       backgroundColor:bgColor ?? colors.white,
@@ -25,7 +27,12 @@ const TagComponent = (props:Props)=>{
     },styles]}>
         {icon && icon}
         {icon && <SpaceComponent width={8}/>}
-        <TextComponent font={font ?? fontFamilies.medium} text={label} color={textColor ? textColor : bgColor ? colors.white : colors.gray}/>
+        <TextComponent 
+        font={font ?? fontFamilies.medium} 
+        text={label} 
+        color={textColor ? textColor : bgColor ? colors.white : colors.gray}
+        styles={[textStyles]}
+        />
     </TouchableOpacity>
   )
 }

@@ -1,4 +1,4 @@
-import { Button, StyleProp, Text, View, ViewStyle } from "react-native"
+import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
 import React from "react"
 import { Image } from "react-native"
 import TextComponent from "./TextComponent"
@@ -10,13 +10,16 @@ interface Props {
     index?: number,
     styles?: StyleProp<ViewStyle>,
     notBorderWidth?:boolean,
-    bdRadius?:number
+    bdRadius?:number,
+    onPress?:()=>void
 }
 const AvatarItem = (props: Props) => {
-    const { photoUrl, size, colorBorderWidth, index,styles,notBorderWidth,bdRadius } = props
+    const { photoUrl, size, colorBorderWidth, index,styles,notBorderWidth,bdRadius,onPress} = props
     const ml = size ? -(size/2) : -12
     return (
-        <View style={[styles]}>
+        <TouchableOpacity
+        onPress={onPress}
+        style={[styles]}>
             {
                 photoUrl ? <Image
                     source={{ uri: photoUrl }}
@@ -40,7 +43,7 @@ const AvatarItem = (props: Props) => {
                     alignItems:'center'
                 }}><TextComponent title color={colors.white} size={size ? (size/2) : 12} text="H" /></View>
             }
-        </View>
+        </TouchableOpacity>
     )
 }
 export default AvatarItem;

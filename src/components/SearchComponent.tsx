@@ -9,10 +9,11 @@ interface Props {
     value:string,
     onSearch:(val:string)=>void,
     onPressArrow:()=>void,
-    styles?:StyleProp<ViewStyle>
+    styles?:StyleProp<ViewStyle>,
+    titlePlaceholder?:string
 }
 const SearchComponent = (props:Props)=>{
-    const {value,onSearch,onPressArrow,styles} = props
+    const {value,onSearch,onPressArrow,styles,titlePlaceholder} = props
   return <RowComponent styles={[styles]} justify="flex-end">
     <ArrowLeft color={colors.gray}  onPress={() => onPressArrow()} />
                     <SpaceComponent width={8} />
@@ -24,8 +25,9 @@ const SearchComponent = (props:Props)=>{
           marginBottom:0
         }}
         affix={<SearchNormal size={20} color={colors.gray}/>}
+        
         value={value} 
-        placeholder="Tìm kiếm"
+        placeholder={titlePlaceholder ?? "Tìm kiếm..."}
         allowClear
         onChange={val => onSearch(val)}
         />

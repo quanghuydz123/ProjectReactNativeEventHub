@@ -296,7 +296,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
         hidenHeader
         data={allCategory}
         onClose={() => setIsOpenModalizeSelectCategory(false)}
-        onCofirm={() => setIsOpenModalizeSelectCategory(false)}
         onSearch={(val) => setSearchCategory(val)}
         valueSearch={searchCategory}
         title='Danh sách thể loại'

@@ -1,4 +1,4 @@
-import { Button, Image, ImageBackground, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
@@ -18,61 +18,106 @@ import { convertMoney } from "../../utils/convertMoney";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
-import { LoadingModal } from "../../../modals";
+import { LoadingModal, SelectModalize } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
 import followerAPI from "../../apis/followerAPI";
 import { FollowerModel } from "../../models/FollowerModel";
 import socket from "../../utils/socket";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import AvatarItem from "../../components/AvatarItem";
+import { UserHandleCallAPI } from "../../utils/UserHandleCallAPI";
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { apis } from "../../constrants/apis";
+import notificationAPI from "../../apis/notificationAPI";
 const EventDetails = ({ navigation, route }: any) => {
-  
-  const { item,followers }:{item:EventModelNew,followers:FollowerModel[]} = route.params
+
+  const { item, followers }: { item: EventModelNew, followers: FollowerModel[] } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
   const auth = useSelector(authSelector)
-  const [isLoading,setIsLoading] = useState(false)
-  const [isLLoadingNotShow,setIsLLoadingNotShow] = useState(false)
-
-  const [followerEvent,setFollowerEvent] = useState<FollowerModel[]>([])
-  const { getItem:getItemAuth } = useAsyncStorage('auth')
-
-  useEffect(()=>{
-    if(followers){
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
+  const [followerEvent, setFollowerEvent] = useState<FollowerModel[]>([])
+  const [searchUser, setSearchUser] = useState('')
+  const [userSelected, setUserSelected] = useState<string[]>([])
+  const [allUser, setAllUser] = useState<UserModel[]>([])
+  const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
+  useEffect(() => {
+    if (followers) {
       setFollowerEvent(followers)
     }
-    
-  },[followers])
-  
-  const handleScroll = (event:any) => {//khi scroll tới cuối cùng thì bằng true
+
+  }, [followers])
+  useEffect(() => {
+    UserHandleCallAPI.getAll(setAllUser)
+  }, [])
+
+  const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
     const y = isAtEnd ? layoutMeasurement.height + contentOffset.y + heightButton : layoutMeasurement.height + contentOffset.y
-    const isScrollEnd = y  >= contentSize.height - paddingToBottom;
+    const isScrollEnd = y >= contentSize.height - paddingToBottom;
     setIsAtEnd(isScrollEnd);
   };
-  const onLayout = (event:any) => {//Lấy ra height
-    const { height,width } = event.nativeEvent.layout;
+  const onLayout = (event: any) => {//Lấy ra height
+    const { height, width } = event.nativeEvent.layout;
     setHeightButton(height)
   };
-  const handleFlowerEvent = async ()=>{
-    
+  const handleFlowerEvent = async () => {
+
     const api = '/update-follower-event'
     setIsLLoadingNotShow(true)
     try {
-      const res = await followerAPI.HandleFollwer(api,{idUser:auth.id,idEvent:item._id},'post')
-      if(res && res.data.event && res.status===200){
+      const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: item._id }, 'post')
+      if (res && res.data.event && res.status === 200) {
         socket.emit("followers");
       }
       setIsLLoadingNotShow(false)
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
-      if(errorMessage.statusCode === 403){
+      if (errorMessage.statusCode === 403) {
         console.log(errorMessage.message)
-      }else{
+      } else {
         console.log('Lỗi rồi EventDetails')
       }
       setIsLLoadingNotShow(false)
+    }
+  }
+  const handleSelectItem = (id: string) => {
+    if (userSelected.includes(id)) {
+      const data = userSelected.filter(item => item !== id);
+      setUserSelected(data)
+    } else {
+      setUserSelected([...userSelected, id])
+    }
+  }
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'React Native | A framework for building native apps using React',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
+  const handleInviteUsers = async ()=>{
+    const api = apis.notification.handleSendNotificationInviteUserToEvent()
+    try {
+      const res = await notificationAPI.HandleNotification(api,{uids:userSelected,eventId:item._id},'post')
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+        console.log('Lỗi rồi EventDetails')
+        
     }
   }
   return (
@@ -87,11 +132,11 @@ const EventDetails = ({ navigation, route }: any) => {
         resizeMode: 'stretch',
         height: 260,
         width: appInfo.sizes.WIDTH,
-      }} source={{uri:item.photoUrl}}>
+      }} source={{ uri: item.photoUrl }}>
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
           <RowComponent styles={{
             padding: 16,
-            paddingTop: 30  ,
+            paddingTop: 30,
           }} justify="space-between" >
             <RowComponent styles={{ flex: 1 }}>
               <TouchableOpacity onPress={() => navigation.goBack()}
@@ -102,12 +147,12 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-    <FontAwesome 
-        name={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? "bookmark" : 'bookmark-o'} 
-        size={22} 
-        color={followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black} 
-    />
-</CardComponent>
+              <FontAwesome
+                name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? "bookmark" : 'bookmark-o'}
+                size={22}
+                color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black}
+              />
+            </CardComponent>
           </RowComponent>
         </LinearGradient>
         <View style={{
@@ -125,13 +170,13 @@ const EventDetails = ({ navigation, route }: any) => {
                 backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: item.users && item.users?.length > 0 ? 12 : 0,
                 width: '96%'
               }, globalStyles.shadow]}>
-                <AvatarGroup size={36} isShowButton users={item.users} />
+                <AvatarGroup size={36} isShowButton users={item.users} onPressInvity={(event: any) => { event.persist(), setIsOpenModalizeInityUser(true) }} />
               </RowComponent>
             </View>
           </SectionComponent>
-          <ScrollView 
-          onScroll={handleScroll}
-          showsVerticalScrollIndicator={false}
+          <ScrollView
+            onScroll={handleScroll}
+            showsVerticalScrollIndicator={false}
           >
             <SectionComponent>
               <TextComponent text={item.title} title size={30} font={fontFamilies.semiBold} />
@@ -177,21 +222,23 @@ const EventDetails = ({ navigation, route }: any) => {
                   height: 48,
                 }}>
                   <TextComponent text={item.Location} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <TextComponent numberOfLine={1} text={item.Address} color={colors.gray}/>
+                  <TextComponent numberOfLine={1} text={item.Address} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
             <SectionComponent>
-              <RowComponent onPress={()=>{if(item.authorId._id===auth.id){
-               navigation.navigate('Profile',{
-                screen:'ProfileScreen'
-               })
-              }
-              else{
-                navigation.navigate("AboutProfileScreen",{uid:item.authorId._id})
-              }}}
+              <RowComponent onPress={() => {
+                if (item.authorId._id === auth.id) {
+                  navigation.navigate('Profile', {
+                    screen: 'ProfileScreen'
+                  })
+                }
+                else {
+                  navigation.navigate("AboutProfileScreen", { uid: item.authorId._id })
+                }
+              }}
               >
-                <AvatarItem photoUrl={item.authorId.photoUrl} size={48} bdRadius={12}/>
+                <AvatarItem photoUrl={item.authorId.photoUrl} size={48} bdRadius={12} />
                 <SpaceComponent width={16} />
                 <View style={{
                   justifyContent: 'space-around',
@@ -212,41 +259,92 @@ const EventDetails = ({ navigation, route }: any) => {
       </ImageBackground>
 
       {
-        isAtEnd ? 
+        isAtEnd ?
           <View onLayout={onLayout} style={{
-            padding:12
+            padding: 12
           }}>
             <ButtonComponent text="Mua vé ngay" type="primary"
-            icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
-              <ArrowRight
-                size={18}
-                color={colors.white}
-              /></View>}
-            iconFlex="right" 
-            onPress={()=>console.log("mua vé")}
+              icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
+                <ArrowRight
+                  size={18}
+                  color={colors.white}
+                /></View>}
+              iconFlex="right"
+              onPress={() => console.log("mua vé")}
             />
           </View>
-        :
-        <LinearGradient colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']} style={{
-          position: 'absolute',
-          bottom: 0,
-          right: 0,
-          left: 0,
-          padding:12
-        }}>
-          <ButtonComponent text="Mua vé ngay" type="primary"
-            icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
-              <ArrowRight
-                size={18}
-                color={colors.white}
-              /></View>}
-            iconFlex="right" 
-            onPress={()=>console.log("mua vé")}
+          :
+          <LinearGradient colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']} style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            left: 0,
+            padding: 12
+          }}>
+            <ButtonComponent text="Mua vé ngay" type="primary"
+              icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
+                <ArrowRight
+                  size={18}
+                  color={colors.white}
+                /></View>}
+              iconFlex="right"
+              onPress={() => console.log("mua vé")}
             />
-        </LinearGradient>
+          </LinearGradient>
       }
-      <LoadingModal visible={isLoading}/>
-      <LoadingModal visible={isLLoadingNotShow} notShowContent/>
+      <LoadingModal visible={isLoading} />
+      <LoadingModal visible={isLLoadingNotShow} notShowContent />
+      <SelectModalize
+        adjustToContentHeight
+        title="Danh sách người dùng đang theo dõi"
+        data={allUser}
+        onClose={() => setIsOpenModalizeInityUser(false)}
+        onSearch={(val: string) => setSearchUser(val)}
+        valueSearch={searchUser}
+        visible={isOpenModalizeInvityUser}
+        footerComponent={<View style={{
+          paddingHorizontal: 10,
+          paddingBottom: 10,
+        }}>
+          <ButtonComponent text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
+            textColor={colors.primary} type="primary" onPress={() => handleInviteUsers()} />
+        </View>}
+        renderItem={(item: UserModel) => <RowComponent
+          key={item.email} styles={[
+            {
+              paddingVertical: 6,
+              borderBottomWidth: 1,
+              borderBlockColor: colors.gray6,
+              paddingHorizontal: 10,
+            }
+          ]}
+        >
+          <AvatarItem photoUrl={item.photoUrl} size={38} onPress={() => {
+            if (item._id == auth.id) {
+              setIsOpenModalizeInityUser(false)
+              navigation.navigate('Profile', {
+                screen: 'ProfileScreen'
+              })
+            }
+            else {
+              setIsOpenModalizeInityUser(false)
+              navigation.navigate("AboutProfileScreen", { uid: item._id })
+            }
+          }} />
+          <SpaceComponent width={8} />
+          <View style={{ flex: 1 }}>
+            <ButtonComponent
+              text={`${item.fullname} (${item.email})`}
+              onPress={() => handleSelectItem(item._id)}
+              textColor={userSelected.includes(item._id) ?
+                colors.primary : colors.colorText}
+              numberOfLineText={1}
+              textFont={fontFamilies.regular}
+            />
+          </View>
+          {userSelected.includes(item._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
+        </RowComponent>}
+      />
     </View>
   )
 }

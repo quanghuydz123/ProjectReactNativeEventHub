@@ -16,6 +16,7 @@ import { globalStyles } from "../src/styles/globalStyles";
 import AvatarGroup from "../src/components/AvatarGroup";
 import SearchComponent from "../src/components/SearchComponent";
 import { CategoryModel } from "../src/models/CategoryModel";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 interface Props {
     // values: SelectModel[],
@@ -24,7 +25,7 @@ interface Props {
     multibale?: boolean,
     visible:boolean,
     onClose:()=>void,
-    onCofirm:()=>void,
+    // onCofirm:()=>void,
     data:any[],
     renderItem:(val:any)=>ReactElement,
     hidenHeader?:boolean,
@@ -37,7 +38,7 @@ interface Props {
 
 }
 const DropdownPicker = (props: Props) => {
-    const {multibale,visible,onClose,onCofirm,data,renderItem,hidenHeader,styles,adjustToContentHeight,onSearch ,valueSearch,title,footerComponent} = props
+    const {multibale,visible,onClose,data,renderItem,hidenHeader,styles,adjustToContentHeight,onSearch ,valueSearch,title,footerComponent} = props
     // const [isVisibleModalize, setIsVisibleModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
     // const [selectedItems, setSelectItems] = useState<string[]>([])
@@ -98,17 +99,54 @@ const DropdownPicker = (props: Props) => {
     //         setSelectItems([...selectedItems, id])
     //     }
     // }
-    console.log("se",valueSearch)
+    const renderFlatList = () => (
+        <View style={{ paddingVertical:12 }}>
+          <FlatList
+            data={data}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderItem}
+          />
+        </View>
+      );
+    
     return (
-       
-            <Portal>
+        
+        // <Portal>
+        //         <Modalize
+        //             onClosed={()=>{onClose()}}
+        //             adjustToContentHeight={adjustToContentHeight}
+        //             flatListProps={{
+        //                 data:data,
+        //                 keyExtractor:item=> item._id,
+        //                 showsVerticalScrollIndicator:false,
+        //                 renderItem:(item)=>renderItem(item),
+                        
+        //             }}
+        //             HeaderComponent={
+        //                 <View style={{paddingTop:20,paddingHorizontal:12}}>
+        //                     <TextComponent text={title ?? 'Danh sách'}  title size={15}/>
+        //                     <SpaceComponent height={8}/>
+        //                {
+        //                  !hidenHeader && <SearchComponent value={valueSearch} onSearch={(val)=>onSearch(val)} onPressArrow={()=>modalieRef.current?.close()}  />
+        //                }
+        //                 </View>
+        //             }
+                    
+        //             FooterComponent={
+        //                 footerComponent
+        //             }
+        //             handlePosition="inside" ref={modalieRef} onClose={() => onClose()}/>
+                    
+        //     </Portal>
+        <Portal>
                 <Modalize
                     onClosed={()=>{onClose()}}
                     adjustToContentHeight={adjustToContentHeight}
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={
                         <View style={{paddingTop:20,paddingHorizontal:12}}>
-                            <TextComponent text={title ?? 'Danh sách'}  title size={15}/>
+                            <TextComponent text={title ?? 'Danh sách'}  title size={16}/>
                             <SpaceComponent height={8}/>
                        {
                          !hidenHeader && <SearchComponent value={valueSearch} onSearch={(val)=>onSearch(val)} onPressArrow={()=>modalieRef.current?.close()}  />

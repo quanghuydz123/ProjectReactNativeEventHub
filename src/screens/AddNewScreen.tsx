@@ -5,13 +5,9 @@ import { useSelector } from "react-redux"
 import { authSelector } from "../reduxs/reducers/authReducers"
 import userAPI from "../apis/userApi"
 import DropdownPicker from "../components/DropdownPicker"
-import { SelectModel } from "../models/SelectModel"
 import { ImageOrVideo } from "react-native-image-crop-picker"
 import DropdownPickerSelect from "../components/DropdownPickerSelect"
 import { CategoryModel } from "../models/CategoryModel"
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import { Food, FoodWhite } from "../assets/svgs"
 import { Address } from "../models/LocationModel"
 import storage from  "@react-native-firebase/storage"
 import axios from "axios"
@@ -19,6 +15,7 @@ import eventAPI from "../apis/eventAPI"
 import { LoadingModal } from "../../modals"
 import socket from "../utils/socket"
 import categoryAPI from "../apis/categoryAPI"
+import { UserModel } from "../models/UserModel"
 const initValues = {
   title:'',
   description:'',
@@ -48,7 +45,7 @@ const initValues = {
 const AddNewScreen = ()=>{
   const auth = useSelector(authSelector)
   const [eventData,setEventData] = useState<any>({...initValues,authorId:auth?.id})
-  const [allUser,setAllUser] = useState<SelectModel[]>([])
+  const [allUser,setAllUser] = useState<UserModel[]>([])
   const [fileSelected,setFileSelected] = useState<ImageOrVideo>()
   const [isLoading,setIsLoading] = useState(false)
   const [allCategory,setAllCategory] = useState<CategoryModel[]>([])
@@ -157,17 +154,7 @@ const AddNewScreen = ()=>{
     try {
       const res:any = await userAPI.HandleUser(api, {}, 'get');
       if(res && res.data){
-        const items:SelectModel[] = []
-        res.data.users.forEach((item:any)=>{
-          items.push(
-          {
-            name:item.fullname,
-            email:item.email,
-            value:item._id,
-            photoUrl:item?.photoUrl
-          })
-        })
-        setAllUser(items)
+        setAllUser(res.data.users)
       }
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)
@@ -188,7 +175,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log("adb",eventData)
+  console.log("adb",allUser)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>

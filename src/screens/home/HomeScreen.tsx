@@ -21,6 +21,9 @@ import socket from "../../utils/socket"
 import userAPI from "../../apis/userApi"
 import { HandleNotification } from "../../utils/handleNotification"
 import LoadingComponent from "../../components/LoadingComponent"
+import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import { ToastMessaging } from "../../utils/showToast"
+
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
@@ -38,6 +41,10 @@ const HomeScreen = ({ navigation }: any) => {
   }, [])
   useEffect(()=>{
     HandleNotification.checkNotifitionPersion()
+
+    messaging().onMessage(async (mess:FirebaseMessagingTypes.RemoteMessage) =>{
+      ToastMessaging.Success(`${mess.notification?.title}`)
+    })
   },[])
   useEffect(() => {
     handleCallApiGetAllEvent()
@@ -178,7 +185,7 @@ const HomeScreen = ({ navigation }: any) => {
           paddingHorizontal: 16
         }}>
 
-          <RowComponent onPress={() => handleCallApiGetEventsNearYou()}>
+          <RowComponent onPress={() => console.log("'ok ")}>
             <TouchableOpacity onPress={() => navigation.openDrawer()} >
               <HambergerMenu size={24} color={colors.white} />
             </TouchableOpacity>

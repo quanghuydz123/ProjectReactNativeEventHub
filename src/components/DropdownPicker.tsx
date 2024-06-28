@@ -1,4 +1,4 @@
-import { Button, Image, Platform, StatusBar, StyleSheet, Text, View } from "react-native"
+import { Button, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { lazy, useEffect, useRef, useState } from "react"
 import { SelectModel } from "../models/SelectModel";
 import TextComponent from "./TextComponent";
@@ -17,9 +17,14 @@ import Feather from "react-native-vector-icons/Feather"
 import AntDesign from "react-native-vector-icons/AntDesign"
 
 import SearchComponent from "./SearchComponent";
+import AvatarItem from "./AvatarItem";
+import { useNavigation } from "@react-navigation/native";
+import { UserModel } from "../models/UserModel";
+import { useSelector } from "react-redux";
+import { authSelector } from "../reduxs/reducers/authReducers";
 interface Props {
     label?: string,
-    values: SelectModel[],
+    values: UserModel[],
     // selected?: string | string[],
     selected?:string[],
     onSelected: (val: string | string[]) => void,
@@ -31,6 +36,8 @@ const DropdownPicker = (props: Props) => {
     const modalieRef = useRef<Modalize>()
     const [searchKey, setSearchKey] = useState('')
     const [selectedItems, setSelectItems] = useState<string[]>([])
+    const navigation:any = useNavigation()
+    const auth = useSelector(authSelector)
     useEffect(()=>{
         selected && setSelectItems(selected)
     },[selected])
@@ -46,42 +53,47 @@ const DropdownPicker = (props: Props) => {
     //         setSelectItems(selected as string[])
     //     }
     // },[isVisibleModalize,selected])
-    const renderSelectItem = (item: SelectModel) => {
+    const renderSelectItem = (item: UserModel) => {
         return <RowComponent 
-        onPress={multibale ? ()=>handleSelectItem(item.value) : () => onSelected(item.value)}
          key={item.email} styles={[
             localStyles.listItem,
             {
-                paddingVertical:10,
+                paddingVertical:8,
                 borderBottomWidth:1,
                 borderBlockColor:colors.gray6,
                 paddingHorizontal:10,
             }
         ]}
         >
-            {
-              !item?.photoUrl 
-              ? <View style={[localStyles.avartar,{backgroundColor:colors.gray}]}><TextComponent title color={colors.white} size={16} text="H"/></View> 
-              : <Image style={[localStyles.avartar]} source={{uri:item.photoUrl}}/>
-
-            }
+            <AvatarItem photoUrl={item.photoUrl} size={38} onPress={()=>{if(item._id==auth.id){
+                setIsVisibleModalize(false)
+               navigation.navigate('Profile',{
+                screen:'ProfileScreen'
+               })
+              }
+              else{
+                setIsVisibleModalize(false)
+                navigation.navigate("AboutProfileScreen",{uid:item._id})
+              }}}/>
             <SpaceComponent width={8}/>
-           <View style={{
+           <TouchableOpacity style={{
             flex:1,
-
-           }}>
+           }}
+           onPress={multibale ? ()=>handleSelectItem(item._id) : () => onSelected(item._id)}
+           >
                 <TextComponent 
-                color={selectedItems.includes(item.value) ? 
+                color={selectedItems.includes(item._id) ? 
                 colors.primary : colors.colorText} 
-                text={`${item.name} (${item.email})`} 
+                text={`${item.fullname} (${item.email})`} 
                 flex={1} 
+                numberOfLine={1}
                 font={fontFamilies.regular}
                     styles={{
                         textAlignVertical:'center'
                     }}
                  />
-           </View>
-           {selectedItems.includes(item.value) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
+           </TouchableOpacity>
+           {selectedItems.includes(item._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
         </RowComponent>
     }
 
@@ -160,8 +172,8 @@ export default DropdownPicker;
 const localStyles = StyleSheet.create({
     
     avartar:{
-      width:30,
-      height:30,
+      width:40,
+      height:40,
       borderRadius:100,
       justifyContent:'center',alignItems:'center'
   
