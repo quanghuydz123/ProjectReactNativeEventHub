@@ -10,7 +10,7 @@ export interface EventModelNew {
     Location: string
     position: Position
     price: number
-    category: Category
+    categories: Category[]
     authorId: UserModel
     users?: UserModel[]
     followers?:UserModel[],

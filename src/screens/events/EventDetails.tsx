@@ -212,7 +212,7 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
           </SectionComponent>
           <ScrollView
-            
+
             onScroll={handleScroll}
             showsVerticalScrollIndicator={false}
           >

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, EventDetails, ExploreEvent, NotFound } from "../screens";
+import { AboutProfile, AboutProfileScreen, EventDetails, ExploreEvent, NotFound, SearchEventsScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import { authSelector, removeAuth } from "../reduxs/reducers/authReducers";
 import { AlertComponent } from "../components/Alert";
 import { HandleNotification } from "../utils/handleNotification";
 import EventsNavigator from "./EventsNavigator";
+import { useStatusBar } from "../hooks/useStatusBar";
 
 const MainNavigator = () => {
   const { getItem } = useAsyncStorage('auth')
@@ -69,6 +70,8 @@ const MainNavigator = () => {
       dispatch(removeAuth())
     }
   }
+  useStatusBar('dark-content')
+
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}
@@ -79,6 +82,7 @@ const MainNavigator = () => {
       <Stack.Screen name="AboutProfileScreen" component={AboutProfileScreen} />
       <Stack.Screen name="NotFound" component={NotFound} />
       <Stack.Screen name="ExploreEvent" component={ExploreEvent} />
+      <Stack.Screen name="SearchEventsScreen" component={SearchEventsScreen} />
 
     </Stack.Navigator>
   )

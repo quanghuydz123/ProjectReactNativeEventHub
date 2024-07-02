@@ -14,6 +14,7 @@ import ChoiceLocationComponent from "./ChoiceLocationComponent"
 import DateTimePickerComponent from "./DateTimePickerComponent"
 import UploadImagePicker from "./UploadImagePicker"
 import SearchComponent from "./SearchComponent"
+import ListEventComponent from "./ListEventComponent"
 
 export {
     SpaceComponent,

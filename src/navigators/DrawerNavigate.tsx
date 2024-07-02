@@ -6,6 +6,7 @@ import DrawerCustom from "../components/DrawerCustom"
 import TabNavigator from "./TabNavigator"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { AboutProfile, EventDetails } from "../screens"
+import { useStatusBar } from "../hooks/useStatusBar"
 
 const DrawerNavigate = ()=>{
     const Drawer = createDrawerNavigator()

@@ -23,6 +23,9 @@ import { HandleNotification } from "../../utils/handleNotification"
 import LoadingComponent from "../../components/LoadingComponent"
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
 import { ToastMessaging } from "../../utils/showToast"
+import { apis } from "../../constrants/apis"
+import { CategoryModel } from "../../models/CategoryModel"
+import categoryAPI from "../../apis/categoryAPI"
 
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
@@ -36,6 +39,7 @@ const HomeScreen = ({ navigation }: any) => {
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [refreshList, setRefreshList] = useState(false);
+  const [categories,setCategories] = useState<CategoryModel[]>([])
   useEffect(() => {
     getLocationUser()
   }, [])
@@ -55,6 +59,7 @@ const HomeScreen = ({ navigation }: any) => {
   useEffect(() => {
     handleCallApiGetAllEvent()
     handleCallApiGetAllFollower()
+    handleGetAllCategory()
   }, [])
 
   useEffect(() => {
@@ -84,14 +89,36 @@ const HomeScreen = ({ navigation }: any) => {
       socket.disconnect();
     };
   }, [])
+
+  const handleGetAllCategory = async ()=>{
+    const api = '/get-all'
+    try {
+      const res:any = await categoryAPI.HandleCategory(api)
+      if(res && res.data && res.statusCode===200){
+        setCategories(res.data.categories)
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+    }
+  }
   const getLocationUser = async () => {
     Geolocation.getCurrentPosition(position => {
       if (position.coords) {
         // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        if(position?.coords?.latitude !== auth.position.lat && position?.coords?.longitude !== auth.position.lng)
-        {
+        if(auth.position){
+          if(position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng)
+            {
+              handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+            }
+        }else{
           handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
         }
+        
       }
     }, (error) => {
       console.log('Lấy vị trí bị lỗi', error)
@@ -149,7 +176,8 @@ const HomeScreen = ({ navigation }: any) => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
       setIsLoadingNearEvent(true)
-      const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
+      // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
+      const api = apis.event.getAll({lat:auth.position.lat,long:auth.position.lng,distance:'10',limit:'10',limitDate:`${new Date().toISOString()}`})
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
@@ -253,7 +281,7 @@ const HomeScreen = ({ navigation }: any) => {
         </View>
         <SpaceComponent height={20} />
         <View style={{ marginTop: 10, }}>
-          <CategoriesList isFill />
+          <CategoriesList isFill values={categories} />
         </View>
       </View>
       <ScrollView style={[{
@@ -262,7 +290,7 @@ const HomeScreen = ({ navigation }: any) => {
         marginTop: Platform.OS === 'android' ? 18 : 22
       }]}>
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
-          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('ExploreEvent')} />
+          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen',{title:'Các sự kiện sắp xảy ra',items:allEvent})} />
           {
             isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
@@ -273,7 +301,7 @@ const HomeScreen = ({ navigation }: any) => {
           />
           }
 
-          <TabBarComponent title="Gần chỗ bạn" onPress={() => console.log("abc")} />
+          <TabBarComponent title="Gần chỗ bạn" onPress={() =>  navigation.navigate('SearchEventsScreen',{title:'Các sự kiện gần chỗ bạn',items:allEventNear,lat:auth.position.lat,long:auth.position.lng,distance:'10'})} />
           {
             isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}

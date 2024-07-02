@@ -27,7 +27,7 @@ const EventItem = (props: Props) => {
   const navigation: any = useNavigation()
   const auth = useSelector(authSelector)
   return (
-    <CardComponent isShadow styles={{ width: isShownHorizontal ? appInfo.sizes.WIDTH * 0.94 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.white}>
+    <CardComponent isShadow styles={{ width: isShownHorizontal ? appInfo.sizes.WIDTH * 0.93 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.white}>
       {
         isShownHorizontal ? <>
           <RowComponent>

@@ -46,7 +46,7 @@ const ContainerComponent = (props: Props) => {
                     <ArrowLeft size={24} color={colors.colorText}/>
                 </TouchableOpacity>
                 }
-                <View style={{flex:1}}>{title && <TextComponent text={title} font={fontFamilies.medium} size={20   }/>}</View>
+                <View style={{flex:1}}>{title && <TextComponent text={title} font={fontFamilies.medium} size={20}/>}</View>
                 {right && right}
             </RowComponent>}
             {returnContainer}
