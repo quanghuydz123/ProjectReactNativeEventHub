@@ -45,8 +45,8 @@ const DropdownPickerSelect = (props:Props) => {
             onSearch={val => setSearchKey(val)}
             valueSearch={searchKey}
             visible={isOpenModalize} 
+            adjustToContentHeight
             onClose={()=>{setIsOpenModalize(false),setSearchKey('')}} 
-            onCofirm={()=>setIsOpenModalize(false)}
             data={values.filter((item)=>item.name.toLowerCase().includes(searchKey.toLowerCase()))}
             renderItem={(item:CategoryModel)=><RowComponent onPress={()=>handleSelect(item)} key={item._id} styles={{
                 flex:1,

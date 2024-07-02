@@ -51,10 +51,14 @@ const authSlice = createSlice({
                 lat: lat ?? state.authData.position.lat,
                 lng: lng ?? state.authData.position.lng
             };
+        },
+        updateFcmToken: (state,action)=>{
+            const { fcmTokens } = action.payload;
+            state.authData.fcmTokens=fcmTokens ?? state.authData.fcmTokens
         }
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

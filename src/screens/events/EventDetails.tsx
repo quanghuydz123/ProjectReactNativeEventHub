@@ -31,27 +31,61 @@ import { apis } from "../../constrants/apis";
 import notificationAPI from "../../apis/notificationAPI";
 const EventDetails = ({ navigation, route }: any) => {
 
-  const { item, followers }: { item: EventModelNew, followers: FollowerModel[] } = route.params
+  const {item,followers,id }: {item:EventModelNew,followers: FollowerModel[],id:string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
   const auth = useSelector(authSelector)
   const [isLoading, setIsLoading] = useState(false)
   const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
-  const [followerEvent, setFollowerEvent] = useState<FollowerModel[]>([])
+  const [followerEvent, setFollowerEvent] = useState<FollowerModel[]>(followers)
   const [searchUser, setSearchUser] = useState('')
   const [userSelected, setUserSelected] = useState<string[]>([])
   const [allUser, setAllUser] = useState<UserModel[]>([])
   const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
-  useEffect(() => {
-    if (followers) {
-      setFollowerEvent(followers)
-    }
-
-  }, [followers])
+  const [event,setEvent] = useState<EventModelNew>(item)
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
+    if(!event){
+      handleCallApiGetEventById()
+    }
+    if(!followers){
+      handleCallApiGetAllFollower()
+    }
+  
   }, [])
+  const handleCallApiGetEventById = async ()=>{
+    setIsLoading(true)
+    try {
+      const res = await eventAPI.HandleEvent(apis.event.getById(id))
+      if(res && res.data && res.status===200){
+        setEvent(res.data.event)
+        
+      }
+      setIsLoading(false)
 
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log(errorMessage)
+      setIsLoading(false)
+
+    }
+  }
+  const handleCallApiGetAllFollower = async () => {
+    const api = `/get-all`
+    setIsLoading(true)
+    try {
+      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setFollowerEvent(res.data.followers)
+      }
+      setIsLoading(false)
+
+    } catch (error: any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+      setIsLoading(false)
+    }
+  }
   const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
@@ -64,15 +98,14 @@ const EventDetails = ({ navigation, route }: any) => {
     setHeightButton(height)
   };
   const handleFlowerEvent = async () => {
-
     const api = '/update-follower-event'
-    setIsLLoadingNotShow(true)
+    if(event?._id){
     try {
-      const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: item._id }, 'post')
+      const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
       if (res && res.data.event && res.status === 200) {
         socket.emit("followers");
+        handleCallApiGetAllFollower()
       }
-      setIsLLoadingNotShow(false)
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       if (errorMessage.statusCode === 403) {
@@ -80,7 +113,7 @@ const EventDetails = ({ navigation, route }: any) => {
       } else {
         console.log('Lỗi rồi EventDetails')
       }
-      setIsLLoadingNotShow(false)
+    }
     }
   }
   const handleSelectItem = (id: string) => {
@@ -111,13 +144,15 @@ const EventDetails = ({ navigation, route }: any) => {
     }
   };
   const handleInviteUsers = async ()=>{
-    const api = apis.notification.handleSendNotificationInviteUserToEvent()
+    if(event?._id){
+      const api = apis.notification.handleSendNotificationInviteUserToEvent()
     try {
-      const res = await notificationAPI.HandleNotification(api,{uids:userSelected,eventId:item._id},'post')
+      const res = await notificationAPI.HandleNotification(api,{uids:userSelected,eventId:event._id},'post')
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)
         console.log('Lỗi rồi EventDetails')
         
+    }
     }
   }
   return (
@@ -132,7 +167,7 @@ const EventDetails = ({ navigation, route }: any) => {
         resizeMode: 'stretch',
         height: 260,
         width: appInfo.sizes.WIDTH,
-      }} source={{ uri: item.photoUrl }}>
+      }} source={{ uri: event?.photoUrl ??  'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg'    }}>
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
           <RowComponent styles={{
             padding: 16,
@@ -147,11 +182,13 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-              <FontAwesome
-                name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? "bookmark" : 'bookmark-o'}
+              {
+                event?._id && <FontAwesome
+                name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? "bookmark" : 'bookmark-o'}
                 size={22}
-                color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) ? colors.white : colors.black}
+                color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? colors.white : colors.black}
               />
+              }
             </CardComponent>
           </RowComponent>
         </LinearGradient>
@@ -167,19 +204,20 @@ const EventDetails = ({ navigation, route }: any) => {
 
             }}>
               <RowComponent styles={[{
-                backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: item.users && item.users?.length > 0 ? 12 : 0,
+                backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: event?.users && event?.users?.length > 0 ? 12 : 0,
                 width: '96%'
               }, globalStyles.shadow]}>
-                <AvatarGroup size={36} isShowButton users={item.users} onPressInvity={(event: any) => { event.persist(), setIsOpenModalizeInityUser(true) }} />
+                <AvatarGroup size={36} isShowButton users={event?.users} onPressInvity={(event: any) => { event.persist(), setIsOpenModalizeInityUser(true) }} />
               </RowComponent>
             </View>
           </SectionComponent>
           <ScrollView
+            
             onScroll={handleScroll}
             showsVerticalScrollIndicator={false}
           >
             <SectionComponent>
-              <TextComponent text={item.title} title size={30} font={fontFamilies.semiBold} />
+              <TextComponent text={event?.title ?? ''} title size={30} font={fontFamilies.semiBold} />
             </SectionComponent>
             <SectionComponent>
               <RowComponent>
@@ -191,7 +229,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={convertMoney(item.price)} font={fontFamilies.medium} size={16} />
+                  <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={16} />
                   <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} />
                 </View>
               </RowComponent>
@@ -206,8 +244,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={DateTime.GetDate(new Date(item.date))} font={fontFamilies.medium} size={16} />
-                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item.date).getDay())}, ${DateTime.GetTime(new Date(item.startAt))} - ${DateTime.GetTime(new Date(item.endAt))}`} color={colors.gray} />
+                  <TextComponent text={DateTime.GetDate(new Date(event?.date ?? Date.now()))} font={fontFamilies.medium} size={16} />
+                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.date ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -221,37 +259,37 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48,
                 }}>
-                  <TextComponent text={item.Location} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <TextComponent numberOfLine={1} text={item.Address} color={colors.gray} />
+                  <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
+                  <TextComponent numberOfLine={1} text={event?.Address ?? ''} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
             <SectionComponent>
               <RowComponent onPress={() => {
-                if (item.authorId._id === auth.id) {
+                if (event?.authorId._id === auth.id) {
                   navigation.navigate('Profile', {
                     screen: 'ProfileScreen'
                   })
                 }
                 else {
-                  navigation.navigate("AboutProfileScreen", { uid: item.authorId._id })
+                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId._id })
                 }
               }}
               >
-                <AvatarItem photoUrl={item.authorId.photoUrl} size={48} bdRadius={12} />
+                <AvatarItem photoUrl={event?.authorId.photoUrl} size={48} bdRadius={12} />
                 <SpaceComponent width={16} />
                 <View style={{
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={item.authorId.fullname} font={fontFamilies.medium} size={16} />
+                  <TextComponent text={event?.authorId.fullname || ''} font={fontFamilies.medium} size={16} />
                   <TextComponent text="Người chủ trì" color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
             <TabBarComponent title={'Thông tin sự kiện'} />
             <SectionComponent>
-              <TextComponent text={item.description ? item.description : ''} />
+              <TextComponent text={event?.description ? event.description : ''} />
 
             </SectionComponent>
           </ScrollView>

@@ -13,6 +13,7 @@ import { Host } from "react-native-portalize";
 import socket from "./src/utils/socket"
 import { HandleNotification } from "./src/utils/handleNotification"
 import Toast from "react-native-toast-message"
+import linking from "./src/linking"
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
   useEffect(()=>{
@@ -25,7 +26,7 @@ const App = () => {
         <Provider store={store}>
           <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
           <Host>
-            <NavigationContainer>
+            <NavigationContainer linking={linking}>
               <AppRouters />
             </NavigationContainer>
           </Host>

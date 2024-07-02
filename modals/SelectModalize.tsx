@@ -37,7 +37,7 @@ interface Props {
     footerComponent?:ReactNode
 
 }
-const DropdownPicker = (props: Props) => {
+const SelectModalize = (props: Props) => {
     const {multibale,visible,onClose,data,renderItem,hidenHeader,styles,adjustToContentHeight,onSearch ,valueSearch,title,footerComponent} = props
     // const [isVisibleModalize, setIsVisibleModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
@@ -99,16 +99,6 @@ const DropdownPicker = (props: Props) => {
     //         setSelectItems([...selectedItems, id])
     //     }
     // }
-    const renderFlatList = () => (
-        <View style={{ paddingVertical:12 }}>
-          <FlatList
-            data={data}
-            keyExtractor={item => item.id}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderItem}
-          />
-        </View>
-      );
     
     return (
         
@@ -171,7 +161,7 @@ const DropdownPicker = (props: Props) => {
             </Portal>
     )
 }
-export default DropdownPicker;
+export default SelectModalize;
 
 // const localStyles = StyleSheet.create({
     

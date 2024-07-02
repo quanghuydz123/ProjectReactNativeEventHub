@@ -38,3 +38,5 @@ react-native-geocoding
 npm install react-native-maps
 
 npm install --save react-native-toast-message
+
+npx uri-scheme add eventhub --android

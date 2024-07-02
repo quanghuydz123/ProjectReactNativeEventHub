@@ -17,7 +17,8 @@ interface Props {
     iconFlex?: 'right' | 'left',
     textFont?: string,
     disable?: boolean,
-    numberOfLineText?:number
+    numberOfLineText?:number,
+    textSize?:number
 }
 const ButtonComponent = (props: Props) => {
     const {
@@ -32,7 +33,8 @@ const ButtonComponent = (props: Props) => {
         onPress,
         textFont,
         disable,
-        numberOfLineText
+        numberOfLineText,
+        textSize
     } = props
     return (
         type === 'primary' ?
@@ -43,12 +45,12 @@ const ButtonComponent = (props: Props) => {
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,
                         marginBottom: 17,
-                        width: '80%'
+                        width: '90%'
 
                     }, styles]}>
                     {icon && iconFlex === 'left' && icon}
                     {
-                        text && <TextComponent numberOfLine={numberOfLineText} text={text} color={textColor ?? colors.white}
+                        text && <TextComponent size={textSize} numberOfLine={numberOfLineText} text={text} color={textColor ?? colors.white}
                             styles={[{ marginLeft: icon ? 12 : 0, fontSize: 16, textAlign: 'center' }, textStyles]}
                             flex={icon && iconFlex === 'right' ? 1 : 0
                             }
@@ -63,7 +65,7 @@ const ButtonComponent = (props: Props) => {
                 {icon && iconFlex === 'left' && icon}
 
                 {
-                    text && <TextComponent text={text} numberOfLine={numberOfLineText} color={type === 'link' ? colors.link : textColor ? textColor : colors.colorText} />
+                    text && <TextComponent size={textSize} text={text} numberOfLine={numberOfLineText} color={type === 'link' ? colors.link : textColor ? textColor : colors.colorText} />
                 }
                 {icon && iconFlex === 'right' && icon}
 

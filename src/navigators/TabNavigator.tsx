@@ -22,7 +22,7 @@ const TabNavigator = () => {
     screenOptions={({route})=>({
       headerShown: false,
       tabBarStyle: {
-        height: Platform.OS === 'ios' ?  88 : 68,
+        height: Platform.OS === 'ios' ?  76 : 56,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:colors.white
@@ -32,7 +32,7 @@ const TabNavigator = () => {
       tabBarIcon: ({ focused, color, size }) => {//Chỉnh sửa hiện thị icon
         let icon: ReactNode;
         color = focused ? colors.primary : colors.gray5
-        size=23
+        size=20
         switch (route.name){
           case "Explore":
             icon = <MaterialIcons name="explore" size={size} color={color}/>
@@ -41,8 +41,8 @@ const TabNavigator = () => {
             icon = <MaterialIcons name="event" size={size} color={color}/>
             break
           case "Add":
-            icon = <CricleComponent size={60} styles={{marginBottom:Platform.OS === 'ios' ? 50 : 66}}>
-              <AddSquare size={30} color={colors.white} variant="Bold" />
+            icon = <CricleComponent size={50} styles={{marginBottom:Platform.OS === 'ios' ? 24 : 40,borderWidth:2,borderColor:'white'}}>
+              <AddSquare size={26} color={colors.white} variant="Bold" />
             </CricleComponent>
             
             break
@@ -63,7 +63,7 @@ const TabNavigator = () => {
         return route.name === 'Add' ? null : <TextComponent 
         text={route.name} 
         styles={{marginBottom: Platform.OS === 'android' ? 12 : 0}} 
-        size={12} 
+        size={10} 
         color={focused ? colors.primary : colors.gray}/>
       },
       

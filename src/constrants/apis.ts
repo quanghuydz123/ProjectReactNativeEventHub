@@ -9,6 +9,9 @@ export const apis = {
     },
     notification:{
         handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`
+    },
+    event:{
+        getById:(eid:string)=>`/get-event-byId?eid=${eid}`
     }
 
 }

@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, EventDetails } from "../screens";
+import { AboutProfile, AboutProfileScreen, EventDetails, ExploreEvent, NotFound } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector, removeAuth } from "../reduxs/reducers/authReducers";
 import { AlertComponent } from "../components/Alert";
 import { HandleNotification } from "../utils/handleNotification";
+import EventsNavigator from "./EventsNavigator";
 
 const MainNavigator = () => {
   const { getItem } = useAsyncStorage('auth')
@@ -48,14 +49,12 @@ const MainNavigator = () => {
   }
   const handleLogout = async () => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    console.log(fcmtoken)
     if(fcmtoken){
       if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
         const items = [...auth.fcmTokens]
         const index = items.findIndex(item => item === fcmtoken)
         if(index !== -1){
           items.splice(index,1)
-          console.log(items)
         }
         await HandleNotification.Update(auth.id,items)
       }
@@ -78,6 +77,9 @@ const MainNavigator = () => {
       <Stack.Screen name="Main" component={DrawerNavigate} />
       <Stack.Screen name="EventDetails" component={EventDetails} />
       <Stack.Screen name="AboutProfileScreen" component={AboutProfileScreen} />
+      <Stack.Screen name="NotFound" component={NotFound} />
+      <Stack.Screen name="ExploreEvent" component={ExploreEvent} />
+
     </Stack.Navigator>
   )
 }

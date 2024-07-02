@@ -48,14 +48,14 @@ const dispatch = useDispatch()
   }
   const handleLogout = async ()=> {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    console.log(fcmtoken)
     if(fcmtoken){
       if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
         const items = [...auth.fcmTokens]
+        
         const index = items.findIndex(item => item === fcmtoken)
         if(index !== -1){
           items.splice(index,1)
-          console.log(items)
+          console.log("items",items)
         }
         await HandleNotification.Update(auth.id,items)
       }

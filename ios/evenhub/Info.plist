@@ -39,7 +39,7 @@
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<key>NSPhotoLibraryUsageDescription</key>
-  	<string>YOUR TEXT</string>
+	<string>Chúng tôi cần truy cập vào thư viện ảnh của bạn để cho phép bạn tải lên hình ảnh.</string>
 	<key>NSCameraUsageDescription</key>
   	<string>YOUR TEXT</string>
 	<array>
@@ -53,6 +53,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>eventhub</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	
 	<array>

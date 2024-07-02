@@ -14,6 +14,8 @@ import EventDetails from "./events/EventDetails"
 import AboutProfile from "./profiles/Component/AboutProfile"
 import EditProfileScreen from "./profiles/EditProfileScreen"
 import AboutProfileScreen from "./profiles/AboutProfileScreen"
+import NotFound from "./NotFound"
+import ExploreEvent from "./events/ExploreEvent"
 
 export {
     HomeScreen,
@@ -31,5 +33,7 @@ export {
     EventDetails,
     AboutProfile,
     EditProfileScreen,
-    AboutProfileScreen
+    AboutProfileScreen,
+    NotFound,
+    ExploreEvent
 }

@@ -135,6 +135,7 @@ const DropdownPicker = (props: Props) => {
             {/* Portal chiếm hết chiều rộng màn hình*/}
             <Portal>
                 <Modalize
+                    adjustToContentHeight
                     onClosed={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}
                     scrollViewProps={{ showsVerticalScrollIndicator: false }}
                     HeaderComponent={

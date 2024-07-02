@@ -40,10 +40,16 @@ const HomeScreen = ({ navigation }: any) => {
     getLocationUser()
   }, [])
   useEffect(()=>{
-    HandleNotification.checkNotifitionPersion()
-
+    HandleNotification.checkNotifitionPersion(dispatch)
     messaging().onMessage(async (mess:FirebaseMessagingTypes.RemoteMessage) =>{
-      ToastMessaging.Success(`${mess.notification?.title}`)
+      console.log("mess",mess)
+      ToastMessaging.Success({message:`${mess.notification?.body}`,title:`${mess.notification?.title}`,
+      onPress:()=>{
+        if(mess.data){
+          navigation.navigate('EventDetails',{id:mess?.data.id}) 
+        }
+      }
+      })
     })
   },[])
   useEffect(() => {
@@ -82,13 +88,15 @@ const HomeScreen = ({ navigation }: any) => {
     Geolocation.getCurrentPosition(position => {
       if (position.coords) {
         // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+        if(position?.coords?.latitude !== auth.position.lat && position?.coords?.longitude !== auth.position.lng)
+        {
+          handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+        }
       }
     }, (error) => {
       console.log('Lấy vị trí bị lỗi', error)
     }, {});
   }
-
 
 
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
@@ -254,14 +262,14 @@ const HomeScreen = ({ navigation }: any) => {
         marginTop: Platform.OS === 'android' ? 18 : 22
       }]}>
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
-          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => console.log("abc")} />
+          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('ExploreEvent')} />
           {
             isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal
             data={allEvent}
             extraData={refreshList}
-            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
           />
           }
 
@@ -272,7 +280,7 @@ const HomeScreen = ({ navigation }: any) => {
             horizontal
             data={allEventNear}
             extraData={refreshList}
-            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} type="card" />}
+            renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
           />
           }
         </SectionComponent>

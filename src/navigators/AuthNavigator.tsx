@@ -11,7 +11,6 @@ const AuthNavigator = ()=>{
     },[])
     const checkUserExisting = async ()=>{
       const res = await AsyncStorage.getItem('auth')
-
       res && setIsExistringUser(true)
     }
   return <Stack.Navigator

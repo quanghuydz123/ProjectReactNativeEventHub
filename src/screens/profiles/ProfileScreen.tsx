@@ -174,7 +174,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         socket.emit('updateUser')
         setIsLoading(false)
         setIsUpdateProfile(false)
-        ToastMessaging.Success("Cập nhập ảnh đại điện thành công")
+        ToastMessaging.Success({message:"Cập nhập ảnh đại điện thành công"})
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -254,7 +254,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
               onPress={() => navigation.navigate('EditProfileScreen', { profile })}
               color="white"
               textColor={colors.primary}
-              styles={{ borderWidth: 1, borderColor: colors.primary }}
+              styles={{ borderWidth: 1, borderColor: colors.primary}}
               icon={<Feather name="edit" size={20} color={colors.primary} />}
               iconFlex="left"
             />
@@ -291,6 +291,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       <LoadingModal visible={isLoading} />
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
       <SelectModalize
+        key={profile?._id}
         adjustToContentHeight
         visible={isOpenModalizeSelectCategory}
         hidenHeader
@@ -308,7 +309,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
             textColor={colors.primary} type="primary" onPress={() => handleCallApiUpdateFollowerCategory()} />
         </View>}
         renderItem={(item: CategoryModel) => <>
-          <View style={{paddingVertical:4,paddingHorizontal:4}}>
+          <View style={{paddingVertical:4,paddingHorizontal:4}} key={item._id}>
             <TagComponent key={item._id} onPress={()=>handleFollowerCategory(item._id)} label={item.name} 
             bgColor={idsFollowerCategory.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
             textColor={idsFollowerCategory.some(idCategory => idCategory === item._id) ? colors.white : colors.black} 

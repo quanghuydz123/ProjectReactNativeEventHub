@@ -15,7 +15,7 @@ interface Props {
   size?: number,
   isShowButton?: boolean,
   users?: UserModel[],
-  styles?:StyleProp<ViewStyle>,
+  styles?:StyleProp<ViewStyle>, 
   onPressInvity?:(event:any)=>void
 }
 const AvatarGroup = (props: Props) => {
