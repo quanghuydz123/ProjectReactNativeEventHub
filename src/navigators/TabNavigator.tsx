@@ -14,10 +14,16 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { globalStyles } from "../styles/globalStyles";
 import DrawerNavigate from "./DrawerNavigate";
+import { ParamListBase } from "@react-navigation/native";
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
-  return <Tab.Navigator
+  const nameTab: { [key in keyof ParamListBase]: string } = {
+    Explore: 'Trang chủ',
+    Events: 'Sự kiện',
+    Profile: 'Tôi',
+    Map: 'Bản đồ'
+  };  return <Tab.Navigator
   
     screenOptions={({route})=>({
       headerShown: false,
@@ -61,7 +67,7 @@ const TabNavigator = () => {
       },
       tabBarLabel({focused}){//Cấu hình hiện thị name
         return route.name === 'Add' ? null : <TextComponent 
-        text={route.name} 
+        text={nameTab[route.name]} 
         styles={{marginBottom: Platform.OS === 'android' ? 12 : 0}} 
         size={10} 
         color={focused ? colors.primary : colors.gray}/>

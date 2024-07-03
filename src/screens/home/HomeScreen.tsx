@@ -26,6 +26,7 @@ import { ToastMessaging } from "../../utils/showToast"
 import { apis } from "../../constrants/apis"
 import { CategoryModel } from "../../models/CategoryModel"
 import categoryAPI from "../../apis/categoryAPI"
+import { handleLinking } from "../../utils/handleLinking"
 
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
@@ -54,6 +55,13 @@ const HomeScreen = ({ navigation }: any) => {
         }
       }
       })
+    })
+
+    messaging().getInitialNotification().then((mess:any) =>{  //Xử khi người dùng tắt app và ấn thông 
+      console.log("messmess",mess)
+      if(mess?.data?.id){
+        handleLinking(`eventhub://app/detail/${mess.data.id}`)
+      }
     })
   },[])
   useEffect(() => {

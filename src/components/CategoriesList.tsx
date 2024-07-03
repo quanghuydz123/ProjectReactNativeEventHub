@@ -17,7 +17,7 @@ const CategoriesList = (props:Props)=>{
     const [categories,setCategories] = useState<CategoryModel[]>([])
     useEffect(()=>{
         setCategories(values)
-    },[])
+    },[values])
   return (
     <FlatList 
     style={{paddingHorizontal:8}}
@@ -27,10 +27,10 @@ const CategoriesList = (props:Props)=>{
     renderItem={({item,index}) => (
         <TagComponent 
         key={item._id} 
-        bgColor={colors.danger2} 
+        bgColor={colors.danger2}
         label={item.name}
         styles={{marginRight:index === categories.length -1 ? 28 : 12}}
-        onPress={()=>Linking.openURL('eventhub://app/detail/666b0dcfedb7fe46ae8ecdd9')}
+        onPress={()=>Linking.openURL('eventhub://app/main/home/add')}
         />
     )}
     />
