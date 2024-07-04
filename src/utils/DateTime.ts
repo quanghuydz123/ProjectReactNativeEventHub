@@ -11,6 +11,11 @@ export class DateTime {
         return `Ngày ${numberToString(date.getDate())} tháng ${numberToString(date.getMonth()+1)} năm ${date.getFullYear()}`
     }
 
+    static GetDateShort = (num:Date) =>{
+        const date = new Date(num)
+        return `${numberToString(date.getDate())}/${numberToString(date.getMonth()+1)}/${date.getFullYear()}`
+    }
+
     static ConvertDayOfWeek = (num:number) =>{
         if(num === 0){
             return "Chủ nhật"

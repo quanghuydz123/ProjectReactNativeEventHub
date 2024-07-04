@@ -153,7 +153,7 @@ const SelectModalize = (props: Props) => {
                         paddingHorizontal:12,
                     },styles]}>
                         {
-                            data.map((item)=>renderItem(item))
+                            data.length > 0 ? data.map((item)=>renderItem(item)) : <TextComponent text={'Không có dữ liệu'}/>
                         }
                         
                     </View>

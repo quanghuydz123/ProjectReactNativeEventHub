@@ -214,6 +214,7 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
+  console.log("abc",allFollower)
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />

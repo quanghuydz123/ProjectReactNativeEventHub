@@ -155,6 +155,14 @@ const EventDetails = ({ navigation, route }: any) => {
     }
     }
   }
+  const handleCreateBillPaymentEvent = async () =>{
+    const data = {
+      createAt:Date.now(),
+      createdBy:auth.id,
+      event:item,
+    }
+    navigation.navigate('PaymentScreen',{event:item})
+  }
   return (
     <View style={{
       flex: 1,
@@ -258,9 +266,11 @@ const EventDetails = ({ navigation, route }: any) => {
                 <View style={{
                   justifyContent: 'space-around',
                   height: 48,
+                  flex:1
                 }}>
                   <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <TextComponent numberOfLine={1} text={event?.Address ?? ''} color={colors.gray} />
+                  <SpaceComponent height={8}/>
+                  <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -308,7 +318,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   color={colors.white}
                 /></View>}
               iconFlex="right"
-              onPress={() => console.log("mua vé")}
+              onPress={() => handleCreateBillPaymentEvent()}
             />
           </View>
           :
@@ -326,7 +336,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   color={colors.white}
                 /></View>}
               iconFlex="right"
-              onPress={() => console.log("mua vé")}
+              onPress={() => handleCreateBillPaymentEvent()}
             />
           </LinearGradient>
       }
@@ -344,7 +354,7 @@ const EventDetails = ({ navigation, route }: any) => {
           paddingHorizontal: 10,
           paddingBottom: 10,
         }}>
-          <ButtonComponent text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
+          <ButtonComponent disable={userSelected.length <= 0} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
             textColor={colors.primary} type="primary" onPress={() => handleInviteUsers()} />
         </View>}
         renderItem={(item: UserModel) => <RowComponent

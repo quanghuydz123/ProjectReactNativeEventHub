@@ -16,6 +16,7 @@ import { LoadingModal } from "../../modals"
 import socket from "../utils/socket"
 import categoryAPI from "../apis/categoryAPI"
 import { UserModel } from "../models/UserModel"
+import { ToastMessaging } from "../utils/showToast"
 const initValues = {
   title:'',
   description:'',
@@ -36,7 +37,7 @@ const initValues = {
   photoUrl:'',
   price:'',
   users:[],
-  category:'',
+  categories:[],
   authorId:'',
   startAt:Date.now(),
   endAt:Date.now(),
@@ -136,6 +137,7 @@ const AddNewScreen = ()=>{
       {
         setEventData({...initValues,authorId:auth?.id})
         socket.emit('events')
+        ToastMessaging.Success({message:"Thêm sự kiện thành công"})
 
       }
       setIsLoading(false)
@@ -175,7 +177,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log("adb",allUser)
+  console.log("adb",eventData?.categories)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -185,8 +187,8 @@ const AddNewScreen = ()=>{
         <DropdownPickerSelect 
         title="Thể loại" 
         values={allCategory} 
-        selected={eventData.category} 
-        onSelect={val => handleOnchageValue('category',val)}
+        selected={eventData.categories} 
+        onSelect={val => handleOnchageValue('categories',val)}
         />
 
         <InputComponent  

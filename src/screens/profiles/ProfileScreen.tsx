@@ -219,6 +219,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       setIsLoading(false)
     }
   }
+  console.log("abc",follower)
   return (
     <ContainerComponent title="Hồ sơ người dùng">
       <SectionComponent styles={[globalStyles.center]}>

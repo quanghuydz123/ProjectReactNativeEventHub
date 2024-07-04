@@ -154,7 +154,7 @@ const DropdownPicker = (props: Props) => {
                             paddingHorizontal:10,
                             paddingBottom:30
                         }}>
-                            <ButtonComponent text="Thêm" type="primary" onPress={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}/>
+                            <ButtonComponent disable={selectedItems.length <= 0} text="Thêm" type="primary" onPress={()=>{onSelected(selectedItems),setIsVisibleModalize(false)}}/>
                         </View>
                     }
                     handlePosition="inside" ref={modalieRef} onClose={() => setIsVisibleModalize(false)}>

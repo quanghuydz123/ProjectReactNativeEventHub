@@ -30,7 +30,7 @@ const CategoriesList = (props:Props)=>{
         bgColor={colors.danger2}
         label={item.name}
         styles={{marginRight:index === categories.length -1 ? 28 : 12}}
-        onPress={()=>Linking.openURL('eventhub://app/main/home/add')}
+        onPress={()=>console.log("ok")}
         />
     )}
     />

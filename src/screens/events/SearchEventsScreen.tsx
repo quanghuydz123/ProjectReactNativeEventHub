@@ -11,29 +11,45 @@ import LoadingComponent from "../../components/LoadingComponent"
 import { SearchNormal, Sort } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
 import {debounce} from 'lodash'
+import socket from "../../utils/socket"
 const SearchEventsScreen = ({ navigation, route }: any) => {
   const { items, lat, long, distance,title }: { items: EventModelNew[],lat:string,long:string,distance:string,title:string } = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(false)
   const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
   const [searchKey, setSeachKey] = useState('')
-  const [result,setResult] = useState<EventModelNew[]>([])
+  const [result,setResult] = useState<EventModelNew[]>(items)
   const [isSearching,setIsSearching] = useState(false)
   useEffect(() => {
-    if (!events) {
+    if (!result) {
       getEvents()
     }
     handleCallApiGetAllFollower()
   }, [])
   useEffect(()=>{
-    if(!searchKey){
-      setResult(events)
-    }
-    else{
-      const handleSeachValude = debounce(handleSearchEvent,100)
-      handleSeachValude()
-    }
-  },[searchKey,events])
+    // if(!searchKey){
+    //   setResult(events)
+    // }
+    // else{
+    //   const handleSeachValude = debounce(handleSearchEvent,100)
+    //   handleSeachValude()
+    // }
+    const handleSeachValude = debounce(handleSearchEvent,500)
+    handleSeachValude()
+
+  },[searchKey])
+
+  useEffect(() => {
+    socket.on('followers', data => {
+      handleCallApiGetAllFollower()
+      console.log('follower chạy lại')
+    })
+
+ 
+    return () => {
+      socket.disconnect();
+    };
+  }, [])
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
@@ -54,7 +70,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
-        setEvents(res.data.events)
+        setResult(res.data.events)
       }
       setIsLoading(false)
     } catch (error: any) {
@@ -70,9 +86,11 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       if (res && res.data && res.status === 200) {
         setResult(res.data.events)
       }
+
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("ExploreEvent", errorMessage)
+
     }
   }
   return (

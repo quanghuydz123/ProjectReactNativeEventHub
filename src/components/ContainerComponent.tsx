@@ -8,6 +8,7 @@ import { ArrowLeft } from "iconsax-react-native"
 import { colors } from "../constrants/color"
 import TextComponent from "./TextComponent"
 import { fontFamilies } from "../constrants/fontFamilies"
+import LinearGradient from "react-native-linear-gradient"
 interface Props {
     isImageBackgound?: boolean,
     isScroll?: boolean,
@@ -26,7 +27,7 @@ const ContainerComponent = (props: Props) => {
             {children}
         </ScrollView>
     ) : (
-        <View style={{flex:1}}>
+            <View style={{flex:1}}>
             {children}
         </View>
     )

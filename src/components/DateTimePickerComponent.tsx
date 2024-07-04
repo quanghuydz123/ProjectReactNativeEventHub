@@ -63,7 +63,7 @@ const DateTimePickerComponent = (props: Props) => {
       onConfirm={(val) => handleComfirm(val)}
     /> 
       } */}
-       <DatePicker title={title} cancelText="Hủy" confirmText="Xác nhận" mode={type} date={minimumDate ? new Date(minimumDate) : new Date(selected)} modal open={isShowDatePicker} onCancel={() => setIsShowDatePicker(false)}
+       <DatePicker title={title} cancelText="Hủy" confirmText="Xác nhận" mode={type} date={new Date(selected)} modal open={isShowDatePicker} onCancel={() => setIsShowDatePicker(false)}
         onConfirm={(val) => handleComfirm(val)}
       />
     </View>

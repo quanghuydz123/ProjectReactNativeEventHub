@@ -17,6 +17,7 @@ import { numberToString } from "../utils/numberToString"
 import { useSelector } from "react-redux"
 import { authSelector } from "../reduxs/reducers/authReducers"
 import { FollowerModel } from "../models/FollowerModel"
+import { DateTime } from "../utils/DateTime"
 interface Props {
   item: EventModelNew,
   isShownHorizontal?: boolean,
@@ -31,11 +32,11 @@ const EventItem = (props: Props) => {
       {
         isShownHorizontal ? <>
           <RowComponent>
-            <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'cover' }} />
+            <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'stretch' }} />
             <SpaceComponent width={12} />
             <View style={{height:'100%',flex:1}}>
               <RowComponent justify="space-between">
-                <TextComponent text="Thứ 3, 26/04/2024 11:00 - 12:00" size={12}/>
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.date ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.date ?? Date.now()))} 11:00 - 12:00`}size={12}/>
                 {
                   followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) &&  <FontAwesome name="bookmark" size={22} color={'red'} />
                 }

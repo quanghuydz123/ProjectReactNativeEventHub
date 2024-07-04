@@ -13,7 +13,8 @@ const LoadingComponent = (props:Props)=>{
         justifyContent:'center',
         alignItems:'center',
         paddingHorizontal:20,
-        paddingVertical:75
+        paddingVertical:75,
+        flex:1
     }}>
       {
         isLoading ? <ActivityIndicator /> : value === 0 && <TextComponent text={message ? message : 'Không có dữ liệu'}/>

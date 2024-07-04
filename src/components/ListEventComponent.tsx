@@ -11,8 +11,9 @@ interface Props {
 const ListEventComponent = (props:Props)=>{
     const {items,follows} = props
   return (
-    <View>
-      <FlatList 
+    <View style={{marginBottom:40}}>
+      <FlatList
+      showsVerticalScrollIndicator={false}
       data={items} 
       renderItem={({item})=><EventItem followers={follows} item={item} key={item._id} isShownHorizontal/>}/>
     </View>
