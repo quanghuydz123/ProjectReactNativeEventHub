@@ -177,7 +177,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log("adb",eventData?.categories)
+  console.log("adb",auth)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>

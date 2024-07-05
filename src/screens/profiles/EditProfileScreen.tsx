@@ -36,7 +36,7 @@ const EditProfileScreen = ({navigation,route}:any)=>{
                 dispatch(addAuth({...auth,...res.data.user}))
                 socket.emit('updateUser')
                 setIsLoading(false)
-                ToastMessaging.Success()
+                ToastMessaging.Success({})
             }
         } catch (error:any) {
             const errorMessage = JSON.parse(error.message)

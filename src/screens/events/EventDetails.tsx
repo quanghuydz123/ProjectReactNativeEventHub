@@ -53,6 +53,7 @@ const EventDetails = ({ navigation, route }: any) => {
     }
   
   }, [])
+  console.log("event",event?.title)
   const handleCallApiGetEventById = async ()=>{
     setIsLoading(true)
     try {

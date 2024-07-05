@@ -83,16 +83,18 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }, [isUpdateImageProfile])
   useEffect(() => {
-    socket.on('updateUser', data => {
-      console.log('updateUser chạy lại')
+    const handleUpdateProfile = ()=>{
       handleCallApiGetProfile()
-    })
-    socket.on('followUser', data => {
-      console.log('followUser chạy lại')
-      handleCallApiGetFollowerById()
-    })
+    }
+    const handleFollowByid = () => {
+      handleCallApiGetFollowerById();
+      console.log('followers cập nhật');
+    };
+    socket.on('updateUser',handleUpdateProfile)
+    socket.on('followUser',handleFollowByid)
     return () => {
-      socket.disconnect();
+      socket.off('updateUser',handleUpdateProfile)
+      socket.off('followUser',handleFollowByid)
     };
   }, [])
   const handleGetAllCategory = async () => {

@@ -77,24 +77,31 @@ const HomeScreen = ({ navigation }: any) => {
     setRefreshList(prev => !prev);
   }, [allFollower])
   useEffect(() => {
-    socket.on('followers', data => {
-      handleCallApiGetAllFollower()
-      console.log('follower chạy lại')
-    })
+    const handleFollowers = () => {
+      handleCallApiGetAllFollower();
+      console.log('followers cập nhật');
+    };
 
-    socket.on('events', data => {
-      handleCallApiGetAllEvent()
-      handleCallApiGetEventsNearYou()
-      console.log('events chạy lại')
-    })
+    const handleEvents = () => {
+      handleCallApiGetAllEvent();
+      handleCallApiGetEventsNearYou();
+      console.log('events cập nhật');
+    };
 
-    socket.on('updateUser', data => {
-      handleCallApiGetAllEvent()
-      handleCallApiGetEventsNearYou()
-      console.log('updateUser chạy lại')
-    })
+    const handleUpdateUser = () => {
+      handleCallApiGetAllEvent();
+      handleCallApiGetEventsNearYou();
+      console.log('user cập nhật');
+    };
+
+    socket.on('followers', handleFollowers);
+    socket.on('events', handleEvents);
+    socket.on('updateUser', handleUpdateUser);
+
     return () => {
-      socket.disconnect();
+      socket.off('followers', handleFollowers);
+      socket.off('events', handleEvents);
+      socket.off('updateUser', handleUpdateUser);
     };
   }, [])
 
@@ -299,7 +306,7 @@ const HomeScreen = ({ navigation }: any) => {
         marginTop: Platform.OS === 'android' ? 18 : 22
       }]}>
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
-          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen',{title:'Các sự kiện sắp xảy ra',items:allEvent})} />
+          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen',{title:'Các sự kiện sắp xảy ra',items:allEvent,follows:allFollower})} />
           {
             isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
@@ -310,7 +317,7 @@ const HomeScreen = ({ navigation }: any) => {
           />
           }
 
-          <TabBarComponent title="Gần chỗ bạn" onPress={() =>  navigation.navigate('SearchEventsScreen',{title:'Các sự kiện gần chỗ bạn',items:allEventNear,lat:auth.position.lat,long:auth.position.lng,distance:'10'})} />
+          <TabBarComponent title="Gần chỗ bạn" onPress={() =>  navigation.navigate('SearchEventsScreen',{title:'Các sự kiện gần chỗ bạn',items:allEventNear,lat:auth.position.lat,long:auth.position.lng,distance:'10',follows:allFollower})} />
           {
             isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}

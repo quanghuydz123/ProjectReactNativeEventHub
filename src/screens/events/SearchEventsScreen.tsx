@@ -13,10 +13,10 @@ import { colors } from "../../constrants/color"
 import {debounce} from 'lodash'
 import socket from "../../utils/socket"
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { items, lat, long, distance,title }: { items: EventModelNew[],lat:string,long:string,distance:string,title:string } = route.params || {}
+  const { items,follows, lat, long, distance,title }: { items: EventModelNew[],follows: FollowerModel[],lat:string,long:string,distance:string,title:string } = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(false)
-  const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
+  const [allFollower, setAllFollower] = useState<FollowerModel[]>(follows)
   const [searchKey, setSeachKey] = useState('')
   const [result,setResult] = useState<EventModelNew[]>(items)
   const [isSearching,setIsSearching] = useState(false)
@@ -24,7 +24,9 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     if (!result) {
       getEvents()
     }
-    handleCallApiGetAllFollower()
+    if(!allFollower){
+      handleCallApiGetAllFollower()
+    }
   }, [])
   useEffect(()=>{
     // if(!searchKey){
@@ -40,14 +42,15 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   },[searchKey])
 
   useEffect(() => {
-    socket.on('followers', data => {
-      handleCallApiGetAllFollower()
-      console.log('follower chạy lại')
-    })
+    const handleFollowers = () => {
+      handleCallApiGetAllFollower();
+      console.log('followers cập nhật');
+    };
+    socket.on('followers',handleFollowers)
 
  
     return () => {
-      socket.disconnect();
+      socket.off('followers', handleFollowers);
     };
   }, [])
   const handleCallApiGetAllFollower = async () => {
