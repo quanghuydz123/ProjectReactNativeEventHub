@@ -16,7 +16,6 @@ export interface EventModelNew {
     followers?:UserModel[],
     startAt: string
     endAt: string
-    date: string
     status: boolean
     createdAt: string
     updatedAt: string

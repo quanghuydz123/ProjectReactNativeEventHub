@@ -20,6 +20,7 @@ export const apis = {
                 if (limit !== undefined) params.append('limit', limit);
                 if (limitDate !== undefined) params.append('limitDate', limitDate);
                 if (searchValue !== undefined) params.append('searchValue', searchValue);
+                console.log("abcdd",params)
                 return `/get-events?${params.toString()}`;
             }
             

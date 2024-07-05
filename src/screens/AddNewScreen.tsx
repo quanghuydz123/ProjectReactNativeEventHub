@@ -17,6 +17,7 @@ import socket from "../utils/socket"
 import categoryAPI from "../apis/categoryAPI"
 import { UserModel } from "../models/UserModel"
 import { ToastMessaging } from "../utils/showToast"
+import { useStatusBar } from "../hooks/useStatusBar"
 const initValues = {
   title:'',
   description:'',
@@ -41,7 +42,6 @@ const initValues = {
   authorId:'',
   startAt:Date.now(),
   endAt:Date.now(),
-  date:Date.now()
 }
 const AddNewScreen = ()=>{
   const auth = useSelector(authSelector)
@@ -54,7 +54,7 @@ const AddNewScreen = ()=>{
     handleGetAllUsers()
     handleGetAllCategory()
   },[])
-  
+  useStatusBar('dark-content')
   useEffect(()=>{//call api get lat and long
     const api = `https://geocode.search.hereapi.com/v1/geocode?q=${eventData.Address}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
     handleCallApiGetLatAndLong(api)
@@ -177,7 +177,7 @@ const AddNewScreen = ()=>{
     handleOnchageValue('Address',val?.label) 
 
   }
-  console.log("adb",auth)
+  console.log("adb",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -210,22 +210,20 @@ const AddNewScreen = ()=>{
         />
 
         
-        <DateTimePickerComponent title="Ngày diễn ra" selected={eventData.date} 
+      {/* <DateTimePickerComponent title="Ngày diễn ra" selected={eventData.date} 
           type="date" 
           onSelect={(val) => handleOnchageValue('date',val)}
-          />
+          /> */}
           
-        <RowComponent>
-          <DateTimePickerComponent minimumDate={eventData.date}  title="Thời gian bắt đầu" selected={eventData.startAt} 
+          <DateTimePickerComponent  title="Thời gian bắt đầu" selected={eventData.startAt} 
           type="datetime" 
           onSelect={(val) => handleOnchageValue('startAt',val)}
           />
           <SpaceComponent width={20}/>
-          <DateTimePickerComponent minimumDate={eventData.date}  title="Thời gian kết thúc" selected={eventData.endAt} 
+          <DateTimePickerComponent  title="Thời gian kết thúc" selected={eventData.endAt} 
           type="datetime" 
           onSelect={(val) => handleOnchageValue('endAt',val)}
           />
-        </RowComponent>
         <DropdownPicker label="Mời tham gia" values={allUser} 
         selected={eventData.users} 
         multibale

@@ -221,7 +221,7 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
           </SectionComponent>
           <ScrollView
-
+            
             onScroll={handleScroll}
             showsVerticalScrollIndicator={false}
           >
@@ -253,8 +253,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={DateTime.GetDate(new Date(event?.date ?? Date.now()))} font={fontFamilies.medium} size={16} />
-                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.date ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
+                  <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()),new Date(event?.endAt ?? Date.now())) } font={fontFamilies.medium} size={16} />
+                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>

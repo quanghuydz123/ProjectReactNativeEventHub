@@ -42,7 +42,7 @@ const DateTimePickerComponent = (props: Props) => {
       ]}
         onPress={() => setIsShowDatePicker(true)}
       >
-        <TextComponent text={`${selected ? type === 'datetime' ? DateTime.GetTime(selected) : DateTime.GetDate(selected) : 'Chọn thời gian'}`}
+        <TextComponent text={`${selected ? DateTime.GetTime(selected) +" - " + DateTime.GetDate(selected) :'Chọn thời gian'}`}
           flex={1} font={fontFamilies.medium}
           styles={{
             textAlign: 'center'

@@ -63,7 +63,7 @@ const TabNavigator = () => {
       },
       tabBarIconStyle:{
         marginBottom:0,
-        marginTop:8
+        marginTop:8,
       },
       tabBarLabel({focused}){//Cấu hình hiện thị name
         return route.name === 'Add' ? null : <TextComponent 

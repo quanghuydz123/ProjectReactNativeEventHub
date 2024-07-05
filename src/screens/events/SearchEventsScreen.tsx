@@ -12,14 +12,25 @@ import { SearchNormal, Sort } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
 import {debounce} from 'lodash'
 import socket from "../../utils/socket"
+interface routeParams {
+  items: EventModelNew[],
+  follows: FollowerModel[],
+  lat:string,
+  long:string,
+  distance:string,
+  title:string,
+  limit:string
+  
+}
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { items,follows, lat, long, distance,title }: { items: EventModelNew[],follows: FollowerModel[],lat:string,long:string,distance:string,title:string } = route.params || {}
+  const { items,follows, lat, long, distance,title,limit }: routeParams = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(false)
   const [allFollower, setAllFollower] = useState<FollowerModel[]>(follows)
   const [searchKey, setSeachKey] = useState('')
   const [result,setResult] = useState<EventModelNew[]>(items)
   const [isSearching,setIsSearching] = useState(false)
+  const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
   useEffect(() => {
     if (!result) {
       getEvents()
@@ -28,6 +39,11 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       handleCallApiGetAllFollower()
     }
   }, [])
+  // useEffect (()=>{
+  //   if(route.params){
+  //     setDateRoute(route.params)
+  //   }
+  // },[route])
   useEffect(()=>{
     // if(!searchKey){
     //   setResult(events)
@@ -68,6 +84,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
   }
   const getEvents = async () => {
+    console.log("abc")
     const api = apis.event.getAll({lat:lat,long:long,distance:distance})
     setIsLoading(true)
     try {
@@ -97,7 +114,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
   }
   return (
-    <ContainerComponent back title={title ?? 'Danh sách sự kiện'}>
+    <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
       <SectionComponent>
         <RowComponent>
           <RowComponent styles={{ flex: 1, alignItems: 'center' }}>
@@ -121,7 +138,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
         (result && result?.length > 0) ? <>
 
           <ListEventComponent items={result} follows={allFollower} />
-        </> :
+        </> 
+        :
           <LoadingComponent isLoading={isLoading} value={result?.length} />
       }
     </ContainerComponent>

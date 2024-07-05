@@ -13,7 +13,7 @@ const EventsScreen = () => {
     });
   }
   return (
-    <ContainerComponent back title="Sự kiện">
+    <ContainerComponent title="Sự kiện">
       <View>
       </View>
     </ContainerComponent>

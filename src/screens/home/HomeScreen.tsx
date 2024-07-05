@@ -279,7 +279,7 @@ const HomeScreen = ({ navigation }: any) => {
           <RowComponent>
             <RowComponent styles={{ flex: 1 }}
               onPress={() => navigation.navigate('SearchEventsScreen', {
-                isFilter: false
+                
               })}>
               <SearchNormal size={20} variant="TwoTone" color={colors.white} />
               <View style={{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }} />
@@ -287,7 +287,7 @@ const HomeScreen = ({ navigation }: any) => {
             </RowComponent>
             <TagComponent
               onPress={() => navigation.navigate('SearchEventsScreen', {
-                isFilter: true
+                
               })}
               label="Lọc"
               icon={<CricleComponent size={20} color={'#b1aefa'}><Sort size={18} color="#5d56f3" /></CricleComponent>}
