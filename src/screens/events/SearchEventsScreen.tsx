@@ -10,7 +10,7 @@ import ListEventComponent from "../../components/ListEventComponent"
 import LoadingComponent from "../../components/LoadingComponent"
 import { SearchNormal, Sort } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
-import {debounce} from 'lodash'
+import {debounce, lte} from 'lodash'
 import socket from "../../utils/socket"
 import ModalFilterEvent from "../../../modals/ModalFilterEvent"
 import { CategoryModel } from "../../models/CategoryModel"
@@ -139,9 +139,14 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     })
     setFilterEvent(filterCopy)
   }
-  const handleOnChangeValudeFilter = async (key:string,value:string | string[]) =>{
+  const handleOnChangeValudeFilter = async (key:string,value:string | string[],keyPosition?:string,position?:any) =>{
     const filterCopy:any = {...filterEvent}
     filterCopy[`${key}`] = value
+    if(position){
+      Object.keys(filterEvent.position).forEach((keyChild)=> {
+        filterCopy[`${keyPosition}`][`${keyChild}`] = position[`${keyChild}`]
+      })
+    }
     setFilterEvent(filterCopy)
   }
   const handleGetAllCategory = async () => {
@@ -179,13 +184,12 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   //   const api = `https://geocode.search.hereapi.com/v1/geocode?q=${addressFilter}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
   //   handleCallApiGetLatAndLong(api)
   // },[addressFilter])
-  console.log("addressFilter",addressFilter)
   const handleCallApiGetLatAndLong = async ()=>{
     const api = `https://geocode.search.hereapi.com/v1/geocode?q=${addressFilter}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {
       const res = await axios(api)
       if(res && res.data && res.status === 200){
-        handleOnchangePosition('position',res.data.items[0].position)
+          return res.data.items[0].position
       }else{
         console.log("vị trí chọn không hợp lệ")
       }
@@ -231,8 +235,11 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   }
   const handleCofirmFilterEvent = async ()=>{
     setIsOpenModalizeFilter(false)
-    await handleCallApiGetLatAndLong()
-    await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories)
+    let position
+    if(addressFilter){
+      position = await handleCallApiGetLatAndLong()
+    }
+    await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories,'position',position)
 
   }
   return (
