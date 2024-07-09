@@ -1,32 +1,86 @@
-import { Button, Text, View } from "react-native"
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
-import { ButtonComponent, RowComponent, TagComponent, TextComponent } from "../src/components";
+import { ButtonComponent, ChoiceLocationComponent, RowComponent, SpaceComponent, TagComponent, TextComponent } from "../src/components";
 import { colors } from "../src/constrants/color";
 import { CategoryModel } from "../src/models/CategoryModel";
 import { globalStyles } from "../src/styles/globalStyles";
 import { FollowerModel } from "../src/models/FollowerModel";
 import { fontFamilies } from "../src/constrants/fontFamilies";
+import { DateTime } from "../src/utils/DateTime";
+import { numberToString } from "../src/utils/numberToString";
+import { Address } from "../src/models/LocationModel";
 interface Props {
     visible: boolean,
     onClose: () => void,
-    onComfirm:()=>void,
+    onComfirm: () => void,
     categories: CategoryModel[],
-    selectedCategories:string[],
-    onSelectCategories:(val:string[])=>void
+    selectedCategories: string[],
+    onSelectCategories: (val: string[]) => void,
+    selectedDateTime:{
+        startAt:string,
+        endAt:string
+    },
+    onSelectDateTime:(val:{
+        startAt:string,
+        endAt:string
+    })=>void,
+    selectedAddress:string,
+    onSelectAddress:(val:Address) =>void
 }
 const ModalFilterEvent = (props: Props) => {
-    const { visible, onClose, categories ,selectedCategories,onSelectCategories,onComfirm} = props
+    const { visible, onClose, categories, selectedCategories,selectedAddress,onSelectAddress, onSelectCategories, onComfirm,onSelectDateTime,selectedDateTime } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
     const [allFollow, setAllFollow] = useState<FollowerModel[]>([])
-
+    const [filterDate,setFilterDate] = useState('')
+    const timeChoises = [{
+        key:'today',
+        text:'Hôm nay'
+    },
+    {
+        key:'tomorrow',
+        text:'Ngày mai'
+    },
+    {
+        key:'thisWeek',
+        text:'Trong tuần'
+    }
+    ]
 
     useEffect(() => {
         setAllCategory(categories)
     }, [categories])
 
+    useEffect(()=>{
+        if(filterDate === 'today'){
+            const d = new Date()
+            const date = `${d.getFullYear()}-${numberToString(d.getMonth()+1)}-${numberToString(d.getDate())}`
+            onSelectDateTime({
+                startAt:`${date} 00:00:00`,
+                endAt:`${date} 23:59:59`
+            })
+        }else if(filterDate === 'tomorrow'){
+            const d = new Date(Date.now() + 24 * 60 * 60 * 1000)
+            const date = `${d.getFullYear()}-${numberToString(d.getMonth()+1)}-${numberToString(d.getDate())}`
+            onSelectDateTime({
+                startAt:`${date} 00:00:00`,
+                endAt:`${date} 23:59:59`
+            })
+        }else if(filterDate === 'thisWeek'){
+            const date = new Date();
+            var sub = date.getDay() > 0 ? 1 : -6;
+            var dStartAt = new Date(date.setDate(date.getDate() - date.getDay() + sub));
+            const startAtWeek = `${dStartAt.getFullYear()}-${numberToString(dStartAt.getMonth()+1)}-${numberToString(dStartAt.getDate())}`
+            var dEndAt = new Date(date.setDate(date.getDate() - date.getDay() + sub)+ 24 * 60 * 60 * 1000 * 6);
+            const endAtWeek = `${dEndAt.getFullYear()}-${numberToString(dEndAt.getMonth()+1)}-${numberToString(dEndAt.getDate())}`
+            onSelectDateTime({
+                startAt:`${startAtWeek} 00:00:00`,
+                endAt:`${endAtWeek} 23:59:59`
+            })
+        }
+    },[filterDate])
     useEffect(() => {
         if (visible) {
             modalieRef.current?.open()
@@ -46,6 +100,17 @@ const ModalFilterEvent = (props: Props) => {
 
         }
     }
+    const handleChoiseFilterDate = (val:string)=>{
+        if(val === filterDate){
+            setFilterDate('')
+            onSelectDateTime({startAt:'',endAt:''})
+        }else{
+            setFilterDate(val)
+        }
+    }
+    const handleOnSelectLocation = (val:Address)=>{
+        onSelectAddress(val)
+      }
     return (
         <Portal>
             <Modalize
@@ -70,27 +135,42 @@ const ModalFilterEvent = (props: Props) => {
 
             >
 
-                <View style={{paddingTop:10}}>
-                   <View style={{flexDirection:'row',flexWrap:'wrap'}}>
-                   {
-                        categories && categories.map((item) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={item._id}>
-                            <TagComponent key={item._id} onPress={() => handleFollowerCategory(item._id)} label={item.name}
-                                bgColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
-                                textColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.white : colors.black}
-                                styles={[globalStyles.shadow, { borderWidth: 1, borderColor: selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.gray }]} />
+                <View style={{ paddingTop: 10 }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {
+                            categories && categories.map((item) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={item._id}>
+                                <TagComponent key={item._id} onPress={() => handleFollowerCategory(item._id)} label={item.name}
+                                    bgColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
+                                    textColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.white : colors.black}
+                                    styles={[globalStyles.shadow, { borderWidth: 1, borderColor: selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.gray }]} />
 
-                        </View>)
-                    }
-                   </View>
-                   <View>
-                   <TextComponent text={'Thời gian'} size={14}/>
-                   <RowComponent justify="center">
-                    <ButtonComponent text="text1" type="primary" color="white" textColor={colors.colorText}/>
-                    <ButtonComponent text="text1"  type="primary"  color="white" textColor={colors.colorText}/>
+                            </View>)
+                        }
+                    </View>
+                    <View>
+                        <SpaceComponent height={12} />
+                        <TextComponent text={'Thời gian diễn ra'} title size={14} />
+                        <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
+                            {
+                                timeChoises.map((item)=> <>
+                                <TouchableOpacity 
+                                onPress={()=>handleChoiseFilterDate(item.key)}
+                                key={item.key} style={[globalStyles.button, 
+                                    { borderColor: colors.gray2, borderWidth: 1, minHeight: 30
+                                        ,backgroundColor:filterDate === item.key ? colors.primary : colors.white
+                                     }]}>
+                                    <TextComponent text={item.text} font={fontFamilies.medium} color={filterDate === item.key ? colors.white : colors.colorText} />
+                                </TouchableOpacity>
+                                <SpaceComponent width={12}/>
+                                </>
+                                )
+                            }
+                        </RowComponent>
+                    </View>
+                    <View>
+                        <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
 
-                   </RowComponent>
-                   </View>
-                    
+                    </View>
                 </View>
             </Modalize>
         </Portal>

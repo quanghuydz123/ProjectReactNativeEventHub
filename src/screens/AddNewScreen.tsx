@@ -63,6 +63,7 @@ const AddNewScreen = ()=>{
     try {
       const res = await axios(api)
       if(res && res.data && res.status === 200){
+        console.log("res.data.items[0].position",res.data.items[0].position)
         handleOnchangePosition('position',res.data.items[0].position)
       }else{
         console.log("vị trí chọn không hợp lệ")
@@ -76,6 +77,7 @@ const AddNewScreen = ()=>{
     item[`${key}`] = value
     setEventData(item)
   }
+  console.log("e",eventData)
   const handleOnchangeAddressDetails = (key:string,value:any)=>{
     const item:any = {...eventData}
     Object.keys(eventData.addressDetals).forEach((keyChild)=> {

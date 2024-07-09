@@ -15,6 +15,7 @@ import socket from "../../utils/socket"
 import ModalFilterEvent from "../../../modals/ModalFilterEvent"
 import { CategoryModel } from "../../models/CategoryModel"
 import categoryAPI from "../../apis/categoryAPI"
+import axios from "axios"
 interface routeParams {
   items: EventModelNew[],
   follows: FollowerModel[],
@@ -27,20 +28,24 @@ interface routeParams {
   categoriesSelected:string[]
 }
 interface FilterEvent {
-  lat?:string,
-  long?:string,
   distance?:string,
   limit?:string,
   categoriesFilter?:string[],
-  searchKey?:string
+  searchKey?:string,
+  position:{
+    lat?:string,
+    lng?:string
+  },
 }
 const initFilterEvent:FilterEvent = {
-  lat:'',
-  long:'',
   limit:'',
   categoriesFilter:[],
   distance:'',
-  searchKey:''
+  searchKey:'',
+  position:{
+    lat:'',
+    lng:''
+  },
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
   const { items,follows,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
@@ -53,7 +58,15 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [allCategory, setAllCategory] = useState<CategoryModel[]>(categories)
   const [first,setFirst] = useState(false)
   const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
+  const [addressFilter,setAddressFilter] = useState('')
 
+  const [dateTime,setDateTime] = useState<{
+    startAt:string,
+    endAt:string
+}>({
+  startAt:'',
+  endAt:''
+})
   const [filterEvent,setFilterEvent] = useState<FilterEvent>(initFilterEvent)
   useEffect(() => {
     handleSetFilterEvent()
@@ -64,7 +77,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       handleGetAllCategory()
     }
   }, [])
-  console.log("ids",idsSelectedCategories)
+
   // console.log("abcaasdadasasdsa",filterEvent.searchKey)
   // useEffect (()=>{
   //   if(route.params){
@@ -113,13 +126,20 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
 
   const handleSetFilterEvent = async ()=>{
     const filterCopy:FilterEvent = {...filterEvent}
-    filterCopy['lat'] = lat
-    filterCopy['long'] = long
+    filterCopy['position']['lat'] = lat
+    filterCopy['position']['lng'] = long
     filterCopy['distance'] = distance
     filterCopy['categoriesFilter'] = categoriesSelected
     setFilterEvent(filterCopy)
   }
-  const handleOnChangeValudeFilter = (key:string,value:string | string[]) =>{
+  const handleOnchangePosition = (key:string,value:any) =>{
+    const filterCopy:any = {...filterEvent}
+    Object.keys(filterEvent.position).forEach((keyChild)=> {
+      filterCopy[`${key}`][`${keyChild}`] = value[`${keyChild}`]
+    })
+    setFilterEvent(filterCopy)
+  }
+  const handleOnChangeValudeFilter = async (key:string,value:string | string[]) =>{
     const filterCopy:any = {...filterEvent}
     filterCopy[`${key}`] = value
     setFilterEvent(filterCopy)
@@ -155,9 +175,28 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
 
     }
   }
+  // useEffect(()=>{//call api get lat and long
+  //   const api = `https://geocode.search.hereapi.com/v1/geocode?q=${addressFilter}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
+  //   handleCallApiGetLatAndLong(api)
+  // },[addressFilter])
+  console.log("addressFilter",addressFilter)
+  const handleCallApiGetLatAndLong = async ()=>{
+    const api = `https://geocode.search.hereapi.com/v1/geocode?q=${addressFilter}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
+    try {
+      const res = await axios(api)
+      if(res && res.data && res.status === 200){
+        handleOnchangePosition('position',res.data.items[0].position)
+      }else{
+        console.log("vị trí chọn không hợp lệ")
+      }
+    } catch (error:any) {
+      console.log(error)
+    }
+  }
   const getEvents = async () => {
-    const api = apis.event.getAll({lat:filterEvent.lat,
-      long:filterEvent.long,distance:filterEvent.distance,categoriesFilter:filterEvent.categoriesFilter
+    const api = apis.event.getAll({lat:filterEvent.position.lat,
+      long:filterEvent.position.lng,distance:'10',categoriesFilter:filterEvent.categoriesFilter,
+      startAt:dateTime.startAt,endAt:dateTime.endAt
       })
     setIsLoading(true)
     try {
@@ -173,9 +212,11 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
   }
   const handleSearchEvent = async ()=>{
-    const api = apis.event.getAll({lat:filterEvent.lat,
-      long:filterEvent.long,distance:filterEvent.distance,
-      searchValue:filterEvent.searchKey,categoriesFilter:filterEvent.categoriesFilter})
+    const api = apis.event.getAll({lat:filterEvent.position.lat,
+      long:filterEvent.position.lng,distance:'10',
+      searchValue:filterEvent.searchKey,categoriesFilter:filterEvent.categoriesFilter,
+      startAt:dateTime.startAt,endAt:dateTime.endAt
+    })
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
@@ -188,11 +229,12 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
 
     }
   }
-  const handleCofirmFilterEvent = ()=>{
+  const handleCofirmFilterEvent = async ()=>{
     setIsOpenModalizeFilter(false)
-    handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories)
+    await handleCallApiGetLatAndLong()
+    await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories)
+
   }
-  console.log("cacac",filterEvent.categoriesFilter)
   return (
     <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
       <SectionComponent>
@@ -226,6 +268,10 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       categories={allCategory} visible={isOpenModelizeFilter} 
       onClose={()=>setIsOpenModalizeFilter(false)}
       onComfirm={handleCofirmFilterEvent}
+      selectedDateTime={dateTime}
+      onSelectDateTime={(val)=>setDateTime(val)}
+      selectedAddress={addressFilter}
+      onSelectAddress={(val)=>setAddressFilter(val.label)}
       />
     </ContainerComponent>
   )
