@@ -146,7 +146,6 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
     }
     }
   }
-  console.log("abc",follower)
  return (
     <ContainerComponent back title="Hồ sơ người ta" right={<Feather name="more-vertical" size={22} color={colors.black}/>}>
      <SectionComponent styles={[globalStyles.center]}>

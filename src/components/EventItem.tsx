@@ -36,7 +36,7 @@ const EventItem = (props: Props) => {
             <SpaceComponent width={12} />
             <View style={{height:'100%',flex:1}}>
               <RowComponent justify="space-between">
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()),new Date(item?.endAt ?? Date.now()))} 11:00 - 12:00`}size={12}/>
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()),new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`}size={12}/>
                 {
                   followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) &&  <FontAwesome name="bookmark" size={22} color={'red'} />
                 }

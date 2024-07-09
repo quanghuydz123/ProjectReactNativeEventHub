@@ -133,9 +133,12 @@ const SelectModalize = (props: Props) => {
                 <Modalize
                     onClosed={()=>{onClose()}}
                     adjustToContentHeight={adjustToContentHeight}
-                    scrollViewProps={{ showsVerticalScrollIndicator: false }}
+                    modalStyle={[{
+                        paddingVertical: 10,
+                        paddingHorizontal:12,
+                    }]}
                     HeaderComponent={
-                        <View style={{paddingTop:20,paddingHorizontal:12}}>
+                        <View style={{paddingTop:10}}>
                             <TextComponent text={title ?? 'Danh sách'}  title size={16}/>
                             <SpaceComponent height={8}/>
                        {
@@ -143,21 +146,24 @@ const SelectModalize = (props: Props) => {
                        }
                         </View>
                     }
+                    flatListProps={{
+                        data:data,
+                        keyExtractor: item => item.id,
+                        showsVerticalScrollIndicator: false,
+                        renderItem:({item,index})=>renderItem(item),
+                        contentContainerStyle:styles,
+                        ListEmptyComponent:<View style={{paddingVertical:20}}>
+                            <TextComponent text={'Không có dữ liệu'}/>
+                        </View>
+                        
+                    }}
+                    
                     
                     FooterComponent={
                         footerComponent
                     }
-                    handlePosition="inside" ref={modalieRef} onClose={() => onClose()}>
-                    <View style={[{
-                        paddingVertical: 10,
-                        paddingHorizontal:12,
-                    },styles]}>
-                        {
-                            data.length > 0 ? data.map((item)=>renderItem(item)) : <TextComponent text={'Không có dữ liệu'}/>
-                        }
-                        
-                    </View>
-                </Modalize>
+                    handlePosition="inside" ref={modalieRef} onClose={() => onClose()} />
+                    
             </Portal>
     )
 }

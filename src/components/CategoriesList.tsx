@@ -7,6 +7,7 @@ import { colors } from "../constrants/color"
 import TagComponent from "./TagComponent"
 import { Food, FoodWhite } from "../assets/svgs"
 import { CategoryModel } from "../models/CategoryModel"
+import { useNavigation } from "@react-navigation/native"
 interface Props{
     isFill?:boolean,
     values:CategoryModel[]
@@ -15,6 +16,7 @@ interface Props{
 const CategoriesList = (props:Props)=>{
     const {isFill,values} = props
     const [categories,setCategories] = useState<CategoryModel[]>([])
+    const navigation:any = useNavigation()
     useEffect(()=>{
         setCategories(values)
     },[values])
@@ -30,7 +32,7 @@ const CategoriesList = (props:Props)=>{
         bgColor={colors.danger2}
         label={item.name}
         styles={{marginRight:index === categories.length -1 ? 28 : 12}}
-        onPress={()=>console.log("ok")}
+        onPress={()=> navigation.navigate('SearchEventsScreen',{categoriesSelected:[item._id]})}
         />
     )}
     />

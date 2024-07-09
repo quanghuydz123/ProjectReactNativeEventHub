@@ -12,7 +12,10 @@ export const apis = {
     },
     event:{
         getById:(eid:string)=>`/get-event-byId?eid=${eid}`,
-        getAll:({lat,long,distance,limit,limitDate,searchValue}:{lat?:string,long?:string,distance?:string,limit?:string,limitDate?:string,searchValue?:string})=>{
+        getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter}:
+    {lat?:string,long?:string,distance?:string,limit?:string,limitDate?:string
+        ,searchValue?:string,categoriesFilter?:string[]})=>{
+            console.log("evenhub",categoriesFilter)
                 const params = new URLSearchParams();
                 if (lat !== undefined) params.append('lat', lat);
                 if (long !== undefined) params.append('long', long);
@@ -20,7 +23,11 @@ export const apis = {
                 if (limit !== undefined) params.append('limit', limit);
                 if (limitDate !== undefined) params.append('limitDate', limitDate);
                 if (searchValue !== undefined) params.append('searchValue', searchValue);
-                console.log("abcdd",params)
+                if (categoriesFilter !== undefined) {
+                    categoriesFilter.forEach(category => {
+                        params.append('categoriesFilter', category);
+                    });
+                }
                 return `/get-events?${params.toString()}`;
             }
             

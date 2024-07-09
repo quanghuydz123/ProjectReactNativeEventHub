@@ -31,7 +31,7 @@ import { apis } from "../../constrants/apis";
 import notificationAPI from "../../apis/notificationAPI";
 const EventDetails = ({ navigation, route }: any) => {
 
-  const {item,followers,id }: {item:EventModelNew,followers: FollowerModel[],id:string } = route.params
+  const { item, followers, id }: { item: EventModelNew, followers: FollowerModel[], id: string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
   const auth = useSelector(authSelector)
@@ -42,29 +42,29 @@ const EventDetails = ({ navigation, route }: any) => {
   const [userSelected, setUserSelected] = useState<string[]>([])
   const [allUser, setAllUser] = useState<UserModel[]>([])
   const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
-  const [event,setEvent] = useState<EventModelNew>(item)
+  const [event, setEvent] = useState<EventModelNew>(item)
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
-    if(!event){
+    if (!event) {
       handleCallApiGetEventById()
     }
-    if(!followers){
+    if (!followers) {
       handleCallApiGetAllFollower()
     }
-  
+
   }, [])
-  console.log("event",event?.title)
-  const handleCallApiGetEventById = async ()=>{
+  console.log("event", event?.title)
+  const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
       const res = await eventAPI.HandleEvent(apis.event.getById(id))
-      if(res && res.data && res.status===200){
+      if (res && res.data && res.status === 200) {
         setEvent(res.data.event)
-        
+
       }
       setIsLoading(false)
 
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log(errorMessage)
       setIsLoading(false)
@@ -100,21 +100,21 @@ const EventDetails = ({ navigation, route }: any) => {
   };
   const handleFlowerEvent = async () => {
     const api = '/update-follower-event'
-    if(event?._id){
-    try {
-      const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
-      if (res && res.data.event && res.status === 200) {
-        socket.emit("followers");
-        handleCallApiGetAllFollower()
+    if (event?._id) {
+      try {
+        const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
+        if (res && res.data.event && res.status === 200) {
+          socket.emit("followers");
+          handleCallApiGetAllFollower()
+        }
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
+        if (errorMessage.statusCode === 403) {
+          console.log(errorMessage.message)
+        } else {
+          console.log('Lỗi rồi EventDetails')
+        }
       }
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
-      } else {
-        console.log('Lỗi rồi EventDetails')
-      }
-    }
     }
   }
   const handleSelectItem = (id: string) => {
@@ -144,25 +144,25 @@ const EventDetails = ({ navigation, route }: any) => {
       Alert.alert(error.message);
     }
   };
-  const handleInviteUsers = async ()=>{
-    if(event?._id){
+  const handleInviteUsers = async () => {
+    if (event?._id) {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
-    try {
-      const res = await notificationAPI.HandleNotification(api,{uids:userSelected,eventId:event._id},'post')
-    } catch (error:any) {
-      const errorMessage = JSON.parse(error.message)
+      try {
+        const res = await notificationAPI.HandleNotification(api, { uids: userSelected, eventId: event._id }, 'post')
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
         console.log('Lỗi rồi EventDetails')
-        
-    }
+
+      }
     }
   }
-  const handleCreateBillPaymentEvent = async () =>{
+  const handleCreateBillPaymentEvent = async () => {
     const data = {
-      createAt:Date.now(),
-      createdBy:auth.id,
-      event:item,
+      createAt: Date.now(),
+      createdBy: auth.id,
+      event: item,
     }
-    navigation.navigate('PaymentScreen',{event:item})
+    navigation.navigate('PaymentScreen', { event: item })
   }
   return (
     <View style={{
@@ -176,7 +176,7 @@ const EventDetails = ({ navigation, route }: any) => {
         resizeMode: 'stretch',
         height: 260,
         width: appInfo.sizes.WIDTH,
-      }} source={{ uri: event?.photoUrl ??  'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg'    }}>
+      }} source={{ uri: event?.photoUrl ?? 'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg' }}>
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
           <RowComponent styles={{
             padding: 16,
@@ -193,10 +193,10 @@ const EventDetails = ({ navigation, route }: any) => {
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 event?._id && <FontAwesome
-                name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? "bookmark" : 'bookmark-o'}
-                size={22}
-                color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? colors.white : colors.black}
-              />
+                  name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? "bookmark" : 'bookmark-o'}
+                  size={22}
+                  color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? colors.white : colors.black}
+                />
               }
             </CardComponent>
           </RowComponent>
@@ -221,7 +221,7 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
           </SectionComponent>
           <ScrollView
-            
+
             onScroll={handleScroll}
             showsVerticalScrollIndicator={false}
           >
@@ -238,8 +238,15 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={16} />
-                  <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} />
+                  {
+                    event.price ? <>
+                      <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={16} />
+                      <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} /></> :
+                      <>
+                        <TextComponent text={'Vào cổng tự do'} font={fontFamilies.medium} size={16} />
+                      </>
+                  }
+
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -253,7 +260,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   justifyContent: 'space-around',
                   height: 48
                 }}>
-                  <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()),new Date(event?.endAt ?? Date.now())) } font={fontFamilies.medium} size={16} />
+                  <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} font={fontFamilies.medium} size={16} />
                   <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
                 </View>
               </RowComponent>
@@ -267,10 +274,10 @@ const EventDetails = ({ navigation, route }: any) => {
                 <View style={{
                   justifyContent: 'space-around',
                   height: 48,
-                  flex:1
+                  flex: 1
                 }}>
                   <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <SpaceComponent height={8}/>
+                  <SpaceComponent height={8} />
                   <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
                 </View>
               </RowComponent>
@@ -294,7 +301,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   height: 48
                 }}>
                   <TextComponent text={event?.authorId.fullname || ''} font={fontFamilies.medium} size={16} />
-                  <TextComponent text="Người chủ trì" color={colors.gray} />
+                  <TextComponent text="Đơn vị tổ chức" color={colors.gray} />
                 </View>
               </RowComponent>
             </SectionComponent>
@@ -330,7 +337,7 @@ const EventDetails = ({ navigation, route }: any) => {
             left: 0,
             padding: 12
           }}>
-            <ButtonComponent text="Mua vé ngay" type="primary"
+            {event.price ? <ButtonComponent text="Mua vé ngay" type="primary"
               icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
                 <ArrowRight
                   size={18}
@@ -338,7 +345,8 @@ const EventDetails = ({ navigation, route }: any) => {
                 /></View>}
               iconFlex="right"
               onPress={() => handleCreateBillPaymentEvent()}
-            />
+            /> :
+              <ButtonComponent text="Đăng ký tham dự" type="primary"/>}
           </LinearGradient>
       }
       <LoadingModal visible={isLoading} />
@@ -352,7 +360,6 @@ const EventDetails = ({ navigation, route }: any) => {
         valueSearch={searchUser}
         visible={isOpenModalizeInvityUser}
         footerComponent={<View style={{
-          paddingHorizontal: 10,
           paddingBottom: 10,
         }}>
           <ButtonComponent disable={userSelected.length <= 0} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
@@ -364,7 +371,6 @@ const EventDetails = ({ navigation, route }: any) => {
               paddingVertical: 6,
               borderBottomWidth: 1,
               borderBlockColor: colors.gray6,
-              paddingHorizontal: 10,
             }
           ]}
         >

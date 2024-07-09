@@ -47,7 +47,7 @@ const TabNavigator = () => {
             icon = <MaterialIcons name="event" size={size} color={color}/>
             break
           case "Add":
-            icon = <CricleComponent size={50} styles={{marginBottom:Platform.OS === 'ios' ? 24 : 40,borderWidth:2,borderColor:'white'}}>
+            icon = <CricleComponent size={50} styles={[globalStyles.shadow,{marginBottom:Platform.OS === 'ios' ? 24 : 40,borderWidth:2,borderColor:'white'}]}>
               <AddSquare size={26} color={colors.white} variant="Bold" />
             </CricleComponent>
             

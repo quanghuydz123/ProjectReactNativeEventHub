@@ -12,6 +12,9 @@ import { SearchNormal, Sort } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
 import {debounce} from 'lodash'
 import socket from "../../utils/socket"
+import ModalFilterEvent from "../../../modals/ModalFilterEvent"
+import { CategoryModel } from "../../models/CategoryModel"
+import categoryAPI from "../../apis/categoryAPI"
 interface routeParams {
   items: EventModelNew[],
   follows: FollowerModel[],
@@ -19,26 +22,50 @@ interface routeParams {
   long:string,
   distance:string,
   title:string,
-  limit:string
-  
+  limit:string,
+  categories:CategoryModel[],
+  categoriesSelected:string[]
+}
+interface FilterEvent {
+  lat?:string,
+  long?:string,
+  distance?:string,
+  limit?:string,
+  categoriesFilter?:string[],
+  searchKey?:string
+}
+const initFilterEvent:FilterEvent = {
+  lat:'',
+  long:'',
+  limit:'',
+  categoriesFilter:[],
+  distance:'',
+  searchKey:''
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { items,follows, lat, long, distance,title,limit }: routeParams = route.params || {}
+  const { items,follows,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(false)
   const [allFollower, setAllFollower] = useState<FollowerModel[]>(follows)
-  const [searchKey, setSeachKey] = useState('')
   const [result,setResult] = useState<EventModelNew[]>(items)
-  const [isSearching,setIsSearching] = useState(false)
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
+  const [isOpenModelizeFilter,setIsOpenModalizeFilter] = useState(false)
+  const [allCategory, setAllCategory] = useState<CategoryModel[]>(categories)
+  const [first,setFirst] = useState(false)
+  const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
+
+  const [filterEvent,setFilterEvent] = useState<FilterEvent>(initFilterEvent)
   useEffect(() => {
-    if (!result) {
-      getEvents()
-    }
+    handleSetFilterEvent()
     if(!allFollower){
       handleCallApiGetAllFollower()
     }
+    if(!allCategory){
+      handleGetAllCategory()
+    }
   }, [])
+  console.log("ids",idsSelectedCategories)
+  // console.log("abcaasdadasasdsa",filterEvent.searchKey)
   // useEffect (()=>{
   //   if(route.params){
   //     setDateRoute(route.params)
@@ -52,11 +79,14 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     //   const handleSeachValude = debounce(handleSearchEvent,100)
     //   handleSeachValude()
     // }
-    const handleSeachValude = debounce(handleSearchEvent,500)
-    handleSeachValude()
+    if(first){
+      const handleSeachValude = debounce(handleSearchEvent,500)
+      handleSeachValude()
+    }else{
+      setFirst(true)
+    }
 
-  },[searchKey])
-
+  },[filterEvent.searchKey])
   useEffect(() => {
     const handleFollowers = () => {
       handleCallApiGetAllFollower();
@@ -69,6 +99,48 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       socket.off('followers', handleFollowers);
     };
   }, [])
+  useEffect(()=>{
+    if(first){
+      // if (!result) {
+      //   getEvents()
+      // }
+      getEvents()
+    }else{
+      setFirst(true)
+    }
+  },[filterEvent])
+  
+
+  const handleSetFilterEvent = async ()=>{
+    const filterCopy:FilterEvent = {...filterEvent}
+    filterCopy['lat'] = lat
+    filterCopy['long'] = long
+    filterCopy['distance'] = distance
+    filterCopy['categoriesFilter'] = categoriesSelected
+    setFilterEvent(filterCopy)
+  }
+  const handleOnChangeValudeFilter = (key:string,value:string | string[]) =>{
+    const filterCopy:any = {...filterEvent}
+    filterCopy[`${key}`] = value
+    setFilterEvent(filterCopy)
+  }
+  const handleGetAllCategory = async () => {
+    const api = '/get-all'
+    try {
+      const res: any = await categoryAPI.HandleCategory(api)
+      if (res && res.data && res.statusCode === 200) {
+        setAllCategory(res.data.categories)
+      }
+    } catch (error: any) {
+      const errorMessage = JSON.parse(error.message)
+      if (errorMessage.statusCode === 403) {
+        console.log(errorMessage.message)
+      } else {
+        console.log('Lỗi rồi')
+      }
+    }
+  }
+
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
@@ -84,8 +156,9 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
   }
   const getEvents = async () => {
-    console.log("abc")
-    const api = apis.event.getAll({lat:lat,long:long,distance:distance})
+    const api = apis.event.getAll({lat:filterEvent.lat,
+      long:filterEvent.long,distance:filterEvent.distance,categoriesFilter:filterEvent.categoriesFilter
+      })
     setIsLoading(true)
     try {
       const res = await eventAPI.HandleEvent(api)
@@ -100,7 +173,9 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
   }
   const handleSearchEvent = async ()=>{
-    const api = apis.event.getAll({lat:lat,long:long,distance:distance,searchValue:searchKey})
+    const api = apis.event.getAll({lat:filterEvent.lat,
+      long:filterEvent.long,distance:filterEvent.distance,
+      searchValue:filterEvent.searchKey,categoriesFilter:filterEvent.categoriesFilter})
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
@@ -113,6 +188,11 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
 
     }
   }
+  const handleCofirmFilterEvent = ()=>{
+    setIsOpenModalizeFilter(false)
+    handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories)
+  }
+  console.log("cacac",filterEvent.categoriesFilter)
   return (
     <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
       <SectionComponent>
@@ -121,13 +201,12 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
             <SearchNormal size={20} variant="TwoTone" color={colors.gray} />
             <View style={{ backgroundColor: colors.gray, marginLeft: 10, height: 20, width: 1 }} />
             <View style={{ flex: 1 }}>
-              <InputComponent styles={{ minHeight: 'auto', marginBottom: 0, borderColor: 'white' }} onChange={(val) => setSeachKey(val)} value={searchKey} placeholder="Tìm kiếm sự kiện..." allowClear />
+              <InputComponent styles={{ minHeight: 'auto', marginBottom: 0, borderColor: 'white' }} onChange={(val) => handleOnChangeValudeFilter('searchKey',val)} value={filterEvent.searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear />
             </View>
           </RowComponent>
           <TagComponent
-            onPress={() => navigation.navigate('SearchEventsScreen', {
-              isFilter: true
-            })}
+            onPress={() => {setIsOpenModalizeFilter(true),setIdsSelectedCategories(filterEvent.categoriesFilter ?? [])}}
+            
             label="Lọc"
             icon={<CricleComponent size={20} color={'#b1aefa'}><Sort size={18} color="#5d56f3" /></CricleComponent>}
             bgColor="#5d56f3"
@@ -135,13 +214,19 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
         </RowComponent>
       </SectionComponent>
       {
-        (result && result?.length > 0) ? <>
+        (result && result?.length > 0 && !isLoading ) ? <>
 
           <ListEventComponent items={result} follows={allFollower} />
         </> 
         :
           <LoadingComponent isLoading={isLoading} value={result?.length} />
       }
+      <ModalFilterEvent selectedCategories={idsSelectedCategories} 
+      onSelectCategories={(val)=>setIdsSelectedCategories(val)} 
+      categories={allCategory} visible={isOpenModelizeFilter} 
+      onClose={()=>setIsOpenModalizeFilter(false)}
+      onComfirm={handleCofirmFilterEvent}
+      />
     </ContainerComponent>
   )
 }

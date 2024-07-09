@@ -4,6 +4,7 @@ import TextComponent from "./TextComponent"
 import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constrants/color"
 import { fontFamilies } from "../constrants/fontFamilies"
+import { AsyncStorageStatic } from "@react-native-async-storage/async-storage"
 
 interface Props {
     icon?: ReactNode,
@@ -18,7 +19,8 @@ interface Props {
     textFont?: string,
     disable?: boolean,
     numberOfLineText?:number,
-    textSize?:number
+    textSize?:number,
+    width?:any
 }
 const ButtonComponent = (props: Props) => {
     const {
@@ -34,7 +36,8 @@ const ButtonComponent = (props: Props) => {
         textFont,
         disable,
         numberOfLineText,
-        textSize
+        textSize,
+        width
     } = props
     return (
         type === 'primary' ?
@@ -45,7 +48,7 @@ const ButtonComponent = (props: Props) => {
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,
                         marginBottom: 17,
-                        width: '90%'
+                        width: width ?? '90%'
 
                     }, styles]}>
                     {icon && iconFlex === 'left' && icon}

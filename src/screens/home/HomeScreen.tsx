@@ -211,6 +211,7 @@ const HomeScreen = ({ navigation }: any) => {
     }
   }
   const reverseGeoCode = async (lat: number, long: number) => {
+    console.log("oke")
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {
       const res = await axios(api)
@@ -221,7 +222,6 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
-  console.log("abc",allFollower)
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -285,18 +285,18 @@ const HomeScreen = ({ navigation }: any) => {
               <View style={{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }} />
               <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} />
             </RowComponent>
-            <TagComponent
+            {/* <TagComponent
               onPress={() => navigation.navigate('SearchEventsScreen', {
                 
               })}
               label="Lọc"
               icon={<CricleComponent size={20} color={'#b1aefa'}><Sort size={18} color="#5d56f3" /></CricleComponent>}
               bgColor="#5d56f3"
-            />
+            /> */}
           </RowComponent>
         </View>
         <SpaceComponent height={20} />
-        <View style={{ marginTop: 10, }}>
+        <View style={{ marginTop: 18 }}>
           <CategoriesList isFill values={categories} />
         </View>
       </View>
@@ -306,7 +306,7 @@ const HomeScreen = ({ navigation }: any) => {
         marginTop: Platform.OS === 'android' ? 18 : 22
       }]}>
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
-          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen',{title:'Các sự kiện sắp xảy ra',items:allEvent,follows:allFollower})} />
+          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen',{title:'Các sự kiện sắp xảy ra',categories:categories,follows:allFollower})} />
           {
             isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
@@ -317,7 +317,7 @@ const HomeScreen = ({ navigation }: any) => {
           />
           }
 
-          <TabBarComponent title="Gần chỗ bạn" onPress={() =>  navigation.navigate('SearchEventsScreen',{title:'Các sự kiện gần chỗ bạn',items:allEventNear,lat:auth.position.lat,long:auth.position.lng,distance:'10',follows:allFollower})} />
+          <TabBarComponent title="Gần chỗ bạn" onPress={() =>  navigation.navigate('SearchEventsScreen',{title:'Các sự kiện gần chỗ bạn',categories:categories,lat:auth.position.lat,long:auth.position.lng,distance:'10',follows:allFollower})} />
           {
             isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
             showsHorizontalScrollIndicator={false}
