@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import { Image } from "react-native"
 import TextComponent from "./TextComponent"
 import { colors } from "../constrants/color"
@@ -16,6 +16,7 @@ interface Props {
 const AvatarItem = (props: Props) => {
     const { photoUrl, size, colorBorderWidth, index,styles,notBorderWidth,bdRadius,onPress} = props
     const ml = size ? -(size/2) : -12
+    console.log("AvatarItem")
     return (
         <TouchableOpacity
         onPress={onPress}
@@ -46,4 +47,4 @@ const AvatarItem = (props: Props) => {
         </TouchableOpacity>
     )
 }
-export default AvatarItem;
+export default memo(AvatarItem)

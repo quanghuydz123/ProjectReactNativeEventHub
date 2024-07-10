@@ -293,8 +293,9 @@ const ProfileScreen = ({ navigation, route }: any) => {
       <LoadingModal visible={isLoading} />
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
       <SelectModalize
-        key={profile?._id}
+        key={"ProfileScreen"}
         adjustToContentHeight
+        
         visible={isOpenModalizeSelectCategory}
         hidenHeader
         data={allCategory}

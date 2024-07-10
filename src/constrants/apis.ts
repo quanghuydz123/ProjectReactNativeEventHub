@@ -12,9 +12,9 @@ export const apis = {
     },
     event:{
         getById:(eid:string)=>`/get-event-byId?eid=${eid}`,
-        getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter,startAt,endAt}:
+        getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter,startAt,endAt,minPrice,maxPrice}:
     {lat?:string,long?:string,distance?:string,limit?:string,limitDate?:string
-        ,searchValue?:string,categoriesFilter?:string[],startAt?:string,endAt?:string})=>{
+        ,searchValue?:string,categoriesFilter?:string[],startAt?:string,endAt?:string,minPrice?:string,maxPrice?:string})=>{
                 const params = new URLSearchParams();
                 if (lat !== undefined) params.append('lat', lat);
                 if (long !== undefined) params.append('long', long);
@@ -24,7 +24,8 @@ export const apis = {
                 if (searchValue !== undefined) params.append('searchValue', searchValue);
                 if (startAt !== undefined) params.append('startAt', startAt);
                 if (endAt !== undefined) params.append('endAt', endAt);
-
+                if (minPrice !== undefined) params.append('minPrice', minPrice);
+                if (maxPrice  !== undefined) params.append('maxPrice', maxPrice );
                 if (categoriesFilter !== undefined) {
                     categoriesFilter.forEach(category => {
                         params.append('categoriesFilter', category);

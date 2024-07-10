@@ -1,8 +1,8 @@
 import { Button, FlatList, Text, TouchableOpacity, View } from "react-native"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
-import { ButtonComponent, ChoiceLocationComponent, RowComponent, SpaceComponent, TagComponent, TextComponent } from "../src/components";
+import { ButtonComponent, ChoiceLocationComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../src/components";
 import { colors } from "../src/constrants/color";
 import { CategoryModel } from "../src/models/CategoryModel";
 import { globalStyles } from "../src/styles/globalStyles";
@@ -11,6 +11,7 @@ import { fontFamilies } from "../src/constrants/fontFamilies";
 import { DateTime } from "../src/utils/DateTime";
 import { numberToString } from "../src/utils/numberToString";
 import { Address } from "../src/models/LocationModel";
+import RnRangeSlider from "rn-range-slider";
 interface Props {
     visible: boolean,
     onClose: () => void,
@@ -18,69 +19,78 @@ interface Props {
     categories: CategoryModel[],
     selectedCategories: string[],
     onSelectCategories: (val: string[]) => void,
-    selectedDateTime:{
-        startAt:string,
-        endAt:string
+    selectedDateTime: {
+        startAt: string,
+        endAt: string
     },
-    onSelectDateTime:(val:{
-        startAt:string,
-        endAt:string
-    })=>void,
-    selectedAddress:string,
-    onSelectAddress:(val:Address) =>void
+    onSelectDateTime: (val: {
+        startAt: string,
+        endAt: string
+    }) => void,
+    selectedAddress: string,
+    onSelectAddress: (val: Address) => void,
+    selectedPriceRenge:{
+        low: number,
+        high: number
+    },
+    onSelectPriceRange:(val:{
+        low: number,
+        high: number
+    })=>void
 }
 const ModalFilterEvent = (props: Props) => {
-    const { visible, onClose, categories, selectedCategories,selectedAddress,onSelectAddress, onSelectCategories, onComfirm,onSelectDateTime,selectedDateTime } = props
+    const { visible, onClose, categories, selectedCategories, selectedAddress, onSelectAddress
+        , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime,selectedPriceRenge,onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
     const [allFollow, setAllFollow] = useState<FollowerModel[]>([])
-    const [filterDate,setFilterDate] = useState('')
+    const [filterDate, setFilterDate] = useState('')
     const timeChoises = [{
-        key:'today',
-        text:'Hôm nay'
+        key: 'today',
+        text: 'Hôm nay'
     },
     {
-        key:'tomorrow',
-        text:'Ngày mai'
+        key: 'tomorrow',
+        text: 'Ngày mai'
     },
     {
-        key:'thisWeek',
-        text:'Trong tuần'
+        key: 'thisWeek',
+        text: 'Trong tuần'
     }
     ]
 
     useEffect(() => {
         setAllCategory(categories)
+        
     }, [categories])
-
-    useEffect(()=>{
-        if(filterDate === 'today'){
+    useEffect(() => {
+        if (filterDate === 'today') {
             const d = new Date()
-            const date = `${d.getFullYear()}-${numberToString(d.getMonth()+1)}-${numberToString(d.getDate())}`
+            const date = `${d.getFullYear()}-${numberToString(d.getMonth() + 1)}-${numberToString(d.getDate())}`
             onSelectDateTime({
-                startAt:`${date} 00:00:00`,
-                endAt:`${date} 23:59:59`
+                startAt: `${date} 00:00:00`,
+                endAt: `${date} 23:59:59`
             })
-        }else if(filterDate === 'tomorrow'){
+        } else if (filterDate === 'tomorrow') {
             const d = new Date(Date.now() + 24 * 60 * 60 * 1000)
-            const date = `${d.getFullYear()}-${numberToString(d.getMonth()+1)}-${numberToString(d.getDate())}`
+            const date = `${d.getFullYear()}-${numberToString(d.getMonth() + 1)}-${numberToString(d.getDate())}`
             onSelectDateTime({
-                startAt:`${date} 00:00:00`,
-                endAt:`${date} 23:59:59`
+                startAt: `${date} 00:00:00`,
+                endAt: `${date} 23:59:59`
             })
-        }else if(filterDate === 'thisWeek'){
+        } else if (filterDate === 'thisWeek') {
             const date = new Date();
             var sub = date.getDay() > 0 ? 1 : -6;
             var dStartAt = new Date(date.setDate(date.getDate() - date.getDay() + sub));
-            const startAtWeek = `${dStartAt.getFullYear()}-${numberToString(dStartAt.getMonth()+1)}-${numberToString(dStartAt.getDate())}`
-            var dEndAt = new Date(date.setDate(date.getDate() - date.getDay() + sub)+ 24 * 60 * 60 * 1000 * 6);
-            const endAtWeek = `${dEndAt.getFullYear()}-${numberToString(dEndAt.getMonth()+1)}-${numberToString(dEndAt.getDate())}`
+            const startAtWeek = `${dStartAt.getFullYear()}-${numberToString(dStartAt.getMonth() + 1)}-${numberToString(dStartAt.getDate())}`
+            var dEndAt = new Date(date.setDate(date.getDate() - date.getDay() + sub) + 24 * 60 * 60 * 1000 * 6);
+            const endAtWeek = `${dEndAt.getFullYear()}-${numberToString(dEndAt.getMonth() + 1)}-${numberToString(dEndAt.getDate())}`
             onSelectDateTime({
-                startAt:`${startAtWeek} 00:00:00`,
-                endAt:`${endAtWeek} 23:59:59`
+                startAt: `${startAtWeek} 00:00:00`,
+                endAt: `${endAtWeek} 23:59:59`
             })
         }
-    },[filterDate])
+    }, [filterDate])
     useEffect(() => {
         if (visible) {
             modalieRef.current?.open()
@@ -100,22 +110,27 @@ const ModalFilterEvent = (props: Props) => {
 
         }
     }
-    const handleChoiseFilterDate = (val:string)=>{
-        if(val === filterDate){
+    const handleChoiseFilterDate = (val: string) => {
+        if (val === filterDate) {
             setFilterDate('')
-            onSelectDateTime({startAt:'',endAt:''})
-        }else{
+            onSelectDateTime({ startAt: '', endAt: '' })
+        } else {
             setFilterDate(val)
         }
     }
-    const handleOnSelectLocation = (val:Address)=>{
+    const handleOnSelectLocation = (val: Address) => {
         onSelectAddress(val)
-      }
+    }
+    const handleValueChange = useCallback((low: number, high: number) => {
+        onSelectPriceRange({ low, high });
+    }, []);
+    console.log("asd",categories,allCategory)
     return (
         <Portal>
             <Modalize
                 adjustToContentHeight
                 ref={modalieRef}
+                key={'ModalFilterEvent'}
                 onClose={() => onClose()}
                 modalStyle={{
                     paddingHorizontal: 12,
@@ -147,30 +162,65 @@ const ModalFilterEvent = (props: Props) => {
                             </View>)
                         }
                     </View>
+                    <SectionComponent styles={{ paddingHorizontal: 0 }}>
+                    <RowComponent justify="space-between">
+                        <TextComponent text={'Giá'} title size={14} />
+                        <TextComponent text={`${selectedPriceRenge?.low} - ${selectedPriceRenge?.high} (VNĐ)`}/>
+                    </RowComponent>
+                    <SpaceComponent height={12}/>
+                        <RowComponent>
+                            <View style={{flex:1,paddingHorizontal:4}}>
+                            <RnRangeSlider
+                                min={0} max={1000000} step={1000}
+                                style={{height: 5, backgroundColor: colors.gray2, borderRadius: 10, justifyContent: 'center' }}
+                                renderThumb={() => (
+                                    <View style={{
+                                        width: 20,
+                                        height: 20,
+                                        borderRadius: 100,
+                                        backgroundColor: colors.primary
+                                    }}/>
+                                )}
+                                renderRail={() => <></>}
+                                renderRailSelected={() => <View style={{
+                                    height:5,
+                                    backgroundColor:colors.primary,
+                                    borderRadius:10
+                                }}></View>}
+                                onValueChanged={handleValueChange}
+
+                            />
+                            </View>
+                        </RowComponent>
+                    </SectionComponent >
                     <View>
                         <SpaceComponent height={12} />
                         <TextComponent text={'Thời gian diễn ra'} title size={14} />
                         <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
                             {
-                                timeChoises.map((item)=> <>
-                                <TouchableOpacity 
-                                onPress={()=>handleChoiseFilterDate(item.key)}
-                                key={item.key} style={[globalStyles.button, 
-                                    { borderColor: colors.gray2, borderWidth: 1, minHeight: 30
-                                        ,backgroundColor:filterDate === item.key ? colors.primary : colors.white
-                                     }]}>
-                                    <TextComponent text={item.text} font={fontFamilies.medium} color={filterDate === item.key ? colors.white : colors.colorText} />
-                                </TouchableOpacity>
-                                <SpaceComponent width={12}/>
+                                timeChoises.map((item) => <>
+                                    <TouchableOpacity
+                                        onPress={() => handleChoiseFilterDate(item.key)}
+                                        key={item.key} style={[globalStyles.button,
+                                        {
+                                            borderColor: colors.gray2, borderWidth: 1, minHeight: 30
+                                            , backgroundColor: selectedDateTime.startAt ? filterDate === item.key ? colors.primary : colors.white : colors.white
+                                        }]}>
+                                        <TextComponent text={item.text} font={fontFamilies.medium} color={selectedDateTime.startAt ? filterDate === item.key ? colors.white : colors.colorText : colors.colorText} />
+                                    </TouchableOpacity>
+                                    <SpaceComponent width={12} />
                                 </>
                                 )
                             }
                         </RowComponent>
                     </View>
                     <View>
-                        <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
+                        <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: Address) => handleOnSelectLocation(val)} />
 
                     </View>
+                    
+                    <SpaceComponent height={16} />
+
                 </View>
             </Modalize>
         </Portal>

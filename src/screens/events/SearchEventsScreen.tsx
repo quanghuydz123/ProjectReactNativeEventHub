@@ -10,7 +10,7 @@ import ListEventComponent from "../../components/ListEventComponent"
 import LoadingComponent from "../../components/LoadingComponent"
 import { SearchNormal, Sort } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
-import {debounce, lte} from 'lodash'
+import {debounce, lte, toString} from 'lodash'
 import socket from "../../utils/socket"
 import ModalFilterEvent from "../../../modals/ModalFilterEvent"
 import { CategoryModel } from "../../models/CategoryModel"
@@ -59,7 +59,13 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [first,setFirst] = useState(false)
   const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
   const [addressFilter,setAddressFilter] = useState('')
-
+  const [priceRenge, setPriceRenge] = useState<{
+    low: number,
+    high: number
+  }>({
+      low:0,
+      high:1000000
+  })
   const [dateTime,setDateTime] = useState<{
     startAt:string,
     endAt:string
@@ -200,7 +206,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const getEvents = async () => {
     const api = apis.event.getAll({lat:filterEvent.position.lat,
       long:filterEvent.position.lng,distance:'10',categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
       })
     setIsLoading(true)
     try {
@@ -219,7 +225,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     const api = apis.event.getAll({lat:filterEvent.position.lat,
       long:filterEvent.position.lng,distance:'10',
       searchValue:filterEvent.searchKey,categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
     })
     try {
       const res = await eventAPI.HandleEvent(api)
@@ -241,6 +247,9 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
     await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories,'position',position)
 
+  }
+  const handleResetFilterEvent = ()=>{
+    setIsOpenModalizeFilter(false)
   }
   return (
     <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
@@ -273,12 +282,14 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       <ModalFilterEvent selectedCategories={idsSelectedCategories} 
       onSelectCategories={(val)=>setIdsSelectedCategories(val)} 
       categories={allCategory} visible={isOpenModelizeFilter} 
-      onClose={()=>setIsOpenModalizeFilter(false)}
+      onClose={()=>handleResetFilterEvent()}
       onComfirm={handleCofirmFilterEvent}
       selectedDateTime={dateTime}
       onSelectDateTime={(val)=>setDateTime(val)}
       selectedAddress={addressFilter}
       onSelectAddress={(val)=>setAddressFilter(val.label)}
+      onSelectPriceRange={(val)=>setPriceRenge({low:val.low,high:val.high})}
+      selectedPriceRenge={priceRenge}
       />
     </ContainerComponent>
   )

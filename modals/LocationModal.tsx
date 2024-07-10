@@ -9,6 +9,7 @@ import { Address, LocationModel } from "../src/models/LocationModel"
 import { fontFamilies } from "../src/constrants/fontFamilies"
 import SearchComponent from "../src/components/SearchComponent"
 import { BackHandler } from 'react-native';
+import LoadingComponent from "../src/components/LoadingComponent"
 
 interface Props {
     visible:boolean
@@ -26,12 +27,14 @@ const LocationModal = (props:Props)=>{
     }
     const handleSearchLocation = async ()=>{
       const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_AUTOCOMPLE}`
+      setIsLoading(true)
       try {
         setIsLoading(true)
         const res = await axios.get(api)
         if(res && res.data && res.status===200){
           setLocations(res.data)
         }
+        setIsLoading(false) 
       } catch (error) {
         console.log(error)
         setIsLoading(false)
@@ -110,13 +113,14 @@ const LocationModal = (props:Props)=>{
           marginTop:20
         }}>
             {
-              locations && (
+              (locations && !isLoading ) ? (
                 <FlatList 
                 showsVerticalScrollIndicator={false}
                 data={locations.items}
                 renderItem={({item,index}) => handleRenderLocationSearch(item.address)}
                 />
-              )
+              ):
+              <LoadingComponent isLoading={isLoading} value={locations?.items.length ?? 0} />
             }
         </View>
       </View>

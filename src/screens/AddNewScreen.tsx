@@ -170,7 +170,7 @@ const AddNewScreen = ()=>{
     setFileSelected(val)
     handleOnchageValue('photoUrl',val.path)
   }
-  const handleChoiceImage = (val:any)=>{
+  const   handleChoiceImage = (val:any)=>{
     setFileSelected(undefined)
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }

@@ -40,3 +40,5 @@ npm install react-native-maps
 npm install --save react-native-toast-message
 
 npx uri-scheme add eventhub --android
+
+npm install --save rn-range-slider

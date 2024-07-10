@@ -5,7 +5,7 @@ import { fontFamilies } from "../constrants/fontFamilies";
 import { globalStyles } from "../styles/globalStyles";
 //numberOfLine hiện thị tối đa bao nhiêu dòng
 interface Props{
-    text:string | string[],
+    text:string | string[] | number,
     color?: string,
     size?: number,
     flex?: number,
