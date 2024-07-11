@@ -16,7 +16,6 @@ interface Props {
 const AvatarItem = (props: Props) => {
     const { photoUrl, size, colorBorderWidth, index,styles,notBorderWidth,bdRadius,onPress} = props
     const ml = size ? -(size/2) : -12
-    console.log("AvatarItem")
     return (
         <TouchableOpacity
         onPress={onPress}

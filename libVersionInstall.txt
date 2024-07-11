@@ -42,3 +42,8 @@ npm install --save react-native-toast-message
 npx uri-scheme add eventhub --android
 
 npm install --save rn-range-slider
+
+
+react-native-orientation-locker
+react-native-device-info
+npm i @react-native-community/netinfo@6.0.6 // kiểm tra kết nối mạng

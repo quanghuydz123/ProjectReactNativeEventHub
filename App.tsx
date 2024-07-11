@@ -14,10 +14,18 @@ import socket from "./src/utils/socket"
 import { HandleNotification } from "./src/utils/handleNotification"
 import Toast from "react-native-toast-message"
 import linking from "./src/linking"
+import DeviceInfo from "react-native-device-info"
+import Orientation from "react-native-orientation-locker"
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
   useEffect(()=>{
     HandleNotification.checkNotifitionPersion()
+  },[])
+  useEffect(()=>{
+    const type = DeviceInfo.getDeviceType()
+    if(type === 'Handset'){
+      Orientation.lockToPortrait() // khóa xoay ngang
+    }
   },[])
   return <>
     {/* //hiện thi thanh giờ,pin,... */}

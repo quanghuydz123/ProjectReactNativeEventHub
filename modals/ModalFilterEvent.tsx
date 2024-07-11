@@ -44,6 +44,13 @@ const ModalFilterEvent = (props: Props) => {
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
     const [allFollow, setAllFollow] = useState<FollowerModel[]>([])
+    const [rangePriceCopy,setRangePriceCopy] = useState<{
+        low: number,
+        high: number
+    }>({
+        low:0,
+        high:1000000
+    })
     const [filterDate, setFilterDate] = useState('')
     const timeChoises = [{
         key: 'today',
@@ -124,8 +131,7 @@ const ModalFilterEvent = (props: Props) => {
     const handleValueChange = useCallback((low: number, high: number) => {
         onSelectPriceRange({ low, high });
     }, []);
-    console.log("asd",categories,allCategory)
-    return (
+        return (
         <Portal>
             <Modalize
                 adjustToContentHeight
@@ -164,28 +170,44 @@ const ModalFilterEvent = (props: Props) => {
                     </View>
                     <SectionComponent styles={{ paddingHorizontal: 0 }}>
                     <RowComponent justify="space-between">
-                        <TextComponent text={'Giá'} title size={14} />
-                        <TextComponent text={`${selectedPriceRenge?.low} - ${selectedPriceRenge?.high} (VNĐ)`}/>
+                        <TextComponent text={'Giá (VNĐ)'} title size={14} />
+                        {/* <TextComponent text={`0 - 1000000 (VNĐ)`}/> */}
                     </RowComponent>
-                    <SpaceComponent height={12}/>
+                    <SpaceComponent height={20  }/>
                         <RowComponent>
                             <View style={{flex:1,paddingHorizontal:4}}>
                             <RnRangeSlider
                                 min={0} max={1000000} step={1000}
-                                style={{height: 5, backgroundColor: colors.gray2, borderRadius: 10, justifyContent: 'center' }}
-                                renderThumb={() => (
+                                // low={selectedPriceRenge.low}
+                                // high={selectedPriceRenge.high}
+                                style={{height: 5, backgroundColor: colors.gray2, borderRadius: 10,marginHorizontal:12, justifyContent: 'center' }}
+                                renderThumb={(name) => (
                                     <View style={{
                                         width: 20,
                                         height: 20,
                                         borderRadius: 100,
-                                        backgroundColor: colors.primary
-                                    }}/>
+                                        borderWidth:2,
+                                        borderColor:colors.primary,
+                                        backgroundColor: colors.white
+                                        
+                                    }}>
+                                        <View style={{
+                                            position:'absolute',
+                                            right:0,
+                                            left:-20,
+                                            bottom:16,
+                                            width:50,
+                                            alignItems:'center'
+                                        }}>
+                                            <TextComponent size={12} color={colors.gray} text={name === 'low' ? selectedPriceRenge.low : selectedPriceRenge.high}/>
+                                        </View>
+                                    </View>
                                 )}
                                 renderRail={() => <></>}
                                 renderRailSelected={() => <View style={{
                                     height:5,
                                     backgroundColor:colors.primary,
-                                    borderRadius:10
+                                    borderRadius:10,
                                 }}></View>}
                                 onValueChanged={handleValueChange}
 

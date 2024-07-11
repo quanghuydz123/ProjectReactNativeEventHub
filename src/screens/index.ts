@@ -17,6 +17,7 @@ import AboutProfileScreen from "./profiles/AboutProfileScreen"
 import NotFound from "./NotFound"
 import ExploreEvent from "./events/ExploreEvent"
 import PaymentScreen from "./events/PaymentScreen"
+import NewScreen from "./NewScreen"
 
 export {
     HomeScreen,
@@ -37,5 +38,6 @@ export {
     AboutProfileScreen,
     NotFound,
     ExploreEvent,
-    PaymentScreen
+    PaymentScreen,
+    NewScreen
 }
