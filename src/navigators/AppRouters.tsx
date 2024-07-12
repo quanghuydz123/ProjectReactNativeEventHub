@@ -11,7 +11,7 @@ const AppRouters = ()=>{
     const {getItem} = useAsyncStorage('auth')
     const [isShowSlash,setIsShowSlash] = useState(true)
     const dispatch = useDispatch()
-    const [isOnline,setIsOnline] = useState(false)
+    const [isOnline,setIsOnline] = useState(true )
     const auth = useSelector(authSelector)
     useEffect(()=>{
       checkLogin()

@@ -27,6 +27,8 @@ import { apis } from "../../constrants/apis"
 import { CategoryModel } from "../../models/CategoryModel"
 import categoryAPI from "../../apis/categoryAPI"
 import { handleLinking } from "../../utils/handleLinking"
+import notificationAPI from "../../apis/notificationAPI"
+import { NotificationModel } from "../../models/NotificationModel"
 
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch()
@@ -41,6 +43,9 @@ const HomeScreen = ({ navigation }: any) => {
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [refreshList, setRefreshList] = useState(false);
   const [categories,setCategories] = useState<CategoryModel[]>([])
+  const [notifications,setNotifications] = useState<NotificationModel[]>([])
+  const [isViewdNotifications,setIsViewNotifications] = useState(true)
+  const [numberOfUnseenNotifications,setNumberOfUnseenNotifications] = useState(0)
   useEffect(() => {
     getLocationUser()
   }, [])
@@ -68,7 +73,15 @@ const HomeScreen = ({ navigation }: any) => {
     handleCallApiGetAllEvent()
     handleCallApiGetAllFollower()
     handleGetAllCategory()
+    handleCallAPIGetNotifications()
   }, [])
+
+  useEffect(()=>{
+    if(notifications){
+      console.log("123123123")
+      handleCheckViewedNotifications(notifications)
+    }
+  },[notifications])
 
   useEffect(() => {
     handleCallApiGetEventsNearYou()
@@ -94,16 +107,44 @@ const HomeScreen = ({ navigation }: any) => {
       console.log('user cập nhật');
     };
 
+    const handleGetNotifications = () => {
+      handleCallAPIGetNotifications()
+      console.log('notification cập nhật');
+    };
+
     socket.on('followers', handleFollowers);
     socket.on('events', handleEvents);
     socket.on('updateUser', handleUpdateUser);
-
+    socket.on('getNotifications',handleGetNotifications)
     return () => {
       socket.off('followers', handleFollowers);
       socket.off('events', handleEvents);
       socket.off('updateUser', handleUpdateUser);
+      socket.off('getNotifications', handleGetNotifications);
     };
   }, [])
+  const handleCheckViewedNotifications = (notifications:NotificationModel[])=>{
+    const isCheck = notifications?.some((item)=>item.isViewed === false)
+    const numberOfUnseenNotifications = notifications?.reduce((count, item) => count + (!item.isViewed ? 1 : 0), 0);
+    setNumberOfUnseenNotifications(numberOfUnseenNotifications);
+    setIsViewNotifications(!isCheck)
+  }
+  const handleCallAPIGetNotifications = async ()=>{
+    const api = `/get-notifications-byId?uid=${auth.id}`
+    try {
+      const res:any = await notificationAPI.HandleNotification(api)
+      if(res && res.data && res.status===200){
+        setNotifications(res.data.notifications)
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+    }
+  }
 
   const handleGetAllCategory = async ()=>{
     const api = '/get-all'
@@ -222,6 +263,7 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
+  console.log('notifi',notifications.length)
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -257,20 +299,26 @@ const HomeScreen = ({ navigation }: any) => {
                   size={13} color={colors.white2} font={fontFamilies.medium} />
               }
             </View>
-            <CricleComponent color={'#524CE0'} size={36}>
+            <CricleComponent color={'#524CE0'} size={36} onPress={()=>navigation.navigate('NotificationsScreen',{notificationRoute:notifications})}>
               <View>
                 <Notification size={18} color={colors.white} />
-                <View style={{
+                {
+                 !isViewdNotifications && <View style={{
                   backgroundColor: '#02E9FE',
-                  width: 6,
-                  height: 6,
-                  borderRadius: 4,
+                  width: 18,
+                  height: 18,
+                  borderRadius: 100,
                   borderWidth: 1,
                   borderColor: '#02E9FE',
                   position: 'absolute',
-                  top: 0,
-                  right: 3
-                }} />
+                  top: -8,
+                  right: -8,
+                  justifyContent:'center',
+                  alignItems:'center'
+                }} >
+                  <TextComponent text={numberOfUnseenNotifications} size={10} font={fontFamilies.medium} color={colors.white}/>
+                  </View>
+                }
               </View>
             </CricleComponent>
           </RowComponent>

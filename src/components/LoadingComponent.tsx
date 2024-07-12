@@ -2,7 +2,7 @@ import { ActivityIndicator, Button, Text, View } from "react-native"
 import React from "react"
 import TextComponent from "./TextComponent"
 interface Props{
-    value:number,
+    value?:number,
     isLoading:boolean,
     message?:string
 }

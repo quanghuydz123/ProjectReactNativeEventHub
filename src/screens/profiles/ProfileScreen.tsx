@@ -295,7 +295,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
       <SelectModalize
         key={"ProfileScreen"}
         adjustToContentHeight
-        
         visible={isOpenModalizeSelectCategory}
         hidenHeader
         data={allCategory}

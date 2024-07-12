@@ -148,7 +148,10 @@ const EventDetails = ({ navigation, route }: any) => {
     if (event?._id) {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
       try {
-        const res = await notificationAPI.HandleNotification(api, { uids: userSelected, eventId: event._id }, 'post')
+        const res = await notificationAPI.HandleNotification(api, { SenderID:auth.id,RecipientIds: userSelected, eventId: event._id }, 'post')
+        if(res && res.status===200){
+          socket.emit('getNotifications')
+        }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
         console.log('Lỗi rồi EventDetails')
@@ -294,7 +297,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 }
               }}
               >
-                <AvatarItem photoUrl={event?.authorId.photoUrl} size={48} bdRadius={12} />
+                <AvatarItem photoUrl={event?.authorId?.photoUrl} size={48} bdRadius={12} />
                 <SpaceComponent width={16} />
                 <View style={{
                   justifyContent: 'space-around',
@@ -374,7 +377,7 @@ const EventDetails = ({ navigation, route }: any) => {
             }
           ]}
         >
-          <AvatarItem photoUrl={item.photoUrl} size={38} onPress={() => {
+          <AvatarItem photoUrl={item?.photoUrl} size={38} onPress={() => {
             if (item._id == auth.id) {
               setIsOpenModalizeInityUser(false)
               navigation.navigate('Profile', {

@@ -115,6 +115,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
         socket.emit('followUser')
+        socket.emit('getNotifications')
       }
       setIsLoading(false)
     } catch (error:any) {

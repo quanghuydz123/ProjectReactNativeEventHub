@@ -18,6 +18,7 @@ import NotFound from "./NotFound"
 import ExploreEvent from "./events/ExploreEvent"
 import PaymentScreen from "./events/PaymentScreen"
 import NewScreen from "./NewScreen"
+import NotificationsScreen from "./NotificationsScreen"
 
 export {
     HomeScreen,
@@ -39,5 +40,6 @@ export {
     NotFound,
     ExploreEvent,
     PaymentScreen,
-    NewScreen
+    NewScreen,
+    NotificationsScreen
 }

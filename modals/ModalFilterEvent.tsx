@@ -159,7 +159,7 @@ const ModalFilterEvent = (props: Props) => {
                 <View style={{ paddingTop: 10 }}>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
-                            categories && categories.map((item) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={item._id}>
+                            categories && categories.map((item,index) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={`categoriesModalFilter${index}`}>
                                 <TagComponent key={item._id} onPress={() => handleFollowerCategory(item._id)} label={item.name}
                                     bgColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
                                     textColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.white : colors.black}
@@ -167,6 +167,28 @@ const ModalFilterEvent = (props: Props) => {
 
                             </View>)
                         }
+                    </View>
+
+                    <View>
+                        <SpaceComponent height={12} />
+                        <TextComponent text={'Thời gian diễn ra'} title size={14} />
+                        <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
+                            {
+                                timeChoises.map((item,index) => <>
+                                    <TouchableOpacity
+                                        onPress={() => handleChoiseFilterDate(item.key)}
+                                        key={`time${index}`} style={[globalStyles.button,
+                                        {
+                                            borderColor: colors.gray2, borderWidth: 1, minHeight: 30
+                                            , backgroundColor: selectedDateTime.startAt ? filterDate === item.key ? colors.primary : colors.white : colors.white
+                                        }]}>
+                                        <TextComponent text={item.text} font={fontFamilies.medium} color={selectedDateTime.startAt ? filterDate === item.key ? colors.white : colors.colorText : colors.colorText} />
+                                    </TouchableOpacity>
+                                    <SpaceComponent width={12} />
+                                </>
+                                )
+                            }
+                        </RowComponent>
                     </View>
                     <SectionComponent styles={{ paddingHorizontal: 0 }}>
                     <RowComponent justify="space-between">
@@ -215,27 +237,6 @@ const ModalFilterEvent = (props: Props) => {
                             </View>
                         </RowComponent>
                     </SectionComponent >
-                    <View>
-                        <SpaceComponent height={12} />
-                        <TextComponent text={'Thời gian diễn ra'} title size={14} />
-                        <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
-                            {
-                                timeChoises.map((item) => <>
-                                    <TouchableOpacity
-                                        onPress={() => handleChoiseFilterDate(item.key)}
-                                        key={item.key} style={[globalStyles.button,
-                                        {
-                                            borderColor: colors.gray2, borderWidth: 1, minHeight: 30
-                                            , backgroundColor: selectedDateTime.startAt ? filterDate === item.key ? colors.primary : colors.white : colors.white
-                                        }]}>
-                                        <TextComponent text={item.text} font={fontFamilies.medium} color={selectedDateTime.startAt ? filterDate === item.key ? colors.white : colors.colorText : colors.colorText} />
-                                    </TouchableOpacity>
-                                    <SpaceComponent width={12} />
-                                </>
-                                )
-                            }
-                        </RowComponent>
-                    </View>
                     <View>
                         <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: Address) => handleOnSelectLocation(val)} />
 

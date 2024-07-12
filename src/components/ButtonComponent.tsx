@@ -64,7 +64,7 @@ const ButtonComponent = (props: Props) => {
                 </TouchableOpacity>
             </View>
             :
-            <TouchableOpacity onPress={onPress} disabled={disable} >
+            <TouchableOpacity onPress={onPress} disabled={disable} style={[styles]} >
                 {icon && iconFlex === 'left' && icon}
 
                 {
