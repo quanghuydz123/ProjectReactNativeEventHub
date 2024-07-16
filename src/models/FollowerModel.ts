@@ -8,5 +8,10 @@ export interface FollowerModel {
     user:UserModel,
     events:EventModelNew[],
     categories:CategoryModel[],
-    users:UserModel[]
+    users:{
+        idUser:UserModel,
+        status:boolean,
+        _id:string,
+        idNotification:string
+    }[]
 }

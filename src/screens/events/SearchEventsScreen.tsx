@@ -16,6 +16,8 @@ import ModalFilterEvent from "../../../modals/ModalFilterEvent"
 import { CategoryModel } from "../../models/CategoryModel"
 import categoryAPI from "../../apis/categoryAPI"
 import axios from "axios"
+import { useSelector } from "react-redux"
+import { authSelector } from "../../reduxs/reducers/authReducers"
 interface routeParams {
   items: EventModelNew[],
   follows: FollowerModel[],
@@ -31,7 +33,6 @@ interface FilterEvent {
   distance?:string,
   limit?:string,
   categoriesFilter?:string[],
-  searchKey?:string,
   position:{
     lat?:string,
     lng?:string
@@ -41,7 +42,6 @@ const initFilterEvent:FilterEvent = {
   limit:'',
   categoriesFilter:[],
   distance:'',
-  searchKey:'',
   position:{
     lat:'',
     lng:''
@@ -59,6 +59,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [first,setFirst] = useState(false)
   const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
   const [addressFilter,setAddressFilter] = useState('')
+  const [searchKey,setSearchKey] = useState('')
   const [priceRenge, setPriceRenge] = useState<{
     low: number,
     high: number
@@ -73,6 +74,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   startAt:'',
   endAt:''
 })
+const auth = useSelector(authSelector)
   const [filterEvent,setFilterEvent] = useState<FilterEvent>(initFilterEvent)
   useEffect(() => {
     handleSetFilterEvent()
@@ -90,39 +92,42 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   //     setDateRoute(route.params)
   //   }
   // },[route])
-  useEffect(()=>{
-    // if(!searchKey){
-    //   setResult(events)
-    // }
-    // else{
-    //   const handleSeachValude = debounce(handleSearchEvent,100)
-    //   handleSeachValude()
-    // }
-    if(first){
-      const handleSeachValude = debounce(handleSearchEvent,500)
-      handleSeachValude()
-    }else{
-      setFirst(true)
-    }
+  // useEffect(()=>{
+  //   // if(!searchKey){
+  //   //   setResult(events)
+  //   // }
+  //   // else{
+  //   //   const handleSeachValude = debounce(handleSearchEvent,100)
+  //   //   handleSeachValude()
+  //   // }
+  //   console.log("ok2")
+  //   if(first){
+  //     const handleSeachValude = debounce(handleSearchEvent,500)
+  //     handleSeachValude()
+  //   }else{
+  //     setFirst(true)
+  //   }
 
-  },[filterEvent.searchKey])
+  // },[searchKey])
   useEffect(() => {
-    const handleFollowers = () => {
-      handleCallApiGetAllFollower();
-      console.log('followers cập nhật');
-    };
-    socket.on('followers',handleFollowers)
+    // const handleFollowers = () => {
+    //   handleCallApiGetAllFollower();
+    //   console.log('followers cập nhật');
+    // };
+    // socket.on('followers',(idUser)=>{
+    //   if(idUser===auth.id){
+    //     handleFollowers()
+    //   }
+    // })
 
  
-    return () => {
-      socket.off('followers', handleFollowers);
-    };
+    // return () => {
+    //   socket.off('followers', handleFollowers);
+    // };
   }, [])
   useEffect(()=>{
+    console.log("ok1")
     if(first){
-      // if (!result) {
-      //   getEvents()
-      // }
       getEvents()
     }else{
       setFirst(true)
@@ -224,19 +229,20 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const handleSearchEvent = async ()=>{
     const api = apis.event.getAll({lat:filterEvent.position.lat,
       long:filterEvent.position.lng,distance:'10',
-      searchValue:filterEvent.searchKey,categoriesFilter:filterEvent.categoriesFilter,
+      searchValue:searchKey,categoriesFilter:filterEvent.categoriesFilter,
       startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
     })
+    setIsLoading(true)
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
         setResult(res.data.events)
       }
-
+      setIsLoading(false)
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("ExploreEvent", errorMessage)
-
+      setIsLoading(false)
     }
   }
   const handleCofirmFilterEvent = async ()=>{
@@ -259,7 +265,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
             <SearchNormal size={20} variant="TwoTone" color={colors.gray} />
             <View style={{ backgroundColor: colors.gray, marginLeft: 10, height: 20, width: 1 }} />
             <View style={{ flex: 1 }}>
-              <InputComponent styles={{ minHeight: 'auto', marginBottom: 0, borderColor: 'white' }} onChange={(val) => handleOnChangeValudeFilter('searchKey',val)} value={filterEvent.searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear />
+              <InputComponent styles={{ minHeight: 'auto', marginBottom: 0, borderColor: 'white' }} onChange={(val) => setSearchKey(val)}
+               value={searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear onEnd={()=>handleSearchEvent()} />
             </View>
           </RowComponent>
           <TagComponent

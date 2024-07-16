@@ -35,8 +35,8 @@ const EditProfileScreen = ({navigation,route}:any)=>{
                 await AsyncStorage.setItem('auth',JSON.stringify({...jsonResStorage,...res.data.user}))
                 dispatch(addAuth({...auth,...res.data.user}))
                 socket.emit('updateUser')
-                setIsLoading(false)
                 ToastMessaging.Success({})
+                setIsLoading(false)
             }
         } catch (error:any) {
             const errorMessage = JSON.parse(error.message)

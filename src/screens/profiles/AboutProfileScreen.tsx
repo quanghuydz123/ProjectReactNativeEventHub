@@ -49,10 +49,10 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
   },[])
   useEffect(()=>{
     handleCallApiGetProfile()
-    handleCallApiGetFollowerUserOtherById()
+    handleCallApiGetFollowerUserOtherById(true)
   },[uidOthor])
   useEffect(()=>{
-    handleCallApiGetFollowerById()
+    handleCallApiGetFollowerById(true)
   },[])
   const renderTabContent = (key:String)=>{
     let content = <></>
@@ -86,10 +86,10 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       }
     }
   }
-  const handleCallApiGetFollowerById = async () => {
+  const handleCallApiGetFollowerById = async (isLoading?:boolean) => {
     if(auth.id){
       const api = apis.follow.getById(auth.id)
-      setIsLoading(true)
+      setIsLoading(isLoading ? isLoading : false)
 
     try {
       const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
@@ -128,10 +128,10 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       setIsLoading(false)
     }
   }
-  const handleCallApiGetFollowerUserOtherById = async ( )=>{
+  const handleCallApiGetFollowerUserOtherById = async (isLoading?:boolean)=>{
     if(uidOthor){
       const api = apis.follow.getById(uidOthor)
-      setIsLoading(true)
+      setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
@@ -166,31 +166,32 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
           </View>
           <View style={{height:'100%', width:1,backgroundColor:colors.gray2}}/>
           <View style={[globalStyles.center, { flex: 1 }]}>
-          <TextComponent text={followerUserOther[0]?.users.length !== undefined ? `${followerUserOther[0]?.users.length}` : '0'} size={20} />
+          <TextComponent text={followerUserOther[0]?.users.length !== undefined ? `${followerUserOther[0]?.users.filter((item)=>item.status===true).length}` : '0'} size={20} />
             <TextComponent text="Đang theo dõi" />
           </View>
         </RowComponent>
       </SectionComponent>
       <SectionComponent>
       <RowComponent justify="center">
-          <ButtonComponent 
-            text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user._id === uidOthor)) ?  "Hủy theo dõi" : "Theo dõi"}
+          <ButtonComponent
+            
+              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser._id === uidOthor)) ? follower[0]?.users.some(user => (user.status === false && user.idUser._id === uidOthor)) ?  "Đang đợi chấp nhận" : "Đã theo dõi" : 'Theo dõi'}
             onPress={()=>handleFollowUser()}
             type="primary"
             color={colors.primary}
             textColor={colors.white}
-            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0}}
-            icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user._id === uidOthor)) ? 
+            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0,paddingHorizontal:8}}
+            icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser._id === uidOthor)) ? 
             <AntDesign name="deleteuser" size={22} color={colors.white}/> : 
             <AntDesign name="adduser" size={22} color={colors.white}/>}
             iconFlex="left"
           />
-          <SpaceComponent width={20}/>
+          <SpaceComponent width={10}/>
           <ButtonComponent text="Nhắn tin"
             type="primary"
             color="white"
             textColor={colors.primary}
-            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0}}
+            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0,paddingHorizontal:8}}
             icon={<AntDesign name="message1" size={22} color={colors.primary} />}
             iconFlex="left"
           />

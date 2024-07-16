@@ -104,7 +104,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
         if (res && res.data.event && res.status === 200) {
-          socket.emit("followers");
+          socket.emit("followers",{id:auth.id});
           handleCallApiGetAllFollower()
         }
       } catch (error: any) {
@@ -149,7 +149,7 @@ const EventDetails = ({ navigation, route }: any) => {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
       try {
         const res = await notificationAPI.HandleNotification(api, { SenderID:auth.id,RecipientIds: userSelected, eventId: event._id }, 'post')
-        if(res && res.status===200){
+        if(res && res.status===200 && res.data){
           socket.emit('getNotifications')
         }
       } catch (error: any) {

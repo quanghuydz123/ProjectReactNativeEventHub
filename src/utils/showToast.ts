@@ -6,7 +6,7 @@ export class ToastMessaging {
             type: 'success',
             text1:title ?? 'Thông báo',
             text2:message ?? 'Cập nhập thành công',
-            visibilityTime:1500,
+            visibilityTime:500,
             onPress:onPress
         });
     }

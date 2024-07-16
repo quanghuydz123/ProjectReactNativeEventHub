@@ -70,21 +70,21 @@ const HomeScreen = ({ navigation }: any) => {
     })
   },[])
   useEffect(() => {
-    handleCallApiGetAllEvent()
+    handleCallApiGetAllEvent(true)
     handleCallApiGetAllFollower()
     handleGetAllCategory()
     handleCallAPIGetNotifications()
   }, [])
 
-  useEffect(()=>{
-    if(notifications){
-      console.log("123123123")
-      handleCheckViewedNotifications(notifications)
-    }
-  },[notifications])
+  // useEffect(()=>{
+  //   if(notifications){
+  //     console.log("HomeNotification")
+  //     handleCheckViewedNotifications()
+  //   }
+  // },[notifications])
 
   useEffect(() => {
-    handleCallApiGetEventsNearYou()
+    handleCallApiGetEventsNearYou(true)
   }, [auth.position])
   useEffect(() => {
     setRefreshList(prev => !prev);
@@ -112,7 +112,11 @@ const HomeScreen = ({ navigation }: any) => {
       console.log('notification cập nhật');
     };
 
-    socket.on('followers', handleFollowers);
+    socket.on('followers', (idUser)=>{
+      if(idUser === auth.id){
+        handleCallApiGetAllFollower()
+      }
+    });
     socket.on('events', handleEvents);
     socket.on('updateUser', handleUpdateUser);
     socket.on('getNotifications',handleGetNotifications)
@@ -123,9 +127,10 @@ const HomeScreen = ({ navigation }: any) => {
       socket.off('getNotifications', handleGetNotifications);
     };
   }, [])
-  const handleCheckViewedNotifications = (notifications:NotificationModel[])=>{
-    const isCheck = notifications?.some((item)=>item.isViewed === false)
-    const numberOfUnseenNotifications = notifications?.reduce((count, item) => count + (!item.isViewed ? 1 : 0), 0);
+  const handleCheckViewedNotifications = async (notifications123:NotificationModel[])=>{
+    const isCheck = notifications123?.some((item)=>item.isViewed === false)
+    const numberOfUnseenNotifications = notifications123?.reduce((count, item) => count + (!item.isViewed ? 1 : 0), 0);
+    // const numberOfUnseenNotifications = notifications.filter((item)=>item.isViewed===false).length
     setNumberOfUnseenNotifications(numberOfUnseenNotifications);
     setIsViewNotifications(!isCheck)
   }
@@ -134,7 +139,9 @@ const HomeScreen = ({ navigation }: any) => {
     try {
       const res:any = await notificationAPI.HandleNotification(api)
       if(res && res.data && res.status===200){
+        console.log("res.data.notificatios",res.data.notifications.length)
         setNotifications(res.data.notifications)
+        await handleCheckViewedNotifications(res.data.notifications)       
       }
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)
@@ -181,7 +188,6 @@ const HomeScreen = ({ navigation }: any) => {
     }, {});
   }
 
-
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
     const api = '/update-position-user'
     try {
@@ -211,9 +217,9 @@ const HomeScreen = ({ navigation }: any) => {
     }
   }
 
-  const handleCallApiGetAllEvent = async () => {
+  const handleCallApiGetAllEvent = async (isLoading?:boolean) => {
     const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}`
-    setIsLoading(true)
+    setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
       if (res && res.data && res.status === 200) {
@@ -228,10 +234,10 @@ const HomeScreen = ({ navigation }: any) => {
     }
   }
 
-  const handleCallApiGetEventsNearYou = async () => {
+  const handleCallApiGetEventsNearYou = async (isLoading?:boolean) => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
-      setIsLoadingNearEvent(true)
+      setIsLoadingNearEvent(isLoading ? isLoading : false)
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
       const api = apis.event.getAll({lat:auth.position.lat,long:auth.position.lng,distance:'10',limit:'10',limitDate:`${new Date().toISOString()}`})
       try {
@@ -252,7 +258,6 @@ const HomeScreen = ({ navigation }: any) => {
     }
   }
   const reverseGeoCode = async (lat: number, long: number) => {
-    console.log("oke")
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {
       const res = await axios(api)
@@ -263,7 +268,6 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error)
     }
   }
-  console.log('notifi',notifications.length)
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />

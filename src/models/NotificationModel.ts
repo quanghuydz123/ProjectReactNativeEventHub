@@ -12,6 +12,7 @@ export interface NotificationModel {
     recipientId: UserModel
     senderID: UserModel
     updatedAt: string,
-    type:'inviteEvent' | 'message' |'like' |'follow' | 'other'
+    type:'inviteEvent' | 'message' |'like' |'follow' |'rejectFollow'| 'allowFollow' | 'other',
+    status:'answered' | 'unanswered' | 'cancelled' |'rejected' | 'other'
   }
   

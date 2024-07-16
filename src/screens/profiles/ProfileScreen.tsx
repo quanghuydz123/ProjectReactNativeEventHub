@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    handleCallApiGetProfile()
+    handleCallApiGetProfile(true)
     handleGetAllCategory()
     handleCallApiGetFollowerById()
   }, [])
@@ -128,9 +128,9 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
     }
   }
-  const handleCallApiGetProfile = async () => {
+  const handleCallApiGetProfile = async (isLoading?:boolean) => {
     if (auth) {
-      setIsLoading(true)
+      setIsLoading(isLoading ? isLoading : false)
       const api = `/get-user-byId?uid=${auth.id}`
       try {
         const res = await userAPI.HandleUser(api)
@@ -221,6 +221,13 @@ const ProfileScreen = ({ navigation, route }: any) => {
       setIsLoading(false)
     }
   }
+  // const handleCountFollows = useMemo(()=>{
+  //   const vale = [1,2,3,4,5].reduce((total,item)=>{
+  //     return total+item
+  //   },0)  
+  //   return ``
+  // },[follower])
+  console.log(follower[0]?.users[0]?.idUser)
   return (
     <ContainerComponent title="Hồ sơ người dùng">
       <SectionComponent styles={[globalStyles.center]}>
@@ -243,7 +250,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
           </View>
           <View style={{height:'100%', width:1,backgroundColor:colors.gray2}}/>
           <View style={[globalStyles.center, { flex: 1 }]}>
-          <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.length}` : '0'} size={20} />
+          <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item)=>item.status===true).length}` : '0'} size={20} />
             <TextComponent text="Đang theo dõi" />
           </View>
         </RowComponent>

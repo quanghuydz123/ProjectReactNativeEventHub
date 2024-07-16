@@ -13,15 +13,51 @@ import { EventModelNew } from "../models/EventModelNew";
 import { NotificationModel } from "../models/NotificationModel";
 import notificationAPI from "../apis/notificationAPI";
 import socket from "../utils/socket";
+import { DateTime } from "../utils/DateTime";
+import { LoadingModal } from "../../modals";
 
 const NotificationsScreen = ({navigation,route}:any)=>{
   const {notificationRoute}: { notificationRoute: NotificationModel[]} = route.params || {}
   const [notifications,setNotifications] = useState<NotificationModel[]>(notificationRoute)
   const [isLoading,setIsLoadng] = useState(false)
+  const [isLoadingModal,setIsLoadingModal] = useState(false)
   const user = useSelector(authSelector)
   useEffect(()=>{
+    // if(!notifications){
+    //   handleCallAPIGetNotifications()
+    // }
     handleCallAPIUpdateIsViewdNotifications()
   },[])
+  const handleCallAPIGetNotifications = async (isLoading?:boolean)=>{
+    const api = `/get-notifications-byId?uid=${user.id}`
+    setIsLoadng(isLoading ? isLoading : false)
+    try {
+      const res:any = await notificationAPI.HandleNotification(api)
+      if(res && res.data && res.status===200){
+        setNotifications(res.data.notifications)
+      }
+      setIsLoadng(false)
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+      setIsLoadng(false)
+    }
+  }
+  useEffect(() => {
+    
+    const handleGetNotifications = () => {
+      handleCallAPIGetNotifications()
+      console.log('notification cập nhật');
+    };
+    socket.on('getNotifications',handleGetNotifications)
+    return () => {
+      socket.off('getNotifications', handleGetNotifications);
+    };
+  }, [])
   const handleCallAPIUpdateIsViewdNotifications = async ()=>{
     const api = `/update-isViewed-notifitions`
     try {
@@ -36,6 +72,75 @@ const NotificationsScreen = ({navigation,route}:any)=>{
       }else{
         console.log('Lỗi rồi')
       }
+    }
+  }
+  const handleRejectNotification = async (notification:NotificationModel)=>{
+    const api = '/update-status-notifitions'
+    setIsLoadingModal(true)
+    try {
+      const res:any = await notificationAPI.HandleNotification(api,{idUserFollow:notification.senderID._id,idUserFollowed:notification.recipientId._id,type:'rejected'},'put')
+      setIsLoadingModal(false)
+      if(res && res.status===200){
+        socket.emit('getNotifications')
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+      setIsLoadingModal(false)
+    }
+  }
+  console.log("is",isLoadingModal)
+  const handleComfirmNofitication = async (notification:NotificationModel)=>{
+    const api = '/update-status-notifitions'
+    setIsLoadingModal(true)
+    try {
+      const res:any = await notificationAPI.HandleNotification(api,{idUserFollow:notification.senderID._id,idUserFollowed:notification.recipientId._id,type:'answered'},'put')
+      setIsLoadingModal(false)
+      if(res && res.status===200){
+        socket.emit('getNotifications')
+        socket.emit('followUser')
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      if(errorMessage.statusCode === 403){
+        console.log(errorMessage.message)
+      }else{
+        console.log('Lỗi rồi')
+      }
+      setIsLoadingModal(false)
+    }
+  }
+  const renderStatusNotification = (notification:NotificationModel)=>{
+    switch(notification.status){
+      case 'unanswered':
+        return (
+          <RowComponent>
+            <ButtonComponent text="Từ chối" type="primary" color="white" width={'auto'} textColor={colors.colorText}
+            styles={{minHeight:20,paddingVertical:10,borderWidth:1,borderColor:colors.gray2}} onPress={()=>handleRejectNotification(notification)}/>
+            <SpaceComponent width={20}/>
+            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{minHeight:20,paddingVertical:10}}
+            onPress={()=>handleComfirmNofitication(notification)}
+            />
+        </RowComponent> 
+      )
+      case 'answered':
+        return (
+          <TextComponent text={'Đã đồng ý'} title size={14}/>
+        )
+      case 'cancelled':
+        return (
+          <TextComponent text={'Đã bị hủy bởi người gửi'} title size={14}/>
+        )
+      case 'rejected':
+        return (
+          <TextComponent text={'Đã từ chối'} title size={14}/>
+        )
+      default:
+        return <></>
     }
   }
   const renderNofitications = (value:NotificationModel)=>{
@@ -55,7 +160,7 @@ const NotificationsScreen = ({navigation,route}:any)=>{
                         </Text>
                       </Text>
                       <SpaceComponent height={2}/>
-                      <TextComponent text={'5 phút trước'} color={colors.gray} size={12}/>
+                      <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12}/>
                       {/* <RowComponent>
                         <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
                         styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
@@ -86,12 +191,11 @@ const NotificationsScreen = ({navigation,route}:any)=>{
                         </Text>
                       </Text>
                       <SpaceComponent height={2}/>
-                      <TextComponent text={'5 phút trước'} color={colors.gray} size={12}/>
-                      {/* <RowComponent>
-                        <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
-                        styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
-                        <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
-                      </RowComponent> */}
+                      <TextComponent  text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12}/>
+                      <SpaceComponent height={8}/>
+                     {
+                      renderStatusNotification(value)
+                     }
                   </TouchableOpacity>
                   <ButtonComponent
                   
@@ -103,6 +207,70 @@ const NotificationsScreen = ({navigation,route}:any)=>{
               
                 </View>
         )
+      case 'rejectFollow':
+        return(
+        <View key={`${value._id}`} style={{flex:1,paddingHorizontal:12,backgroundColor:value.isRead ? colors.white : '#eff8ff'}}>
+        <RowComponent key={`${value._id}`} styles={{flex:1,minHeight:appInfo.sizes.HEIGHT/8,paddingTop:10,alignItems:'flex-start'}} >
+          <AvatarItem size={60} styles={{minHeight:'100%'}} photoUrl={value.senderID.photoUrl}/>
+          <TouchableOpacity style={{flex:1,paddingHorizontal:12,minHeight:'100%'}} 
+             onPress={()=>navigation.navigate('EventDetails', {item:value.eventId})}>
+
+              <Text style={[globalStyles.text,{fontWeight:'bold'}]} numberOfLines={3}>
+                {`${value.senderID.fullname} `}
+                <Text style={[globalStyles.text]}>
+                  {value.content}
+                </Text>
+              </Text>
+              <SpaceComponent height={2}/>
+              <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12}/>
+              {/* <RowComponent>
+                <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+                styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+                <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+              </RowComponent> */}
+          </TouchableOpacity>
+          <ButtonComponent
+          
+          onPress={()=>console.log("ok")}
+          styles={{paddingVertical:4}}
+          icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText}/>} 
+          iconFlex="right"/>
+      </RowComponent>
+      
+        </View>
+        )
+        case 'allowFollow':
+          return(
+          <View key={`${value._id}`} style={{flex:1,paddingHorizontal:12,backgroundColor:value.isRead ? colors.white : '#eff8ff'}}>
+          <RowComponent key={`${value._id}`} styles={{flex:1,minHeight:appInfo.sizes.HEIGHT/8,paddingTop:10,alignItems:'flex-start'}} >
+            <AvatarItem size={60} styles={{minHeight:'100%'}} photoUrl={value.senderID.photoUrl}/>
+            <TouchableOpacity style={{flex:1,paddingHorizontal:12,minHeight:'100%'}} 
+               onPress={()=>navigation.navigate('EventDetails', {item:value.eventId})}>
+  
+                <Text style={[globalStyles.text,{fontWeight:'bold'}]} numberOfLines={3}>
+                  {`${value.senderID.fullname} `}
+                  <Text style={[globalStyles.text]}>
+                    {value.content}
+                  </Text>
+                </Text>
+                <SpaceComponent height={2}/>
+                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12}/>
+                {/* <RowComponent>
+                  <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+                  styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+                  <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+                </RowComponent> */}
+            </TouchableOpacity>
+            <ButtonComponent
+            
+            onPress={()=>console.log("ok")}
+            styles={{paddingVertical:4}}
+            icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText}/>} 
+            iconFlex="right"/>
+        </RowComponent>
+        
+          </View>
+          )
       default:
         return (
           <></>
@@ -117,7 +285,7 @@ const NotificationsScreen = ({navigation,route}:any)=>{
             <SpaceComponent height={8}/>
             
             <FlatList 
-            contentContainerStyle={{paddingBottom:10}}
+            contentContainerStyle={{paddingBottom:16}}
             showsVerticalScrollIndicator={false}
             data={notifications}
             renderItem={({item,index})=>renderNofitications(item)}
@@ -137,6 +305,7 @@ const NotificationsScreen = ({navigation,route}:any)=>{
         <ActivityIndicator />
     </View></>
         }
+      <LoadingModal visible={isLoadingModal}/>
     </ContainerComponent>
   )
 }

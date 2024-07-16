@@ -43,7 +43,6 @@ const MainNavigator = () => {
     let token = res && JSON.parse(res).accesstoken;
     let decodedToken = jwtDecode(token);
     let currentDate = new Date();
-
     // JWT exp is in seconds
     if (decodedToken.exp && decodedToken.exp * 1000 < currentDate.getTime()) {
       { AlertComponent({ title: 'Thông báo', message: 'Phiên đăng nhập đã hết hạn vui lòng đăng nhập lại !', onConfirm: () => handleLogout() }) }
