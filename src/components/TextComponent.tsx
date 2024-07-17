@@ -1,34 +1,76 @@
-import { Button, Platform, StyleProp, Text, TextStyle, View } from "react-native"
-import React, { RefObject } from "react"
+import { Animated, Platform, StyleProp, Text, TextStyle } from "react-native";
+import React, { memo } from "react";
 import { colors } from "../constrants/color";
 import { fontFamilies } from "../constrants/fontFamilies";
 import { globalStyles } from "../styles/globalStyles";
-//numberOfLine hiện thị tối đa bao nhiêu dòng
-interface Props{
-    text:string | string[] | number,
-    color?: string,
-    size?: number,
-    flex?: number,
-    font?: string,
-    styles?: StyleProp<TextStyle>,
-    title?: boolean,
-    numberOfLine?:number,
-    textAlign?: 'center' | 'left'| 'auto' | 'right' | 'justify'
-  
+
+interface Props {
+  text: string | string[] | number;
+  color?: string;
+  size?: number;
+  flex?: number;
+  font?: string;
+  styles?: StyleProp<TextStyle>;
+  title?: boolean;
+  numberOfLine?: number;
+  textAlign?: 'center' | 'left' | 'auto' | 'right' | 'justify';
+  isAnimationHiden?: boolean;
+  animatedValue?: any;
 }
-const TextComponent = (props:Props)=>{
-    const {text,size,flex,font,color,styles,title,numberOfLine,textAlign} = props
-    const fontSizeDefault = Platform.OS === 'ios' ? 16 : 14
-    const lineHeight = size && size + 6
-  return <Text style={[
+
+const TextComponent = (props: Props) => {
+  const {
+    text, size, flex, font, color, styles, title,
+    numberOfLine, textAlign, isAnimationHiden, animatedValue
+  } = props;
+
+  const fontSizeDefault = Platform.OS === 'ios' ? 16 : 14;
+  const lineHeight = size ? size + 6 : title ? 30 : Platform.OS === 'ios' ? 20 : 18;
+
+  const textStyle = [
     globalStyles.text,
     {
-    color: color ?? colors.colorText,
-    flex: flex ?? 0,
-    fontSize: size ? size : title ? 24 : fontSizeDefault,
-    fontFamily: font ? font : title ? fontFamilies.medium : fontFamilies.regular,
-    lineHeight:lineHeight ? lineHeight : title ? 30 : Platform.OS === 'ios' ? 20 : 18,
-    textAlign:textAlign ? textAlign : 'left'
-  },styles]} numberOfLines={numberOfLine}>{text}</Text>
+      color: color ?? colors.colorText,
+      flex: flex ?? 0,
+      fontSize: size ?? (title ? 24 : fontSizeDefault),
+      fontFamily: font ?? (title ? fontFamilies.medium : fontFamilies.regular),
+      lineHeight,
+      textAlign: textAlign ?? 'left'
+    },
+    styles
+  ];
+
+  const animatedStyle = isAnimationHiden && animatedValue ? {
+    transform: [
+      {
+        scaleX: animatedValue.interpolate({
+          inputRange: [0, 50],
+          outputRange: [1, 0],
+          extrapolate: 'clamp',
+        }),
+      },
+      {
+        translateX: animatedValue.interpolate({
+          inputRange: [0, 25],
+          outputRange: [0, -100],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 25],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    }),
+  } : {};
+
+  const TextComponent = isAnimationHiden ? Animated.Text : Text;
+
+  return (
+    <TextComponent style={[animatedStyle, ...textStyle]} numberOfLines={numberOfLine}>
+      {text}
+    </TextComponent>
+  );
 }
-export default TextComponent;
+
+export default memo(TextComponent);

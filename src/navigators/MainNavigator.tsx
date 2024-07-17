@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, SearchEventsScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, ChatsScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, SearchEventsScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,6 +85,7 @@ const MainNavigator = () => {
       <Stack.Screen name="SearchEventsScreen" component={SearchEventsScreen} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+      <Stack.Screen name="ChatsScreen" component={ChatsScreen} />
 
     </Stack.Navigator>
   )

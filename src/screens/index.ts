@@ -19,6 +19,7 @@ import ExploreEvent from "./events/ExploreEvent"
 import PaymentScreen from "./events/PaymentScreen"
 import NewScreen from "./NewScreen"
 import NotificationsScreen from "./NotificationsScreen"
+import ChatsScreen from "./chat/ChatsScreen"
 
 export {
     HomeScreen,
@@ -41,5 +42,6 @@ export {
     ExploreEvent,
     PaymentScreen,
     NewScreen,
-    NotificationsScreen
+    NotificationsScreen,
+    ChatsScreen
 }

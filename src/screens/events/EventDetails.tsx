@@ -29,6 +29,7 @@ import { UserHandleCallAPI } from "../../utils/UserHandleCallAPI";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { apis } from "../../constrants/apis";
 import notificationAPI from "../../apis/notificationAPI";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowerModel[], id: string } = route.params
@@ -160,11 +161,6 @@ const EventDetails = ({ navigation, route }: any) => {
     }
   }
   const handleCreateBillPaymentEvent = async () => {
-    const data = {
-      createAt: Date.now(),
-      createdBy: auth.id,
-      event: item,
-    }
     navigation.navigate('PaymentScreen', { event: item })
   }
   return (
@@ -316,8 +312,19 @@ const EventDetails = ({ navigation, route }: any) => {
           </ScrollView>
         </View>
       </ImageBackground>
-
       {
+        event.price && <RowComponent justify="space-between" >
+        <TouchableOpacity style={{flex:1,alignItems:'center',paddingVertical:4}}>
+            <MaterialCommunityIcons name="cart-plus" size={22} color={colors.primary} />
+            <TextComponent text={'Thêm vào giỏ hàng'} size={11}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flex:1,alignItems:'center',backgroundColor:colors.primary,paddingVertical:4}} onPress={() => handleCreateBillPaymentEvent()}>
+          <TextComponent text={'Mua vé ngay'} size={12} color={colors.white}/>
+          <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white}/>
+        </TouchableOpacity>
+      </RowComponent>
+      }
+      {/* {
         isAtEnd ?
           <View onLayout={onLayout} style={{
             padding: 12
@@ -351,7 +358,7 @@ const EventDetails = ({ navigation, route }: any) => {
             /> :
               <ButtonComponent text="Đăng ký tham dự" type="primary"/>}
           </LinearGradient>
-      }
+      } */}
       <LoadingModal visible={isLoading} />
       <LoadingModal visible={isLLoadingNotShow} notShowContent />
       <SelectModalize

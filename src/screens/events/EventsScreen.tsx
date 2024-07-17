@@ -1,21 +1,12 @@
-import { Button, Text, View } from "react-native"
-import React from "react"
-import { ContainerComponent } from "../../components";
-import Toast from "react-native-toast-message";
-import EventItem from "../../components/EventItem";
-
-const EventsScreen = () => {
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Cập nhập thành công',
-      visibilityTime: 1500
-    });
-  }
+import React, { useEffect, useRef, useState } from 'react';
+import { ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+const EventsScreen = ({navigation,route}:any) => {
   return (
-    <ContainerComponent title="Sự kiện">
-      <View>
-      </View>
+
+    <ContainerComponent>
+      <SectionComponent>
+        <TextComponent text={'abc'}/>
+      </SectionComponent>
     </ContainerComponent>
   )
 }
