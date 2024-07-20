@@ -72,7 +72,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     const TRANSLATE_X_INPUT_RANGE = [0, 80];
     const translateY = {
       translateY: animatedValue.interpolate({
-        inputRange: [0, 96],
+        inputRange: [0, LOWER_HEADER_HEIGHT],
         outputRange: [0, -57],
         extrapolate: 'clamp',
       }),
@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation, route }: any) => {
       ],
     };
   };
-  const depositViewAnimation = getFeatureViewAnimation(animatedValue, 34);
+  const depositViewAnimation = getFeatureViewAnimation(animatedValue, 38);
   const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, -6);
   const qrViewAnimation = getFeatureViewAnimation(animatedValue, -44);
   const scanViewAnimation = getFeatureViewAnimation(animatedValue, -76);
@@ -153,18 +153,18 @@ const HomeScreen = ({ navigation, route }: any) => {
     transform: [
       {
         translateY: animatedValue.interpolate({
-          inputRange: [0, 96],
+          inputRange: [0, LOWER_HEADER_HEIGHT],
           outputRange: [0, -100],
           extrapolate: 'clamp',
         }),
       },
     ],
   };
-  const maxHeight = animatedValue.interpolate({
-    inputRange: [0, 96],
-    outputRange: [168, 72],
-    extrapolate: 'clamp',
-  })
+  // const maxHeight = animatedValue.interpolate({
+  //   inputRange: [0, LOWER_HEADER_HEIGHT],
+  //   outputRange: [96,0],
+  //   extrapolate: 'clamp',
+  // })
 
   useEffect(() => {
     HandleNotification.checkNotifitionPersion(dispatch)
@@ -378,41 +378,26 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
   const handleScrollView = (e: any) => {
     const offsetY = e.nativeEvent.contentOffset.y;
-    // console.log("e.nativeEvent.contentOffset.y - lastOffsetY.current",e.nativeEvent.contentOffset.y - lastOffsetY.current)
     scrollDirection.current =
       offsetY - lastOffsetY.current > 0 ? 'down' : 'up';
     lastOffsetY.current = offsetY;
     animatedValue.setValue(offsetY);
   }
-  const handleScrollEndDrag = (e:any) => {
-    const offsetY = e.nativeEvent.contentOffset.y;
-    const deltaY = offsetY - lastOffsetY.current;
-    
-    let targetOffsetY = offsetY;
-
-    if (offsetY < 96) {
-      targetOffsetY = deltaY > 0 ? 100 : 0;
-    }
-
-    requestAnimationFrame(() => {
-      scrollViewRef.current?.scrollTo({
-        y: targetOffsetY,
-        animated: true,
-      });
-    });
-
-    lastOffsetY.current = offsetY;
+  const headerAnimation = {
+    zIndex: animatedValue.interpolate({
+          inputRange: [0, 10],
+          outputRange: [1,0],
+          extrapolate: 'clamp',
+        }),
   };
-
   return (
-
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView>
-        <Animated.View style={[styles.upperHeaderPlaceholder, { height: maxHeight }]} />
+        <Animated.View style={[styles.upperHeaderPlaceholder]} />
       </SafeAreaView>
 
-      <SafeAreaView style={styles.header}>
+      <Animated.View style={[styles.header,headerAnimation]}>
         <View style={styles.upperHeader}>
           {/* <View style={styles.searchContainer}>
             <Image
@@ -542,22 +527,23 @@ const HomeScreen = ({ navigation, route }: any) => {
           />
           <TextComponent text={isShowMoney ? '1.000.000đ' : '*********'} font={fontFamilies.medium} color={colors.black} />
         </Animated.View>
-      </SafeAreaView>
+      </Animated.View >
 
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         ref={scrollViewRef}
         onScroll={handleScrollView}
-        // onScrollEndDrag={(e) => {//chạy khi người dùng thả scroll View
-        //   scrollViewRef.current?.scrollTo({
-        //     y: (e.nativeEvent.contentOffset.y < 96) ? (e.nativeEvent.contentOffset.y - lastOffsetY.current > 0) ? 100 : 0 : e.nativeEvent.contentOffset.y,
-        //     animated: true,
-        //   });
-        // }
-        // }
+        onScrollEndDrag={(e) => {
+          if (e.nativeEvent.contentOffset.y < LOWER_HEADER_HEIGHT) {
+              scrollViewRef.current?.scrollTo({
+                  y: scrollDirection.current === 'down' ? 96 : 0,
+                  animated: true,
+              });
+          }
+      }}
         scrollEventThrottle={16}>
-        {/* <View style={styles.spaceForHeader} /> */}
+        <Animated.View style={[styles.spaceForHeader]} />
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: 'white' }}>
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
@@ -603,7 +589,7 @@ const styles = StyleSheet.create({
     height: 32,
   },
   upperHeaderPlaceholder: {
-    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP + 24 + 96,
+    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP + 24 ,
     paddingTop: UPPER_HEADER_PADDING_TOP,
   },
   header: {
@@ -611,6 +597,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#AF0C6E',
     paddingTop: 30,
+    zIndex:1
   },
   upperHeader: {
     flexDirection: 'row',
