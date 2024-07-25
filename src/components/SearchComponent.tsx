@@ -28,11 +28,11 @@ const SearchComponent = (props: Props) => {
     }}>
       <InputComponent
         styles={{
-          marginBottom: 0
+          marginBottom: 0,
         }}
         affix={<SearchNormal size={20} color={colors.gray} />}
-
         value={value}
+        
         placeholder={titlePlaceholder ?? "Tìm kiếm..."}
         allowClear
         onChange={val => onSearch(val)}

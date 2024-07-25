@@ -11,7 +11,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import LoadingComponent from '../../components/LoadingComponent';
 import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
@@ -42,7 +42,11 @@ import { handleLinking } from '../../utils/handleLinking';
 import { ToastMessaging } from '../../utils/showToast';
 import socket from '../../utils/socket';
 import axios from 'axios';
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
+const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
+
 const UPPER_HEADER_HEIGHT = 44;
 const UPPER_HEADER_PADDING_TOP = 4;
 const LOWER_HEADER_HEIGHT = 96;
@@ -94,13 +98,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, -6);
   const qrViewAnimation = getFeatureViewAnimation(animatedValue, -44);
   const scanViewAnimation = getFeatureViewAnimation(animatedValue, -76);
-  const featureIconCircleAnimation = {
-    opacity: animatedValue.interpolate({
-      inputRange: [0, 25],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    }),
-  };
+
   const featureNameAnimation = {
     transform: [
       {
@@ -124,7 +122,13 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     }),
   };
-
+  const featureIconCircleAnimation = {
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 25],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    })
+  };
   const textInputAnimation = {
     transform: [
       {
@@ -156,9 +160,17 @@ const HomeScreen = ({ navigation, route }: any) => {
           inputRange: [0, LOWER_HEADER_HEIGHT],
           outputRange: [0, -100],
           extrapolate: 'clamp',
+
         }),
       },
     ],
+  };
+  const headerAnimation = {
+    zIndex: animatedValue.interpolate({
+      inputRange: [0, 10],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    }),
   };
   // const maxHeight = animatedValue.interpolate({
   //   inputRange: [0, LOWER_HEADER_HEIGHT],
@@ -383,12 +395,19 @@ const HomeScreen = ({ navigation, route }: any) => {
     lastOffsetY.current = offsetY;
     animatedValue.setValue(offsetY);
   }
-  const headerAnimation = {
-    zIndex: animatedValue.interpolate({
-          inputRange: [0, 10],
-          outputRange: [1,0],
-          extrapolate: 'clamp',
-        }),
+  const featureIconCircleCustomAnimation = {
+    backgroundColor: animatedValue.interpolate({
+      inputRange: [0, 25],
+      outputRange: ['rgb(255, 255, 255)', 'rgb(175, 12, 110)'],
+      extrapolate: 'clamp',
+    })
+  };
+  const featureIconCustomAnimation = {
+    color: animatedValue.interpolate({
+      inputRange: [0, 50],
+      outputRange: ['rgb(175, 12, 110)', 'rgb(255, 255, 255)'],
+      extrapolate: 'clamp',
+    })
   };
   return (
     <View style={styles.container}>
@@ -397,7 +416,7 @@ const HomeScreen = ({ navigation, route }: any) => {
         <Animated.View style={[styles.upperHeaderPlaceholder]} />
       </SafeAreaView>
 
-      <Animated.View style={[styles.header,headerAnimation]}>
+      <Animated.View style={[styles.header, headerAnimation]}>
         <View style={styles.upperHeader}>
           {/* <View style={styles.searchContainer}>
             <Image
@@ -438,7 +457,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               </View>
             }
           </TouchableOpacity>
-          <SpaceComponent width={20} />
+          <SpaceComponent width={22} />
           <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')}>
             <MaterialCommunityIcons name="chat-processing-outline" size={22} color={colors.white} />
             {
@@ -477,46 +496,68 @@ const HomeScreen = ({ navigation, route }: any) => {
           </Animated.View>
 
           <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-            <Animated.Image
-              source={require('../../assets/images/momo/withdraw.png')}
-              style={[styles.featureIcon, featureIconAnimation]}
-            />
-            <Animated.Image
-              source={require('../../assets/images/momo/withdraw-circle.png')}
-              style={[styles.icon32, featureIconCircleAnimation]}
-            />
-            <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              CHUYỂN TIỀN
-            </Animated.Text>
-          </Animated.View>
-
-          <Animated.View style={[styles.feature, qrViewAnimation]}>
-            <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => console.log("qr")}>
+            <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => console.log("123123")}>
               <Animated.Image
-                source={require('../../assets/images/momo/qr.png')}
+                source={require('../../assets/images/momo/withdraw.png')}
                 style={[styles.featureIcon, featureIconAnimation]}
               />
               <Animated.Image
-                source={require('../../assets/images/momo/qr-circle.png')}
+                source={require('../../assets/images/momo/withdraw-circle.png')}
                 style={[styles.icon32, featureIconCircleAnimation]}
               />
               <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                BẠN BÈ
+                CHUYỂN TIỀN
               </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
 
-          <Animated.View style={[styles.feature, scanViewAnimation]}>
-            <Animated.Image
-              source={require('../../assets/images/momo/scan.png')}
-              style={[styles.featureIcon, featureIconAnimation]}
-            />
-            <Animated.Image
-              source={require('../../assets/images/momo/scan-circle.png')}
-              style={[styles.icon32, featureIconCircleAnimation]}
-            />
+          <Animated.View style={[styles.feature, qrViewAnimation]}>
+
+            {/* <CricleComponent color={colors.primary} borderRadius={10} size={32} 
+              featureIconAnimation={featureIconAnimation}
+              styles={[styles.featureIcon,{width:20}]}
+              onPress={() => navigation.navigate('ChatsScreen')}
+              >
+                <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
+              </CricleComponent> */}
+
+            <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+              featureIconAnimation={featureIconCircleCustomAnimation}
+              onPress={() => navigation.navigate('ChatsScreen')}
+            >
+              <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
+            </CricleComponent>
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              ĐÁNH DẤU
+              BẠN BÈ
+            </Animated.Text>
+          </Animated.View>
+
+          <Animated.View style={[styles.feature, scanViewAnimation]}>
+            {/* <Animated.Image
+                source={require('../../assets/images/momo/scan.png')}
+                style={[styles.featureIcon, featureIconAnimation]}
+              />
+              <Animated.Image
+                source={require('../../assets/images/momo/scan-circle.png')}
+                style={[styles.icon32, featureIconCircleAnimation]}
+              /> */}
+            {/* <Animated.Image
+                  source={require('../../assets/images/momo/qr.png')}
+                  style={[styles.featureIcon, featureIconAnimation]}
+                /> */}
+            <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+              featureIconAnimation={featureIconCircleCustomAnimation}
+              onPress={() => console.log("ok")}
+            >
+              <AnimatedFontAwesome5 name='gifts' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
+            </CricleComponent>
+            {/* <Animated.Image
+                  source={require('../../assets/images/momo/qr-circle.png')}
+                  style={[styles.icon32, featureIconCircleAnimation]}
+                /> */}
+
+            <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+              ƯU ĐÃI
             </Animated.Text>
           </Animated.View>
         </View>
@@ -536,12 +577,12 @@ const HomeScreen = ({ navigation, route }: any) => {
         onScroll={handleScrollView}
         onScrollEndDrag={(e) => {
           if (e.nativeEvent.contentOffset.y < LOWER_HEADER_HEIGHT) {
-              scrollViewRef.current?.scrollTo({
-                  y: scrollDirection.current === 'down' ? 96 : 0,
-                  animated: true,
-              });
+            scrollViewRef.current?.scrollTo({
+              y: scrollDirection.current === 'down' ? 96 : 0,
+              animated: true,
+            });
           }
-      }}
+        }}
         scrollEventThrottle={16}>
         <Animated.View style={[styles.spaceForHeader]} />
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: 'white' }}>
@@ -589,7 +630,7 @@ const styles = StyleSheet.create({
     height: 32,
   },
   upperHeaderPlaceholder: {
-    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP + 24 ,
+    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP + 24,
     paddingTop: UPPER_HEADER_PADDING_TOP,
   },
   header: {
@@ -597,7 +638,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#AF0C6E',
     paddingTop: 30,
-    zIndex:1
+    zIndex: 1
   },
   upperHeader: {
     flexDirection: 'row',
@@ -631,7 +672,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: LOWER_HEADER_HEIGHT,
-    paddingHorizontal: 16,
   },
   searchInput: {
     position: 'absolute',
@@ -644,6 +684,7 @@ const styles = StyleSheet.create({
   },
   feature: {
     alignItems: 'center',
+    flex:1,
   },
   featureName: {
     fontWeight: 'bold',

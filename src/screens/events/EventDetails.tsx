@@ -203,8 +203,9 @@ const EventDetails = ({ navigation, route }: any) => {
         <View style={{
           flex: 1,
           paddingTop: 244 - 102,
+          
         }}>
-          <SectionComponent>
+          <SectionComponent styles={{paddingBottom:0,paddingHorizontal:12}}>
             <View style={{
               marginTop: 0,
               justifyContent: 'center',
@@ -313,11 +314,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </View>
       </ImageBackground>
       {
-        event.price && <RowComponent justify="space-between" >
-        <TouchableOpacity style={{flex:1,alignItems:'center',paddingVertical:4}}>
-            <MaterialCommunityIcons name="cart-plus" size={22} color={colors.primary} />
-            <TextComponent text={'Thêm vào giỏ hàng'} size={11}/>
-        </TouchableOpacity>
+        event.price && <RowComponent justify="space-between">
         <TouchableOpacity style={{flex:1,alignItems:'center',backgroundColor:colors.primary,paddingVertical:4}} onPress={() => handleCreateBillPaymentEvent()}>
           <TextComponent text={'Mua vé ngay'} size={12} color={colors.white}/>
           <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white}/>

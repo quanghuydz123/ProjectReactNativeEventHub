@@ -273,8 +273,8 @@ const auth = useSelector(authSelector)
             onPress={() => {setIsOpenModalizeFilter(true),setIdsSelectedCategories(filterEvent.categoriesFilter ?? [])}}
             
             label="Lọc"
-            icon={<CricleComponent size={20} color={'#b1aefa'}><Sort size={18} color="#5d56f3" /></CricleComponent>}
-            bgColor="#5d56f3"
+            icon={<CricleComponent size={20} color={'#FFD6E7'}><Sort size={18} color={colors.primary} /></CricleComponent>}
+            bgColor={colors.primary}
           />
         </RowComponent>
       </SectionComponent>

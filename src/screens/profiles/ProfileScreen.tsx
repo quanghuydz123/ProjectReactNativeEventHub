@@ -229,13 +229,11 @@ const ProfileScreen = ({ navigation, route }: any) => {
   // },[follower])
   console.log(follower[0]?.users[0]?.idUser)
   return (
-    <ContainerComponent title="Hồ sơ người dùng">
+    <ContainerComponent title="Hồ sơ người dùng" isScroll>
       <SectionComponent styles={[globalStyles.center]}>
         <RowComponent onPress={() => handleChangeImageAvatar()}>
-          <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth />
-          <CricleComponent styles={{ position: 'absolute', bottom: 0, right: 0, borderWidth: 1, borderColor: colors.white }} size={24} color={colors.gray5}>
-            <MaterialIcons name="add-a-photo" size={16} color={colors.gray} />
-          </CricleComponent>
+          <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
+          
         </RowComponent>
         <SpaceComponent height={8} />
         <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
@@ -269,7 +267,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
             />
           </RowComponent>
           <TextComponent text="Thông tin về tôi" title size={18} />
-          <TextComponent text={profile?.bio || ''} />
+          <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  />
         </View>
         <SpaceComponent height={20} />
 

@@ -9,7 +9,7 @@ export interface EventModelNew {
     addressDetals: AddressDetals
     Location: string
     position: Position
-    price: number
+    price?: number
     categories: Category[]
     authorId: UserModel
     users?: UserModel[]

@@ -5,7 +5,7 @@ import { addAuth, addPositionUser, authSelector, removeAuth } from "../../reduxs
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage"
 import { globalStyles } from "../../styles/globalStyles"
 import { colors } from "../../constrants/color"
-import { CategoriesList, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components"
+import { CategoriesList, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components"
 import { ArrowDown, Filter, HambergerMenu, Notification, SearchNormal, Sort } from "iconsax-react-native"
 import { fontFamilies } from "../../constrants/fontFamilies"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
@@ -273,168 +273,11 @@ const MapScreen = ({ navigation }: any) => {
     }
   }
   return (
-    <View style={[globalStyles.container]}>
-      <StatusBar barStyle={'light-content'} />
-      <View style={{
-        height: Platform.OS === 'android' ? 168 : 182,
-        backgroundColor: colors.primary,
-        // borderBottomLeftRadius: 40,
-        // borderBottomRightRadius: 40,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
-        zIndex: 1,
-      }}>
-        <View style={{
-          paddingHorizontal: 16
-        }}>
-
-          <RowComponent onPress={() => console.log("'ok ")}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()} >
-              <HambergerMenu size={24} color={colors.white} />
-            </TouchableOpacity>
-            <View style={[{ flex: 1, alignItems: 'center' }]}>
-              <RowComponent>
-                {
-                  address ?
-                    <TextComponent text="Chỉnh sửa địa chỉ" color={colors.white2} size={12} />
-                    :
-                    <TextComponent text="Lấy địa chỉ hiện tại" color={colors.white2} size={12} />
-                }
-                <MaterialIcons name="arrow-drop-down" size={18} color={colors.white2} />
-              </RowComponent>
-              {
-                address &&
-                <TextComponent text={`${address.address?.district}, ${address.address?.city}, ${address.address?.county}`} numberOfLine={1}
-                  size={13} color={colors.white2} font={fontFamilies.medium} />
-              }
-            </View>
-            <CricleComponent color={'#524CE0'} size={36} onPress={() => navigation.navigate('NotificationsScreen', { notificationRoute: notifications })}>
-              <View>
-                <Notification size={24} color={colors.white} />
-                {
-                  !isViewdNotifications && <View style={{
-                    backgroundColor: '#02E9FE',
-                    width: 18,
-                    height: 18,
-                    borderRadius: 100,
-                    borderWidth: 1,
-                    borderColor: '#02E9FE',
-                    position: 'absolute',
-                    top: -6,
-                    right: -6,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }} >
-                    <TextComponent text={numberOfUnseenNotifications} size={10} font={fontFamilies.medium} color={colors.white} />
-                  </View>
-                }
-              </View>
-            </CricleComponent>
-            <SpaceComponent width={8} />
-            <CricleComponent color={'#524CE0'} size={36} onPress={() => navigation.navigate('ChatsScreen')}>
-              <View>
-                <MaterialCommunityIcons name="chat-processing-outline" size={24} color={colors.white} />
-                {
-                  !true && <View style={{
-                    backgroundColor: '#02E9FE',
-                    width: 18,
-                    height: 18,
-                    borderRadius: 100,
-                    borderWidth: 1,
-                    borderColor: '#02E9FE',
-                    position: 'absolute',
-                    top: -6,
-                    right: -6,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }} >
-                    <TextComponent text={numberOfUnseenNotifications} size={10} font={fontFamilies.medium} color={colors.white} />
-                  </View>
-                }
-              </View>
-            </CricleComponent>
-          </RowComponent>
-          <SpaceComponent height={20} />
-
-          <RowComponent>
-            <RowComponent styles={{ flex: 1 }}
-              onPress={() => navigation.navigate('SearchEventsScreen', {
-
-              })}>
-              <SearchNormal size={20} variant="TwoTone" color={colors.white} />
-              <View style={{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }} />
-              <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} />
-            </RowComponent>
-            {/* <TagComponent
-              onPress={() => navigation.navigate('SearchEventsScreen', {
-                
-              })}
-              label="Lọc"
-              icon={<CricleComponent size={20} color={'#b1aefa'}><Sort size={18} color="#5d56f3" /></CricleComponent>}
-              bgColor="#5d56f3"
-            /> */}
-          </RowComponent>
-        </View>
-        <SpaceComponent height={18} />
-        {/* <View style={{ marginTop: 18 }}>
-          <CategoriesList isFill values={categories} />
-        </View> */}
-        <SectionComponent styles={{height:100}}>
-          <RowComponent styles={[{backgroundColor: colors.white, borderRadius: 10,paddingVertical:8,paddingHorizontal:16},globalStyles.shadow]}
-          >
-            <View style={{flex:1}}>
-              <RowComponent>
-                <TextComponent text={'Số dư ví'} size={12}/>
-                <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'} 
-                size={14} color={colors.gray} onPress={()=>setIsShowMoney(!isShowMoney)} 
-                style={{paddingHorizontal:4,paddingVertical:4}}
-                />
-              </RowComponent>
-              <TextComponent text={isShowMoney ? '1.000.000đ' : '********'} title size={16}/>
-            </View>
-            <View style={{alignItems:'center'}}>
-              <Image source={{uri:'https://t3.ftcdn.net/jpg/01/38/17/94/360_F_138179402_zZ84rqvFW8lIPSU7mqEpCo8FoWh8lrOb.jpg'}} style={{width:55,height:55}}/>
-              <TextComponent text={'Chuyển tiền'} size={13}/>
-            </View>
-            <SpaceComponent width={25}/>
-            <View style={{alignItems:'center'}}>
-              <Image source={{uri:'https://t3.ftcdn.net/jpg/01/38/17/94/360_F_138179402_zZ84rqvFW8lIPSU7mqEpCo8FoWh8lrOb.jpg'}}  style={{width:55,height:55}}/>
-              <TextComponent text={'Nạp tiền'} size={13}/>
-            </View>
-          </RowComponent>
-        </SectionComponent>
-      </View>
-      <ScrollView style={[{
-        flex: 1,
-        backgroundColor: colors.white,
-        marginTop: Platform.OS === 'android' ? 58 : 62
-      }]}>
-        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20 }}>
-          <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
-          {
-            isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={allEvent}
-              extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
-            />
-          }
-
-          <TabBarComponent title="Gần chỗ bạn" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện gần chỗ bạn', categories: categories, lat: auth.position.lat, long: auth.position.lng, distance: '10', follows: allFollower })} />
-          {
-            isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={allEventNear}
-              extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
-            />
-          }
-        </SectionComponent>
-
-
-      </ScrollView>
-    </View>
+    <ContainerComponent>
+      <SectionComponent>
+        <TextComponent text={'abc'}/>
+      </SectionComponent>
+    </ContainerComponent>
   )
 }
 export default MapScreen;
