@@ -6,7 +6,7 @@ import SearchComponent from "../../components/SearchComponent";
 const ChatsScreen = ()=>{
     const [searchKey,setSearchKey] = useState('')
   return (
-    <ContainerComponent back title="Tin nhắn">
+    <ContainerComponent back title="Đoạn chat">
         <SectionComponent>
             <SearchComponent onSearch={(val)=>setSearchKey(val)} value={searchKey}  isNotShowArrow/>
         </SectionComponent>

@@ -220,6 +220,7 @@ const EventDetails = ({ navigation, route }: any) => {
               </RowComponent>
             </View>
           </SectionComponent>
+          <SpaceComponent height={8}/>
           <ScrollView
 
             onScroll={handleScroll}
@@ -239,7 +240,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   height: 48
                 }}>
                   {
-                    event.price ? <>
+                    event?.price ? <>
                       <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={16} />
                       <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} /></> :
                       <>
@@ -314,10 +315,10 @@ const EventDetails = ({ navigation, route }: any) => {
         </View>
       </ImageBackground>
       {
-        event.price && <RowComponent justify="space-between">
+        event?.price && <RowComponent justify="space-between">
         <TouchableOpacity style={{flex:1,alignItems:'center',backgroundColor:colors.primary,paddingVertical:4}} onPress={() => handleCreateBillPaymentEvent()}>
           <TextComponent text={'Mua vé ngay'} size={12} color={colors.white}/>
-          <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white}/>
+          <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white}/>
         </TouchableOpacity>
       </RowComponent>
       }

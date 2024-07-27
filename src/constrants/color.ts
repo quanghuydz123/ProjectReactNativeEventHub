@@ -13,5 +13,8 @@ export const colors ={
     link:'#5669FF',
     danger:'#e74c3c',
     danger2:'#F0635A',
-    black:'#000000'
+    black:'#000000',
+    blue:'#1b96f3',
+    orange:'#fc8527',
+    green:'#56da78'
 }
