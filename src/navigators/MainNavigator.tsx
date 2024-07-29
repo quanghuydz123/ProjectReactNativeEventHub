@@ -13,24 +13,33 @@ import { HandleNotification } from "../utils/handleNotification";
 import EventsNavigator from "./EventsNavigator";
 import { useStatusBar } from "../hooks/useStatusBar";
 import { TextComponent } from "../components";
+import NetInfo from "@react-native-community/netinfo";
+import {BackHandler} from 'react-native';
 
 const MainNavigator = () => {
   const { getItem } = useAsyncStorage('auth')
   const { getItem: getRememberItem } = useAsyncStorage('isRemember');
   const { getItem: getPasswordItem } = useAsyncStorage('password');
   const dispatch = useDispatch()
+  const [isOnline, setIsOnline] = useState(true)
   const [isRemember, setIsReMember] = useState<boolean>(false)
   const auth = useSelector(authSelector)
   const [password, setPasswored] = useState('')
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
-
+  const [toggle,setToggle] = useState(true)
   useEffect(() => {
     const interval = setInterval(() => {
       checkToken()
-    }, 60000);
+    }, 5000);
     setIntervalId(interval);
     return () => clearInterval(interval);
   }, [])
+  useEffect(() => {
+    checkNetWork()
+  }, [])
+  const checkNetWork = () => {
+    NetInfo.addEventListener(state => { setIsOnline(state.isConnected ?? false),console.log("state",state) }) //lấy ra thông tin kết nối
+  }
   const handleGetItem = async () => {
     const res = await getRememberItem()
     const resPassword = await getPasswordItem()
@@ -46,18 +55,18 @@ const MainNavigator = () => {
     // JWT exp is in seconds
     if (decodedToken.exp && decodedToken.exp * 1000 < currentDate.getTime()) {
       { AlertComponent({ title: 'Thông báo', message: 'Phiên đăng nhập đã hết hạn vui lòng đăng nhập lại !', onConfirm: () => handleLogout() }) }
-    } 
+    }
   }
   const handleLogout = async () => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    if(fcmtoken){
-      if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
+    if (fcmtoken) {
+      if (auth.fcmTokens && auth.fcmTokens.length > 0) {
         const items = [...auth.fcmTokens]
         const index = items.findIndex(item => item === fcmtoken)
-        if(index !== -1){
-          items.splice(index,1)
+        if (index !== -1) {
+          items.splice(index, 1)
         }
-        await HandleNotification.Update(auth.id,items)
+        await HandleNotification.Update(auth.id, items)
       }
     }
     if (isRemember === true) {
@@ -71,23 +80,27 @@ const MainNavigator = () => {
     }
   }
   useStatusBar('dark-content')
-
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}
+    <>
+      <Stack.Navigator screenOptions={{ headerShown: false }}
 
-    >
-      <Stack.Screen name="Main" component={DrawerNavigate} />
-      <Stack.Screen name="EventDetails" component={EventDetails} />
-      <Stack.Screen name="AboutProfileScreen" component={AboutProfileScreen} />
-      <Stack.Screen name="NotFound" component={NotFound} />
-      <Stack.Screen name="ExploreEvent" component={ExploreEvent} />
-      <Stack.Screen name="SearchEventsScreen" component={SearchEventsScreen} />
-      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-      <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
-      <Stack.Screen name="ChatsScreen" component={ChatsScreen} />
+      >
+        <Stack.Screen name="Main" component={DrawerNavigate} />
+        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="AboutProfileScreen" component={AboutProfileScreen} />
+        <Stack.Screen name="NotFound" component={NotFound} />
+        <Stack.Screen name="ExploreEvent" component={ExploreEvent} />
+        <Stack.Screen name="SearchEventsScreen" component={SearchEventsScreen} />
+        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+        <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+        <Stack.Screen name="ChatsScreen" component={ChatsScreen} />
 
-    </Stack.Navigator>
+      </Stack.Navigator>
+      {!isOnline && AlertComponent({title:'Thông báo'
+        ,message:'Quý khách vui lòng kiểm tra kết nối Internet/3G/Wifi',
+        onConfirm:()=>{BackHandler.exitApp()}})}
+      </>
   )
 }
 export default MainNavigator;

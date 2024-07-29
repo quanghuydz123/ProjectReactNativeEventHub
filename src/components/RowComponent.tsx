@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 interface Props{
     justify?: "center" | "flex-start" | "flex-end" | "space-between" | "space-around" | "space-evenly" | undefined,
@@ -23,4 +23,4 @@ const RowComponent = (props:Props)=>{
     </View>
   )
 }
-export default RowComponent;
+export default memo(RowComponent);

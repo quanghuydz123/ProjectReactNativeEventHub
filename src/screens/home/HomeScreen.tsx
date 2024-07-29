@@ -129,29 +129,29 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     })
   };
-  const textInputAnimation = {
-    transform: [
-      {
-        scaleX: animatedValue.interpolate({
-          inputRange: [0, 50],
-          outputRange: [1, 0],
-          extrapolate: 'clamp',
-        }),
-      },
-      {
-        translateX: animatedValue.interpolate({
-          inputRange: [0, 25],
-          outputRange: [0, -100],
-          extrapolate: 'clamp',
-        }),
-      },
-    ],
-    opacity: animatedValue.interpolate({
-      inputRange: [0, 25],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    }),
-  };
+  // const textInputAnimation = {
+  //   transform: [
+  //     {
+  //       scaleX: animatedValue.interpolate({
+  //         inputRange: [0, 50],
+  //         outputRange: [1, 0],
+  //         extrapolate: 'clamp',
+  //       }),
+  //     },
+  //     {
+  //       translateX: animatedValue.interpolate({
+  //         inputRange: [0, 25],
+  //         outputRange: [0, -100],
+  //         extrapolate: 'clamp',
+  //       }),
+  //     },
+  //   ],
+  //   opacity: animatedValue.interpolate({
+  //     inputRange: [0, 25],
+  //     outputRange: [1, 0],
+  //     extrapolate: 'clamp',
+  //   }),
+  // };
 
   const viewMoneyAnimation = {
     transform: [

@@ -1,5 +1,5 @@
 import { Button, Image, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import RowComponent from "./RowComponent";
 import TextComponent from "./TextComponent";
 import { colors } from "../constrants/color";
@@ -74,4 +74,4 @@ const AvatarGroup = (props: Props) => {
     </RowComponent>
   )
 }
-export default AvatarGroup;
+export default memo(AvatarGroup);

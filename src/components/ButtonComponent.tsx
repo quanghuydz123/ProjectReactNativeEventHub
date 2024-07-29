@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import TextComponent from "./TextComponent"
 import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constrants/color"
@@ -75,4 +75,4 @@ const ButtonComponent = (props: Props) => {
             </TouchableOpacity>
     )
 }
-export default ButtonComponent;
+export default memo(ButtonComponent);

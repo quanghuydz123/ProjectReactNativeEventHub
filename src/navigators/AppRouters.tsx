@@ -11,7 +11,7 @@ const AppRouters = ()=>{
     const {getItem} = useAsyncStorage('auth')
     const [isShowSlash,setIsShowSlash] = useState(true)
     const dispatch = useDispatch()
-    const [isOnline,setIsOnline] = useState(true )
+    const [isOnline,setIsOnline] = useState(true)
     const auth = useSelector(authSelector)
     useEffect(()=>{
       checkLogin()
@@ -22,19 +22,13 @@ const AppRouters = ()=>{
       return ()=>clearTimeout(timeout)
     },[])
 
-    useEffect(()=>{
-      checkNetWork( )
-    },[])
-    const checkNetWork = ()=>{
-      NetInfo.addEventListener(state=>{setIsOnline(state.isConnected ?? false)}) //lấy ra thông tin kết nối
-    }
     const checkLogin = async ()=>{
         const res = await getItem()
         res && dispatch(addAuth(JSON.parse(res)))
     }
   return (
     <> 
-        {isOnline ? isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator /> : <NewScreen />  }
+        {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
     </>
   )
 }

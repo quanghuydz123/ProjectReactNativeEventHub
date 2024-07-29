@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constrants/color"
 interface Props{
@@ -21,4 +21,4 @@ const CardComponent = (props:Props)=>{
     </TouchableOpacity >
   )
 }
-export default CardComponent;
+export default memo(CardComponent);
