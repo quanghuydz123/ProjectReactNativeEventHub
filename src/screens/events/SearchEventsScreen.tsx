@@ -1,8 +1,8 @@
 import { Button, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import followerAPI from "../../apis/followerAPI"
+import followAPI from "../../apis/followAPI"
 import { EventModelNew } from "../../models/EventModelNew"
-import { FollowerModel } from "../../models/FollowerModel"
+import { FollowModel } from "../../models/FollowModel"
 import { apis } from "../../constrants/apis"
 import eventAPI from "../../apis/eventAPI"
 import { ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, TagComponent, TextComponent } from "../../components"
@@ -20,7 +20,7 @@ import { useSelector } from "react-redux"
 import { authSelector } from "../../reduxs/reducers/authReducers"
 interface routeParams {
   items: EventModelNew[],
-  follows: FollowerModel[],
+  follows: FollowModel[],
   lat:string,
   long:string,
   distance:string,
@@ -51,7 +51,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const { items,follows,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(false)
-  const [allFollower, setAllFollower] = useState<FollowerModel[]>(follows)
+  const [allFollower, setAllFollower] = useState<FollowModel[]>(follows)
   const [result,setResult] = useState<EventModelNew[]>(items)
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
   const [isOpenModelizeFilter,setIsOpenModalizeFilter] = useState(false)
@@ -180,7 +180,7 @@ const auth = useSelector(authSelector)
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setAllFollower(res.data.followers)
       }

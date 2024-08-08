@@ -6,8 +6,8 @@ import { apis } from "../../constrants/apis";
 import eventAPI from "../../apis/eventAPI";
 import { LoadingModal } from "../../../modals";
 import LoadingComponent from "../../components/LoadingComponent";
-import { FollowerModel } from "../../models/FollowerModel";
-import followerAPI from "../../apis/followerAPI";
+import { FollowModel } from "../../models/FollowModel";
+import followAPI from "../../apis/followAPI";
 import ListEventComponent from "../../components/ListEventComponent";
 import { SearchNormal } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
@@ -16,7 +16,7 @@ const ExploreEvent = ({navigation,route}:any) => {
     const {items}:{items:EventModelNew[]} = route.params || {}
     const [events, setEvents] = useState<EventModelNew[]>(items)
     const [isLoading, setIsLoading] = useState(false)
-    const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
+    const [allFollower, setAllFollower] = useState<FollowModel[]>([])
 
     useEffect(() => {
         if(!events){
@@ -27,7 +27,7 @@ const ExploreEvent = ({navigation,route}:any) => {
     const handleCallApiGetAllFollower = async () => {
         const api = `/get-all`
         try {
-          const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+          const res: any = await followAPI.HandleFollwer(api, {}, 'get');
           if (res && res.data && res.status === 200) {
             setAllFollower(res.data.followers)
           }

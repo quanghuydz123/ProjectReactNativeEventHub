@@ -3,10 +3,10 @@ import React from "react"
 import { EventModelNew } from "../models/EventModelNew"
 import { FlatList } from "react-native-gesture-handler"
 import EventItem from "./EventItem"
-import { FollowerModel } from "../models/FollowerModel"
+import { FollowModel } from "../models/FollowModel"
 interface Props {
     items:EventModelNew[],
-    follows:FollowerModel[]
+    follows:FollowModel[]
 }
 const ListEventComponent = (props:Props)=>{
     const {items,follows} = props

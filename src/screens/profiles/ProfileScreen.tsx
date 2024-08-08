@@ -20,8 +20,8 @@ import { Edit2 } from "iconsax-react-native";
 import categoryAPI from "../../apis/categoryAPI";
 import { CategoryModel } from "../../models/CategoryModel";
 import { fontFamilies } from "../../constrants/fontFamilies";
-import { FollowerModel } from "../../models/FollowerModel";
-import followerAPI from "../../apis/followerAPI";
+import { FollowModel } from "../../models/FollowModel";
+import followAPI from "../../apis/followAPI";
 import { apis } from "../../constrants/apis";
 
 const ProfileScreen = ({ navigation, route }: any) => {
@@ -34,7 +34,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [isUpdateImageProfile, setIsUpdateProfile] = useState(false)
   const [isOpenModalizeSelectCategory, setIsOpenModalizeSelectCategory] = useState(false)
   const [allCategory, setAllCategory] = useState<CategoryModel[]>([])
-  const [follower, setFollower] = useState<FollowerModel[]>([])
+  const [follower, setFollower] = useState<FollowModel[]>([])
   const [idsFollowerCategory,setIdsFollowerCategory] = useState<string[]>([])
   const [searchCategory, setSearchCategory] = useState('')
   const [numberOfFollowers,setNumberOfFollowers] = useState(0)
@@ -116,7 +116,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const handleCallApiGetFollowerById = async () => {
     const api = apis.follow.getById(auth.id)
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollower(res.data.followers)
         setNumberOfFollowers(res.data.numberOfFollowers)
@@ -205,7 +205,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     const api = '/update-follower-category'
     setIsLoading(true)
     try {
-      const res:any = await followerAPI.HandleFollwer(api,{idUser:auth.id,idsCategory:idsFollowerCategory},'put')
+      const res:any = await followAPI.HandleFollwer(api,{idUser:auth.id,idsCategory:idsFollowerCategory},'put')
       if(res && res.data && res.status===200){
         handleCallApiGetFollowerById()
       }

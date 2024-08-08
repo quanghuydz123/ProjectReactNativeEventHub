@@ -326,7 +326,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       <LoadingModal visible={isLoadingModal} />
       <Portal>
         <Modalize ref={modalizeRef} adjustToContentHeight >
-          <SectionComponent styles={{ minHeight: 200 ,paddingHorizontal:12}}>
+          <SectionComponent styles={{ minHeight: 150 ,paddingHorizontal:12}}>
             <SpaceComponent height={6} />
             <AvatarItem size={66} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID.photoUrl} />
             <SpaceComponent height={6}/>

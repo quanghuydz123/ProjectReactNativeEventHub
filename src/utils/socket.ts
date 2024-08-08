@@ -5,4 +5,4 @@ const socket = io.connect(appInfo.BASE_URL,{
     reconnectionAttempts: 5,  // Số lần cố gắng kết nối lại
     reconnectionDelay: 1000,  // Thời gian chờ giữa các lần kết nối lại
 });
-export default socket;
+export default socket; 

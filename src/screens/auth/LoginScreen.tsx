@@ -96,11 +96,11 @@ const LoginScreen = ({ navigation }: any) => {
         />
         <RowComponent justify={'space-between'}>
           <RowComponent onPress={() => setIsReMember(!isRemember)}>
-            <Switch thumbColor={colors.white} trackColor={{ true: colors.primary }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
+            <Switch thumbColor={colors.white} trackColor={{ true: colors.blue }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
             <SpaceComponent width={4} />
             <TextComponent text={'Lưu thông tin đăng nhập'} />
           </RowComponent>
-          <ButtonComponent text="Quên mật khẩu?" onPress={() => navigation.navigate('ForgotPasswordScreen')} type={'link'} />
+          <ButtonComponent text="Quên mật khẩu" onPress={() => navigation.navigate('ForgotPasswordScreen')} type={'link'} />
         </RowComponent>
       </SectionComponent>
       {
@@ -118,7 +118,7 @@ const LoginScreen = ({ navigation }: any) => {
       <SocialLogin />
       <SectionComponent>
         <RowComponent justify="center">
-          <TextComponent text="Bạn chưa có tài khoản?" />
+          <TextComponent text="Bạn chưa có tài khoản? " />
           <ButtonComponent text="Đăng ký" type="link" onPress={() => navigation.navigate('SignUpScreen')} />
         </RowComponent>
       </SectionComponent>

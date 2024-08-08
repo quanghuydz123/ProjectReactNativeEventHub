@@ -1,7 +1,7 @@
 import { appInfo } from "../constrants/appInfo"
 import axiosClient from "./axiosClient"
 
-class FollowerAPI {
+class FollowAPI {
     HandleFollwer = async (
         url:string,
         data?:any,
@@ -14,5 +14,5 @@ class FollowerAPI {
     }
 }
 
-const followerAPI = new FollowerAPI()
-export default followerAPI
+const followAPI = new FollowAPI()
+export default followAPI

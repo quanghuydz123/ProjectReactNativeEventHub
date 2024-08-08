@@ -14,8 +14,8 @@ import { apis } from "../../constrants/apis";
 import userAPI from "../../apis/userApi";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal } from "../../../modals";
-import { FollowerModel } from "../../models/FollowerModel";
-import followerAPI from "../../apis/followerAPI";
+import { FollowModel } from "../../models/FollowModel";
+import followAPI from "../../apis/followAPI";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../reduxs/reducers/authReducers";
 import socket from "../../utils/socket";
@@ -25,8 +25,8 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
   const [tabSelected,setTabSelected] = useState('about')
   const [isLoading, setIsLoading] = useState(false)
   const [profile, setProfile] = useState<UserModel>()
-  const [follower, setFollower] = useState<FollowerModel[]>([])
-  const [followerUserOther, setFollowerUserOther] = useState<FollowerModel[]>([])
+  const [follower, setFollower] = useState<FollowModel[]>([])
+  const [followerUserOther, setFollowerUserOther] = useState<FollowModel[]>([])
   const [isLLoadingNotShow,setIsLLoadingNotShow] = useState(false)
   const auth = useSelector(authSelector)
   const [numberOfFollowers,setNumberOfFollowers] = useState(0)
@@ -92,7 +92,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       setIsLoading(isLoading ? isLoading : false)
 
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollower(res.data.followers)
       }
@@ -110,7 +110,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
     const api = '/update-follower-userOther'
     setIsLoading(true)
     try {
-      const res = await followerAPI.HandleFollwer(api,{idUser:auth.id,idUserOther:uidOthor},'put')
+      const res = await followAPI.HandleFollwer(api,{idUser:auth.id,idUserOther:uidOthor},'put')
       if(res && res.data && res.status===200){
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
@@ -133,7 +133,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       const api = apis.follow.getById(uidOthor)
       setIsLoading(isLoading ? isLoading : false)
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollowerUserOther(res.data.followers)
         setNumberOfFollowers(res.data.numberOfFollowers)

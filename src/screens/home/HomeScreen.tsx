@@ -11,19 +11,18 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { CategoriesList, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import LoadingComponent from '../../components/LoadingComponent';
 import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
-import { FollowerModel } from '../../models/FollowerModel';
+import { FollowModel } from '../../models/FollowModel';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPositionUser, authSelector } from '../../reduxs/reducers/authReducers';
 import eventAPI from '../../apis/eventAPI';
 import { apis } from '../../constrants/apis';
-import followerAPI from '../../apis/followerAPI';
+import followAPI from '../../apis/followAPI';
 import { fontFamilies } from '../../constrants/fontFamilies';
 import { colors } from '../../constrants/color';
-import { Friends } from '../../assets/svgs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { globalStyles } from '../../styles/globalStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -43,9 +42,12 @@ import { ToastMessaging } from '../../utils/showToast';
 import socket from '../../utils/socket';
 import axios from 'axios';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import { appInfo } from '../../constrants/appInfo';
+import Swiper from 'react-native-swiper';
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
+const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 
 const UPPER_HEADER_HEIGHT = 44;
 const UPPER_HEADER_PADDING_TOP = 4;
@@ -56,7 +58,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const { getItem } = useAsyncStorage('isRemember')
   const [allEvent, setAllEvent] = useState<EventModelNew[]>([])
   const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
-  const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
+  const [allFollower, setAllFollower] = useState<FollowModel[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
@@ -94,10 +96,10 @@ const HomeScreen = ({ navigation, route }: any) => {
       ],
     };
   };
-  const depositViewAnimation = getFeatureViewAnimation(animatedValue, 38);
+  const depositViewAnimation = getFeatureViewAnimation(animatedValue, 36);
   const withdrawViewAnimation = getFeatureViewAnimation(animatedValue, -6);
   const qrViewAnimation = getFeatureViewAnimation(animatedValue, -44);
-  const scanViewAnimation = getFeatureViewAnimation(animatedValue, -76);
+  const scanViewAnimation = getFeatureViewAnimation(animatedValue, -78);
 
   const featureNameAnimation = {
     transform: [
@@ -281,7 +283,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setAllFollower(res.data.followers)
       }
@@ -409,6 +411,8 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     })
   };
+  const [index,setIndex] = useState(0)
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -458,8 +462,8 @@ const HomeScreen = ({ navigation, route }: any) => {
             }
           </TouchableOpacity>
           <SpaceComponent width={22} />
-          <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')}>
-            <MaterialCommunityIcons name="chat-processing-outline" size={22} color={colors.white} />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <MaterialCommunityIcons name="menu" size={22} color={colors.white} />
             {
               !true && <View style={{
                 backgroundColor: '#02E9FE',
@@ -547,9 +551,9 @@ const HomeScreen = ({ navigation, route }: any) => {
                 /> */}
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
-              onPress={() => console.log("ok")}
+              onPress={() => navigation.navigate('ChatsScreen')}
             >
-              <AnimatedFontAwesome5 name='gifts' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
+              <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
             {/* <Animated.Image
                   source={require('../../assets/images/momo/qr-circle.png')}
@@ -557,7 +561,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 /> */}
 
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              ƯU ĐÃI
+              TIN NHẮN
             </Animated.Text>
           </Animated.View>
         </View>
@@ -569,7 +573,7 @@ const HomeScreen = ({ navigation, route }: any) => {
           <TextComponent text={isShowMoney ? '1.000.000đ' : '*********'} font={fontFamilies.medium} color={colors.black} />
         </Animated.View>
       </Animated.View >
-
+              
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -586,6 +590,25 @@ const HomeScreen = ({ navigation, route }: any) => {
         scrollEventThrottle={16}>
         <Animated.View style={[styles.spaceForHeader]} />
         <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: 'white' }}>
+
+          {/* <Swiper style={{}} loop={false} onIndexChanged={(num)=>setIndex(num)}
+          activeDotColor={colors.white}
+          height={200}
+          index={index}
+          >
+              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
+              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
+              />
+              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
+              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
+              />
+              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
+              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
+              />
+          </Swiper> */}
+          <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} />
+            <CategoriesList values={categories} />
+          <SpaceComponent height={16}/>
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
             isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList

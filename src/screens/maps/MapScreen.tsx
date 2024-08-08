@@ -15,8 +15,8 @@ import axios, { all } from "axios"
 import { AddressModel } from "../../models/AddressModel"
 import eventAPI from "../../apis/eventAPI"
 import { EventModelNew } from "../../models/EventModelNew"
-import { FollowerModel } from "../../models/FollowerModel"
-import followerAPI from "../../apis/followerAPI"
+import { FollowModel } from "../../models/FollowModel"
+import followAPI from "../../apis/followAPI"
 import socket from "../../utils/socket"
 import userAPI from "../../apis/userApi"
 import { HandleNotification } from "../../utils/handleNotification"
@@ -40,7 +40,7 @@ const MapScreen = ({ navigation }: any) => {
   const { getItem } = useAsyncStorage('isRemember')
   const [allEvent, setAllEvent] = useState<EventModelNew[]>([])
   const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
-  const [allFollower, setAllFollower] = useState<FollowerModel[]>([])
+  const [allFollower, setAllFollower] = useState<FollowModel[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
@@ -209,7 +209,7 @@ const MapScreen = ({ navigation }: any) => {
   const handleCallApiGetAllFollower = async () => {
     const api = `/get-all`
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setAllFollower(res.data.followers)
       }

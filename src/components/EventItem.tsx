@@ -16,14 +16,14 @@ import { EventModelNew } from "../models/EventModelNew"
 import { numberToString } from "../utils/numberToString"
 import { useSelector } from "react-redux"
 import { authSelector } from "../reduxs/reducers/authReducers"
-import { FollowerModel } from "../models/FollowerModel"
+import { FollowModel } from "../models/FollowModel"
 import { DateTime } from "../utils/DateTime"
 import { convertMoney } from "../utils/convertMoney"
 import TagComponent from "./TagComponent"
 interface Props {
   item: EventModelNew,
   isShownHorizontal?: boolean,
-  followers: FollowerModel[]
+  followers: FollowModel[]
 }
 const EventItem = (props: Props) => {
   const { item, followers, isShownHorizontal } = props

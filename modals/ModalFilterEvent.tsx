@@ -6,7 +6,7 @@ import { ButtonComponent, ChoiceLocationComponent, RowComponent, SectionComponen
 import { colors } from "../src/constrants/color";
 import { CategoryModel } from "../src/models/CategoryModel";
 import { globalStyles } from "../src/styles/globalStyles";
-import { FollowerModel } from "../src/models/FollowerModel";
+import { FollowModel } from "../src/models/FollowModel";
 import { fontFamilies } from "../src/constrants/fontFamilies";
 import { DateTime } from "../src/utils/DateTime";
 import { numberToString } from "../src/utils/numberToString";
@@ -43,7 +43,7 @@ const ModalFilterEvent = (props: Props) => {
         , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime,selectedPriceRenge,onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
-    const [allFollow, setAllFollow] = useState<FollowerModel[]>([])
+    const [allFollow, setAllFollow] = useState<FollowModel[]>([])
     const [rangePriceCopy,setRangePriceCopy] = useState<{
         low: number,
         high: number

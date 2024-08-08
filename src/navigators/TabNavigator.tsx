@@ -140,7 +140,7 @@ const TabNavigator = () => {
       position:'absolute',
       width:width,
       backgroundColor:colors.primary,
-      bottom:57,
+      bottom:58,
       left:0,
       borderRadius:100,
       marginHorizontal:12,

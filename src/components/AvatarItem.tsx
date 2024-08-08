@@ -17,10 +17,11 @@ interface Props {
     bdRadius?: number,
     onPress?: () => void,
     isShowIconAbsolute?: boolean,
-    typeIcon?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other'
+    typeIcon?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other',
+    textName?:string
 }
 const AvatarItem = (props: Props) => {
-    const { photoUrl, size, colorBorderWidth, index, styles, notBorderWidth, bdRadius, onPress, isShowIconAbsolute, typeIcon } = props
+    const { photoUrl, size, colorBorderWidth, index, styles, notBorderWidth, bdRadius, onPress,textName, isShowIconAbsolute, typeIcon } = props
     const ml = size ? -(size / 2) : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
     const renderIconAbsolute = (type?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
@@ -56,36 +57,39 @@ const AvatarItem = (props: Props) => {
         return content
     }
     return (
-        <TouchableOpacityComponent
-            onPress={onPress}
-            style={[styles]}>
-            {
-                photoUrl ? <Image
-                    source={{ uri: photoUrl }}
-                    style={{
-                        width: size ?? 24,
-                        height: size ?? 24,
-                        borderRadius: bdRadius ?? 100,
-                        borderWidth: notBorderWidth ? 0 : 1,
-                        borderColor: colorBorderWidth ?? colors.white,
-                        marginLeft: (index && index !== 0) ? ml : 0,
-                    }}
-                /> : <Image
-                    source={{ uri: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' }}
-                    style={{
-                        width: size ?? 24,
-                        height: size ?? 24,
-                        borderRadius: bdRadius ?? 100,
-                        borderWidth: notBorderWidth ? 0 : 1,
-                        borderColor: colorBorderWidth ?? colors.white,
-                        marginLeft: (index && index !== 0) ? ml : 0,
-                    }}
-                />
-            }
-            {
-                isShowIconAbsolute && renderIconAbsolute(typeIcon)
-            }
-        </TouchableOpacityComponent>
+        <View style={textName ? {justifyContent:'center',alignItems:'center'} : {}}>
+            <TouchableOpacityComponent
+                onPress={onPress}
+                style={[styles]}>
+                {
+                    photoUrl ? <Image
+                        source={{ uri: photoUrl }}
+                        style={{
+                            width: size ?? 24,
+                            height: size ?? 24,
+                            borderRadius: bdRadius ?? 100,
+                            borderWidth: notBorderWidth ? 0 : 1,
+                            borderColor: colorBorderWidth ?? colors.white,
+                            marginLeft: (index && index !== 0) ? ml : 0,
+                        }}
+                    /> : <Image
+                        source={{ uri: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' }}
+                        style={{
+                            width: size ?? 24,
+                            height: size ?? 24,
+                            borderRadius: bdRadius ?? 100,
+                            borderWidth: notBorderWidth ? 0 : 1,
+                            borderColor: colorBorderWidth ?? colors.white,
+                            marginLeft: (index && index !== 0) ? ml : 0,
+                        }}
+                    />
+                }
+                {
+                    isShowIconAbsolute && renderIconAbsolute(typeIcon)
+                }
+            </TouchableOpacityComponent>
+            {textName && <TextComponent styles={{maxWidth:100}} numberOfLine={1} text={textName} title size={12} textAlign="center"/>}
+        </View>
     )
 }
 export default memo(AvatarItem)

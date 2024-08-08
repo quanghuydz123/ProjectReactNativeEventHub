@@ -8,6 +8,9 @@ import TagComponent from "./TagComponent"
 import { Food, FoodWhite } from "../assets/svgs"
 import { CategoryModel } from "../models/CategoryModel"
 import { useNavigation } from "@react-navigation/native"
+import AvatarItem from "./AvatarItem"
+import { TouchableOpacity } from "react-native"
+import { globalStyles } from "../styles/globalStyles"
 interface Props{
     isFill?:boolean,
     values:CategoryModel[]
@@ -20,6 +23,30 @@ const CategoriesList = (props:Props)=>{
     useEffect(()=>{
         setCategories(values)
     },[values])
+    const renderItem = (item:CategoryModel,index:number)=>{
+      return (
+      // <TagComponent 
+      //   key={item._id} 
+      //   bgColor={colors.danger2}
+      //   label={item.name}
+      //   styles={{marginRight:index === categories.length -1 ? 28 : 12}}
+      //   onPress={()=> navigation.navigate('SearchEventsScreen',{categoriesSelected:[item._id]})}
+      //   />
+      <TouchableOpacity onPress={()=> navigation.navigate('SearchEventsScreen',{categoriesSelected:[item._id]})}  style={[{marginRight:index === categories.length -1 ? 28 : 8,
+        paddingHorizontal:20,
+        paddingVertical:4,
+        borderRadius:10,
+        borderWidth:1,
+        borderColor:'#f6f6f3'}]}>
+        <AvatarItem 
+        size={60} 
+        textName={item.name} 
+        
+        photoUrl={item.image}
+        />
+      </TouchableOpacity >
+      )
+    }
   return (
     <FlatList 
     style={{paddingHorizontal:8}}
@@ -27,13 +54,7 @@ const CategoriesList = (props:Props)=>{
     showsHorizontalScrollIndicator={false}
     data={categories}
     renderItem={({item,index}) => (
-        <TagComponent 
-        key={item._id} 
-        bgColor={colors.danger2}
-        label={item.name}
-        styles={{marginRight:index === categories.length -1 ? 28 : 12}}
-        onPress={()=> navigation.navigate('SearchEventsScreen',{categoriesSelected:[item._id]})}
-        />
+      renderItem(item,index)
     )}
     />
   )

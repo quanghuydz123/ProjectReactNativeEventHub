@@ -77,10 +77,7 @@ const dispatch = useDispatch()
           handleLogout()
           break
         case 'MyProfile':
-          navigation.navigate('Profile',{
-            screen:'ProfileScreen',
-            // params: { id: auth.id } 
-          })
+         console.log("profile")
           break
         default:
           console.log("key",key)

@@ -17,7 +17,7 @@ const TabBarComponent = (props:Props)=>{
         paddingHorizontal:16,
         marginBottom:10
     }}>
-        <TextComponent text={title} title flex={1} size={18}/>
+        <TextComponent text={title} title flex={1} size={16}/>
         {onPress && 
         <RowComponent>
             <ButtonComponent text="Xem tất cả" color={colors.text2} onPress={onPress} textSize={12}/>

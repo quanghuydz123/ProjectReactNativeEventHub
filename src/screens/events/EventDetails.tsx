@@ -20,8 +20,8 @@ import { authSelector } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
-import followerAPI from "../../apis/followerAPI";
-import { FollowerModel } from "../../models/FollowerModel";
+import followAPI from "../../apis/followAPI";
+import { FollowModel } from "../../models/FollowModel";
 import socket from "../../utils/socket";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import AvatarItem from "../../components/AvatarItem";
@@ -32,13 +32,13 @@ import notificationAPI from "../../apis/notificationAPI";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const EventDetails = ({ navigation, route }: any) => {
 
-  const { item, followers, id }: { item: EventModelNew, followers: FollowerModel[], id: string } = route.params
+  const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
   const auth = useSelector(authSelector)
   const [isLoading, setIsLoading] = useState(false)
   const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
-  const [followerEvent, setFollowerEvent] = useState<FollowerModel[]>(followers)
+  const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
   const [searchUser, setSearchUser] = useState('')
   const [userSelected, setUserSelected] = useState<string[]>([])
   const [allUser, setAllUser] = useState<UserModel[]>([])
@@ -76,7 +76,7 @@ const EventDetails = ({ navigation, route }: any) => {
     const api = `/get-all`
     setIsLoading(true)
     try {
-      const res: any = await followerAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollowerEvent(res.data.followers)
       }
@@ -103,7 +103,7 @@ const EventDetails = ({ navigation, route }: any) => {
     const api = '/update-follower-event'
     if (event?._id) {
       try {
-        const res = await followerAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
+        const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
         if (res && res.data.event && res.status === 200) {
           socket.emit("followers",{id:auth.id});
           handleCallApiGetAllFollower()
