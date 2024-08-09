@@ -12,7 +12,12 @@
           "package_name": "com.evenhub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "989926603372-v1lppokn36b1mf2g203libf01c3bbhj9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDJYxU5S0bbxtaKM8UL6_55mtiTRXeX07E"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989926603372-v1lppokn36b1mf2g203libf01c3bbhj9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "989926603372-i5pfspb98hqefk7d9nlbtgaf3njvgc1v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.evenhub"
+              }
+            }
+          ]
         }
       }
     }

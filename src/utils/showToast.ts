@@ -17,4 +17,11 @@ export class ToastMessaging {
             visibilityTime:1500,
         });
     }
+    static Warning = ({message,visibilityTime}:{message?:string,visibilityTime?:number})=>{
+        Toast.show({
+            type: 'info',
+            text1: message ?? 'Lỗi rồi',
+            visibilityTime:visibilityTime ?? 1500,
+        });
+    }
 }

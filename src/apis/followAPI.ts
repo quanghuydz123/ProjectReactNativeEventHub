@@ -7,7 +7,7 @@ class FollowAPI {
         data?:any,
         method?: 'get' | 'post' | 'put' | 'delete'
     )=>{
-        return await axiosClient(`/follower${url}`,{
+        return await axiosClient(`/follow${url}`,{
             method: method ?? 'get',
             data
         })

@@ -44,8 +44,6 @@ import axios from 'axios';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { appInfo } from '../../constrants/appInfo';
 import Swiper from 'react-native-swiper';
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 

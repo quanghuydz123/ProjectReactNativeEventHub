@@ -1,5 +1,5 @@
-import { Animated, Platform, Text, View } from "react-native"
-import React, { ReactNode, useRef, useState } from "react"
+import { Animated, BackHandler, Platform, Text, View } from "react-native"
+import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import ExploreNavigator from "./ExploreNavigator";
 import EventsNavigator from "./EventsNavigator";
@@ -19,7 +19,7 @@ import * as Animatable from 'react-native-animatable';
 import Octicons from 'react-native-vector-icons/Octicons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { appInfo } from "../constrants/appInfo";
-const TabNavigator = () => {
+const TabNavigator = ({navigation}:any) => {
   const Tab = createBottomTabNavigator();
   const nameTab: { [key in keyof ParamListBase]: string } = {
     Explore: 'Trang chủ',
@@ -32,6 +32,17 @@ const TabNavigator = () => {
   }
   const [width,setWidth] = useState(getWidth()-24)
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+  const [index,setIndex] = useState(0)
+  useEffect(()=>{
+    setWidth(getWidth()-24)
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth() * index,
+      useNativeDriver: true,
+      speed:250
+    }).start();
+  },[index])
+  
+
   return <>
     <Tab.Navigator
 
@@ -48,7 +59,7 @@ const TabNavigator = () => {
         //focused khi click nào
         tabBarIcon: ({ focused, color, size }) => {//Chỉnh sửa hiện thị icon
           let icon: ReactNode;
-          color = focused ? colors.primary : colors.gray5
+          color = focused ? colors.primary : colors.gray2
           size = 24
           switch (route.name) {
             case "Explore":
@@ -59,7 +70,7 @@ const TabNavigator = () => {
               break
             case "Add":
               icon = <CricleComponent size={50}
-                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 30 : 46, borderWidth: 2, borderColor: 'white' }]}>
+                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 40 : 56, borderWidth: 2, borderColor: 'white' }]}>
                 <AddSquare size={26} color={colors.white} variant="Bold" />
               </CricleComponent>
 
@@ -90,22 +101,12 @@ const TabNavigator = () => {
 
       <Tab.Screen name="Explore" component={ExploreNavigator} listeners={{
         tabPress: e => {
-          setWidth(getWidth()-24)
-          Animated.spring(tabOffsetValue, {
-            toValue: 0,
-            useNativeDriver: true,
-            speed:250
-          }).start();
+          setIndex(0)
         }
       }}/>
       <Tab.Screen name="Events" component={EventsNavigator} listeners={{
         tabPress: e => {
-          setWidth(getWidth()-24)
-          Animated.spring(tabOffsetValue, {
-            toValue: getWidth() * 1,
-            useNativeDriver: true,
-            speed:250
-          }).start();
+          setIndex(1)
         }
       }}/>
       <Tab.Screen name="Add" component={AddNewScreen} listeners={{
@@ -115,22 +116,12 @@ const TabNavigator = () => {
       }}/>
       <Tab.Screen name="Transaction" component={TransactionNavigator} listeners={{
         tabPress: e => {
-          setWidth(getWidth()-24)
-          Animated.spring(tabOffsetValue, {
-            toValue: getWidth() * 3,
-            useNativeDriver: true,
-            speed:250
-          }).start();
+          setIndex(3)
         }
       }}/>
       <Tab.Screen name="Profile" component={ProfileNavigator} listeners={{
         tabPress: e => {
-          setWidth(getWidth()-24)
-          Animated.spring(tabOffsetValue, {
-            toValue: getWidth() * 4,
-            useNativeDriver: true,
-            speed:250
-          }).start();
+          setIndex(4)
         }
       }}/>
 

@@ -6,7 +6,7 @@ import { useStatusBar } from "../hooks/useStatusBar";
 const ProfileNavigator = ()=>{
 const Stack = createNativeStackNavigator();
 useStatusBar('dark-content')
-
+  
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>

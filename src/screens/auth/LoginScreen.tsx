@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducers";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { LoadingModal } from "../../../modals";
+import { EventHubLogo } from "../../assets/svgs";
+import { appInfo } from "../../constrants/appInfo";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('')
@@ -73,13 +75,8 @@ const LoginScreen = ({ navigation }: any) => {
   return (
     <ContainerComponent isScroll>
       <SectionComponent styles={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
-        <Image source={require('../../assets/images/text-logo.png')}
-          style={{
-            width: 162,
-            height: 114,
-            marginBottom: 30
-          }}
-        />
+        <EventHubLogo width={appInfo.sizes.WIDTH*0.8}/>
+        <SpaceComponent height={16}/>
       </SectionComponent>
       <SectionComponent>
         <TextComponent text={'Đăng nhập'} size={24} font={fontFamilies.medium} />
@@ -96,7 +93,7 @@ const LoginScreen = ({ navigation }: any) => {
         />
         <RowComponent justify={'space-between'}>
           <RowComponent onPress={() => setIsReMember(!isRemember)}>
-            <Switch thumbColor={colors.white} trackColor={{ true: colors.blue }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
+            <Switch thumbColor={colors.white} trackColor={{ true: colors.primary }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
             <SpaceComponent width={4} />
             <TextComponent text={'Lưu thông tin đăng nhập'} />
           </RowComponent>

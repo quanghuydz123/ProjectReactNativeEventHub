@@ -16,7 +16,7 @@ import { TextComponent } from "../components";
 import NetInfo from "@react-native-community/netinfo";
 import {BackHandler} from 'react-native';
 
-const MainNavigator = () => {
+const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
   const { getItem: getRememberItem } = useAsyncStorage('isRemember');
   const { getItem: getPasswordItem } = useAsyncStorage('password');
@@ -37,6 +37,7 @@ const MainNavigator = () => {
   useEffect(() => {
     checkNetWork()
   }, [])
+  
   const checkNetWork = () => {
     NetInfo.addEventListener(state => { setIsOnline(state.isConnected ?? false),console.log("state",state) }) //lấy ra thông tin kết nối
   }
