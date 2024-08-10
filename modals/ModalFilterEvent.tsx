@@ -28,7 +28,7 @@ interface Props {
         endAt: string
     }) => void,
     selectedAddress: string,
-    onSelectAddress: (val: Address) => void,
+    onSelectAddress: (val: string) => void,
     selectedPriceRenge:{
         low: number,
         high: number
@@ -125,7 +125,7 @@ const ModalFilterEvent = (props: Props) => {
             setFilterDate(val)
         }
     }
-    const handleOnSelectLocation = (val: Address) => {
+    const handleOnSelectLocation = (val: string) => {
         onSelectAddress(val)
     }
     const handleValueChange = useCallback((low: number, high: number) => {
@@ -238,8 +238,7 @@ const ModalFilterEvent = (props: Props) => {
                         </RowComponent>
                     </SectionComponent >
                     <View>
-                        <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: Address) => handleOnSelectLocation(val)} />
-
+                        <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: string) => handleOnSelectLocation(val)} />
                     </View>
                     
                     <SpaceComponent height={16} />

@@ -78,7 +78,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
           handleCallApiUpdateImageProfile(profile)
         }
       } else {
-        ToastMessaging.Error("Ảnh không hợp lệ")
+        ToastMessaging.Error({message:"Ảnh không hợp lệ"})
       }
     }
   }, [isUpdateImageProfile])

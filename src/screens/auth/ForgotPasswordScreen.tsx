@@ -9,7 +9,7 @@ import { Validate } from "../../utils/validate";
 import { fontFamilies } from "../../constrants/fontFamilies";
 import { LoadingModal } from "../../../modals";
 
-const ForgotPasswordScreen = () => {
+const ForgotPasswordScreen = ({navigation}:any) => {
   const [email, setEmail] = useState('')
   const [emailSendVerifition, setEmailSendVerifition] = useState('')
   const [isCheckValidate, setIsCheckValidate] = useState(true)
@@ -126,6 +126,9 @@ const ForgotPasswordScreen = () => {
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email,password,comfirmPassword }, 'post')
+      if(res && res.status ===200){
+        navigation.goBack()
+      }
       setIsLoading(false)
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)

@@ -4,11 +4,13 @@ import { ContainerComponent, SectionComponent, TextComponent } from "../../compo
 import SearchComponent from "../../components/SearchComponent";
 
 const ChatsScreen = ()=>{
-    const [searchKey,setSearchKey] = useState('')
+  const [searchKey,setSearchKey] = useState('')
+  
   return (
     <ContainerComponent back title="Đoạn chat">
         <SectionComponent>
             <SearchComponent onSearch={(val)=>setSearchKey(val)} value={searchKey}  isNotShowArrow/>
+            
         </SectionComponent>
     </ContainerComponent>
   )

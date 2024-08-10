@@ -12,7 +12,7 @@ import LocationModal from "../../modals/LocationModal";
 interface Props {
     onPress?:() => void,
     value:string,
-    onSelect:(val:any)=> void,
+    onSelect:(val:string)=> void,
     title:string
 }
 const ChoiceLocationComponent = (props:Props) => {

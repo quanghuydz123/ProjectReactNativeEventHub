@@ -13,18 +13,18 @@ const DrawerNavigate = ({ navigation }: any) => {
   const Drawer = createDrawerNavigator()
   const [count, setCount] = useState(0)
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
-  const [frist, setFrist] = useState(true)
   useEffect(() => {
     const interval = setInterval(() => {
       setCount(0)
     }, 3000);
     setIntervalId(interval);
-    return () => clearInterval(interval);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [])
   const handleBackButtonClick = () => {
     const state = navigation.getState();
     const routes = state.routes;
-    const prevRoute = routes[routes.length - 2]; // -2 because -1 is the current route
     if (routes.length > 1) {
       const prevRoute = routes[routes.length - 2]; // Lấy route trước đó
       console.log("prevRoute.name", prevRoute.name);
@@ -34,12 +34,6 @@ const DrawerNavigate = ({ navigation }: any) => {
       if (count >= 1) {
         BackHandler.exitApp();
       } else {
-        // if (frist) {
-        //   setFrist(false)
-        // }
-        // else {
-        //   ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
-        // }
         ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
         setCount(prev => prev + 1)
       }

@@ -58,26 +58,37 @@ const AddNewScreen = ()=>{
   useEffect(()=>{//call api get lat and long
     const api = `https://geocode.search.hereapi.com/v1/geocode?q=${eventData.Address}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
     handleCallApiGetLatAndLong(api)
-  },[eventData.Address])
+    },[eventData.Address])
   const handleCallApiGetLatAndLong = async (api:string)=>{
     try {
       const res = await axios(api)
-      if(res && res.data && res.status === 200){
-        console.log("res.data.items[0].position",res.data.items[0].position)
-        handleOnchangePosition('position',res.data.items[0].position)
+      if(res && res.data.items.length > 0 && res.status === 200){
+        const address = res.data.items[0].address
+        if(address.street && address.district && address.city){
+          handleOnchangePosition('position',res.data.items[0].position)
+          handleOnchangeAddressDetails('addressDetals',address)
+        }else{
+          ToastMessaging.Error({message:'Hãy nhập đầy đủ thông tin địa chỉ sự kiện (tên đường,xã,huyện,tỉnh,....)'})
+          handleOnchageValue('Address','') 
+        }
       }else{
         console.log("vị trí chọn không hợp lệ")
+        ToastMessaging.Error({message:'vị trí nhập không hợp lệ vui lòng nhập lại'})
+        handleOnchageValue('Address','') 
       }
     } catch (error:any) {
       console.log(error)
     }
+  }
+  const handleOnSelectLocation = (val:string)=>{
+    // handleOnchangeAddressDetails('addressDetals',val)
+    handleOnchageValue('Address',val) 
   }
   const handleOnchageValue = (key:string, value:string | Date | string[] | number) => {
     const item:any = {...eventData}
     item[`${key}`] = value
     setEventData(item)
   }
-  console.log("e",eventData)
   const handleOnchangeAddressDetails = (key:string,value:any)=>{
     const item:any = {...eventData}
     Object.keys(eventData.addressDetals).forEach((keyChild)=> {
@@ -174,12 +185,7 @@ const AddNewScreen = ()=>{
     setFileSelected(undefined)
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }
-  const handleOnSelectLocation = (val:Address)=>{
-    handleOnchangeAddressDetails('addressDetals',val)
-    handleOnchageValue('Address',val?.label) 
-
-  }
-  console.log("adb",eventData)
+  console.log("event",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
@@ -237,7 +243,7 @@ const AddNewScreen = ()=>{
         title="Địa điểm tổ chức" 
         onChange={val => handleOnchageValue('Location',val)}
         />
-        <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:Address) => handleOnSelectLocation(val)}/>
+        <ChoiceLocationComponent title="Vị trí" value={eventData.Address} onSelect={(val:string) => handleOnSelectLocation(val)}/>
 
         <TextComponent text="Hình ảnh" title size={14}/>
         <SpaceComponent height={8}/>

@@ -14,7 +14,7 @@ import LoadingComponent from "../src/components/LoadingComponent"
 interface Props {
     visible:boolean
     onClose:()=>void
-    onSelect:(val:Address)=>void,
+    onSelect:(val:string)=>void,
     onConfirm:()=>void
 }
 const LocationModal = (props:Props)=>{
@@ -40,41 +40,41 @@ const LocationModal = (props:Props)=>{
         setIsLoading(false)
       }
     }
-    const handleSelectedLocation = (address:Address)=>{
+    const handleSelectedLocation = (address:string)=>{
       onSelect(address)
       onConfirm()
     }
-    const handleRenderLocationSearch = (address:Address)=>{
-      return <RowComponent
-      onPress={()=>handleSelectedLocation(address)}
-       key={address.label} styles={[
-          localStyles.listItem,
-          {
-              paddingVertical:10,
-              borderBottomWidth:1,
-              borderBlockColor:colors.gray6,
-              paddingHorizontal:10,
-          }
-      ]}
-      >
+    // const handleRenderLocationSearch = (address:Address)=>{
+    //   return <RowComponent
+    //   onPress={()=>handleSelectedLocation(address)}
+    //    key={address.label} styles={[
+    //       localStyles.listItem,
+    //       {
+    //           paddingVertical:10,
+    //           borderBottomWidth:1,
+    //           borderBlockColor:colors.gray6,
+    //           paddingHorizontal:10,
+    //       }
+    //   ]}
+    //   >
          
-          <SpaceComponent width={8}/>
-         <View style={{
-          flex:1,
+    //       <SpaceComponent width={8}/>
+    //      <View style={{
+    //       flex:1,
 
-         }}>
-              <TextComponent 
-              color={colors.colorText} 
-              text={address.label} 
-              flex={1} 
-              font={fontFamilies.regular}
-                  styles={{
-                      textAlignVertical:'center'
-                  }}
-               />
-         </View>
-      </RowComponent>
-    }
+    //      }}>
+    //           <TextComponent 
+    //           color={colors.colorText} 
+    //           text={address.label} 
+    //           flex={1} 
+    //           font={fontFamilies.regular}
+    //               styles={{
+    //                   textAlignVertical:'center'
+    //               }}
+    //            />
+    //      </View>
+    //   </RowComponent>
+    // }
   return (
     <Modal visible={visible} animationType="slide" style={{
       flex:1,
@@ -107,12 +107,15 @@ const LocationModal = (props:Props)=>{
             </View>
            
         </RowComponent> */}
-        <SearchComponent value={searchKey} onPressArrow={()=>handleClose()} onSearch={(val)=> setSearchKey(val)}/>
+        <SearchComponent value={searchKey} titlePlaceholder="Nhập địa chỉ tại đây..." onPressArrow={()=>handleClose()} onSearch={(val)=> setSearchKey(val)}/>
         </View>
         <View style={{
-          marginTop:20
+          marginTop:20,
+          justifyContent:'center',
+          alignItems:'center',
+          flex:1
         }}>
-            {
+            {/* {
               (locations && !isLoading ) ? (
                 <FlatList 
                 showsVerticalScrollIndicator={false}
@@ -121,10 +124,11 @@ const LocationModal = (props:Props)=>{
                 />
               ):
               <LoadingComponent isLoading={isLoading} value={locations?.items.length ?? 0} />
-            }
+            } */}
+            <TextComponent text={'Map View'}/>
         </View>
       </View>
-      <ButtonComponent text="Tìm kiếm" type="primary" onPress={handleSearchLocation}/>
+      <ButtonComponent text="Xác nhận" type="primary" onPress={()=>handleSelectedLocation(searchKey)}/>
     </Modal >
   )
 }

@@ -10,11 +10,11 @@ export class ToastMessaging {
             onPress:onPress
         });
     }
-    static Error = (message?:string)=>{
+    static Error = ({message,visibilityTime}:{message:string,visibilityTime?:number})=>{
         Toast.show({
             type: 'error',
             text1: message ?? 'Lỗi rồi',
-            visibilityTime:1500,
+            visibilityTime:visibilityTime ?? 1500,
         });
     }
     static Warning = ({message,visibilityTime}:{message?:string,visibilityTime?:number})=>{

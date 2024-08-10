@@ -32,7 +32,9 @@ const MainNavigator = ({navigation}:any) => {
       checkToken()
     }, 5000);
     setIntervalId(interval);
-    return () => clearInterval(interval);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [])
   useEffect(() => {
     checkNetWork()

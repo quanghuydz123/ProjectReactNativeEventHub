@@ -294,7 +294,7 @@ const auth = useSelector(authSelector)
       selectedDateTime={dateTime}
       onSelectDateTime={(val)=>setDateTime(val)}
       selectedAddress={addressFilter}
-      onSelectAddress={(val)=>setAddressFilter(val.label)}
+      onSelectAddress={(val)=>setAddressFilter(val)}
       onSelectPriceRange={(val)=>setPriceRenge({low:val.low,high:val.high})}
       selectedPriceRenge={priceRenge}
       />

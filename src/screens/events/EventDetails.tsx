@@ -54,7 +54,6 @@ const EventDetails = ({ navigation, route }: any) => {
     }
 
   }, [])
-  console.log("event", event?.title)
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
@@ -76,7 +75,7 @@ const EventDetails = ({ navigation, route }: any) => {
     const api = `/get-all`
     setIsLoading(true)
     try {
-      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+      const res: any = await followAPI.HandleFollwer(api, {}, 'get')
       if (res && res.data && res.status === 200) {
         setFollowerEvent(res.data.followers)
       }
