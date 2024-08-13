@@ -5,11 +5,11 @@ import { colors } from "../../../constrants/color";
 import { fontFamilies } from "../../../constrants/fontFamilies";
 import { Facebook,Google } from "../../../assets/svgs";
 import { AlertComponent } from "../../../components/Alert";
-import {GoogleSignin} from '@react-native-google-signin/google-signin'
+import { GoogleSignin,GoogleSigninButton  } from '@react-native-google-signin/google-signin';
 GoogleSignin.configure({
-  webClientId:'989926603372-v1lppokn36b1mf2g203libf01c3bbhj9.apps.googleusercontent.com', //lấy trên api console
+  webClientId:'989926603372-o490b46k8a8o4qrticlharlh7nf290hf.apps.googleusercontent.com', //lấy trên api console
   scopes: ['profile', 'email'],
-  offlineAccess: true,
+  offlineAccess: true,  
   
 })
 const SocialLogin = ()=>{
@@ -25,9 +25,10 @@ const SocialLogin = ()=>{
       console.log("erer,",error)
     }
   }
+  
   return (
     <SectionComponent>
-      <TextComponent text="OR" color={colors.gray4} size={16} 
+      <TextComponent text="Hoặc" color={colors.gray4} size={16} 
       font={fontFamilies.medium}
       styles={{textAlign:'center'}}
       />
@@ -41,7 +42,7 @@ const SocialLogin = ()=>{
       textColor={colors.colorText} 
       icon={<Google />} iconFlex="left"
       />
-
+      <ButtonComponent text="Logout" type="primary" onPress={()=>GoogleSignin.signOut()}/>
     {/* <ButtonComponent textFont={fontFamilies.regular} text="Đăng nhập bằng Facebook" type="primary" color={colors.white}
       textColor={colors.colorText} icon={<Facebook />} iconFlex="left"
       /> */}

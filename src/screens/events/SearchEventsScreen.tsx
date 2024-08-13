@@ -126,7 +126,6 @@ const auth = useSelector(authSelector)
     // };
   }, [])
   useEffect(()=>{
-    console.log("ok1")
     if(first){
       getEvents()
     }else{
@@ -209,7 +208,7 @@ const auth = useSelector(authSelector)
     }
   }
   const getEvents = async () => {
-    const api = apis.event.getAll({lat:filterEvent.position.lat,
+    const api = apis.event.getAll({lat:filterEvent.position.lat,searchValue:searchKey,
       long:filterEvent.position.lng,distance:'10',categoriesFilter:filterEvent.categoriesFilter,
       startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
       })

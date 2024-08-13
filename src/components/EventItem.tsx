@@ -1,5 +1,5 @@
 import { Button, Image, ImageBackground, Text, View } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import CardComponent from "./CardComponent"
 import TextComponent from "./TextComponent"
 import { appInfo } from "../constrants/appInfo"
@@ -132,4 +132,4 @@ const EventItem = (props: Props) => {
     </CardComponent>
   )
 }
-export default EventItem;
+export default memo(EventItem);

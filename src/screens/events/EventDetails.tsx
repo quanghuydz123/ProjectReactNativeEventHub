@@ -30,6 +30,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { apis } from "../../constrants/apis";
 import notificationAPI from "../../apis/notificationAPI";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { ToastMessaging } from "../../utils/showToast";
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
@@ -285,9 +286,7 @@ const EventDetails = ({ navigation, route }: any) => {
             <SectionComponent>
               <RowComponent onPress={() => {
                 if (event?.authorId._id === auth.id) {
-                  navigation.navigate('Profile', {
-                    screen: 'ProfileScreen'
-                  })
+                  {ToastMessaging.Warning({message:'Đó là bạn mà',visibilityTime:2000})}
                 }
                 else {
                   navigation.navigate("AboutProfileScreen", { uid: event?.authorId._id })

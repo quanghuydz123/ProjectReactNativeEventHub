@@ -46,28 +46,26 @@ const dispatch = useDispatch()
     resPassword && setPasswored(resPassword)
     setIsReMember(res === 'true')
   }
-  const handleLogout = async ()=> {
+  const handleLogout = async () => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    if(fcmtoken){
-      if(auth.fcmTokens && auth.fcmTokens.length > 0 ){
+    if (fcmtoken) {
+      if (auth.fcmTokens && auth.fcmTokens.length > 0) {
         const items = [...auth.fcmTokens]
-        
         const index = items.findIndex(item => item === fcmtoken)
-        if(index !== -1){
-          items.splice(index,1)
-          console.log("items",items)
+        if (index !== -1) {
+          items.splice(index, 1)
         }
-        await HandleNotification.Update(auth.id,items)
+        await HandleNotification.Update(auth.id, items)
       }
     }
-    if(isRemember===true){
-      await AsyncStorage.setItem('auth',JSON.stringify({email:auth.email,password:password}))
+    if (isRemember === true) {
+      await AsyncStorage.setItem('auth', JSON.stringify({ email: auth.email, password: password }))
       dispatch(removeAuth())
-    }else{
-      await AsyncStorage.setItem('auth',JSON.stringify({email:'',password:''}))
+    } else {
+      await AsyncStorage.setItem('auth', JSON.stringify({ email: '', password: '' }))
       await AsyncStorage.removeItem('isRemember')
       await AsyncStorage.removeItem('password')
-      dispatch(removeAuth())    
+      dispatch(removeAuth())
     }
   }
   const handleClickItemMenu = (key:string) => {
@@ -112,14 +110,13 @@ const dispatch = useDispatch()
               </RowComponent>
               )}
         />
-        <RowComponent>
-            {/* <ButtonComponent textColor="#00F8FF" text="Nâng cấp tài khoản" color="#00F8FF33" type="primary"/> */}
+        {/* <RowComponent>
             <TouchableOpacity style={[globalStyles.button,{backgroundColor:'#00F8FF22'}]}>
               <FontAwesome5 name="crown" size={22} color="#00F8FF"/>
               <SpaceComponent width={8}/>
                <TextComponent text="Nâng cấp tài khoản" color="#00F8FF"/>
             </TouchableOpacity>
-        </RowComponent>
+        </RowComponent> */}
     </View>
   )
 }

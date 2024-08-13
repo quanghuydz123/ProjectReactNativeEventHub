@@ -70,7 +70,7 @@ const TabNavigator = ({navigation}:any) => {
               break
             case "Add":
               icon = <CricleComponent size={50}
-                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 40 : 56, borderWidth: 2, borderColor: 'white' }]}>
+                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 18 : 24, borderWidth: 2, borderColor: 'white' }]}>
                 <AddSquare size={26} color={colors.white} variant="Bold" />
               </CricleComponent>
 

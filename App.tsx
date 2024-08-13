@@ -16,10 +16,12 @@ import Toast from "react-native-toast-message"
 import linking from "./src/linking"
 import DeviceInfo from "react-native-device-info"
 import Orientation from "react-native-orientation-locker"
+import { Platform,PermissionsAndroid } from 'react-native';
 const App = () => {
 //GestureHandlerRootView, Host khai báo để sử dụng modalize
   useEffect(()=>{
     HandleNotification.checkNotifitionPersion()
+    requestNotificationPermission()
   },[])
   useEffect(()=>{
     const type = DeviceInfo.getDeviceType()
@@ -27,6 +29,34 @@ const App = () => {
       Orientation.lockToPortrait() // khóa xoay ngang
     }
   },[])
+
+const requestNotificationPermission = async () => {
+  if(Platform.OS ==="android"){
+    try {
+      PermissionsAndroid.check('android.permission.POST_NOTIFICATIONS').then(
+        response => {
+          if(!response){
+            PermissionsAndroid.request('android.permission.POST_NOTIFICATIONS',{
+                title: 'Notification',
+                message:
+                  'App needs access to your notification ' +
+                  'so you can get Updates',
+                buttonNeutral: 'Ask Me Later',
+                buttonNegative: 'Cancel',
+                buttonPositive: 'OK',
+            })
+          }
+        }
+      ).catch(
+        err => {
+          console.log("Notification Error=====>",err);
+        }
+      )
+    } catch (err){
+      console.log(err);
+    }
+  }
+};
   return <>
     {/* //hiện thi thanh giờ,pin,... */}
     <GestureHandlerRootView>

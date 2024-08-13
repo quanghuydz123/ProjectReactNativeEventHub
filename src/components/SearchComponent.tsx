@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, View, ViewStyle } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import RowComponent from "./RowComponent";
 import { colors } from "../constrants/color";
 import { ArrowLeft, SearchNormal } from "iconsax-react-native";
@@ -42,4 +42,4 @@ const SearchComponent = (props: Props) => {
 
   </RowComponent>
 }
-export default SearchComponent;
+export default memo(SearchComponent);

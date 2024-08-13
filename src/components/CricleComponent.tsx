@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import { colors } from "../constrants/color"
 import { Animated } from "react-native"
 interface Props {
@@ -30,4 +30,4 @@ const CricleComponent = (props: Props) => {
     </TouchableOpacityComponent> : <TouchableOpacityComponent style={[localStyle, styles,featureIconAnimation]}>{children}</TouchableOpacityComponent>
   )
 }
-export default CricleComponent;
+export default memo(CricleComponent);

@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native"
-import React, { useState } from "react"
+import React, { memo, useState } from "react"
 import RowComponent from "./RowComponent";
 import { globalStyles } from "../styles/globalStyles";
 import TextComponent from "./TextComponent";
@@ -43,4 +43,4 @@ const ChoiceLocationComponent = (props:Props) => {
         </>
     )
 }
-export default ChoiceLocationComponent;
+export default memo(ChoiceLocationComponent);

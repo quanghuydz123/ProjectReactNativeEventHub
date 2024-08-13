@@ -1,5 +1,5 @@
 import { Button, KeyboardType, StyleProp, StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from "react-native"
-import React, { ReactNode, useState } from "react"
+import React, { memo, ReactNode, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { EyeSlash } from "iconsax-react-native"
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -71,5 +71,5 @@ const InputComponent = (props: Props) => {
     </View>
   )
 }
-export default InputComponent;
+export default memo(InputComponent);
 

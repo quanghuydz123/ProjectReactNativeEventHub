@@ -1,5 +1,5 @@
 import { Button, Image, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import React, { lazy, useEffect, useRef, useState } from "react"
+import React, { lazy, memo, useEffect, useRef, useState } from "react"
 import { SelectModel } from "../models/SelectModel";
 import TextComponent from "./TextComponent";
 import SpaceComponent from "./SpaceComponent";
@@ -168,7 +168,7 @@ const DropdownPicker = (props: Props) => {
         </View>
     )
 }
-export default DropdownPicker;
+export default memo(DropdownPicker);
 
 const localStyles = StyleSheet.create({
     

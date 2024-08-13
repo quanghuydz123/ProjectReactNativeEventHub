@@ -2,13 +2,25 @@
 export const apis = {
     follow:{
         getAll:()=>'/get-all',
-        getById:(uid:string)=>`/get-byId?uid=${uid}`
+        getById:(uid:string)=>`/get-byId?uid=${uid}`,
+        updateFollowEvent:()=>'/update-follower-event',
+        updateFollowCategory:()=>'/update-follower-category q',
+        updateFollowUserOther:()=>'/update-follower-userOther',
+
     },
     user:{
-        getById:(uid:string)=>`/get-user-byId?uid=${uid}`
+        getById:(uid:string)=>`/get-user-byId?uid=${uid}`,
+        getAll:(uid:string)=>`/get-all`,
+        updatePositionUser:(uid:string)=>`/update-position-user`,
+        updateFcmToken:(uid:string)=>`/update-fcmtoken`,
+        updateProfile:(uid:string)=>`/update-profile`,
+
     },
     notification:{
         handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`
+    },
+    auth:{
+
     },
     event:{
         getById:(eid:string)=>`/get-event-byId?eid=${eid}`,

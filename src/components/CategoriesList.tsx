@@ -1,5 +1,5 @@
 import { Button, FlatList, Linking, Text, View } from "react-native"
-import React, { ReactNode, useEffect, useState } from "react"
+import React, { memo, ReactNode, useEffect, useState } from "react"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
@@ -59,4 +59,4 @@ const CategoriesList = (props:Props)=>{
     />
   )
 }
-export default CategoriesList;
+export default memo(CategoriesList);

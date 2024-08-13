@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import { EventModelNew } from "../models/EventModelNew"
 import { FlatList } from "react-native-gesture-handler"
 import EventItem from "./EventItem"
@@ -19,4 +19,4 @@ const ListEventComponent = (props:Props)=>{
     </View>
   )
 }
-export default ListEventComponent;
+export default memo(ListEventComponent);

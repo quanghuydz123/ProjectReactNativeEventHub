@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native"
-import React, { useRef, useState } from "react"
+import React, { memo, useRef, useState } from "react"
 import DatePicker from "react-native-date-picker"
 import RowComponent from "./RowComponent"
 import TextComponent from "./TextComponent"
@@ -69,4 +69,4 @@ const DateTimePickerComponent = (props: Props) => {
     </View>
   )
 }
-export default DateTimePickerComponent;
+export default memo(DateTimePickerComponent);

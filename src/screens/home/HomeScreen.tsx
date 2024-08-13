@@ -44,6 +44,7 @@ import axios from 'axios';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { appInfo } from '../../constrants/appInfo';
 import Swiper from 'react-native-swiper';
+import { Platform,PermissionsAndroid } from 'react-native';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 
@@ -72,6 +73,87 @@ const HomeScreen = ({ navigation, route }: any) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
+ 
+  
+  
+  // const maxHeight = animatedValue.interpolate({
+  //   inputRange: [0, LOWER_HEADER_HEIGHT],
+  //   outputRange: [96,0],
+  //   extrapolate: 'clamp',
+  // })
+
+  useEffect(() => {
+    HandleNotification.checkNotifitionPersion(dispatch)
+    messaging().onMessage(async (mess: FirebaseMessagingTypes.RemoteMessage) => {
+      ToastMessaging.Success({
+        message: `${mess.notification?.body}`, title: `${mess.notification?.title}`,
+        onPress: () => {
+          if (mess.data) {
+            navigation.navigate('EventDetails', { id: mess?.data.id })
+          }
+        }
+      })
+    })
+
+    messaging().getInitialNotification().then((mess: any) => {  //Xử khi người dùng tắt app và ấn thông 
+      console.log("messmess", mess)
+      if (mess?.data?.id) {
+        handleLinking(`eventhub://app/detail/${mess.data.id}`)
+      }
+    })
+  }, [])
+  useEffect(() => {
+    getLocationUser()
+    handleCallApiGetAllEvent(true)
+    handleCallApiGetAllFollower()
+    handleGetAllCategory()
+    handleCallAPIGetNotifications()
+  }, [])
+  useEffect(() => {
+    handleCallApiGetEventsNearYou(true)
+  }, [auth.position])
+  useEffect(() => {
+    setRefreshList(prev => !prev);
+  }, [allFollower])
+  useEffect(() => {
+    const handleFollowers = () => {
+      handleCallApiGetAllFollower();
+      console.log('followers cập nhật');
+    };
+
+    const handleEvents = () => {
+      handleCallApiGetAllEvent();
+      handleCallApiGetEventsNearYou();
+      console.log('events cập nhật');
+    };
+
+    const handleUpdateUser = () => {
+      handleCallApiGetAllEvent();
+      handleCallApiGetEventsNearYou();
+      console.log('user cập nhật');
+    };
+
+    const handleGetNotifications = () => {
+      handleCallAPIGetNotifications()
+      console.log('notification cập nhật');
+    };
+
+    socket.on('followers', (idUser) => {
+      if (idUser === auth.id) {
+        handleCallApiGetAllFollower()
+      }
+    });
+    socket.on('events', handleEvents);
+    socket.on('updateUser', handleUpdateUser);
+    socket.on('getNotifications', handleGetNotifications)
+    return () => {
+      socket.off('followers', handleFollowers);
+      socket.off('events', handleEvents);
+      socket.off('updateUser', handleUpdateUser);
+      socket.off('getNotifications', handleGetNotifications);
+    };
+  }, [])
+  
   const getFeatureViewAnimation = (animatedValue: any, outputX: number) => {
     const TRANSLATE_X_INPUT_RANGE = [0, 80];
     const translateY = {
@@ -172,84 +254,6 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     }),
   };
-  // const maxHeight = animatedValue.interpolate({
-  //   inputRange: [0, LOWER_HEADER_HEIGHT],
-  //   outputRange: [96,0],
-  //   extrapolate: 'clamp',
-  // })
-
-  useEffect(() => {
-    HandleNotification.checkNotifitionPersion(dispatch)
-    messaging().onMessage(async (mess: FirebaseMessagingTypes.RemoteMessage) => {
-      ToastMessaging.Success({
-        message: `${mess.notification?.body}`, title: `${mess.notification?.title}`,
-        onPress: () => {
-          if (mess.data) {
-            navigation.navigate('EventDetails', { id: mess?.data.id })
-          }
-        }
-      })
-    })
-
-    messaging().getInitialNotification().then((mess: any) => {  //Xử khi người dùng tắt app và ấn thông 
-      console.log("messmess", mess)
-      if (mess?.data?.id) {
-        handleLinking(`eventhub://app/detail/${mess.data.id}`)
-      }
-    })
-  }, [])
-  useEffect(() => {
-    getLocationUser()
-    handleCallApiGetAllEvent(true)
-    handleCallApiGetAllFollower()
-    handleGetAllCategory()
-    handleCallAPIGetNotifications()
-  }, [])
-  useEffect(() => {
-    handleCallApiGetEventsNearYou(true)
-  }, [auth.position])
-  useEffect(() => {
-    setRefreshList(prev => !prev);
-  }, [allFollower])
-  useEffect(() => {
-    const handleFollowers = () => {
-      handleCallApiGetAllFollower();
-      console.log('followers cập nhật');
-    };
-
-    const handleEvents = () => {
-      handleCallApiGetAllEvent();
-      handleCallApiGetEventsNearYou();
-      console.log('events cập nhật');
-    };
-
-    const handleUpdateUser = () => {
-      handleCallApiGetAllEvent();
-      handleCallApiGetEventsNearYou();
-      console.log('user cập nhật');
-    };
-
-    const handleGetNotifications = () => {
-      handleCallAPIGetNotifications()
-      console.log('notification cập nhật');
-    };
-
-    socket.on('followers', (idUser) => {
-      if (idUser === auth.id) {
-        handleCallApiGetAllFollower()
-      }
-    });
-    socket.on('events', handleEvents);
-    socket.on('updateUser', handleUpdateUser);
-    socket.on('getNotifications', handleGetNotifications)
-    return () => {
-      socket.off('followers', handleFollowers);
-      socket.off('events', handleEvents);
-      socket.off('updateUser', handleUpdateUser);
-      socket.off('getNotifications', handleGetNotifications);
-    };
-  }, [])
-
   const reverseGeoCode = async (lat: number, long: number) => {
     const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=${process.env.API_KEY_REVGEOCODE}`
     try {

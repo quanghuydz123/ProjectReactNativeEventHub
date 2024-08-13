@@ -1,5 +1,5 @@
 import { Button, FlatList, Modal, StyleSheet, Text, View } from "react-native"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import RNPickerSelect from 'react-native-picker-select';
 import { colors } from "../constrants/color";
 import TextComponent from "./TextComponent";
@@ -121,5 +121,5 @@ const DropdownPickerSelect = (props:Props) => {
     );
 };
 
-export default DropdownPickerSelect;
+export default memo(DropdownPickerSelect);
 
