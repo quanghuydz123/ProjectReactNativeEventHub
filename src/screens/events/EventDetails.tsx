@@ -73,7 +73,7 @@ const EventDetails = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetAllFollower = async () => {
-    const api = `/get-all`
+    const api = apis.follow.getAll()
     setIsLoading(true)
     try {
       const res: any = await followAPI.HandleFollwer(api, {}, 'get')
@@ -100,10 +100,10 @@ const EventDetails = ({ navigation, route }: any) => {
     setHeightButton(height)
   };
   const handleFlowerEvent = async () => {
-    const api = '/update-follower-event'
+    const api = apis.follow.updateFollowEvent()
     if (event?._id) {
       try {
-        const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event._id }, 'post')
+        const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.data.event && res.status === 200) {
           socket.emit("followers",{id:auth.id});
           handleCallApiGetAllFollower()
@@ -149,7 +149,7 @@ const EventDetails = ({ navigation, route }: any) => {
     if (event?._id) {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
       try {
-        const res = await notificationAPI.HandleNotification(api, { SenderID:auth.id,RecipientIds: userSelected, eventId: event._id }, 'post')
+        const res = await notificationAPI.HandleNotification(api, { SenderID:auth.id,RecipientIds: userSelected, eventId: event?._id }, 'post')
         if(res && res.status===200 && res.data){
           socket.emit('getNotifications')
         }
@@ -192,9 +192,9 @@ const EventDetails = ({ navigation, route }: any) => {
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 event?._id && <FontAwesome
-                  name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? "bookmark" : 'bookmark-o'}
+                  name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? "bookmark" : 'bookmark-o'}
                   size={22}
-                  color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user._id === auth.id)[0]?.events.some(eventa => eventa._id === event._id) ? colors.white : colors.black}
+                  color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? colors.white : colors.black}
                 />
               }
             </CardComponent>
@@ -285,11 +285,11 @@ const EventDetails = ({ navigation, route }: any) => {
             </SectionComponent>
             <SectionComponent>
               <RowComponent onPress={() => {
-                if (event?.authorId._id === auth.id) {
+                if (event?.authorId?._id === auth.id) {
                   {ToastMessaging.Warning({message:'Đó là bạn mà',visibilityTime:2000})}
                 }
                 else {
-                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId._id })
+                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId?._id })
                 }
               }}
               >
@@ -381,7 +381,7 @@ const EventDetails = ({ navigation, route }: any) => {
           ]}
         >
           <AvatarItem photoUrl={item?.photoUrl} size={38} onPress={() => {
-            if (item._id == auth.id) {
+            if (item?._id == auth?.id) {
               setIsOpenModalizeInityUser(false)
               navigation.navigate('Profile', {
                 screen: 'ProfileScreen'
@@ -389,21 +389,21 @@ const EventDetails = ({ navigation, route }: any) => {
             }
             else {
               setIsOpenModalizeInityUser(false)
-              navigation.navigate("AboutProfileScreen", { uid: item._id })
+              navigation.navigate("AboutProfileScreen", { uid: item?._id })
             }
           }} />
           <SpaceComponent width={8} />
           <View style={{ flex: 1 }}>
             <ButtonComponent
               text={`${item.fullname} (${item.email})`}
-              onPress={() => handleSelectItem(item._id)}
-              textColor={userSelected.includes(item._id) ?
+              onPress={() => handleSelectItem(item?._id)}
+              textColor={userSelected.includes(item?._id) ?
                 colors.primary : colors.colorText}
               numberOfLineText={1}
               textFont={fontFamilies.regular}
             />
           </View>
-          {userSelected.includes(item._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
+          {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
         </RowComponent>}
       />
     </View>

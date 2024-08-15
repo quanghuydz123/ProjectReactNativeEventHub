@@ -140,7 +140,7 @@ const MapScreen = ({ navigation }: any) => {
     setIsViewNotifications(!isCheck)
   }
   const handleCallAPIGetNotifications = async () => {
-    const api = `/get-notifications-byId?uid=${auth.id}`
+    const api = apis.notification.getNotificationsById({idUser:auth.id})
     try {
       const res: any = await notificationAPI.HandleNotification(api)
       if (res && res.data && res.status === 200) {
@@ -159,7 +159,7 @@ const MapScreen = ({ navigation }: any) => {
   }
 
   const handleGetAllCategory = async () => {
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
@@ -193,7 +193,7 @@ const MapScreen = ({ navigation }: any) => {
   }
 
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
-    const api = '/update-position-user'
+    const api = apis.user.updatePositionUser()
     try {
       const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
       const authItem: any = await getItemAuth()
@@ -207,7 +207,7 @@ const MapScreen = ({ navigation }: any) => {
     }
   }
   const handleCallApiGetAllFollower = async () => {
-    const api = `/get-all`
+    const api = apis.follow.getAll()
     try {
       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {

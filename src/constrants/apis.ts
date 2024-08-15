@@ -4,22 +4,33 @@ export const apis = {
         getAll:()=>'/get-all',
         getById:(uid:string)=>`/get-byId?uid=${uid}`,
         updateFollowEvent:()=>'/update-follower-event',
-        updateFollowCategory:()=>'/update-follower-category q',
+        updateFollowCategory:()=>'/update-follower-category',
         updateFollowUserOther:()=>'/update-follower-userOther',
 
     },
     user:{
         getById:(uid:string)=>`/get-user-byId?uid=${uid}`,
-        getAll:(uid:string)=>`/get-all`,
-        updatePositionUser:(uid:string)=>`/update-position-user`,
-        updateFcmToken:(uid:string)=>`/update-fcmtoken`,
-        updateProfile:(uid:string)=>`/update-profile`,
+        getAll:()=>`/get-all`,
+        updatePositionUser:()=>`/update-position-user`,
+        updateFcmToken:()=>`/update-fcmtoken`,
+        updateProfile:()=>`/update-profile`,
 
     },
     notification:{
-        handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`
+        handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`,
+        getAll:()=>`/get-all`,
+        getNotificationsById:({idUser}:{idUser:string})=>`/get-notifications-byId?uid=${idUser}`,
+        updateisViewdNotifications:()=>`/update-isViewed-notifitions`,
+        deleteNotifications:()=>`/delete-notifications`,
+        updateStatusNotifications:()=>`/update-status-notifitions`,
+
     },
     auth:{
+        login:()=>`/login`,
+        register:()=>`/register`,
+        verification:()=>`/verification`,
+        forgotPassword:()=>`/forgotPassword`,
+        verificationForgotPassword:()=>`/verificationForgotPassword`,
 
     },
     event:{
@@ -44,8 +55,16 @@ export const apis = {
                     });
                 }
                 return `/get-events?${params.toString()}`;
-            }
+            },
+            addEvent:()=>`/get-all`,
+            updateFollowEvent:()=>`/update-followers`,
+            updateEvent:()=>`/update-event`,
+
             
+    },
+    category:{
+        addCategory:()=>`/add-category`,
+        getAll:()=>`/get-all`,
     }
 
 }

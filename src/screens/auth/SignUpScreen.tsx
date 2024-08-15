@@ -12,6 +12,7 @@ import { Validate } from "../../utils/validate";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apis } from "../../constrants/apis";
 //Object.keys(errorMessage).map duyệt object
 // interface ErrorMessage {
 //   email:string,
@@ -98,7 +99,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
 
   const handleRegister = async () => {
-    const api = '/verification'
+    const api = apis.auth.verification()
     setIsLoading(true)
     try {
       const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
@@ -106,7 +107,7 @@ const SignUpScreen = ({ navigation }: any) => {
         code:res?.data?.code, // truyền qua route
         email:values.email,
         password:values.password,
-        username:values.username
+        username:values.username,
       })
       setIsLoading(false)
     } catch (error:any) {

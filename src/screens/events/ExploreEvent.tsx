@@ -25,7 +25,7 @@ const ExploreEvent = ({navigation,route}:any) => {
         handleCallApiGetAllFollower()
     }, [])
     const handleCallApiGetAllFollower = async () => {
-        const api = `/get-all`
+        const api = apis.follow.getAll()
         try {
           const res: any = await followAPI.HandleFollwer(api, {}, 'get');
           if (res && res.data && res.status === 200) {

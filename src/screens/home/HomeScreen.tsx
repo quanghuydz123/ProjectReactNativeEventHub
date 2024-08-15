@@ -108,6 +108,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     handleCallApiGetAllFollower()
     handleGetAllCategory()
     handleCallAPIGetNotifications()
+    // checkfcmToken()
   }, [])
   useEffect(() => {
     handleCallApiGetEventsNearYou(true)
@@ -153,7 +154,11 @@ const HomeScreen = ({ navigation, route }: any) => {
       socket.off('getNotifications', handleGetNotifications);
     };
   }, [])
-  
+  // const checkfcmToken = ()=>{
+  //     if(auth.fcmTokens?.length === 0){
+  //         HandleNotification.checkNotifitionPersion()
+  //     }
+  // }
   const getFeatureViewAnimation = (animatedValue: any, outputX: number) => {
     const TRANSLATE_X_INPUT_RANGE = [0, 80];
     const translateY = {
@@ -267,7 +272,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
 
   const handleGetAllCategory = async () => {
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
@@ -283,7 +288,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetAllFollower = async () => {
-    const api = `/get-all`
+    const api = apis.follow.getAll()
     try {
       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
@@ -314,7 +319,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }, {});
   }
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
-    const api = '/update-position-user'
+    const api = apis.user.updatePositionUser()
     try {
       const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
       const authItem: any = await getItemAuth()
@@ -335,7 +340,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     setIsViewNotifications(!isCheck)
   }
   const handleCallAPIGetNotifications = async () => {
-    const api = `/get-notifications-byId?uid=${auth.id}`
+    const api = apis.notification.getNotificationsById({idUser:auth.id})
     try {
       const res: any = await notificationAPI.HandleNotification(api)
       if (res && res.data && res.status === 200) {
@@ -618,7 +623,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               horizontal
               data={allEvent}
               extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
+              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
           }
 
@@ -629,7 +634,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               horizontal
               data={allEventNear}
               extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
+              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
           }
           <View style={styles.scrollViewContent} />

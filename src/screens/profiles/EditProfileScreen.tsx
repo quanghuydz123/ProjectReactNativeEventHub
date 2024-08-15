@@ -10,6 +10,7 @@ import socket from "../../utils/socket"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { ImageOrVideo } from "react-native-image-crop-picker"
 import { ToastMessaging } from "../../utils/showToast"
+import { apis } from "../../constrants/apis"
 
 const EditProfileScreen = ({navigation,route}:any)=>{
     const {profile}:{profile:UserModel} = route.params
@@ -24,7 +25,7 @@ const EditProfileScreen = ({navigation,route}:any)=>{
       setProfileData(item)
     }
     const handleUpdateProfile = async ()=>{
-        const api = '/update-profile'
+        const api = apis.user.updateProfile()
         setIsLoading(true)
         try {
             const { photoUrl, ...profileDataWithoutPhotoUrl } = profileData;
