@@ -55,13 +55,13 @@ const LoginScreen = ({ navigation,route }: any) => {
           const res:any = await authenticationAPI.HandleAuthentication(apis.auth.login(), { email, password }, 'post');
           if (isRemember) {
             await AsyncStorage.setItem('isRemember', 'true')
-            await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+            await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
             await AsyncStorage.setItem('password', password)
           } else {
             await AsyncStorage.setItem('isRemember', 'false')
-            await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+            await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
           }
-          dispatch(addAuth(res.data))
+          dispatch(addAuth({...res.data,loginMethod:'account'}))
           setIsLoading(false)
         } catch (error:any) {
           setIsLoading(false)
@@ -123,7 +123,7 @@ const LoginScreen = ({ navigation,route }: any) => {
       <SectionComponent>
         <ButtonComponent onPress={handleLogin} text={'Đăng nhập'} type={'primary'} />
       </SectionComponent>
-      <SocialLogin />
+      <SocialLogin setIsLoading={(val:boolean)=>setIsLoading(val)}/>
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Bạn chưa có tài khoản? " />

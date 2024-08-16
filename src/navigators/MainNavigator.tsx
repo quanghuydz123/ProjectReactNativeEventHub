@@ -15,6 +15,7 @@ import { useStatusBar } from "../hooks/useStatusBar";
 import { TextComponent } from "../components";
 import NetInfo from "@react-native-community/netinfo";
 import {BackHandler} from 'react-native';
+import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
 
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
@@ -61,6 +62,9 @@ const MainNavigator = ({navigation}:any) => {
     }
   }
   const handleLogout = async () => {
+    if(auth.loginMethod === 'google'){
+      GoogleSignin.signOut()//đăng xuất google
+    }
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
     if (fcmtoken) {
       if (auth.fcmTokens && auth.fcmTokens.length > 0) {

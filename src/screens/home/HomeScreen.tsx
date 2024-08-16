@@ -47,6 +47,7 @@ import Swiper from 'react-native-swiper';
 import { Platform,PermissionsAndroid } from 'react-native';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
 
 const UPPER_HEADER_HEIGHT = 44;
 const UPPER_HEADER_PADDING_TOP = 4;
@@ -245,7 +246,7 @@ const HomeScreen = ({ navigation, route }: any) => {
       {
         translateY: animatedValue.interpolate({
           inputRange: [0, LOWER_HEADER_HEIGHT],
-          outputRange: [0, -100],
+          outputRange: [0, -96],
           extrapolate: 'clamp',
 
         }),
@@ -418,13 +419,27 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     })
   };
-  const [index,setIndex] = useState(0)
-
+  const featureTestAnimation = {
+    // transform: [
+    //   {
+    //     scale: animatedValue.interpolate({
+    //       inputRange: [0, 100],
+    //       outputRange: [0, 1],
+    //       extrapolate: 'clamp',
+    //     }),
+    //   },
+    // ],
+    opacity: animatedValue.interpolate({
+      inputRange: [80, 96],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+  };
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView>
-        <Animated.View style={[styles.upperHeaderPlaceholder]} />
+        <View style={[styles.upperHeaderPlaceholder]} />
       </SafeAreaView>
 
       <Animated.View style={[styles.header, headerAnimation]}>
@@ -489,7 +504,15 @@ const HomeScreen = ({ navigation, route }: any) => {
               </View>
             }
           </TouchableOpacity>
+          
         </View>
+        {/* <Animated.View style={[{backgroundColor:'white',flexDirection:'row',alignItems:'center',},featureTestAnimation]}>
+          <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}
+            size={14} color={colors.black} onPress={() => setIsShowMoney(!isShowMoney)}
+            style={{ paddingHorizontal: 4, paddingVertical: 4 }}
+          />
+          <TextComponent text={isShowMoney ? '1.000.000đ' : '*********'} font={fontFamilies.medium} color={colors.black} />
+        </Animated.View> */}
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
@@ -522,7 +545,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             </TouchableOpacity>
           </Animated.View>
 
-          <Animated.View style={[styles.feature, qrViewAnimation]}>
+          <AnimatedTouchableOpacity style={[styles.feature, qrViewAnimation]} onPress={() => navigation.navigate('ChatsScreen')}>
 
             {/* <CricleComponent color={colors.primary} borderRadius={10} size={32} 
               featureIconAnimation={featureIconAnimation}
@@ -541,36 +564,22 @@ const HomeScreen = ({ navigation, route }: any) => {
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               BẠN BÈ
             </Animated.Text>
-          </Animated.View>
+          </AnimatedTouchableOpacity>
 
-          <Animated.View style={[styles.feature, scanViewAnimation]}>
-            {/* <Animated.Image
-                source={require('../../assets/images/momo/scan.png')}
-                style={[styles.featureIcon, featureIconAnimation]}
-              />
-              <Animated.Image
-                source={require('../../assets/images/momo/scan-circle.png')}
-                style={[styles.icon32, featureIconCircleAnimation]}
-              /> */}
-            {/* <Animated.Image
-                  source={require('../../assets/images/momo/qr.png')}
-                  style={[styles.featureIcon, featureIconAnimation]}
-                /> */}
+          <AnimatedTouchableOpacity style={[styles.feature, scanViewAnimation]} onPress={() => navigation.navigate('ChatsScreen')}          >
+        
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
               onPress={() => navigation.navigate('ChatsScreen')}
             >
               <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
-            {/* <Animated.Image
-                  source={require('../../assets/images/momo/qr-circle.png')}
-                  style={[styles.icon32, featureIconCircleAnimation]}
-                /> */}
+        
 
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               TIN NHẮN
             </Animated.Text>
-          </Animated.View>
+          </AnimatedTouchableOpacity>
         </View>
         <Animated.View style={[viewMoneyAnimation, { paddingHorizontal: 12, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }, globalStyles.shadow]}>
           <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}

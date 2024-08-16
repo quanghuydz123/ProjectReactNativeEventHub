@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import {removeAuth } from "../reduxs/reducers/authReducers";
 import { HandleNotification } from "../utils/handleNotification";
 import AvatarItem from "./AvatarItem";
+import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
 
 const DrawerCustom = ({navigation}:any)=>{
 const user = useSelector(authSelector)
@@ -47,6 +48,9 @@ const dispatch = useDispatch()
     setIsReMember(res === 'true')
   }
   const handleLogout = async () => {
+    if(auth.loginMethod === 'google'){
+      GoogleSignin.signOut()//đăng xuất google
+    }
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
     if (fcmtoken) {
       if (auth.fcmTokens && auth.fcmTokens.length > 0) {

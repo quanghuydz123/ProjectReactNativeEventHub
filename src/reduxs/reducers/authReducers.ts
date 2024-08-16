@@ -10,6 +10,7 @@ export interface AuthState {
     numberPhone:string,
     bio:string,
     fcmTokens:string[],
+    loginMethod:'google' | 'account' | ''
     position: {
         lat: number,
         lng: number
@@ -25,6 +26,7 @@ const initialState: AuthState = {
     numberPhone:'',
     bio:'',
     photoUrl: '',
+    loginMethod:'',
     fcmTokens:[],
     position: {
         lat: 0,
