@@ -111,6 +111,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
     setIsLoading(true)
     try {
       const res = await followAPI.HandleFollwer(api,{idUser:auth.id,idUserOther:uidOthor},'put')
+      console.log("res",res)
       if(res && res.data && res.status===200){
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()

@@ -278,7 +278,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   flex: 1
                 }}>
                   <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <SpaceComponent height={8} />
+                  <SpaceComponent height={12} />
                   <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
                 </View>
               </RowComponent>

@@ -26,9 +26,9 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   const [isLoadingModal, setIsLoadingModal] = useState(false)
   const user = useSelector(authSelector)
   const modalizeRef = useRef<Modalize>(null);
-  const [isFirst,setIsFirst] = useState(false)
-  const [toggle,setToggle] = useState(false)
-  const [notificationSelected,setSotificationSelected] = useState<NotificationModel>()
+  const [isFirst, setIsFirst] = useState(false)
+  const [toggle, setToggle] = useState(false)
+  const [notificationSelected, setSotificationSelected] = useState<NotificationModel>()
   useEffect(() => {
     // if(!notifications){
     //   handleCallAPIGetNotifications()
@@ -36,16 +36,16 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     handleCallAPIUpdateIsViewdNotifications()
     // handleCallAPIGetNotifications(true)
   }, [])
-  useEffect(()=>{
-    if(isFirst){
+  useEffect(() => {
+    if (isFirst) {
       modalizeRef.current?.open();
     }
-    else{
+    else {
       setIsFirst(true)
     }
-  },[notificationSelected,toggle])
+  }, [notificationSelected, toggle])
   const handleCallAPIGetNotifications = async (isLoading?: boolean) => {
-    const api = apis.notification.getNotificationsById({idUser:user.id})
+    const api = apis.notification.getNotificationsById({ idUser: user.id })
     setIsLoadng(isLoading ? isLoading : false)
     try {
       const res: any = await notificationAPI.HandleNotification(api)
@@ -129,7 +129,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       setIsLoadingModal(false)
     }
   }
-  const handleOpenModalize = (notificatoin:NotificationModel) => {
+  const handleOpenModalize = (notificatoin: NotificationModel) => {
     setSotificationSelected(notificatoin)
     setToggle(!toggle)
   }
@@ -138,12 +138,14 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       case 'unanswered':
         return (
           <RowComponent>
-            <ButtonComponent text="Từ chối" type="primary" color="white" width={'auto'} textColor={colors.colorText}
-              styles={{ minHeight: 20, paddingVertical: 10, borderWidth: 1, borderColor: colors.gray2 }} onPress={() => handleRejectNotification(notification)} />
-            <SpaceComponent width={20} />
-            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, paddingVertical: 10 }}
+
+            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius:5, paddingVertical: 10,width:appInfo.sizes.WIDTH*0.32 }}
               onPress={() => handleComfirmNofitication(notification)}
             />
+            <SpaceComponent width={20} />
+
+            <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
+              styles={{ minHeight: 20,width:appInfo.sizes.WIDTH*0.32, borderRadius:5,paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
           </RowComponent>
         )
       case 'answered':
@@ -327,23 +329,23 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       <LoadingModal visible={isLoadingModal} />
       <Portal>
         <Modalize ref={modalizeRef} adjustToContentHeight >
-          <SectionComponent styles={{ minHeight: 150 ,paddingHorizontal:12}}>
+          <SectionComponent styles={{ minHeight: 150, paddingHorizontal: 12 }}>
             <SpaceComponent height={6} />
             <AvatarItem size={66} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID?.photoUrl} />
-            <SpaceComponent height={6}/>
-            <Text style={[globalStyles.text, {textAlign:'center',lineHeight:16}]} numberOfLines={3}>
+            <SpaceComponent height={6} />
+            <Text style={[globalStyles.text, { textAlign: 'center', lineHeight: 16 }]} numberOfLines={3}>
               {`${notificationSelected?.senderID?.fullname} `}
               <Text style={[globalStyles.text]}>
                 {notificationSelected?.content}
               </Text>
             </Text>
-            <SpaceComponent height={16}/>
+            <SpaceComponent height={16} />
             <RowComponent>
-            <CricleComponent styles={{borderWidth: 0.5, borderColor: colors.gray5 }} size={36} color={colors.gray5}>
-                    <MaterialCommunityIcons name="delete" size={24} color={colors.black} />
-            </CricleComponent>
-            <SpaceComponent width={12}/>
-            <TextComponent text={'Gỡ thông báo này'} title size={16}/>
+              <CricleComponent styles={{ borderWidth: 0.5, borderColor: colors.gray5 }} size={36} color={colors.gray5}>
+                <MaterialCommunityIcons name="delete" size={24} color={colors.black} />
+              </CricleComponent>
+              <SpaceComponent width={12} />
+              <TextComponent text={'Gỡ thông báo này'} title size={16} />
             </RowComponent>
           </SectionComponent>
         </Modalize>

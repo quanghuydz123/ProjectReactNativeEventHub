@@ -45,6 +45,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { appInfo } from '../../constrants/appInfo';
 import Swiper from 'react-native-swiper';
 import { Platform,PermissionsAndroid } from 'react-native';
+import { Screen } from 'react-native-screens';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
@@ -455,11 +456,12 @@ const HomeScreen = ({ navigation, route }: any) => {
               style={[styles.searchInput, textInputAnimation]}
             />
           </View> */}
-          <RowComponent styles={{ flex: 1 }}
+          <RowComponent styles={{ flex: 1}}
             onPress={() => navigation.navigate('SearchEventsScreen', {
             })}>
             <SearchNormal size={20} variant="TwoTone" color={colors.white} />
-            <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} />
+            {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
+            <SpaceComponent width={12}/>
             <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />
           </RowComponent>
           <SpaceComponent width={16} />
@@ -545,7 +547,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             </TouchableOpacity>
           </Animated.View>
 
-          <AnimatedTouchableOpacity style={[styles.feature, qrViewAnimation]} onPress={() => navigation.navigate('ChatsScreen')}>
+          <Animated.View style={[styles.feature, qrViewAnimation]} >
 
             {/* <CricleComponent color={colors.primary} borderRadius={10} size={32} 
               featureIconAnimation={featureIconAnimation}
@@ -555,19 +557,22 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
               </CricleComponent> */}
 
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('FriendsScreen')} >
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
-              onPress={() => navigation.navigate('ChatsScreen')}
+              onPress={() => navigation.navigate('FriendsScreen')}
             >
               <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               BẠN BÈ
             </Animated.Text>
-          </AnimatedTouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
 
-          <AnimatedTouchableOpacity style={[styles.feature, scanViewAnimation]} onPress={() => navigation.navigate('ChatsScreen')}          >
+          <Animated.View style={[styles.feature, scanViewAnimation]} >
         
+            <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')} style={{alignItems:'center'}}>
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
               onPress={() => navigation.navigate('ChatsScreen')}
@@ -579,7 +584,8 @@ const HomeScreen = ({ navigation, route }: any) => {
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               TIN NHẮN
             </Animated.Text>
-          </AnimatedTouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
         <Animated.View style={[viewMoneyAnimation, { paddingHorizontal: 12, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }, globalStyles.shadow]}>
           <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}

@@ -19,7 +19,13 @@ export const apis = {
     notification:{
         handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`,
         getAll:()=>`/get-all`,
-        getNotificationsById:({idUser}:{idUser:string})=>`/get-notifications-byId?uid=${idUser}`,
+        getNotificationsById:({idUser,typeFillter,statusFillter}:{idUser:string,typeFillter?:string,statusFillter?:string})=>{
+            const params = new URLSearchParams();
+            if (idUser !== undefined) params.append('idUser', idUser);
+            if (typeFillter !== undefined) params.append('typeFillter', typeFillter);
+            if (statusFillter !== undefined) params.append('statusFillter', statusFillter);
+            return `/get-notifications-byId?${params.toString()}`
+        },
         updateisViewdNotifications:()=>`/update-isViewed-notifitions`,
         deleteNotifications:()=>`/delete-notifications`,
         updateStatusNotifications:()=>`/update-status-notifitions`,
