@@ -1,24 +1,22 @@
-import { Button, Text, View } from "react-native"
-import React, { useEffect, useState } from "react"
-import { ButtonComponent, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../components";
-import { Icon } from "iconsax-react-native";
-import Feather from "react-native-vector-icons/Feather"
-import { colors } from "../../constrants/color";
-import { globalStyles } from "../../styles/globalStyles";
-import AvatarItem from "../../components/AvatarItem";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { useState, useEffect } from "react"
+import {  View, TouchableOpacity } from "react-native"
+
 import AntDesign from "react-native-vector-icons/AntDesign"
-import SimpleLineIcons from "react-native-vector-icons/"
-import { TouchableOpacity } from "react-native";
-import { apis } from "../../constrants/apis";
-import userAPI from "../../apis/userApi";
-import { UserModel } from "../../models/UserModel";
-import { LoadingModal } from "../../../modals";
-import { FollowModel } from "../../models/FollowModel";
-import followAPI from "../../apis/followAPI";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../reduxs/reducers/authReducers";
-import socket from "../../utils/socket";
+import Feather from "react-native-vector-icons/Feather"
+import { useSelector } from "react-redux"
+import { LoadingModal } from "../../../modals"
+import followAPI from "../../apis/followAPI"
+import userAPI from "../../apis/userApi"
+import { ContainerComponent, SectionComponent, RowComponent, SpaceComponent, ButtonComponent, TextComponent } from "../../components"
+import AvatarItem from "../../components/AvatarItem"
+import { apis } from "../../constrants/apis"
+import { colors } from "../../constrants/color"
+import { FollowModel } from "../../models/FollowModel"
+import { UserModel } from "../../models/UserModel"
+import { authSelector } from "../../reduxs/reducers/authReducers"
+import { globalStyles } from "../../styles/globalStyles"
+import socket from "../../utils/socket"
+
 const AboutProfileScreen = ({navigation,route}:any)=>{
   const {uid} = route.params
   const [uidOthor,setUidOther] = useState('')
