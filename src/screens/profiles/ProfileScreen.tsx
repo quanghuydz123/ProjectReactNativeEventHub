@@ -49,7 +49,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     if(follower){
       const ids:string[] = []
       follower[0]?.categories.map((category)=>{
-        ids.push(category._id)
+        ids.push(category?._id)
       })
       setIdsFollowerCategory(ids)
     }
@@ -98,7 +98,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     };
   }, [])
   const handleGetAllCategory = async () => {
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
@@ -165,9 +165,9 @@ const ProfileScreen = ({ navigation, route }: any) => {
   }
 
   const handleCallApiUpdateImageProfile = async (profile: UserModel, url?: string) => {
-    const api = '/update-profile'
+    const api = apis.user.updateProfile()
     try {
-      const res: any = await userAPI.HandleUser(api, { _id: profile._id, photoUrl: url ? url : profile.photoUrl }, 'put')
+      const res: any = await userAPI.HandleUser(api, { _id: profile?._id, photoUrl: url ? url : profile.photoUrl }, 'put')
       if (res && res.data && res.statusCode === 200) {
         const resStorage = await AsyncStorage.getItem('auth')
         const jsonResStorage = JSON.parse(resStorage || '')
@@ -202,7 +202,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiUpdateFollowerCategory = async()=>{
-    const api = '/update-follower-category'
+    const api = apis.follow.updateFollowCategory()
     setIsLoading(true)
     try {
       const res:any = await followAPI.HandleFollwer(api,{idUser:auth.id,idsCategory:idsFollowerCategory},'put')
@@ -286,7 +286,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
           }}>
             {
               
-              follower[0]?.categories ? follower[0]?.categories.map((category)=><View key={category._id} style={{paddingBottom:4,paddingHorizontal:2}}><TagComponent key={category._id} label={category.name} 
+              follower[0]?.categories ? follower[0]?.categories.map((category)=><View key={category?._id} style={{paddingBottom:4,paddingHorizontal:2}}><TagComponent key={category?._id} label={category.name} 
               bgColor={colors.primary} 
               textColor={colors.white} 
               styles={[globalStyles.shadow,{borderWidth:1,borderColor:colors.primary}]} />
@@ -316,11 +316,11 @@ const ProfileScreen = ({ navigation, route }: any) => {
             textColor={colors.primary} type="primary" onPress={() => handleCallApiUpdateFollowerCategory()} />
         </View>}
         renderItem={(item: CategoryModel) => <>
-          <View style={{paddingVertical:4,paddingHorizontal:4}} key={item._id}>
-            <TagComponent key={item._id} onPress={()=>handleFollowerCategory(item._id)} label={item.name} 
-            bgColor={idsFollowerCategory.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
-            textColor={idsFollowerCategory.some(idCategory => idCategory === item._id) ? colors.white : colors.black} 
-            styles={[globalStyles.shadow,{borderWidth:1,borderColor:idsFollowerCategory.some(idCategory => idCategory === item._id) ? colors.primary : colors.gray}]} />
+          <View style={{paddingVertical:4,paddingHorizontal:4}} key={item?._id}>
+            <TagComponent key={item?._id} onPress={()=>handleFollowerCategory(item?._id)} label={item.name} 
+            bgColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.white}
+            textColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.white : colors.black} 
+            styles={[globalStyles.shadow,{borderWidth:1,borderColor:idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.gray}]} />
 
           </View>
         </>

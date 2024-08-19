@@ -18,6 +18,7 @@ import { LoadingModal } from "../../modals";
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { apis } from "../constrants/apis";
 const NotificationsScreen = ({ navigation, route }: any) => {
   const { notificationRoute }: { notificationRoute: NotificationModel[] } = route.params || {}
   const [notifications, setNotifications] = useState<NotificationModel[]>(notificationRoute)
@@ -25,25 +26,26 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   const [isLoadingModal, setIsLoadingModal] = useState(false)
   const user = useSelector(authSelector)
   const modalizeRef = useRef<Modalize>(null);
-  const [isFirst,setIsFirst] = useState(false)
-  const [toggle,setToggle] = useState(false)
-  const [notificationSelected,setSotificationSelected] = useState<NotificationModel>()
+  const [isFirst, setIsFirst] = useState(false)
+  const [toggle, setToggle] = useState(false)
+  const [notificationSelected, setSotificationSelected] = useState<NotificationModel>()
   useEffect(() => {
     // if(!notifications){
     //   handleCallAPIGetNotifications()
     // }
     handleCallAPIUpdateIsViewdNotifications()
+    // handleCallAPIGetNotifications(true)
   }, [])
-  useEffect(()=>{
-    if(isFirst){
+  useEffect(() => {
+    if (isFirst) {
       modalizeRef.current?.open();
     }
-    else{
+    else {
       setIsFirst(true)
     }
-  },[notificationSelected,toggle])
+  }, [notificationSelected, toggle])
   const handleCallAPIGetNotifications = async (isLoading?: boolean) => {
-    const api = `/get-notifications-byId?uid=${user.id}`
+    const api = apis.notification.getNotificationsById({ idUser: user.id })
     setIsLoadng(isLoading ? isLoading : false)
     try {
       const res: any = await notificationAPI.HandleNotification(api)
@@ -73,7 +75,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     };
   }, [])
   const handleCallAPIUpdateIsViewdNotifications = async () => {
-    const api = `/update-isViewed-notifitions`
+    const api = apis.notification.updateisViewdNotifications()
     try {
       const res: any = await notificationAPI.HandleNotification(api, { uid: user.id }, 'put')
       if (res && res.status === 200) {
@@ -89,7 +91,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     }
   }
   const handleRejectNotification = async (notification: NotificationModel) => {
-    const api = '/update-status-notifitions'
+    const api = apis.notification.updateStatusNotifications()
     setIsLoadingModal(true)
     try {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
@@ -107,9 +109,8 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       setIsLoadingModal(false)
     }
   }
-  console.log("is", isLoadingModal)
   const handleComfirmNofitication = async (notification: NotificationModel) => {
-    const api = '/update-status-notifitions'
+    const api = apis.notification.updateStatusNotifications()
     setIsLoadingModal(true)
     try {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
@@ -128,7 +129,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       setIsLoadingModal(false)
     }
   }
-  const handleOpenModalize = (notificatoin:NotificationModel) => {
+  const handleOpenModalize = (notificatoin: NotificationModel) => {
     setSotificationSelected(notificatoin)
     setToggle(!toggle)
   }
@@ -137,12 +138,14 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       case 'unanswered':
         return (
           <RowComponent>
-            <ButtonComponent text="Từ chối" type="primary" color="white" width={'auto'} textColor={colors.colorText}
-              styles={{ minHeight: 20, paddingVertical: 10, borderWidth: 1, borderColor: colors.gray2 }} onPress={() => handleRejectNotification(notification)} />
-            <SpaceComponent width={20} />
-            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, paddingVertical: 10 }}
+
+            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius:5, paddingVertical: 10,width:appInfo.sizes.WIDTH*0.32 }}
               onPress={() => handleComfirmNofitication(notification)}
             />
+            <SpaceComponent width={20} />
+
+            <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
+              styles={{ minHeight: 20,width:appInfo.sizes.WIDTH*0.32, borderRadius:5,paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
           </RowComponent>
         )
       case 'answered':
@@ -167,12 +170,12 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
+              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
                 onPress={() => navigation.navigate('EventDetails', { item: value.eventId })}>
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID.fullname} `}
+                  {`${value.senderID?.fullname} `}
                   <Text style={[globalStyles.text]}>
                     {value.content}
                   </Text>
@@ -199,11 +202,11 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID.photoUrl} isShowIconAbsolute typeIcon="follow" />
+              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}>
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID.fullname} `}
+                  {`${value.senderID?.fullname} `}
                   <Text style={[globalStyles.text]}>
                     {value.content}
                   </Text>
@@ -229,12 +232,12 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
+              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
               >
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID.fullname} `}
+                  {`${value.senderID?.fullname} `}
                   <Text style={[globalStyles.text]}>
                     {value.content}
                   </Text>
@@ -261,12 +264,12 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
+              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
               >
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID.fullname} `}
+                  {`${value.senderID?.fullname} `}
                   <Text style={[globalStyles.text]}>
                     {value.content}
                   </Text>
@@ -298,7 +301,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   return (
     <ContainerComponent back title="Thông báo">
       {
-        !isLoading ? (notifications && notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0 }}>
+        !isLoading && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0 }}>
           <TextComponent text={'Trước đó'} title size={16} styles={{ paddingHorizontal: 12 }} />
           <SpaceComponent height={8} />
 
@@ -326,23 +329,23 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       <LoadingModal visible={isLoadingModal} />
       <Portal>
         <Modalize ref={modalizeRef} adjustToContentHeight >
-          <SectionComponent styles={{ minHeight: 150 ,paddingHorizontal:12}}>
+          <SectionComponent styles={{ minHeight: 150, paddingHorizontal: 12 }}>
             <SpaceComponent height={6} />
-            <AvatarItem size={66} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID.photoUrl} />
-            <SpaceComponent height={6}/>
-            <Text style={[globalStyles.text, {textAlign:'center',lineHeight:16}]} numberOfLines={3}>
-              {`${notificationSelected?.senderID.fullname} `}
+            <AvatarItem size={66} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID?.photoUrl} />
+            <SpaceComponent height={6} />
+            <Text style={[globalStyles.text, { textAlign: 'center', lineHeight: 16 }]} numberOfLines={3}>
+              {`${notificationSelected?.senderID?.fullname} `}
               <Text style={[globalStyles.text]}>
                 {notificationSelected?.content}
               </Text>
             </Text>
-            <SpaceComponent height={16}/>
+            <SpaceComponent height={16} />
             <RowComponent>
-            <CricleComponent styles={{borderWidth: 0.5, borderColor: colors.gray5 }} size={36} color={colors.gray5}>
-                    <MaterialCommunityIcons name="delete" size={24} color={colors.black} />
-            </CricleComponent>
-            <SpaceComponent width={12}/>
-            <TextComponent text={'Gỡ thông báo này'} title size={16}/>
+              <CricleComponent styles={{ borderWidth: 0.5, borderColor: colors.gray5 }} size={36} color={colors.gray5}>
+                <MaterialCommunityIcons name="delete" size={24} color={colors.black} />
+              </CricleComponent>
+              <SpaceComponent width={12} />
+              <TextComponent text={'Gỡ thông báo này'} title size={16} />
             </RowComponent>
           </SectionComponent>
         </Modalize>

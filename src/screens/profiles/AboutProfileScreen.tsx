@@ -105,10 +105,11 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
     }
   }
   const handleFollowUser = async ()=>{
-    const api = '/update-follower-userOther'
+    const api = apis.follow.updateFollowUserOther()
     setIsLoading(true)
     try {
       const res = await followAPI.HandleFollwer(api,{idUser:auth.id,idUserOther:uidOthor},'put')
+      console.log("res",res)
       if(res && res.data && res.status===200){
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
@@ -173,13 +174,13 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       <RowComponent justify="center">
           <ButtonComponent
             
-              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser._id === uidOthor)) ? follower[0]?.users.some(user => (user.status === false && user.idUser._id === uidOthor)) ?  "Đang đợi chấp nhận" : "Đã theo dõi" : 'Theo dõi'}
+              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? follower[0]?.users.some(user => (user.status === false && user.idUser._id === uidOthor)) ?  "Đang đợi chấp nhận" : "Đã theo dõi" : 'Theo dõi'}
             onPress={()=>handleFollowUser()}
             type="primary"
             color={colors.primary}
             textColor={colors.white}
             styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0,paddingHorizontal:8}}
-            icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser._id === uidOthor)) ? 
+            icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? 
             <AntDesign name="deleteuser" size={22} color={colors.white}/> : 
             <AntDesign name="adduser" size={22} color={colors.white}/>}
             iconFlex="left"

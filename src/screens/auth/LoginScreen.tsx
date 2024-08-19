@@ -14,8 +14,11 @@ import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async
 import { LoadingModal } from "../../../modals";
 import { EventHubLogo } from "../../assets/svgs";
 import { appInfo } from "../../constrants/appInfo";
+import { apis } from "../../constrants/apis";
+import { ToastMessaging } from "../../utils/showToast";
 
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = ({ navigation,route }: any) => {
+  const { emailRoute, passwordRoute, status }:{ emailRoute: string, passwordRoute: string, status: number } = route.params || {}
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isRemember, setIsReMember] = useState(true)
@@ -24,9 +27,17 @@ const LoginScreen = ({ navigation }: any) => {
 
   const [isLoading,setIsLoading] = useState(false)
   const dispatch = useDispatch()
+  console.log(emailRoute)
   useEffect(() => {
+    if(emailRoute && passwordRoute && status === 200){ //xử lý người dùng đăng ký tài khoản thành công
+      setEmail(emailRoute)
+      setPassword(passwordRoute)
+      ToastMessaging.Success({message:'Đăng ký thành công hãy đăng nhập đi nào',visibilityTime:2000})
+    }
+  }, [route])
+  useEffect(()=>{
     saveEmail()
-  }, [])
+  },[])
   const saveEmail = async () => {
     const res:any = await getItem()
     const resParse = JSON.parse(res)
@@ -41,16 +52,16 @@ const LoginScreen = ({ navigation }: any) => {
       if (emailValidation) {
         setIsLoading(true)
         try {
-          const res:any = await authenticationAPI.HandleAuthentication('/login', { email, password }, 'post');
+          const res:any = await authenticationAPI.HandleAuthentication(apis.auth.login(), { email, password }, 'post');
           if (isRemember) {
             await AsyncStorage.setItem('isRemember', 'true')
-            await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+            await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
             await AsyncStorage.setItem('password', password)
           } else {
             await AsyncStorage.setItem('isRemember', 'false')
-            await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+            await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
           }
-          dispatch(addAuth(res.data))
+          dispatch(addAuth({...res.data,loginMethod:'account'}))
           setIsLoading(false)
         } catch (error:any) {
           setIsLoading(false)
@@ -112,7 +123,7 @@ const LoginScreen = ({ navigation }: any) => {
       <SectionComponent>
         <ButtonComponent onPress={handleLogin} text={'Đăng nhập'} type={'primary'} />
       </SectionComponent>
-      <SocialLogin />
+      <SocialLogin setIsLoading={(val:boolean)=>setIsLoading(val)}/>
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Bạn chưa có tài khoản? " />

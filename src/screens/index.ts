@@ -1,27 +1,29 @@
-import AddNewScreen from "./AddNewScreen";
-import NotFound from "./NotFound";
-import NotificationsScreen from "./NotificationsScreen";
-import SplashScreen from "./SplashScreen";
-import ForgotPasswordScreen from "./auth/ForgotPasswordScreen";
-import LoginScreen from "./auth/LoginScreen";
-import OnboardingScreen from "./auth/OnboardingScreen";
-import SignUpScreen from "./auth/SignUpScreen";
-import VerificationScreen from "./auth/VerificationScreen";
-import ChatsScreen from "./chat/ChatsScreen";
-import EventDetails from "./events/EventDetails";
-import EventsScreen from "./events/EventsScreen";
-import ExploreEvent from "./events/ExploreEvent";
-import PaymentScreen from "./events/PaymentScreen";
-import SearchEventsScreen from "./events/SearchEventsScreen";
-import HomeScreen from "./home/HomeScreen";
-import MapScreen from "./maps/MapScreen";
-import NewScreen from "./newScreen";
-import AboutProfileScreen from "./profiles/AboutProfileScreen";
-import AboutProfile from "./profiles/Component/AboutProfile";
-import EditProfileScreen from "./profiles/EditProfileScreen";
-import ProfileScreen from "./profiles/ProfileScreen";
-import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen";
-
+import HomeScreen from "./home/HomeScreen"
+import LoginScreen from "./auth/LoginScreen"
+import SplashScreen from "./SplashScreen"
+import OnboardingScreen from "./auth/OnboardingScreen"
+import SignUpScreen from "./auth/SignUpScreen"
+import ForgotPasswordScreen from "./auth/ForgotPasswordScreen"
+import VerificationScreen from "./auth/VerificationScreen"
+import AddNewScreen from "./AddNewScreen"
+import EventsScreen from "./events/EventsScreen"
+import MapScreen from "./maps/MapScreen"
+import ProfileScreen from "./profiles/ProfileScreen"
+import SearchEventsScreen from "./events/SearchEventsScreen"
+import EventDetails from "./events/EventDetails"
+import AboutProfile from "./profiles/Component/AboutProfile"
+import EditProfileScreen from "./profiles/EditProfileScreen"
+import AboutProfileScreen from "./profiles/AboutProfileScreen"
+import NotFound from "./NotFound"
+import ExploreEvent from "./events/ExploreEvent"
+import PaymentScreen from "./events/PaymentScreen"
+import NewScreen from "./NewScreen"
+import NotificationsScreen from "./NotificationsScreen"
+import ChatsScreen from "./chat/ChatsScreen"
+import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen"
+import HomeFriendsScreen from "./friends/HomeFriendsScreen"
+import ListFriendsScreen from "./friends/ListFriendsScreen"
+import FindFriendScreen from "./friends/FindFriendScreen"
 
 export {
     HomeScreen,
@@ -46,5 +48,8 @@ export {
     NewScreen,
     NotificationsScreen,
     ChatsScreen,
-    TransactionHistoryScreen
+    TransactionHistoryScreen,
+    HomeFriendsScreen,
+    ListFriendsScreen,
+    FindFriendScreen
 }

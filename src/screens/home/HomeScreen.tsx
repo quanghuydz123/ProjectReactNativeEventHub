@@ -45,8 +45,10 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { appInfo } from '../../constrants/appInfo';
 import Swiper from 'react-native-swiper';
 import { Platform,PermissionsAndroid } from 'react-native';
+import { Screen } from 'react-native-screens';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
 
 const UPPER_HEADER_HEIGHT = 44;
 const UPPER_HEADER_PADDING_TOP = 4;
@@ -108,6 +110,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     handleCallApiGetAllFollower()
     handleGetAllCategory()
     handleCallAPIGetNotifications()
+    // checkfcmToken()
   }, [])
   useEffect(() => {
     handleCallApiGetEventsNearYou(true)
@@ -153,7 +156,11 @@ const HomeScreen = ({ navigation, route }: any) => {
       socket.off('getNotifications', handleGetNotifications);
     };
   }, [])
-  
+  // const checkfcmToken = ()=>{
+  //     if(auth.fcmTokens?.length === 0){
+  //         HandleNotification.checkNotifitionPersion()
+  //     }
+  // }
   const getFeatureViewAnimation = (animatedValue: any, outputX: number) => {
     const TRANSLATE_X_INPUT_RANGE = [0, 80];
     const translateY = {
@@ -240,7 +247,7 @@ const HomeScreen = ({ navigation, route }: any) => {
       {
         translateY: animatedValue.interpolate({
           inputRange: [0, LOWER_HEADER_HEIGHT],
-          outputRange: [0, -100],
+          outputRange: [0, -96],
           extrapolate: 'clamp',
 
         }),
@@ -267,7 +274,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
 
   const handleGetAllCategory = async () => {
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
@@ -283,7 +290,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetAllFollower = async () => {
-    const api = `/get-all`
+    const api = apis.follow.getAll()
     try {
       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
@@ -314,7 +321,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }, {});
   }
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
-    const api = '/update-position-user'
+    const api = apis.user.updatePositionUser()
     try {
       const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
       const authItem: any = await getItemAuth()
@@ -335,7 +342,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     setIsViewNotifications(!isCheck)
   }
   const handleCallAPIGetNotifications = async () => {
-    const api = `/get-notifications-byId?uid=${auth.id}`
+    const api = apis.notification.getNotificationsById({idUser:auth.id})
     try {
       const res: any = await notificationAPI.HandleNotification(api)
       if (res && res.data && res.status === 200) {
@@ -413,13 +420,27 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     })
   };
-  const [index,setIndex] = useState(0)
-
+  const featureTestAnimation = {
+    // transform: [
+    //   {
+    //     scale: animatedValue.interpolate({
+    //       inputRange: [0, 100],
+    //       outputRange: [0, 1],
+    //       extrapolate: 'clamp',
+    //     }),
+    //   },
+    // ],
+    opacity: animatedValue.interpolate({
+      inputRange: [80, 96],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+  };
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView>
-        <Animated.View style={[styles.upperHeaderPlaceholder]} />
+        <View style={[styles.upperHeaderPlaceholder]} />
       </SafeAreaView>
 
       <Animated.View style={[styles.header, headerAnimation]}>
@@ -435,11 +456,12 @@ const HomeScreen = ({ navigation, route }: any) => {
               style={[styles.searchInput, textInputAnimation]}
             />
           </View> */}
-          <RowComponent styles={{ flex: 1 }}
+          <RowComponent styles={{ flex: 1}}
             onPress={() => navigation.navigate('SearchEventsScreen', {
             })}>
             <SearchNormal size={20} variant="TwoTone" color={colors.white} />
-            <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} />
+            {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
+            <SpaceComponent width={12}/>
             <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />
           </RowComponent>
           <SpaceComponent width={16} />
@@ -484,7 +506,15 @@ const HomeScreen = ({ navigation, route }: any) => {
               </View>
             }
           </TouchableOpacity>
+          
         </View>
+        {/* <Animated.View style={[{backgroundColor:'white',flexDirection:'row',alignItems:'center',},featureTestAnimation]}>
+          <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}
+            size={14} color={colors.black} onPress={() => setIsShowMoney(!isShowMoney)}
+            style={{ paddingHorizontal: 4, paddingVertical: 4 }}
+          />
+          <TextComponent text={isShowMoney ? '1.000.000đ' : '*********'} font={fontFamilies.medium} color={colors.black} />
+        </Animated.View> */}
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
@@ -517,7 +547,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             </TouchableOpacity>
           </Animated.View>
 
-          <Animated.View style={[styles.feature, qrViewAnimation]}>
+          <Animated.View style={[styles.feature, qrViewAnimation]} >
 
             {/* <CricleComponent color={colors.primary} borderRadius={10} size={32} 
               featureIconAnimation={featureIconAnimation}
@@ -527,44 +557,34 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
               </CricleComponent> */}
 
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('FriendsScreen')} >
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
-              onPress={() => navigation.navigate('ChatsScreen')}
+              onPress={() => navigation.navigate('FriendsScreen')}
             >
               <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               BẠN BÈ
             </Animated.Text>
+            </TouchableOpacity>
           </Animated.View>
 
-          <Animated.View style={[styles.feature, scanViewAnimation]}>
-            {/* <Animated.Image
-                source={require('../../assets/images/momo/scan.png')}
-                style={[styles.featureIcon, featureIconAnimation]}
-              />
-              <Animated.Image
-                source={require('../../assets/images/momo/scan-circle.png')}
-                style={[styles.icon32, featureIconCircleAnimation]}
-              /> */}
-            {/* <Animated.Image
-                  source={require('../../assets/images/momo/qr.png')}
-                  style={[styles.featureIcon, featureIconAnimation]}
-                /> */}
+          <Animated.View style={[styles.feature, scanViewAnimation]} >
+        
+            <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')} style={{alignItems:'center'}}>
             <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
               featureIconAnimation={featureIconCircleCustomAnimation}
               onPress={() => navigation.navigate('ChatsScreen')}
             >
               <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
-            {/* <Animated.Image
-                  source={require('../../assets/images/momo/qr-circle.png')}
-                  style={[styles.icon32, featureIconCircleAnimation]}
-                /> */}
+        
 
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
               TIN NHẮN
             </Animated.Text>
+            </TouchableOpacity>
           </Animated.View>
         </View>
         <Animated.View style={[viewMoneyAnimation, { paddingHorizontal: 12, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }, globalStyles.shadow]}>
@@ -618,7 +638,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               horizontal
               data={allEvent}
               extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
+              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
           }
 
@@ -629,7 +649,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               horizontal
               data={allEventNear}
               extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item._id} />}
+              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
           }
           <View style={styles.scrollViewContent} />

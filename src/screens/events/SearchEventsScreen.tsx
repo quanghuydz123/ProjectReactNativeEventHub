@@ -5,7 +5,7 @@ import { EventModelNew } from "../../models/EventModelNew"
 import { FollowModel } from "../../models/FollowModel"
 import { apis } from "../../constrants/apis"
 import eventAPI from "../../apis/eventAPI"
-import { ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, TagComponent, TextComponent } from "../../components"
+import { ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components"
 import ListEventComponent from "../../components/ListEventComponent"
 import LoadingComponent from "../../components/LoadingComponent"
 import { SearchNormal, Sort } from "iconsax-react-native"
@@ -18,6 +18,7 @@ import categoryAPI from "../../apis/categoryAPI"
 import axios from "axios"
 import { useSelector } from "react-redux"
 import { authSelector } from "../../reduxs/reducers/authReducers"
+import SearchComponent from "../../components/SearchComponent"
 interface routeParams {
   items: EventModelNew[],
   follows: FollowModel[],
@@ -160,7 +161,7 @@ const auth = useSelector(authSelector)
     setFilterEvent(filterCopy)
   }
   const handleGetAllCategory = async () => {
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
@@ -177,7 +178,7 @@ const auth = useSelector(authSelector)
   }
 
   const handleCallApiGetAllFollower = async () => {
-    const api = `/get-all`
+    const api = apis.follow.getAll()
     try {
       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
@@ -260,14 +261,16 @@ const auth = useSelector(authSelector)
     <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
       <SectionComponent>
         <RowComponent>
-          <RowComponent styles={{ flex: 1, alignItems: 'center' }}>
+          {/* <RowComponent styles={{ flex: 1, alignItems: 'center' }}>
             <SearchNormal size={20} variant="TwoTone" color={colors.gray} />
             <View style={{ backgroundColor: colors.gray, marginLeft: 10, height: 20, width: 1 }} />
             <View style={{ flex: 1 }}>
               <InputComponent styles={{ minHeight: 'auto', marginBottom: 0, borderColor: 'white' }} onChange={(val) => setSearchKey(val)}
                value={searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear onEnd={()=>handleSearchEvent()} />
             </View>
-          </RowComponent>
+          </RowComponent> */}
+          <SearchComponent isNotShowArrow styles={{width:'78%'}} onSearch={(val)=>setSearchKey(val)} value={searchKey} onEnd={()=>handleSearchEvent()}/>
+            <SpaceComponent width={4}/>
           <TagComponent
             onPress={() => {setIsOpenModalizeFilter(true),setIdsSelectedCategories(filterEvent.categoriesFilter ?? [])}}
             

@@ -18,6 +18,7 @@ import categoryAPI from "../apis/categoryAPI"
 import { UserModel } from "../models/UserModel"
 import { ToastMessaging } from "../utils/showToast"
 import { useStatusBar } from "../hooks/useStatusBar"
+import { apis } from "../constrants/apis"
 const initValues = {
   title:'',
   description:'',
@@ -104,7 +105,7 @@ const AddNewScreen = ()=>{
     setEventData(item)
   }
   const handleGetAllCategory = async ()=>{
-    const api = '/get-all'
+    const api = apis.category.getAll()
     try {
       const res:any = await categoryAPI.HandleCategory(api)
       if(res && res.data && res.statusCode===200){
@@ -165,7 +166,7 @@ const AddNewScreen = ()=>{
     }
   }
     const handleGetAllUsers = async () => {
-    const api = '/get-all'
+    const api = apis.user.getAll()
     try {
       const res:any = await userAPI.HandleUser(api, {}, 'get');
       if(res && res.data){

@@ -1,12 +1,12 @@
 import Toast from "react-native-toast-message";
 
 export class ToastMessaging {
-    static Success = ({message,title,onPress}:{message?:string,title?:string,onPress?:()=>void})=>{
+    static Success = ({message,title,onPress,visibilityTime}:{message?:string,title?:string,onPress?:()=>void,visibilityTime?:number})=>{
         Toast.show({
             type: 'success',
             text1:title ?? 'Thông báo',
             text2:message ?? 'Cập nhập thành công',
-            visibilityTime:500,
+            visibilityTime:visibilityTime ?? 500,
             onPress:onPress
         });
     }

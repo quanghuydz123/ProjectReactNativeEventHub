@@ -1,16 +1,18 @@
-
-import { User, Sms, Lock } from "iconsax-react-native"
-import { useState, useEffect } from "react"
-
-import { useDispatch } from "react-redux"
-import { LoadingModal } from "../../../modals"
-import authenticationAPI from "../../apis/authApi"
-import { ContainerComponent, SectionComponent, SpaceComponent, InputComponent, ButtonComponent, RowComponent, TextComponent } from "../../components"
-import { colors } from "../../constrants/color"
-import { fontFamilies } from "../../constrants/fontFamilies"
-import { Validate } from "../../utils/validate"
-import SocialLogin from "./components/SocialLogin"
-
+import { Button, Image, Switch, Text, View } from "react-native"
+import React, { useEffect, useState } from "react"
+import { ButtonComponent, ContainerComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../components";
+import { globalStyles } from "../../styles/globalStyles";
+import { FolderMinus, Lock, Sms, User } from "iconsax-react-native";
+import { colors } from "../../constrants/color";
+import { fontFamilies } from "../../constrants/fontFamilies";
+import SocialLogin from "./components/SocialLogin";
+import { LoadingModal } from "../../../modals";
+import authenticationAPI from "../../apis/authApi";
+import { Validate } from "../../utils/validate";
+import { useDispatch } from "react-redux";
+import { addAuth } from "../../reduxs/reducers/authReducers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apis } from "../../constrants/apis";
 //Object.keys(errorMessage).map duyệt object
 // interface ErrorMessage {
 //   email:string,
@@ -99,7 +101,7 @@ const SignUpScreen = ({ navigation }: any) => {
 
 
   const handleRegister = async () => {
-    const api = '/verification'
+    const api = apis.auth.verification()
     setIsLoading(true)
     try {
       const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
@@ -107,7 +109,7 @@ const SignUpScreen = ({ navigation }: any) => {
         code:res?.data?.code, // truyền qua route
         email:values.email,
         password:values.password,
-        username:values.username
+        username:values.username,
       })
       setIsLoading(false)
     } catch (error:any) {

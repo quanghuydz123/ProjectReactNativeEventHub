@@ -6,23 +6,45 @@ import { fontFamilies } from "../../../constrants/fontFamilies";
 import { Facebook,Google } from "../../../assets/svgs";
 import { AlertComponent } from "../../../components/Alert";
 import { GoogleSignin,GoogleSigninButton  } from '@react-native-google-signin/google-signin';
+import authenticationAPI from "../../../apis/authApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { addAuth } from "../../../reduxs/reducers/authReducers";
+import { useDispatch } from "react-redux";
 GoogleSignin.configure({
   webClientId:'989926603372-o490b46k8a8o4qrticlharlh7nf290hf.apps.googleusercontent.com', //lấy trên api console
   scopes: ['profile', 'email'],
   offlineAccess: true,  
   
 })
-const SocialLogin = ()=>{
+interface Props{
+  setIsLoading:(val:boolean)=>void
+}
+const SocialLogin = (props:Props)=>{
+  const {setIsLoading} = props
+  const dispatch = useDispatch()
   const handleLoginGoogle = async ()=>{
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog:true,// hiện bảng đăng nhập
     })
+    const api = '/login-with-google'
     try {
       await GoogleSignin.hasPlayServices()
       const userInfo = await GoogleSignin.signIn()
-      console.log("abc",userInfo)
+      const user = userInfo.user
+      setIsLoading(true)
+      const res:any = await authenticationAPI.HandleAuthentication(api,user,'post')
+      if(res && res.data && res.status===200){
+        await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'google'}))
+        await AsyncStorage.removeItem('isRemember')
+        dispatch(addAuth({...res.data,loginMethod:'google'}))
+      }
+      setIsLoading(false)
+
+      console.log("resGoogle",userInfo)
     } catch (error) {
       console.log("erer,",error)
+      setIsLoading(false)
+
     }
   }
   
@@ -42,7 +64,6 @@ const SocialLogin = ()=>{
       textColor={colors.colorText} 
       icon={<Google />} iconFlex="left"
       />
-      <ButtonComponent text="Logout" type="primary" onPress={()=>GoogleSignin.signOut()}/>
     {/* <ButtonComponent textFont={fontFamilies.regular} text="Đăng nhập bằng Facebook" type="primary" color={colors.white}
       textColor={colors.colorText} icon={<Facebook />} iconFlex="left"
       /> */}

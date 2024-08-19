@@ -8,6 +8,7 @@ import authenticationAPI from "../../apis/authApi";
 import { Validate } from "../../utils/validate";
 import { fontFamilies } from "../../constrants/fontFamilies";
 import { LoadingModal } from "../../../modals";
+import { apis } from "../../constrants/apis";
 
 const ForgotPasswordScreen = ({navigation}:any) => {
   const [email, setEmail] = useState('')
@@ -68,7 +69,7 @@ const ForgotPasswordScreen = ({navigation}:any) => {
     setCodeValues([])
     setNewCode('')
     setErrorMessage('')
-    const api = '/verificationForgotPassword'
+    const api = apis.auth.verificationForgotPassword()
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email }, 'post')
@@ -122,7 +123,7 @@ const ForgotPasswordScreen = ({navigation}:any) => {
   }
 
   const handleOnChangePassword = async () => {
-    const api = '/forgotPassword'
+    const api = apis.auth.forgotPassword()
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email,password,comfirmPassword }, 'post')

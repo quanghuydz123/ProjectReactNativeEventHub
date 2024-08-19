@@ -45,7 +45,7 @@ const EventItem = (props: Props) => {
                 </RowComponent>
                 {
                   followers &&
-                  followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id)
+                  followers.length > 0 && followers.filter(item => item?.user?._id === auth.id)[0]?.events.some(event => event?._id === item?._id)
                   && <FontAwesome name="bookmark" size={22} color={'red'} />
                 }
 
@@ -55,7 +55,7 @@ const EventItem = (props: Props) => {
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 {
                   item.categories.map((category, index) => (
-                    <View style={{ paddingVertical: 2 }} key={category._id}>
+                    <View style={{ paddingVertical: 2 }} key={category?._id}>
                       <TagComponent
                         bgColor={colors.danger2}
                         label={category.name}
@@ -90,7 +90,7 @@ const EventItem = (props: Props) => {
                   <TextComponent text={`Tháng ${new Date(item.startAt).getMonth() + 1}`} color={colors.danger2} size={12} />
                 </CardComponent>
                 {
-                  followers && followers.length > 0 && followers.filter(item => item.user._id === auth.id)[0]?.events.some(event => event._id === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard, { position: 'absolute', top: 0, right: 0 }]} color={'#ffffff4D'}>
+                  followers && followers.length > 0 && followers.filter(item => item.user?._id === auth.id)[0]?.events.some(event => event._id === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard, { position: 'absolute', top: 0, right: 0 }]} color={'#ffffff4D'}>
                     <FontAwesome name="bookmark" size={22} color={'white'} />
                   </CardComponent>
                 }

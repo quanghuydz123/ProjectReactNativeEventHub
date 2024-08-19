@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, ChatsScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, SearchEventsScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, ChatsScreen, EditProfileScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, SearchEventsScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,8 @@ import { useStatusBar } from "../hooks/useStatusBar";
 import { TextComponent } from "../components";
 import NetInfo from "@react-native-community/netinfo";
 import {BackHandler} from 'react-native';
+import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
+import FriendsNavigate from "./FriendsNavigate";
 
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
@@ -61,6 +63,9 @@ const MainNavigator = ({navigation}:any) => {
     }
   }
   const handleLogout = async () => {
+    if(auth.loginMethod === 'google'){
+      GoogleSignin.signOut()//đăng xuất google
+    }
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
     if (fcmtoken) {
       if (auth.fcmTokens && auth.fcmTokens.length > 0) {
@@ -98,6 +103,8 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
         <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
         <Stack.Screen name="ChatsScreen" component={ChatsScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+        <Stack.Screen name="FriendsScreen" component={FriendsNavigate} />
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

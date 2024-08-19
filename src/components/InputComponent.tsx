@@ -60,6 +60,7 @@ const InputComponent = (props: Props) => {
           onEndEditing={onEnd}
           editable={disabled}
           numberOfLines={numberOfLines}
+          
         />
         {suffix && suffix}
         <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>

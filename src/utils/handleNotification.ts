@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging'
 import userAPI from '../apis/userApi';
 import { useDispatch } from 'react-redux';
 import { updateFcmToken } from '../reduxs/reducers/authReducers';
+import { apis } from '../constrants/apis';
 export class HandleNotification {
     static checkNotifitionPersion = async (dispatch?:any) => {
         const authStatus = await messaging().requestPermission();
@@ -41,8 +42,9 @@ export class HandleNotification {
 
     }
     static Update = async (id:string,items:string[],dispatch?:any)=>{
+        const api = apis.user.updateFcmToken()
         try {
-            const res = await userAPI.HandleUser('/update-fcmtoken', { uid: id, fcmtokens: items }, 'post')
+            const res = await userAPI.HandleUser(api, { uid: id, fcmtokens: items }, 'post')
             if(res && res.data && res.status===200){
                 dispatch && dispatch(updateFcmToken({fcmTokens:res?.data?.fcmTokens}))
             }

@@ -10,6 +10,8 @@ import { LoadingModal } from "../../../modals"
 import { useDispatch } from "react-redux"
 import { addAuth } from "../../reduxs/reducers/authReducers"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { apis } from "../../constrants/apis"
+import { HandleNotification } from "../../utils/handleNotification"
 
 const VerificationScreen = ({ navigation, route }: any) => {
   const { code, email, password, username } = route.params //truyền bên navigate
@@ -55,7 +57,7 @@ const VerificationScreen = ({ navigation, route }: any) => {
     setCodeValues([])
     setNewCode('')
     setErrorMessage('')
-    const api = '/verification'
+    const api = apis.auth.verification()
     setIsLoading(true)
     try {
       const res: any = await authenticationAPI.HandleAuthentication(api, { email }, 'post')
@@ -74,14 +76,20 @@ const VerificationScreen = ({ navigation, route }: any) => {
       if (parseInt(newCode) !== parseInt(currentCode)) {
         setErrorMessage("Mã xác thực không chính xác")
       } else {
-        const api = '/register'
+        const api = apis.auth.register()
         const data = {
           email, password, username: username ?? 'Người dùng', isAdmin: false
         }
         try {
           const res = await authenticationAPI.HandleAuthentication(api, data, 'post')
-          dispatch(addAuth(res.data))
-          await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+          // dispatch(addAuth(res.data))
+          // await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+          navigation.navigate('LoginScreen',{
+            emailRoute:email,
+            passwordRoute:password,
+            status:200
+          })
+          // HandleNotification.checkNotifitionPersion()
         } catch (error) {
           setErrorMessage("Đăng ký thất bại")
           console.log(`Đăng ký thất bại ${error}`)

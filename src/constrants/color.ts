@@ -16,5 +16,6 @@ export const colors ={
     black:'#000000',
     blue:'#1b96f3',
     orange:'#fc8527',
-    green:'#56da78'
+    green:'#56da78',
+    backgroundSearchInput:'rgb(228, 230, 235)'
 }
