@@ -18,6 +18,8 @@ import { apis } from "../../constrants/apis";
 //   email:string,
 //   password:string,
 //   comfirmPassword:string
+
+
 // }
 const initValue = {
   username: '',
