@@ -200,7 +200,7 @@ const SignUpScreen = ({ navigation }: any) => {
       <SectionComponent>
         <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'} disable={isDisable}/>
       </SectionComponent>
-      <SocialLogin />
+      <SocialLogin setIsLoading={(val)=>setIsLoading(val)}/>
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Bạn đã có tài khoản?" />
