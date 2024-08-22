@@ -24,6 +24,7 @@ import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen"
 import HomeFriendsScreen from "./friends/HomeFriendsScreen"
 import ListFriendsScreen from "./friends/ListFriendsScreen"
 import FindFriendScreen from "./friends/FindFriendScreen"
+import SearchFriendScreen from "./friends/SearchFriendScreen"
 
 export {
     HomeScreen,
@@ -51,5 +52,6 @@ export {
     TransactionHistoryScreen,
     HomeFriendsScreen,
     ListFriendsScreen,
-    FindFriendScreen
+    FindFriendScreen,
+    SearchFriendScreen
 }

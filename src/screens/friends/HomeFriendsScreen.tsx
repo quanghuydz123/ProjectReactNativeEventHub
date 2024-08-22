@@ -1,6 +1,6 @@
 import { Button, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
+import { ButtonComponent, ContainerComponent, DataLoaderComponent, EmptyComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { colors } from "../../constrants/color";
 import { Notification, SearchNormal } from "iconsax-react-native";
 import { appInfo } from "../../constrants/appInfo";
@@ -17,15 +17,42 @@ import { DateTime } from "../../utils/DateTime";
 import socket from "../../utils/socket";
 import { LoadingModal } from "../../../modals";
 import LoadingComponent from "../../components/LoadingComponent";
+import { sizeGlobal } from "../../constrants/sizeGlobal";
+import { FollowModel } from "../../models/FollowModel";
+import followAPI from "../../apis/followAPI";
 
 const HomeFriendsScreen = ({ navigation }: any) => {
     const [notifications, setNotifications] = useState<NotificationModel[]>()
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingModal, setIsLoadingModal] = useState(false)
+    const [follow, setFollower] = useState<FollowModel[]>([])
     const user = useSelector(authSelector)
+    const [yourFollowers, setYourFollowers] = useState<FollowModel[]>([])
     useEffect(() => {
         handleCallAPIGetNotifications(true)
+        handleCallApiGetFollowerById()
     }, [])
+    const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
+        if (user.id) {
+          const api = apis.follow.getById(user.id)
+          isLoading && setIsLoading(isLoading)
+    
+          try {
+            const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+            if (res && res.data && res.status === 200) {
+              setFollower(res.data.followers)
+              setYourFollowers(res.data.yourFollowers)
+            }
+            isLoading && setIsLoading(false)
+    
+          } catch (error: any) {
+            const errorMessage = JSON.parse(error.message)
+            console.log("FollowerScreen", errorMessage)
+            isLoading && setIsLoading(false)
+    
+          }
+        }
+      }
     const handleCallAPIGetNotifications = async (isLoading?: boolean) => {
         const api = apis.notification.getNotificationsById({ idUser: user.id, typeFillter: 'follow', statusFillter: 'unanswered' })
         setIsLoading(isLoading ? isLoading : false)
@@ -117,7 +144,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
         return (
             <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: colors.white }}>
                 <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-                    <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" onPress={() => navigation.navigate("AboutProfileScreen", { uid: value.senderID._id })} />
+                    <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" onPress={() => navigation.navigate("AboutProfileScreen", { uid: value.senderID._id })} />
                     <View style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}>
 
                         <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
@@ -139,8 +166,22 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             </View>
         )
     }
+    // const emptyNotificationComponent = ()=>{
+    //     return (
+    //         <SectionComponent styles={{
+    //             justifyContent:'center',
+    //             alignItems:'center',
+    //             height:appInfo.sizes.HEIGHT*0.2
+    //         }}>
+    //             <TextComponent text={'Không có lời mời theo dõi nào'}/>
+    //         </SectionComponent>
+    //     )
+    // }
     return (
-        <ContainerComponent back title="Bạn bè" right={<SearchNormal size={20} color={colors.gray} />}>
+        <ContainerComponent back title="Bạn bè" 
+        right={<SearchNormal size={20} color={colors.gray} />}
+        onPressRight={() => navigation.push('FriendsScreen', { screen: 'SearchFriendScreen' })}
+        >
             <SectionComponent>
                 <RowComponent>
                     <TagComponent
@@ -158,10 +199,10 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                     <SpaceComponent width={8} />
                     <TagComponent
                         bgColor={colors.backgroundSearchInput}
-                        label={'Danh sách bạn bè'}
+                        label={'Danh sách theo dõi'}
                         textColor={colors.black}
                         textSize={14}
-                        onPress={() => navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })}
+                        onPress={() => navigation.push('FriendsScreen', { screen: 'ListFriendsScreen',params: { followRoute:follow,yourFollowersRoute:yourFollowers } })}
                         styles={{
                             paddingVertical: 8,
                             paddingHorizontal: 8,
@@ -179,21 +220,32 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             <SectionComponent styles={{}}>
                 <TabBarComponent
                     styles={{ paddingHorizontal: 0, paddingVertical: 0, marginBottom: 0 }}
-                    title={`Lời mời theo dõi  ${notifications?.length || 0}`}
+                    title={`Lời mời theo dõi  ${notifications?.length || ''}`}
                     onPress={() => console.log("ok")}
                     textSizeTitle={20}
                 />
             </SectionComponent>
-            <View>
+            {/* <View>
                 {
-                    isLoading ? <LoadingComponent isLoading={isLoading} value={notifications?.length || 0} /> : <FlatList
-                        contentContainerStyle={{ paddingBottom: 16 }}
-                        showsVerticalScrollIndicator={false}
-                        data={notifications}
-                        renderItem={({ item, index }) => renderNofitications(item)}
-                    />
+                    isLoading  ? <LoadingComponent isLoading={isLoading} value={notifications?.length || 0} /> 
+                    : (notifications && notifications?.length > 0) ?  <FlatList
+                    contentContainerStyle={{ paddingBottom: 16 }}
+                    showsVerticalScrollIndicator={false}
+                    data={notifications}
+                    renderItem={({ item, index }) => renderNofitications(item)}
+                /> : <EmptyComponent message="Không có lời mời theo dõi nào" />
                 }
-            </View>
+            </View> */}
+            <DataLoaderComponent data={notifications} isLoading={isLoading} 
+            messageEmpty="Không có lời mời theo dõi nào"
+            children={
+                <FlatList
+                contentContainerStyle={{ paddingBottom: 16 }}
+                showsVerticalScrollIndicator={false}
+                data={notifications}
+                renderItem={({ item, index }) => renderNofitications(item)}
+            />
+            }/>
 
 
            {

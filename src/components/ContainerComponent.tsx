@@ -1,4 +1,4 @@
-import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View ,} from "react-native"
 import React, { ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import { useNavigation } from "@react-navigation/native"
@@ -12,16 +12,17 @@ import LinearGradient from "react-native-linear-gradient"
 interface Props {
     isImageBackgound?: boolean,
     isScroll?: boolean,
-    title?: string,
+    title?: string | ReactNode,
     children: ReactNode,
     back?: boolean,
-    right?:ReactNode
+    right?:ReactNode,
+    onPressRight?:()=>void
 }
 //showsVerticalScrollIndicator ẩn thanh trượt xuống
 const ContainerComponent = (props: Props) => {
-    const { children, isScroll, isImageBackgound, title,back ,right} = props
+    const { children, isScroll, isImageBackgound, title,back ,right,onPressRight} = props
     const navigation:any = useNavigation()  
-    
+    const RightComponent: React.ComponentType<any>  = onPressRight ? TouchableOpacity : View;
     const returnContainer = isScroll ? (
         <ScrollView style={{flex:1}} showsVerticalScrollIndicator={false}>
             {children}
@@ -47,8 +48,9 @@ const ContainerComponent = (props: Props) => {
                     <ArrowLeft size={24} color={colors.colorText}/>
                 </TouchableOpacity>
                 }
-                <View style={{flex:1}}>{title && <TextComponent text={title} font={fontFamilies.medium} size={20}/>}</View>
-                {right && right}
+                <View style={{flex:1}}>{typeof title === 'string' ? <TextComponent text={title} font={fontFamilies.medium} size={20}/> : title}
+                </View>
+                {right && <RightComponent onPress={onPressRight}>{right}</RightComponent>}
             </RowComponent>}
             {returnContainer}
             </View>

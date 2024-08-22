@@ -10,10 +10,12 @@ interface Props{
     title:string,
     onPress?:()=>void,
     styles?:StyleProp<ViewStyle>,
-    textSizeTitle?:number
+    textSizeTitle?:number,
+    isNotShowIconRight?:boolean,
+    titleRight?:string
 }
 const TabBarComponent = (props:Props)=>{
-    const {title,onPress,styles,textSizeTitle} = props
+    const {title,onPress,styles,textSizeTitle,isNotShowIconRight,titleRight} = props
   return (
     <RowComponent styles={[{
         paddingHorizontal:16,
@@ -21,9 +23,9 @@ const TabBarComponent = (props:Props)=>{
     },styles]}>
         <TextComponent text={title} title flex={1} size={textSizeTitle ?? 16}/>
         {onPress && 
-        <RowComponent>
-            <ButtonComponent text="Xem tất cả" color={colors.text2} onPress={onPress} textSize={12}/>
-            <ArrowRight2 size={14} color={colors.text2} variant="Bold" style={{marginTop:2}}/>
+        <RowComponent onPress={onPress}>
+            <TextComponent text={titleRight ?? "Xem tất cả"} color={colors.text2} size={13}/>
+            {!isNotShowIconRight && <ArrowRight2 size={12} color={colors.text2} variant="Bold" style={{marginTop:2}}/>  }
         </RowComponent>}
     </RowComponent>
   )

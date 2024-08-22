@@ -11,7 +11,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { CategoriesList, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { CategoriesList, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import LoadingComponent from '../../components/LoadingComponent';
 import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
@@ -61,6 +61,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
   const [allFollower, setAllFollower] = useState<FollowModel[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [refreshList, setRefreshList] = useState(false);
@@ -275,12 +276,15 @@ const HomeScreen = ({ navigation, route }: any) => {
 
   const handleGetAllCategory = async () => {
     const api = apis.category.getAll()
+    setIsLoadingCategories(true)
     try {
       const res: any = await categoryAPI.HandleCategory(api)
       if (res && res.data && res.statusCode === 200) {
         setCategories(res.data.categories)
       }
+      setIsLoadingCategories(false)
     } catch (error: any) {
+      setIsLoadingCategories(false)
       const errorMessage = JSON.parse(error.message)
       if (errorMessage.statusCode === 403) {
         console.log(errorMessage.message)
@@ -565,7 +569,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
             </CricleComponent>
             <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              BẠN BÈ
+              CÔNG ĐỒNG
             </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
@@ -628,29 +632,50 @@ const HomeScreen = ({ navigation, route }: any) => {
               style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
               />
           </Swiper> */}
-          <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} />
+          <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
+          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} children={
             <CategoriesList values={categories} />
+          }
+              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
+            />
           <SpaceComponent height={16}/>
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
-            isLoading ? <LoadingComponent isLoading={isLoading} value={allEvent.length} /> : <FlatList
+            // <FlatList
+            //   showsHorizontalScrollIndicator={false}
+            //   horizontal
+            //   data={allEvent}
+            //   extraData={refreshList}
+            //   renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+            // />
+            <DataLoaderComponent data={allEvent} isLoading={isLoading} height={appInfo.sizes.HEIGHT*0.3} children={
+               <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
               data={allEvent}
               extraData={refreshList}
               renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
+            }
+              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
+            />
           }
 
           <TabBarComponent title="Gần chỗ bạn" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện gần chỗ bạn', categories: categories, lat: auth.position.lat, long: auth.position.lng, distance: '10', follows: allFollower })} />
           {
-            isLoadingNearEvent ? <LoadingComponent isLoading={isLoadingNearEvent} value={allEvent.length} /> : <FlatList
+          
+
+            <DataLoaderComponent data={allEventNear} isLoading={isLoadingNearEvent} height={appInfo.sizes.HEIGHT*0.3} children={
+              <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
               data={allEventNear}
               extraData={refreshList}
               renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             />
+           }
+             messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
+           />
           }
           <View style={styles.scrollViewContent} />
         </SectionComponent>
@@ -681,7 +706,7 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     width: '100%',
-    backgroundColor: '#AF0C6E',
+    backgroundColor: colors.primary,
     paddingTop: 30,
     zIndex: 1
   },
@@ -735,7 +760,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     lineHeight: 14,
-    color: '#FFFFFF',
+    color: colors.white,
     marginTop: 12,
   },
   spaceForHeader: {

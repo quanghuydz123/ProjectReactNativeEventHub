@@ -5,7 +5,7 @@ import TextComponent from "./TextComponent"
 import { appInfo } from "../constrants/appInfo"
 import AvatarGroup from "./AvatarGroup"
 import RowComponent from "./RowComponent"
-import { Bookmark, Bookmark2, Location } from "iconsax-react-native"
+import { Bookmark, Bookmark2, Eye, Location } from "iconsax-react-native"
 import { colors } from "../constrants/color"
 import SpaceComponent from "./SpaceComponent"
 import { fontFamilies } from "../constrants/fontFamilies"
@@ -20,6 +20,7 @@ import { FollowModel } from "../models/FollowModel"
 import { DateTime } from "../utils/DateTime"
 import { convertMoney } from "../utils/convertMoney"
 import TagComponent from "./TagComponent"
+
 interface Props {
   item: EventModelNew,
   isShownHorizontal?: boolean,
@@ -37,16 +38,21 @@ const EventItem = (props: Props) => {
             <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'stretch' }} />
             <SpaceComponent width={12} />
             <View style={{ height: '100%', flex: 1 }}>
-              <RowComponent justify="space-between" styles={{marginRight:12}}>
+              <RowComponent justify="space-between" styles={{ marginRight: 12 }}>
                 <RowComponent>
                   {/* <Location size={18} color={colors.gray2} variant="Bold" />
                 <SpaceComponent width={4} /> */}
                   <TextComponent text={item.addressDetals.county ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
+                  {/* <RowComponent>
+                    <FontAwesome name="eye" color={colors.primary} size={16} />
+                    <SpaceComponent width={2} />
+                    <TextComponent text={'123'} size={12} color={colors.primary} />
+                  </RowComponent> */}
                 </RowComponent>
                 {
                   followers &&
                   followers.length > 0 && followers.filter(item => item?.user?._id === auth.id)[0]?.events.some(event => event?._id === item?._id)
-                  && <FontAwesome name="bookmark" size={22} color={'red'} />
+                  && <FontAwesome name="bookmark" size={22} color={colors.primary} />
                 }
 
               </RowComponent>
@@ -74,7 +80,14 @@ const EventItem = (props: Props) => {
               {
                 (item.users && item.users.length > 0) && <AvatarGroup users={item.users} />
               }
-              <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} size={12} />
+              <RowComponent styles={{justifyContent:'space-between'}}>
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} size={12} />
+                <RowComponent>
+                  <FontAwesome name="eye" color={colors.primary} size={16} />
+                  <SpaceComponent width={2} />
+                  <TextComponent text={'0'} size={12} color={colors.primary} />
+                </RowComponent>
+              </RowComponent>
             </View>
           </RowComponent>
         </>
@@ -125,7 +138,16 @@ const EventItem = (props: Props) => {
             <RowComponent>
               {/* <Location size={18} color={colors.gray2} variant="Bold" />
               <SpaceComponent width={4} /> */}
-              <TextComponent text={item.addressDetals.county ?? ''} numberOfLine={1} size={12} font={fontFamilies.medium} color={colors.text2} flex={1} />
+              <TextComponent text={item.addressDetals.county ?? ''}
+                numberOfLine={1} size={12}
+                font={fontFamilies.medium}
+                color={colors.text2} flex={1}
+              />
+              <RowComponent>
+                <FontAwesome name="eye" color={colors.primary} size={16} />
+                <SpaceComponent width={2} />
+                <TextComponent text={'0'} size={12} color={colors.primary} />
+              </RowComponent>
             </RowComponent>
           </>
       }

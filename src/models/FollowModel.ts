@@ -11,7 +11,6 @@ export interface FollowModel {
     users:{
         idUser:UserModel,
         status:boolean,
-        _id:string,
         idNotification:string
     }[]
 }

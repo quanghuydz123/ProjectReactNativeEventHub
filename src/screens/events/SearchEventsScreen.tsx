@@ -5,7 +5,7 @@ import { EventModelNew } from "../../models/EventModelNew"
 import { FollowModel } from "../../models/FollowModel"
 import { apis } from "../../constrants/apis"
 import eventAPI from "../../apis/eventAPI"
-import { ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components"
+import { ContainerComponent, CricleComponent, DataLoaderComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components"
 import ListEventComponent from "../../components/ListEventComponent"
 import LoadingComponent from "../../components/LoadingComponent"
 import { SearchNormal, Sort } from "iconsax-react-native"
@@ -281,12 +281,13 @@ const auth = useSelector(authSelector)
         </RowComponent>
       </SectionComponent>
       {
-        (result && result?.length > 0 && !isLoading ) ? <>
+        <DataLoaderComponent data={result} isLoading={isLoading} 
+            messageEmpty="Không có sự kiện nào phù hợp"
+            children={
+              <ListEventComponent items={result} follows={allFollower} />
 
-          <ListEventComponent items={result} follows={allFollower} />
-        </> 
-        :
-          <LoadingComponent isLoading={isLoading} value={result?.length} />
+            }/>
+        
       }
       <ModalFilterEvent selectedCategories={idsSelectedCategories} 
       onSelectCategories={(val)=>setIdsSelectedCategories(val)} 

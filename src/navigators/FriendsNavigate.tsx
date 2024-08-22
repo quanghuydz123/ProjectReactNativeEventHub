@@ -1,6 +1,6 @@
 import React from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {HomeFriendsScreen, MapScreen,ListFriendsScreen, FindFriendScreen} from "../screens";
+import {HomeFriendsScreen, MapScreen,ListFriendsScreen, FindFriendScreen, SearchFriendScreen} from "../screens";
 import { useStatusBar } from "../hooks/useStatusBar";
 
 const FriendsNavigate = ()=>{
@@ -12,6 +12,7 @@ useStatusBar('dark-content')
         <Stack.Screen name="HomeFriendsScreen" component={HomeFriendsScreen} />
         <Stack.Screen name="ListFriendsScreen" component={ListFriendsScreen} />
         <Stack.Screen name="FindFriendScreen" component={FindFriendScreen} />
+        <Stack.Screen name="SearchFriendScreen" component={SearchFriendScreen} />
 
     </Stack.Navigator>
   )

@@ -19,6 +19,7 @@ import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { apis } from "../constrants/apis";
+import { sizeGlobal } from "../constrants/sizeGlobal";
 const NotificationsScreen = ({ navigation, route }: any) => {
   const { notificationRoute }: { notificationRoute: NotificationModel[] } = route.params || {}
   const [notifications, setNotifications] = useState<NotificationModel[]>(notificationRoute)
@@ -170,7 +171,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
+              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
                 onPress={() => navigation.navigate('EventDetails', { item: value.eventId })}>
 
@@ -202,7 +203,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" />
+              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}>
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
@@ -232,7 +233,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
+              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
               >
 
@@ -264,7 +265,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={66} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
+              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
               >
 
@@ -331,7 +332,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         <Modalize ref={modalizeRef} adjustToContentHeight >
           <SectionComponent styles={{ minHeight: 150, paddingHorizontal: 12 }}>
             <SpaceComponent height={6} />
-            <AvatarItem size={66} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID?.photoUrl} />
+            <AvatarItem size={sizeGlobal.avatarItem} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID?.photoUrl} />
             <SpaceComponent height={6} />
             <Text style={[globalStyles.text, { textAlign: 'center', lineHeight: 16 }]} numberOfLines={3}>
               {`${notificationSelected?.senderID?.fullname} `}
