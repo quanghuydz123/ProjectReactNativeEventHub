@@ -18,10 +18,11 @@ interface Props {
     onPress?: () => void,
     isShowIconAbsolute?: boolean,
     typeIcon?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other',
-    textName?:string
+    textName?:string,
+    bgColor?:string
 }
 const AvatarItem = (props: Props) => {
-    const { photoUrl, size, colorBorderWidth, index, styles, notBorderWidth, bdRadius, onPress,textName, isShowIconAbsolute, typeIcon } = props
+    const { photoUrl, size, colorBorderWidth, index, styles, notBorderWidth,bgColor, bdRadius, onPress,textName, isShowIconAbsolute, typeIcon } = props
     const ml = size ? -(size / 2) : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
     const renderIconAbsolute = (type?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
@@ -71,6 +72,7 @@ const AvatarItem = (props: Props) => {
                             borderWidth: notBorderWidth ? 0 : 1,
                             borderColor: colorBorderWidth ?? colors.white,
                             marginLeft: (index && index !== 0) ? ml : 0,
+                            backgroundColor:bgColor 
                         }}
                     /> : <Image
                         source={{ uri: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' }}

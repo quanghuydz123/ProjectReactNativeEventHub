@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import ExploreNavigator from "./ExploreNavigator";
 import EventsNavigator from "./EventsNavigator";
-import { AddNewScreen } from "../screens";
+import { AddNewScreen, QrScannerScreen } from "../screens";
 import TransactionNavigator from "./TransactionNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import { colors } from "../constrants/color";
@@ -68,10 +68,10 @@ const TabNavigator = ({navigation}:any) => {
             case "Events":
               icon = <MaterialIcons name="event" size={size} color={color} />
               break
-            case "Add":
+            case "QrScan":
               icon = <CricleComponent size={50}
-                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 18 : 24, borderWidth: 2, borderColor: 'white' }]}>
-                <AddSquare size={26} color={colors.white} variant="Bold" />
+                styles={[globalStyles.shadow, { marginBottom: Platform.OS === 'ios' ? 10 : 16, borderWidth: 2, borderColor: 'white' }]}>
+                <MaterialCommunityIcons size={26} color={colors.white} name="qrcode-scan" />
               </CricleComponent>
 
               break
@@ -90,7 +90,7 @@ const TabNavigator = ({navigation}:any) => {
 
         },
         tabBarLabel({ focused }) {//Cấu hình hiện thị name
-          return route.name === 'Add' ? null : <TextComponent
+          return route.name === 'QrScan' ? null : <TextComponent
             text={nameTab[route.name]}
             styles={{ marginBottom: Platform.OS === 'android' ? 12 : 0 }}
             size={10}
@@ -109,9 +109,10 @@ const TabNavigator = ({navigation}:any) => {
           setIndex(1)
         }
       }}/>
-      <Tab.Screen name="Add" component={AddNewScreen} listeners={{
+      <Tab.Screen name="QrScan" component={QrScannerScreen} listeners={{
         tabPress: e => {
-         setWidth(0)
+         e.preventDefault();
+         navigation.navigate('QrScannerScreen')
         }
       }}/>
       <Tab.Screen name="Transaction" component={TransactionNavigator} listeners={{

@@ -9,46 +9,46 @@ import SpaceComponent from "./SpaceComponent";
 import { useSelector } from "react-redux";
 import { AuthState, authSelector } from "../reduxs/reducers/authReducers";
 import { colors } from "../constrants/color";
-import { Bookmark2, Calendar, Logout, Message2, MessageQuestion, Setting2, Sms, User } from "iconsax-react-native";
+import { Add, Bookmark2, Calendar, Logout, Message2, MessageQuestion, Setting2, Sms, User } from "iconsax-react-native";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {removeAuth } from "../reduxs/reducers/authReducers";
+import { removeAuth } from "../reduxs/reducers/authReducers";
 import { HandleNotification } from "../utils/handleNotification";
 import AvatarItem from "./AvatarItem";
-import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, } from '@react-native-google-signin/google-signin';
 
-const DrawerCustom = ({navigation}:any)=>{
-const user = useSelector(authSelector)
-const [isRemember,setIsReMember] = useState<boolean>(false)
-const [password,setPasswored] = useState('')
-const { getItem: getRememberItem } = useAsyncStorage('isRemember');
-const { getItem: getPasswordItem } = useAsyncStorage('password');
-const auth:AuthState = useSelector(authSelector)
-const dispatch = useDispatch()
+const DrawerCustom = ({ navigation }: any) => {
+  const user = useSelector(authSelector)
+  const [isRemember, setIsReMember] = useState<boolean>(false)
+  const [password, setPasswored] = useState('')
+  const { getItem: getRememberItem } = useAsyncStorage('isRemember');
+  const { getItem: getPasswordItem } = useAsyncStorage('password');
+  const auth: AuthState = useSelector(authSelector)
+  const dispatch = useDispatch()
   const size = 24
   const color = colors.gray
   const Menu = [
-    {key:'MyProfile',title:'Hồ sơ',icon:<User size={size} color={color}/>},
-    {key:'Message',title:'Tin nhắn',icon:<Message2 size={size} color={color}/>},
-    {key:'Calendar',title:'Lịch',icon:<Calendar size={size} color={color}/>},
-    {key:'Bookmark',title:'Đánh dấu',icon:<Bookmark2 size={size} color={color}/>},
-    {key:'Contactus',title:'Liên lạc',icon:<Sms size={size} color={color}/>},
-    {key:'Setting',title:'Cài đặt',icon:<Setting2  size={size} color={color}/>},
-    {key:'HelpAndFAQs',title:'Giúp đỡ',icon:<MessageQuestion size={size} color={color}/>},
-    {key:'SignOut',title:'Đăng xuất',icon:<Logout size={size} color={color}/>},
+    { key: 'MyProfile', title: 'Hồ sơ', icon: <User size={size} color={color} /> },
+    // { key: 'Message', title: 'Tin nhắn', icon: <Message2 size={size} color={color} /> },
+    // { key: 'Calendar', title: 'Lịch', icon: <Calendar size={size} color={color} /> },
+    { key: 'Bookmark', title: 'Đánh dấu', icon: <Bookmark2 size={size} color={color} /> },
+    // { key: 'Contactus', title: 'Liên lạc', icon: <Sms size={size} color={color} /> },
+    // { key: 'Setting', title: 'Cài đặt', icon: <Setting2 size={size} color={color} /> },
+    { key: 'AddEvent', title: 'Thêm sự kiện', icon: <Add size={size} color={color} /> },
+    { key: 'SignOut', title: 'Đăng xuất', icon: <Logout size={size} color={color} /> },
   ]
-  useEffect(()=>{
+  useEffect(() => {
     handleGetItem()
-  },[])
-  const handleGetItem = async ()=>{
+  }, [])
+  const handleGetItem = async () => {
     const res = await getRememberItem()
     const resPassword = await getPasswordItem()
     resPassword && setPasswored(resPassword)
     setIsReMember(res === 'true')
   }
   const handleLogout = async () => {
-    if(auth.loginMethod === 'google'){
+    if (auth.loginMethod === 'google') {
       GoogleSignin.signOut()//đăng xuất google
     }
     const fcmtoken = await AsyncStorage.getItem('fcmtoken')
@@ -72,49 +72,51 @@ const dispatch = useDispatch()
       dispatch(removeAuth())
     }
   }
-  const handleClickItemMenu = (key:string) => {
-      console.log(key)
-      switch (key){
-        case 'SignOut':
-          handleLogout()
-          break
-        case 'MyProfile':
-         console.log("profile")
-          break
-        default:
-          console.log("key",key)
-      }
+  const handleClickItemMenu = (key: string) => {
+    switch (key) {
+      case 'SignOut':
+        handleLogout()
+        break
+      case 'MyProfile':
+        console.log("profile")
+        break
+      case 'AddEvent':
+        navigation.navigate('AddEvent')
+        navigation.closeDrawer()
+        break
+      default:
+        console.log("key", key)
+    }
   }
 
   return (
     <View style={[localStyles.container]}>
-        <TouchableOpacity 
+      <TouchableOpacity
         activeOpacity={0.9}
-        onPress={()=>
-          {
-            navigation.closeDrawer()
-            navigation.navigate('Profile',{
-              screen:'ProfileScreen',
-              // params: { id: auth.id } 
-            })// screen chọn màn hỉnh để chuyển qua trong ProfileNavigator
-          }
-          }>
-             {
-              <AvatarItem size={52} photoUrl={user.photoUrl} notBorderWidth styles={{marginBottom:8}}/>
-            }
-            <TextComponent text={user?.fullname} title size={18}/>
-        </TouchableOpacity >
-        <FlatList 
+        onPress={() => {
+          navigation.closeDrawer()
+          navigation.navigate('Profile', {
+            screen: 'ProfileScreen',
+            // params: { id: auth.id } 
+          })// screen chọn màn hỉnh để chuyển qua trong ProfileNavigator
+        }
+        }>
+        {
+          <AvatarItem size={52} photoUrl={user.photoUrl} notBorderWidth styles={{ marginBottom: 8 }} />
+        }
+        <TextComponent text={user?.fullname} title size={18} />
+      </TouchableOpacity >
+      <FlatList
         showsVerticalScrollIndicator={false}
-        data={Menu} style={{marginVertical:20,flex:1}}
-            renderItem={({item,index})=>(
-              <RowComponent styles={[localStyles.listItem]} onPress={()=>handleClickItemMenu(item?.key)}>
-                {item?.icon}
-                <TextComponent styles={[localStyles.listItemText]} text={item?.title}/>
-              </RowComponent>
-              )}
-        />
-        {/* <RowComponent>
+        data={Menu} style={{ marginVertical: 20, flex: 1 }}
+        renderItem={({ item, index }) => (
+          <RowComponent styles={[localStyles.listItem]} onPress={() => handleClickItemMenu(item?.key)}>
+            {item?.icon}
+            <TextComponent styles={[localStyles.listItemText]} text={item?.title} />
+          </RowComponent>
+        )}
+      />
+      {/* <RowComponent>
             <TouchableOpacity style={[globalStyles.button,{backgroundColor:'#00F8FF22'}]}>
               <FontAwesome5 name="crown" size={22} color="#00F8FF"/>
               <SpaceComponent width={8}/>
@@ -127,22 +129,22 @@ const dispatch = useDispatch()
 export default DrawerCustom;
 
 const localStyles = StyleSheet.create({
-  container:{
-    padding:16,
-    paddingVertical :Platform.OS === 'android' ? StatusBar.currentHeight : 48,
-    flex:1
+  container: {
+    padding: 16,
+    paddingVertical: Platform.OS === 'android' ? StatusBar.currentHeight : 48,
+    flex: 1
   },
-  avartar:{
-    width:52,
-    height:52,
-    borderRadius:100,
-    marginBottom:12,justifyContent:'center',alignItems:'center'
+  avartar: {
+    width: 52,
+    height: 52,
+    borderRadius: 100,
+    marginBottom: 12, justifyContent: 'center', alignItems: 'center'
 
   },
-  listItem:{
-    paddingVertical:12
+  listItem: {
+    paddingVertical: 12
   },
-  listItemText:{
-    paddingLeft:12
+  listItemText: {
+    paddingLeft: 12
   }
 })

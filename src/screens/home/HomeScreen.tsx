@@ -463,7 +463,7 @@ const HomeScreen = ({ navigation, route }: any) => {
           <RowComponent styles={{ flex: 1}}
             onPress={() => navigation.navigate('SearchEventsScreen', {
             })}>
-            <SearchNormal size={20} variant="TwoTone" color={colors.white} />
+            <SearchNormal size={20} color={colors.white} />
             {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
             <SpaceComponent width={12}/>
             <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />

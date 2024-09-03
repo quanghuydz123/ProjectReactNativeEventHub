@@ -25,6 +25,7 @@ import HomeFriendsScreen from "./friends/HomeFriendsScreen"
 import ListFriendsScreen from "./friends/ListFriendsScreen"
 import FindFriendScreen from "./friends/FindFriendScreen"
 import SearchFriendScreen from "./friends/SearchFriendScreen"
+import QrScannerScreen from "./QrScannerScreen"
 
 export {
     HomeScreen,
@@ -53,5 +54,6 @@ export {
     HomeFriendsScreen,
     ListFriendsScreen,
     FindFriendScreen,
-    SearchFriendScreen
+    SearchFriendScreen,
+    QrScannerScreen
 }
