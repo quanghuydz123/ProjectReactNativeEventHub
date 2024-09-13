@@ -281,10 +281,10 @@ const auth = useSelector(authSelector)
         </RowComponent>
       </SectionComponent>
       {
-        <DataLoaderComponent data={result} isLoading={isLoading} 
+        <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent items={result} follows={allFollower} />
+              <ListEventComponent  items={result} follows={allFollower} />
 
             }/>
         

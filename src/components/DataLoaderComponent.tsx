@@ -10,13 +10,14 @@ interface Props { // phải định nghĩa ra trước
     isLoading:boolean,
     data:any,
     messageEmpty?:string,
-    height?:number
+    height?:number,
+    isFlex?:boolean
     
 }
 const DataLoaderComponent = (props: Props) => {
-    const {children,isLoading,data ,messageEmpty , height} = props
+    const {children,isLoading,data ,messageEmpty , height,isFlex} = props
     console.log("data && data?.length > 0)",data?.length)
-    return <View>
+    return <View style={{flex:isFlex ? 1 : 0}}>
     {
         isLoading  ? <LoadingComponent isLoading={isLoading} value={data?.length || 0} height={height}/> 
         : (data && data?.length > 0) ?  children : <EmptyComponent message={messageEmpty ?? "Không có dữ liệu"} height={height}/>

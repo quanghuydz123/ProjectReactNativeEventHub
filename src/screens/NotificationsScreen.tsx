@@ -1,6 +1,6 @@
-import { ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View } from "react-native"
-import React, { useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../components";
+import { ActivityIndicator, Button, FlatList, RefreshControl, Text, TouchableOpacity, View } from "react-native"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { ButtonComponent, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../components";
 import { globalStyles } from "../styles/globalStyles";
 import { useSelector } from "react-redux";
 import { authSelector } from "../reduxs/reducers/authReducers";
@@ -30,10 +30,11 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   const [isFirst, setIsFirst] = useState(false)
   const [toggle, setToggle] = useState(false)
   const [notificationSelected, setSotificationSelected] = useState<NotificationModel>()
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    // if(!notifications){
-    //   handleCallAPIGetNotifications()
-    // }
+    if(!notifications){
+      handleCallAPIGetNotifications()
+    }
     handleCallAPIUpdateIsViewdNotifications()
     // handleCallAPIGetNotifications(true)
   }, [])
@@ -140,13 +141,13 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         return (
           <RowComponent>
 
-            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius:5, paddingVertical: 10,width:appInfo.sizes.WIDTH*0.32 }}
+            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32 }}
               onPress={() => handleComfirmNofitication(notification)}
             />
             <SpaceComponent width={20} />
 
             <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
-              styles={{ minHeight: 20,width:appInfo.sizes.WIDTH*0.32, borderRadius:5,paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
+              styles={{ minHeight: 20, width: appInfo.sizes.WIDTH * 0.32, borderRadius: 5, paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
           </RowComponent>
         )
       case 'answered':
@@ -299,20 +300,35 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         )
     }
   }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    console.log("ok")
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   return (
     <ContainerComponent back title="Thông báo">
       {
-        !isLoading && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0 }}>
+        !isLoading && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0, flex: 1 }}>
           <TextComponent text={'Trước đó'} title size={16} styles={{ paddingHorizontal: 12 }} />
           <SpaceComponent height={8} />
+          <DataLoaderComponent isFlex data={notifications} isLoading={isLoading}
+            messageEmpty="Không có sự kiện nào phù hợp"
+            children={
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                data={notifications}
+                renderItem={({ item, index }) => renderNofitications(item)}
 
-          <FlatList
-            contentContainerStyle={{ paddingBottom: 16 }}
-            showsVerticalScrollIndicator={false}
-            data={notifications}
-            renderItem={({ item, index }) => renderNofitications(item)}
+              />
 
-          />
+            } />
+
 
         </SectionComponent> : <SectionComponent styles={[globalStyles.center, { flex: 1 }]}>
           <TextComponent text={'Không có thông báo nào'} />

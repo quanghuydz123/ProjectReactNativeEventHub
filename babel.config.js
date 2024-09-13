@@ -15,4 +15,9 @@ module.exports = {
       verbose: false,
     },]
   ],
+  env: {
+    production: {
+      plugins: ['react-native-paper/babel'],
+    },
+  },
 };

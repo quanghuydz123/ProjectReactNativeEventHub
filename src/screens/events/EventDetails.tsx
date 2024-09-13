@@ -170,10 +170,10 @@ const EventDetails = ({ navigation, route }: any) => {
     }}>
       <ImageBackground style={{
         flex: 1,
-        height: 260,
+        height: appInfo.sizes.HEIGHT*0.315,
       }} imageStyle={{
         resizeMode: 'stretch',
-        height: 260,
+        height: appInfo.sizes.HEIGHT*0.315,
         width: appInfo.sizes.WIDTH,
       }} source={{ uri: event?.photoUrl ?? 'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg' }}>
         <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
@@ -189,6 +189,16 @@ const EventDetails = ({ navigation, route }: any) => {
               </TouchableOpacity>
               <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
             </RowComponent>
+            <CardComponent onPress={() => console.log("ok")} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+              {
+                <FontAwesome
+                  size={22}
+                  name="heart-o"
+                  
+                />
+              }
+            </CardComponent>
+            <SpaceComponent width={8}/>
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 event?._id && <FontAwesome
@@ -198,6 +208,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 />
               }
             </CardComponent>
+            
           </RowComponent>
         </LinearGradient>
         <View style={{

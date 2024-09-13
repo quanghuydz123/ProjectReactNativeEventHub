@@ -38,15 +38,21 @@ const QrScannerScreen = ({ navigation }: any) => {
     }
   };
   const handleQrScanner = (data:any)=>{
-    const type = data?.type
-    switch (type){
-      case 'event':
-        const dataEvent:{type:string,idEvent:string} = data
-        navigation.navigate('EventDetails', { id: dataEvent?.idEvent })
-        break
-      default:
-        ToastAndroid.show('Qr chả có tác dụng gì', ToastAndroid.SHORT);
-        break
+    try {
+      const dataParse = JSON.parse(data)
+      const type = dataParse?.type
+      switch (type){
+        case 'event':
+          const dataEvent:{type:string,idEvent:string} = dataParse
+          navigation.navigate('EventDetails', { id: dataEvent?.idEvent })
+          break
+        default:
+          ToastAndroid.show('Qr chả có tác dụng gì', ToastAndroid.SHORT);
+          break
+      }
+    } catch (error) {
+      ToastAndroid.show('Mã Qr không hợp lệ', ToastAndroid.SHORT);
+
     }
   }
   const PendingAuthorizationViewComponent = ()=>{
@@ -63,7 +69,7 @@ const QrScannerScreen = ({ navigation }: any) => {
     <View style={{}}>
      { <QRCodeScanner
       
-        onRead={({ data }) => handleQrScanner(JSON.parse(data))}
+        onRead={({ data }) => handleQrScanner(data)}
         // flashMode={RNCamera.Constants.FlashMode.torch}
         reactivate={true}
         reactivateTimeout={500}

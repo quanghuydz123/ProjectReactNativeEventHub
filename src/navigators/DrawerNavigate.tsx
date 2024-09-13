@@ -8,20 +8,35 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { AboutProfile, EventDetails } from "../screens"
 import { useStatusBar } from "../hooks/useStatusBar"
 import { ToastMessaging } from "../utils/showToast"
+import { Snackbar } from "react-native-paper"
+import { appInfo } from "../constrants/appInfo"
 
 const DrawerNavigate = ({ navigation }: any) => {
   const Drawer = createDrawerNavigator()
   const [count, setCount] = useState(0)
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
+  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout | null>(null)
+  const [visible, setVisible] = useState(false);
+  const onToggleSnackBar = () => setVisible(true);
+  const onDismissSnackBar = () => setVisible(false);
+  const resetTimeOut = () => {
+    if (timeOutId) {
+      clearTimeout(timeOutId);
+    }
+    const newInterval = setTimeout(() => {
+      setCount(0);
+    }, 4000);
+    setTimeOutId(newInterval);
+  };
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setTimeout(() => {
       setCount(0)
-    }, 3000);
-    setIntervalId(interval);
+    }, 4000);
+    setTimeOutId(interval);
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      if (timeOutId) clearTimeout(timeOutId);
     };
   }, [])
+
   const handleBackButtonClick = () => {
     const state = navigation.getState();
     const routes = state.routes;
@@ -34,8 +49,10 @@ const DrawerNavigate = ({ navigation }: any) => {
       if (count >= 1) {
         BackHandler.exitApp();
       } else {
-        ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
+        // ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
+        onToggleSnackBar()
         setCount(prev => prev + 1)
+        resetTimeOut()
       }
     }
     return true;
@@ -49,15 +66,33 @@ const DrawerNavigate = ({ navigation }: any) => {
     };
   }, [count]);
   return (
-    <Drawer.Navigator screenOptions={{
-      headerShown: false,
-      drawerPosition: 'left',
-    }}
-      drawerContent={props => <DrawerCustom {...props} />} // cấu hình giao diện cho drawer
-    >
-      <Drawer.Screen name="HomeNavigator" component={TabNavigator} />
-
-    </Drawer.Navigator>
+    <>
+      <Drawer.Navigator screenOptions={{
+        headerShown: false,
+        drawerPosition: 'left',
+      }}
+        drawerContent={props => <DrawerCustom {...props} />} // cấu hình giao diện cho drawer
+      >
+        <Drawer.Screen name="HomeNavigator" component={TabNavigator} />
+      </Drawer.Navigator>
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        // action={{
+        //   label: 'Undo',
+        //   onPress: () => {
+        //     // Do something
+        //   },
+        // }}
+        duration={3000}
+        style={{
+          position:'absolute',
+          bottom:appInfo.sizes.HEIGHT*0.07
+        }}
+        >
+        Nhấn lần nữa để thoát
+      </Snackbar>
+    </>
   )
 }
 export default DrawerNavigate;

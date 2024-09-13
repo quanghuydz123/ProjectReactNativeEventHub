@@ -36,9 +36,20 @@ const EventItem = (props: Props) => {
         isShownHorizontal ? <>
           <RowComponent>
             <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'stretch' }} />
+            <View style={{
+              position:'absolute',
+              top:6,
+              left:80
+            }}>
+              {
+                followers &&
+                followers.length > 0 && followers.filter(item => item?.user?._id === auth.id)[0]?.events.some(event => event?._id === item?._id)
+                && <FontAwesome name="bookmark" size={18} color={colors.white} />
+              }
+            </View>
             <SpaceComponent width={12} />
             <View style={{ height: '100%', flex: 1 }}>
-              <RowComponent justify="space-between" styles={{ marginRight: 12 }}>
+              <RowComponent justify="space-between" styles={{ }}>
                 <RowComponent>
                   {/* <Location size={18} color={colors.gray2} variant="Bold" />
                 <SpaceComponent width={4} /> */}
@@ -48,12 +59,25 @@ const EventItem = (props: Props) => {
                     <SpaceComponent width={2} />
                     <TextComponent text={'123'} size={12} color={colors.primary} />
                   </RowComponent> */}
+                  <RowComponent>
+                    <FontAwesome name="heart" color={colors.primary} size={16} />
+                    <SpaceComponent width={2} />
+                    <TextComponent text={'78654'} size={12} color={colors.primary} />
+                  </RowComponent>
+                  <SpaceComponent width={4} />
+                  <RowComponent>
+                    <FontAwesome name="eye" color={colors.primary} size={16} />
+                    <SpaceComponent width={2} />
+                    <TextComponent text={'78654'} size={12} color={colors.primary} />
+                  </RowComponent>
+                  <SpaceComponent width={4} />
+
                 </RowComponent>
-                {
+                {/* {
                   followers &&
                   followers.length > 0 && followers.filter(item => item?.user?._id === auth.id)[0]?.events.some(event => event?._id === item?._id)
                   && <FontAwesome name="bookmark" size={22} color={colors.primary} />
-                }
+                } */}
 
               </RowComponent>
               <TextComponent numberOfLine={2} text={item.title} title size={16} />
@@ -77,16 +101,13 @@ const EventItem = (props: Props) => {
                   ))
                 }
               </RowComponent>
+
               {
                 (item.users && item.users.length > 0) && <AvatarGroup users={item.users} />
               }
-              <RowComponent styles={{justifyContent:'space-between'}}>
+              <RowComponent styles={{ justifyContent: 'space-between' }}>
                 <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} size={12} />
-                <RowComponent>
-                  <FontAwesome name="eye" color={colors.primary} size={16} />
-                  <SpaceComponent width={2} />
-                  <TextComponent text={'0'} size={12} color={colors.primary} />
-                </RowComponent>
+
               </RowComponent>
             </View>
           </RowComponent>
@@ -144,9 +165,15 @@ const EventItem = (props: Props) => {
                 color={colors.text2} flex={1}
               />
               <RowComponent>
+                <FontAwesome name="heart" color={colors.primary} size={16} />
+                <SpaceComponent width={2} />
+                <TextComponent text={'99999'} size={12} color={colors.primary} />
+              </RowComponent>
+              <SpaceComponent width={4} />
+              <RowComponent>
                 <FontAwesome name="eye" color={colors.primary} size={16} />
                 <SpaceComponent width={2} />
-                <TextComponent text={'0'} size={12} color={colors.primary} />
+                <TextComponent text={'99999'} size={12} color={colors.primary} />
               </RowComponent>
             </RowComponent>
           </>

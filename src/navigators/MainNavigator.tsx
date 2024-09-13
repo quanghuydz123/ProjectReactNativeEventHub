@@ -93,7 +93,6 @@ const MainNavigator = ({navigation}:any) => {
   return (
     <>
       <Stack.Navigator screenOptions={{ headerShown: false }}
-
       >
         <Stack.Screen name="Main" component={DrawerNavigate} />
         <Stack.Screen name="EventDetails" component={EventDetails} />
