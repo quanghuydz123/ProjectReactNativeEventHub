@@ -1,9 +1,10 @@
+import { RoleModel } from "./RoleModel"
+
 export interface UserModel {
     _id: string
     fullname: string
     email: string
     password: string
-    isAdmin: boolean
     photoUrl?:string
     phoneNumber?:string,
     bio?:string
@@ -12,6 +13,7 @@ export interface UserModel {
       lat:number,
       lng:number
     }
+    idRole:RoleModel
     createAt: string
     updateAt: string
     __v: number

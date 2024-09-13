@@ -2,7 +2,7 @@ import userAPI from "../apis/userApi";
 import { apis } from "../constrants/apis";
 
 export class UserHandleCallAPI{
-    static getAll= async(setData:any,setIsLoading?:boolean)=>{
+    static getAll = async(setData:any,setIsLoading?:boolean)=>{
         const api = apis.user.getAll()
         try {
           const res:any = await userAPI.HandleUser(api, {}, 'get');

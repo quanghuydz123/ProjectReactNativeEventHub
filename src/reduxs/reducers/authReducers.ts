@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RoleModel } from "../../models/RoleModel";
 
 export interface AuthState {
     id: string,
     email: string,
     accesstoken: string,
     fullname: string,
-    isAdmin: boolean,
     photoUrl: string,
     numberPhone:string,
     bio:string,
     fcmTokens:string[],
     loginMethod:'google' | 'account' | ''
+    role:RoleModel
     position: {
         lat: number,
         lng: number
@@ -22,12 +23,16 @@ const initialState: AuthState = {
     email: '',
     accesstoken: '',
     fullname: '',
-    isAdmin: false,
     numberPhone:'',
     bio:'',
     photoUrl: '',
     loginMethod:'',
     fcmTokens:[],
+    role:{
+        _id:'',
+        key:'',
+        name:''
+    },
     position: {
         lat: 0,
         lng: 0

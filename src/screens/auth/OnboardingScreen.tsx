@@ -15,13 +15,13 @@ const OnboardingScreen = ({navigation}: any)=>{
         activeDotColor={colors.white}
         index={index}
         >
-            <Image source={require('../../assets/images/Onboarding1.png')}
+            <Image source={require('../../assets/images/ob1.jpg')}
             style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
             />
-             <Image source={require('../../assets/images/Onboarding2.png')}
+             <Image source={require('../../assets/images/ob2.jpg')}
             style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
             />
-             <Image source={require('../../assets/images/Onboarding3.png')}
+             <Image source={require('../../assets/images/ob3.jpg')}
             style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
             />
         </Swiper>
@@ -40,10 +40,10 @@ const OnboardingScreen = ({navigation}: any)=>{
         >
          
             <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-              <TextComponent text="Skip" color={colors.gray2} font={fontFamilies.medium}/>
+              <TextComponent text="Skip" color={colors.danger2} font={fontFamilies.medium}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => index < 2 ? setIndex(prev => prev+1) : navigation.navigate('LoginScreen')}>
-              <TextComponent text="Next" color={colors.white} font={fontFamilies.medium}/>
+              <TextComponent text="Next" color={colors.danger2} font={fontFamilies.medium}/>
             </TouchableOpacity>
         </View>
     </View>

@@ -78,7 +78,7 @@ const VerificationScreen = ({ navigation, route }: any) => {
       } else {
         const api = apis.auth.register()
         const data = {
-          email, password, username: username ?? 'Người dùng', isAdmin: false
+          email, password, username: username ?? 'Người dùng', idRole: '66c523b677cc482c91fcaa61'
         }
         try {
           const res = await authenticationAPI.HandleAuthentication(api, data, 'post')

@@ -78,7 +78,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   const scrollDirection = useRef('');
  
   
-  
   // const maxHeight = animatedValue.interpolate({
   //   inputRange: [0, LOWER_HEADER_HEIGHT],
   //   outputRange: [96,0],
@@ -350,7 +349,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await notificationAPI.HandleNotification(api)
       if (res && res.data && res.status === 200) {
-        console.log("res.data.notificatios", res.data.notifications.length)
+        // console.log("res.data.notificatios", res.data.notifications.length)
         setNotifications(res.data.notifications)
         await handleCheckViewedNotifications(res.data.notifications)
       }

@@ -87,7 +87,7 @@ const DrawerNavigate = ({ navigation }: any) => {
         duration={3000}
         style={{
           position:'absolute',
-          bottom:appInfo.sizes.HEIGHT*0.07
+          bottom:appInfo.sizes.HEIGHT*0.065
         }}
         >
         Nhấn lần nữa để thoát
