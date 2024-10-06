@@ -1,5 +1,6 @@
 export const colors ={
     primary:'#AF0C6E',
+    primaryLight:'#FFD6E7',
     white:'#FFFFFF',
     white2:'#fcfcfc',
     colorText:'#120D26',
@@ -10,6 +11,7 @@ export const colors ={
     gray4:'#9D9898',
     gray5:"#D9D9D9",
     gray6:'#FAFAFA',
+    gray7:'#e9e9e9',
     link:'#5669FF',
     danger:'#e74c3c',
     danger2:'#F0635A',

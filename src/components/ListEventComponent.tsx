@@ -29,7 +29,7 @@ const ListEventComponent = (props:Props)=>{
       // refreshControl={
       //   <RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />
       // }
-      renderItem={({item})=><EventItem followers={follows} item={item} key={item._id} isShownHorizontal/>}/>
+      renderItem={({item})=><EventItem followers={follows} item={item} key={item._id} isShownVertical/>}/>
     </View>
   )
 }

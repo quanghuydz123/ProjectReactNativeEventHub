@@ -1,6 +1,6 @@
 import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from "../../components";
+import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
@@ -31,6 +31,7 @@ import { apis } from "../../constrants/apis";
 import notificationAPI from "../../apis/notificationAPI";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { ToastMessaging } from "../../utils/showToast";
+import { useStatusBar } from "../../hooks/useStatusBar";
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
@@ -45,6 +46,9 @@ const EventDetails = ({ navigation, route }: any) => {
   const [allUser, setAllUser] = useState<UserModel[]>([])
   const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
   const [event, setEvent] = useState<EventModelNew>(item)
+  const [isInterested, setIsInterested] = useState(false)
+  useStatusBar('light-content')
+
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
     if (!event) {
@@ -105,7 +109,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.data.event && res.status === 200) {
-          socket.emit("followers",{id:auth.id});
+          socket.emit("followers", { id: auth.id });
           handleCallApiGetAllFollower()
         }
       } catch (error: any) {
@@ -149,8 +153,8 @@ const EventDetails = ({ navigation, route }: any) => {
     if (event?._id) {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
       try {
-        const res = await notificationAPI.HandleNotification(api, { SenderID:auth.id,RecipientIds: userSelected, eventId: event?._id }, 'post')
-        if(res && res.status===200 && res.data){
+        const res = await notificationAPI.HandleNotification(api, { SenderID: auth.id, RecipientIds: userSelected, eventId: event?._id }, 'post')
+        if (res && res.status === 200 && res.data) {
           socket.emit('getNotifications')
         }
       } catch (error: any) {
@@ -168,37 +172,38 @@ const EventDetails = ({ navigation, route }: any) => {
       flex: 1,
       backgroundColor: colors.white
     }}>
-      <ImageBackground style={{
+      <ImageBackground style={[{
         flex: 1,
-        height: appInfo.sizes.HEIGHT*0.315,
-      }} imageStyle={{
+        height: appInfo.sizes.HEIGHT * 0.315,
+
+      }]} imageStyle={[{
         resizeMode: 'stretch',
-        height: appInfo.sizes.HEIGHT*0.315,
+        height: appInfo.sizes.HEIGHT * 0.315,
         width: appInfo.sizes.WIDTH,
-      }} source={{ uri: event?.photoUrl ?? 'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg' }}>
-        <LinearGradient colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}>
-          <RowComponent styles={{
+      }]} source={{ uri: event?.photoUrl ?? 'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg' }}>
+        <LinearGradient colors={['rgba(0,0,0,0.4)', 'rgba(0,0,0,0)']}>
+          <RowComponent styles={[{
             padding: 16,
             paddingTop: 30,
-          }} justify="space-between" >
+          }]} justify="space-between" >
             <RowComponent styles={{ flex: 1 }}>
               <TouchableOpacity onPress={() => navigation.goBack()}
                 style={{ minHeight: 48, minWidth: 48, justifyContent: 'center' }}
               >
                 <ArrowLeft size={24} color={colors.white} />
               </TouchableOpacity>
-              <TextComponent flex={1} text="Chi tiết sự kiện" size={24} title color={colors.white} />
+              {/* <TextComponent flex={1} text="Chi tiết sự kiện" size={20} title color={colors.white} /> */}
             </RowComponent>
-            <CardComponent onPress={() => console.log("ok")} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+            {/* <CardComponent onPress={() => console.log("ok")} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 <FontAwesome
                   size={22}
                   name="heart-o"
-                  
+
                 />
               }
             </CardComponent>
-            <SpaceComponent width={8}/>
+            <SpaceComponent width={8} /> */}
             <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 event?._id && <FontAwesome
@@ -208,39 +213,86 @@ const EventDetails = ({ navigation, route }: any) => {
                 />
               }
             </CardComponent>
-            
+
           </RowComponent>
         </LinearGradient>
         <View style={{
           flex: 1,
-          paddingTop: 244 - 102,
-          
+          paddingTop: 244 - 80,
+
         }}>
-          <SectionComponent styles={{paddingBottom:0,paddingHorizontal:12}}>
+          <SectionComponent styles={{ paddingBottom: 0, paddingHorizontal: 12 }}>
             <View style={{
               marginTop: 0,
               justifyContent: 'center',
               alignItems: 'center',
 
             }}>
-              <RowComponent styles={[{
+              {/* <RowComponent styles={[{
                 backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: event?.users && event?.users?.length > 0 ? 12 : 0,
                 width: '96%'
               }, globalStyles.shadow]}>
                 <AvatarGroup size={36} isShowButton users={event?.users} onPressInvity={(event: any) => { event.persist(), setIsOpenModalizeInityUser(true) }} />
-              </RowComponent>
+              </RowComponent> */}
             </View>
           </SectionComponent>
-          <SpaceComponent height={8}/>
+          <SpaceComponent height={8} />
           <ScrollView
 
             onScroll={handleScroll}
             showsVerticalScrollIndicator={false}
           >
-            <SectionComponent>
-              <TextComponent text={event?.title ?? ''} title size={30} font={fontFamilies.semiBold} />
+            <SectionComponent styles={{ paddingBottom: 4, paddingTop: 8 }}>
+              <View style={{
+                justifyContent: 'space-around',
+              }}>
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} font={fontFamilies.medium} size={15} color={colors.blue} />
+
+                {/* <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} font={fontFamilies.medium} size={16}/>
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} /> */}
+
+              </View>
             </SectionComponent>
-            <SectionComponent>
+            <SectionComponent styles={{ paddingBottom: 4 }}>
+              <TextComponent text={event?.title ?? ''} title size={30} font={fontFamilies.medium} />
+            </SectionComponent>
+            <SectionComponent styles={{ paddingBottom: 26 }}>
+              <RowComponent>
+                <AvatarItem photoUrl={event?.authorId?.photoUrl} size={24} />
+                <SpaceComponent width={6} />
+                <TextComponent text={`Được tổ chức bởi ${event?.authorId?.fullname}`} font={fontFamilies.medium} />
+              </RowComponent>
+            </SectionComponent>
+            <SectionComponent styles={{ paddingBottom: 0 }}>
+              <RowComponent justify="center" >
+                <ButtonComponent
+                  text={isInterested ? 'Đã quan tâm' : 'Quan tâm'}
+                  textFont={'12'} type="primary"
+                  width={appInfo.sizes.WIDTH * 0.45}
+                  color={colors.white}
+                  textColor={colors.primary}
+                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
+                  icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.primary} />}
+                  iconFlex="left"
+                  onPress={() => setIsInterested(!isInterested)}
+                />
+
+                <SpaceComponent width={8} />
+                <ButtonComponent
+                  text={'Mời bạn bè'}
+                  textFont={'12'}
+                  type="primary"
+                  width={appInfo.sizes.WIDTH * 0.45}
+                  color={colors.white}
+                  textColor={colors.primary}
+                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
+                  icon={<Ionicons name="person-add" size={16} color={colors.primary} />}
+                  iconFlex="left"
+                  onPress={() => { setIsOpenModalizeInityUser(true) }}
+                />
+              </RowComponent>
+            </SectionComponent>
+            {/* <SectionComponent>
               <RowComponent>
                 <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
                   <MaterialIcons size={30} color={colors.primary} name="attach-money" />
@@ -261,8 +313,8 @@ const EventDetails = ({ navigation, route }: any) => {
 
                 </View>
               </RowComponent>
-            </SectionComponent>
-            <SectionComponent>
+            </SectionComponent> */}
+            {/* <SectionComponent>
               <RowComponent>
                 <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
                   <Calendar size={30} color={colors.primary} variant="Bold" />
@@ -276,8 +328,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
                 </View>
               </RowComponent>
-            </SectionComponent>
-            <SectionComponent>
+            </SectionComponent> */}
+            {/* <SectionComponent>
               <RowComponent>
                 <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
                   <Ionicons size={30} color={colors.primary} name="location-sharp" />
@@ -297,7 +349,7 @@ const EventDetails = ({ navigation, route }: any) => {
             <SectionComponent>
               <RowComponent onPress={() => {
                 if (event?.authorId?._id === auth.id) {
-                  {ToastMessaging.Warning({message:'Đó là bạn mà',visibilityTime:2000})}
+                  { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
                 }
                 else {
                   navigation.navigate("AboutProfileScreen", { uid: event?.authorId?._id })
@@ -314,22 +366,111 @@ const EventDetails = ({ navigation, route }: any) => {
                   <TextComponent text="Đơn vị tổ chức" color={colors.gray} />
                 </View>
               </RowComponent>
+            </SectionComponent> */}
+            <SectionComponent styles={{ paddingVertical: 0 }} isSpace mgSpaceTop={10}>
+              <AvatarGroup users={event.users} size={40} />
             </SectionComponent>
-            <TabBarComponent title={'Thông tin sự kiện'} />
-            <SectionComponent>
+
+            <TabBarComponent title={'Giới thiệu sự kiện'} textSizeTitle={18} />
+            <SectionComponent isSpace mgSpaceTop={20}>
+              <RowComponent styles={{ flexWrap: 'wrap' }}>
+                {
+                  item.categories.map((category, index) => (
+                    <View style={{}} key={category?._id}>
+                      <TagComponent
+                        bgColor={colors.primaryLight}
+                        label={category.name}
+                        textSize={12}
+                        textColor={colors.colorText}
+
+                        styles={{
+                          minWidth: 50,
+                          paddingVertical: 6,
+                          paddingHorizontal: 20,
+                          marginRight: index === item.categories.length - 1 ? 28 : 8,
+                          borderWidth: 1,
+                          borderColor: colors.primary
+                        }}
+                      />
+                    </View>
+                  ))
+                }
+              </RowComponent>
+              <SpaceComponent height={8} />
               <TextComponent text={event?.description ? event.description : ''} />
 
+            </SectionComponent >
+            {/* <TabBarComponent title={'Ngày diễn ra'} textSizeTitle={18} />
+            <SectionComponent isSpace mgSpaceTop={20}>
+              <TextComponent text={'abc'} />
+
+            </SectionComponent> */}
+            <TabBarComponent title={'Ví trí tổ chức'} textSizeTitle={18} />
+            <SectionComponent isSpace mgSpaceTop={20}>
+              <RowComponent styles={{alignItems:'flex-start'}}>
+                <Ionicons size={24} color={colors.primary} name="location-sharp" />
+                <SpaceComponent width={4}/>
+                <View style={{flex:1}}>
+                  <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
+                  <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
+                </View>
+              </RowComponent>
             </SectionComponent>
+
+            <TabBarComponent title={'Đơn vị tổ chức'} textSizeTitle={18} />
+            <SectionComponent isSpace mgSpaceTop={20}>
+              <AvatarItem
+                photoUrl={event?.authorId?.photoUrl}
+                size={100}
+                textName={event?.authorId?.fullname}
+                sizeName={18}
+                onPress={() => {
+                  if (event?.authorId?._id === auth.id) {
+                    { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
+                  }
+                  else {
+                    navigation.navigate("AboutProfileScreen", { uid: event?.authorId?._id })
+                  }
+                }}
+              />
+              <SpaceComponent height={8} />
+              <RowComponent justify="center" >
+                <ButtonComponent
+                  text={'Theo dõi'}
+                  textFont={'12'} type="primary"
+                  width={appInfo.sizes.WIDTH * 0.4}
+                  color={colors.white}
+                  textColor={colors.primary}
+                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
+                  icon={<FontAwesome name={'star'} size={16} color={colors.primary} />}
+                  iconFlex="left"
+                />
+
+                <SpaceComponent width={12} />
+                <ButtonComponent
+                  text={'Nhắn tin'}
+                  textFont={'12'}
+                  type="primary"
+                  width={appInfo.sizes.WIDTH * 0.4}
+                  color={colors.white}
+                  textColor={colors.primary}
+                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
+                  icon={<AntDesign name="message1" size={22} color={colors.primary} />}
+                  iconFlex="left"
+                />
+              </RowComponent>
+            </SectionComponent>
+            <SpaceComponent height={20} />
           </ScrollView>
         </View>
       </ImageBackground>
       {
         event?.price && <RowComponent justify="space-between">
-        <TouchableOpacity style={{flex:1,alignItems:'center',backgroundColor:colors.primary,paddingVertical:4}} onPress={() => handleCreateBillPaymentEvent()}>
-          <TextComponent text={'Mua vé ngay'} size={12} color={colors.white}/>
-          <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white}/>
-        </TouchableOpacity>
-      </RowComponent>
+          <TouchableOpacity style={{ flex: 1, alignItems: 'center', backgroundColor: colors.primary, paddingVertical: 4 }} onPress={() => handleCreateBillPaymentEvent()}>
+            <TextComponent text={'Mua vé ngay'} size={12} color={colors.white} />
+            <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white} />
+          </TouchableOpacity>
+        </RowComponent>
       }
       {/* {
         isAtEnd ?

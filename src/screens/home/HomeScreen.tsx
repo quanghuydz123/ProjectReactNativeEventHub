@@ -42,13 +42,16 @@ import { ToastMessaging } from '../../utils/showToast';
 import socket from '../../utils/socket';
 import axios from 'axios';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { appInfo } from '../../constrants/appInfo';
 import Swiper from 'react-native-swiper';
-import { Platform,PermissionsAndroid } from 'react-native';
+import { Platform, PermissionsAndroid } from 'react-native';
 import { Screen } from 'react-native-screens';
+import { useStatusBar } from '../../hooks/useStatusBar';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
+const AnimatedFontAwesome = Animated.createAnimatedComponent(FontAwesome)
+const AnimatedMaterialIcons = Animated.createAnimatedComponent(MaterialIcons)
 
 const UPPER_HEADER_HEIGHT = 44;
 const UPPER_HEADER_PADDING_TOP = 4;
@@ -71,13 +74,14 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
   const [isShowMoney, setIsShowMoney] = useState(true)
   const auth = useSelector(authSelector)
+  useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
- 
-  
+
+
   // const maxHeight = animatedValue.interpolate({
   //   inputRange: [0, LOWER_HEADER_HEIGHT],
   //   outputRange: [96,0],
@@ -345,7 +349,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     setIsViewNotifications(!isCheck)
   }
   const handleCallAPIGetNotifications = async () => {
-    const api = apis.notification.getNotificationsById({idUser:auth.id})
+    const api = apis.notification.getNotificationsById({ idUser: auth.id })
     try {
       const res: any = await notificationAPI.HandleNotification(api)
       if (res && res.data && res.status === 200) {
@@ -411,7 +415,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
   const featureIconCircleCustomAnimation = {
     backgroundColor: animatedValue.interpolate({
-      inputRange: [0, 25],
+      inputRange: [0, 50],
       outputRange: ['rgb(255, 255, 255)', 'rgb(175, 12, 110)'],
       extrapolate: 'clamp',
     })
@@ -459,12 +463,12 @@ const HomeScreen = ({ navigation, route }: any) => {
               style={[styles.searchInput, textInputAnimation]}
             />
           </View> */}
-          <RowComponent styles={{ flex: 1}}
+          <RowComponent styles={{ flex: 1 }}
             onPress={() => navigation.navigate('SearchEventsScreen', {
             })}>
             <SearchNormal size={20} color={colors.white} />
             {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
-            <SpaceComponent width={12}/>
+            <SpaceComponent width={12} />
             <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />
           </RowComponent>
           <SpaceComponent width={16} />
@@ -509,7 +513,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               </View>
             }
           </TouchableOpacity>
-          
+
         </View>
         {/* <Animated.View style={[{backgroundColor:'white',flexDirection:'row',alignItems:'center',},featureTestAnimation]}>
           <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}
@@ -521,31 +525,29 @@ const HomeScreen = ({ navigation, route }: any) => {
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
-            <Animated.Image
-              source={require('../../assets/images/momo/deposit.png')}
-              style={[styles.featureIcon, featureIconAnimation]}
-            />
-            <Animated.Image
-              source={require('../../assets/images/momo/deposit-circle.png')}
-              style={[styles.icon32, featureIconCircleAnimation]}
-            />
-            <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              NẠP TIỀN
-            </Animated.Text>
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+              <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+                featureIconAnimation={featureIconCircleCustomAnimation}
+                onPress={() => navigation.navigate('FriendsScreen')}
+              >
+                <AnimatedMaterialIcons name='bookmark-added' size={20} color={colors.primary} style={[featureIconCustomAnimation]} />
+              </CricleComponent>
+              <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                SỰ KIỆN LƯU
+              </Animated.Text>
+            </TouchableOpacity>
           </Animated.View>
 
           <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-            <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => console.log("123123")}>
-              <Animated.Image
-                source={require('../../assets/images/momo/withdraw.png')}
-                style={[styles.featureIcon, featureIconAnimation]}
-              />
-              <Animated.Image
-                source={require('../../assets/images/momo/withdraw-circle.png')}
-                style={[styles.icon32, featureIconCircleAnimation]}
-              />
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+              <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+                featureIconAnimation={featureIconCircleCustomAnimation}
+                onPress={() => navigation.navigate('FriendsScreen')}
+              >
+                <AnimatedFontAwesome name='ticket' size={18} color={colors.primary} style={[featureIconCustomAnimation]} />
+              </CricleComponent>
               <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                CHUYỂN TIỀN
+                VÉ ĐÃ MUA
               </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
@@ -560,45 +562,45 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
               </CricleComponent> */}
 
-            <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('FriendsScreen')} >
-            <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
-              featureIconAnimation={featureIconCircleCustomAnimation}
-              onPress={() => navigation.navigate('FriendsScreen')}
-            >
-              <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
-            </CricleComponent>
-            <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              CÔNG ĐỒNG
-            </Animated.Text>
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+              <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+                featureIconAnimation={featureIconCircleCustomAnimation}
+                onPress={() => navigation.navigate('FriendsScreen')}
+              >
+                <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
+              </CricleComponent>
+              <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                CÔNG ĐỒNG
+              </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
 
           <Animated.View style={[styles.feature, scanViewAnimation]} >
-        
-            <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')} style={{alignItems:'center'}}>
-            <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
-              featureIconAnimation={featureIconCircleCustomAnimation}
-              onPress={() => navigation.navigate('ChatsScreen')}
-            >
-              <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
-            </CricleComponent>
-        
 
-            <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-              TIN NHẮN
-            </Animated.Text>
+            <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')} style={{ alignItems: 'center' }}>
+              <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
+                featureIconAnimation={featureIconCircleCustomAnimation}
+                onPress={() => navigation.navigate('ChatsScreen')}
+              >
+                <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
+              </CricleComponent>
+
+
+              <Animated.Text style={[styles.featureName, featureNameAnimation]}>
+                TIN NHẮN
+              </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
-        <Animated.View style={[viewMoneyAnimation, { paddingHorizontal: 12, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }, globalStyles.shadow]}>
+        {/* <Animated.View style={[viewMoneyAnimation, { paddingHorizontal: 12, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }, globalStyles.shadow]}>
           <FontAwesome name={isShowMoney ? 'eye' : 'eye-slash'}
             size={14} color={colors.black} onPress={() => setIsShowMoney(!isShowMoney)}
             style={{ paddingHorizontal: 4, paddingVertical: 4 }}
           />
           <TextComponent text={isShowMoney ? '1.000.000đ' : '*********'} font={fontFamilies.medium} color={colors.black} />
-        </Animated.View>
+        </Animated.View> */}
       </Animated.View >
-              
+
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -632,12 +634,12 @@ const HomeScreen = ({ navigation, route }: any) => {
               />
           </Swiper> */}
           <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
-          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} children={
+          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} height={appInfo.sizes.HEIGHT * 0.3} children={
             <CategoriesList values={categories} />
           }
-              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
-            />
-          <SpaceComponent height={16}/>
+            messageEmpty={'Không có thể loại nào cả'}
+          />
+          <SpaceComponent height={16} />
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
             // <FlatList
@@ -647,14 +649,14 @@ const HomeScreen = ({ navigation, route }: any) => {
             //   extraData={refreshList}
             //   renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
             // />
-            <DataLoaderComponent data={allEvent} isLoading={isLoading} height={appInfo.sizes.HEIGHT*0.3} children={
-               <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={allEvent}
-              extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
-            />
+            <DataLoaderComponent data={allEvent} isLoading={isLoading} height={appInfo.sizes.HEIGHT * 0.3} children={
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={allEvent}
+                extraData={refreshList}
+                renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+              />
             }
               messageEmpty={'Không có sự kiên nào sắp xảy ra'}
             />
@@ -662,19 +664,19 @@ const HomeScreen = ({ navigation, route }: any) => {
 
           <TabBarComponent title="Gần chỗ bạn" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện gần chỗ bạn', categories: categories, lat: auth.position.lat, long: auth.position.lng, distance: '10', follows: allFollower })} />
           {
-          
 
-            <DataLoaderComponent data={allEventNear} isLoading={isLoadingNearEvent} height={appInfo.sizes.HEIGHT*0.3} children={
+
+            <DataLoaderComponent data={allEventNear} isLoading={isLoadingNearEvent} height={appInfo.sizes.HEIGHT * 0.3} children={
               <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={allEventNear}
-              extraData={refreshList}
-              renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={allEventNear}
+                extraData={refreshList}
+                renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+              />
+            }
+              messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
             />
-           }
-             messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
-           />
           }
           <View style={styles.scrollViewContent} />
         </SectionComponent>
@@ -699,7 +701,7 @@ const styles = StyleSheet.create({
     height: 32,
   },
   upperHeaderPlaceholder: {
-    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP + 24,
+    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP,
     paddingTop: UPPER_HEADER_PADDING_TOP,
   },
   header: {
@@ -753,7 +755,7 @@ const styles = StyleSheet.create({
   },
   feature: {
     alignItems: 'center',
-    flex:1,
+    flex: 1,
   },
   featureName: {
     fontWeight: 'bold',

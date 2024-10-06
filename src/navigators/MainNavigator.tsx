@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, AddNewScreen, ChatsScreen, EditProfileScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, QrScannerScreen, SearchEventsScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, AddNewEvent, ChatsScreen, EditProfileScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, QrScannerScreen, SearchEventsScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,6 +64,7 @@ const MainNavigator = ({navigation}:any) => {
     }
   }
   const handleLogout = async () => {
+    //phải kiểm tra có mạng không 
     if(auth.loginMethod === 'google'){
       GoogleSignin.signOut()//đăng xuất google
     }
@@ -105,7 +106,7 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="ChatsScreen" component={ChatsScreen} />
         <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
         <Stack.Screen name="FriendsScreen" component={FriendsNavigate} />
-        <Stack.Screen name="AddEvent" component={AddNewScreen} />
+        <Stack.Screen name="AddEvent" component={AddNewEvent} />
         <Stack.Screen name="QrScannerScreen" component={QrScannerScreen} />
         <Stack.Screen name="TestQrcannerScreen" component={TestQrcannerScreen} />
 

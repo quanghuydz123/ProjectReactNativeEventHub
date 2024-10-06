@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import ExploreNavigator from "./ExploreNavigator";
 import EventsNavigator from "./EventsNavigator";
-import { AddNewScreen, QrScannerScreen } from "../screens";
+import { AddNewEvent, QrScannerScreen } from "../screens";
 import TransactionNavigator from "./TransactionNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import { colors } from "../constrants/color";

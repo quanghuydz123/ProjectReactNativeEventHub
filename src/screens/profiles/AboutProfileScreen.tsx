@@ -16,6 +16,7 @@ import { UserModel } from "../../models/UserModel"
 import { authSelector } from "../../reduxs/reducers/authReducers"
 import { globalStyles } from "../../styles/globalStyles"
 import socket from "../../utils/socket"
+import { appInfo } from "../../constrants/appInfo"
 
 const AboutProfileScreen = ({navigation,route}:any)=>{
   const {uid} = route.params
@@ -179,7 +180,8 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
             type="primary"
             color={colors.primary}
             textColor={colors.white}
-            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0,paddingHorizontal:8}}
+            width={appInfo.sizes.WIDTH * 0.4}
+            styles={{ borderWidth: 1, borderColor: colors.primary,marginBottom:0,minHeight:0,paddingVertical:12}}
             icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? 
             <AntDesign name="deleteuser" size={22} color={colors.white}/> : 
             <AntDesign name="adduser" size={22} color={colors.white}/>}
@@ -190,7 +192,8 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
             type="primary"
             color="white"
             textColor={colors.primary}
-            styles={{ borderWidth: 1, borderColor: colors.primary,width:'auto',marginBottom:0,paddingHorizontal:8}}
+            styles={{ borderWidth: 1, borderColor: colors.primary,marginBottom:0,minHeight:0,paddingVertical:12}}
+            width={appInfo.sizes.WIDTH * 0.4}
             icon={<AntDesign name="message1" size={22} color={colors.primary} />}
             iconFlex="left"
           />
@@ -216,7 +219,7 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
             ))
           }
         </RowComponent>
-        <TextComponent text="abc"/>
+        <TextComponent text={profile?.bio || "Chưa có gì cả"}/>
         
       </SectionComponent>
       <LoadingModal visible={isLoading} />

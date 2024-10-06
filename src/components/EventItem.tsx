@@ -23,17 +23,17 @@ import TagComponent from "./TagComponent"
 
 interface Props {
   item: EventModelNew,
-  isShownHorizontal?: boolean,
+  isShownVertical?: boolean,
   followers: FollowModel[]
 }
 const EventItem = (props: Props) => {
-  const { item, followers, isShownHorizontal } = props
+  const { item, followers, isShownVertical } = props
   const navigation: any = useNavigation()
   const auth = useSelector(authSelector)
   return (
-    <CardComponent isShadow styles={{ width: isShownHorizontal ? appInfo.sizes.WIDTH * 0.93 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.white}>
+    <CardComponent isShadow styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.93 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.white}>
       {
-        isShownHorizontal ? <>
+        isShownVertical ? <>
           <RowComponent>
             <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'stretch' }} />
             <View style={{
@@ -59,11 +59,11 @@ const EventItem = (props: Props) => {
                     <SpaceComponent width={2} />
                     <TextComponent text={'123'} size={12} color={colors.primary} />
                   </RowComponent> */}
-                  <RowComponent>
+                  {/* <RowComponent>
                     <FontAwesome name="heart" color={colors.primary} size={16} />
                     <SpaceComponent width={2} />
                     <TextComponent text={'78654'} size={12} color={colors.primary} />
-                  </RowComponent>
+                  </RowComponent> */}
                   <SpaceComponent width={4} />
                   <RowComponent>
                     <FontAwesome name="eye" color={colors.primary} size={16} />
@@ -164,11 +164,11 @@ const EventItem = (props: Props) => {
                 font={fontFamilies.medium}
                 color={colors.text2} flex={1}
               />
-              <RowComponent>
+              {/* <RowComponent>
                 <FontAwesome name="heart" color={colors.primary} size={16} />
                 <SpaceComponent width={2} />
                 <TextComponent text={'99999'} size={12} color={colors.primary} />
-              </RowComponent>
+              </RowComponent> */}
               <SpaceComponent width={4} />
               <RowComponent>
                 <FontAwesome name="eye" color={colors.primary} size={16} />

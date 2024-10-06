@@ -44,7 +44,7 @@ const initValues = {
   startAt:Date.now(),
   endAt:Date.now(),
 }
-const AddNewScreen = ()=>{
+const AddNewEvent = ()=>{
   const auth = useSelector(authSelector)
   const [eventData,setEventData] = useState<any>({...initValues,authorId:auth?.id})
   const [allUser,setAllUser] = useState<UserModel[]>([])
@@ -264,4 +264,4 @@ const AddNewScreen = ()=>{
     </ContainerComponent>
   )
 }
-export default AddNewScreen;
+export default AddNewEvent;

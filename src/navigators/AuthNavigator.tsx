@@ -18,11 +18,11 @@ const AuthNavigator = ()=>{
         headerShown:false,//ẩn header mặc định
     }}
   >
-    {
+    {/* {
       !isExisttringUser && (
         <Stack.Screen  name="OnboardingScreen" component={OnboardingScreen}/>
       )
-    }
+    } */}
 
     <Stack.Screen  name="LoginScreen" component={LoginScreen}/>
     <Stack.Screen  name="SignUpScreen" component={SignUpScreen}/>
