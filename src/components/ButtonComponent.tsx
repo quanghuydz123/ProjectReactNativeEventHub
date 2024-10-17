@@ -5,6 +5,7 @@ import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constrants/color"
 import { fontFamilies } from "../constrants/fontFamilies"
 import { AsyncStorageStatic } from "@react-native-async-storage/async-storage"
+import SpaceComponent from "./SpaceComponent"
 
 interface Props {
     icon?: ReactNode,
@@ -64,12 +65,21 @@ const ButtonComponent = (props: Props) => {
                 </TouchableOpacity>
             </View>
             :
-            <TouchableOpacity onPress={onPress} disabled={disable} style={[styles]} >
+            <TouchableOpacity onPress={onPress} disabled={disable} style={[
+                {
+                    flexDirection:'row',
+                    alignItems:'center'
+
+                },styles]} >
                 {icon && iconFlex === 'left' && icon}
 
                 {
-                    text && <TextComponent size={textSize} text={text} numberOfLine={numberOfLineText} color={type === 'link' ? colors.link : textColor ? textColor : colors.colorText} />
+                    text && <TextComponent size={textSize} text={text} numberOfLine={numberOfLineText} 
+                    font={textFont ?? fontFamilies.medium} 
+                    color={type === 'link' ? colors.link : textColor ? textColor : colors.colorText} 
+                    />
                 }
+                {icon && iconFlex === 'right' && <SpaceComponent width={4}/>}
                 {icon && iconFlex === 'right' && icon}
 
             </TouchableOpacity>

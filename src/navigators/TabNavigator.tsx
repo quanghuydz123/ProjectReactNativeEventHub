@@ -52,7 +52,7 @@ const TabNavigator = ({navigation}:any) => {
           height: Platform.OS === 'ios' ? 80 : 60,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: colors.white,
+          backgroundColor: '#38373c',
 
         },
         tabBarHideOnKeyboard: true,

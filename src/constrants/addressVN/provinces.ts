@@ -1,4 +1,12 @@
-const p = [
+interface Provinces {
+    name:string,
+    code: number,
+    division_type: string,
+    codename: string,
+    phone_code:number,
+    districts:string[]
+}
+const provinces:Provinces[] = [
     {
         "name": "Thành phố Hà Nội",
         "code": 1,
@@ -504,3 +512,5 @@ const p = [
         "districts": []
     }
 ]
+
+export default provinces

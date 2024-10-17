@@ -20,7 +20,7 @@ import { FollowModel } from "../models/FollowModel"
 import { DateTime } from "../utils/DateTime"
 import { convertMoney } from "../utils/convertMoney"
 import TagComponent from "./TagComponent"
-
+import Feather from "react-native-vector-icons/Feather"
 interface Props {
   item: EventModelNew,
   isShownVertical?: boolean,
@@ -31,25 +31,25 @@ const EventItem = (props: Props) => {
   const navigation: any = useNavigation()
   const auth = useSelector(authSelector)
   return (
-    <CardComponent isShadow styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.93 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.white}>
+    <CardComponent styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.93 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.background}>
       {
         isShownVertical ? <>
           <RowComponent>
             <Image source={{ uri: item.photoUrl }} style={{ width: 100, height: 100, borderRadius: 12, resizeMode: 'stretch' }} />
             <View style={{
-              position:'absolute',
-              top:6,
-              left:80
+              position: 'absolute',
+              top: 6,
+              left: 80
             }}>
               {
                 followers &&
                 followers.length > 0 && followers.filter(item => item?.user?._id === auth.id)[0]?.events.some(event => event?._id === item?._id)
-                && <FontAwesome name="bookmark" size={18} color={colors.white} />
+                && <FontAwesome name="bookmark" size={18} color={colors.primary} />
               }
             </View>
             <SpaceComponent width={12} />
             <View style={{ height: '100%', flex: 1 }}>
-              <RowComponent justify="space-between" styles={{ }}>
+              <RowComponent justify="space-between" styles={{}}>
                 <RowComponent>
                   {/* <Location size={18} color={colors.gray2} variant="Bold" />
                 <SpaceComponent width={4} /> */}
@@ -80,82 +80,115 @@ const EventItem = (props: Props) => {
                 } */}
 
               </RowComponent>
-              <TextComponent numberOfLine={2} text={item.title} title size={16} />
-              <TextComponent flex={1} text={item?.price ? convertMoney(item?.price) : 'Vào cổng tự do'} title size={14} />
+              <TextComponent numberOfLine={2} text={item.title} title size={16} color={colors.white} />
+              <TextComponent flex={1} text={item?.price ? convertMoney(item?.price) : 'Vào cổng tự do'} title size={14} color={colors.primary} />
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 {
-                  item.categories.map((category, index) => (
-                    <View style={{ paddingVertical: 2 }} key={category?._id}>
-                      <TagComponent
-                        bgColor={colors.danger2}
-                        label={category.name}
-                        textSize={8}
-                        styles={{
-                          minWidth: 50,
-                          paddingVertical: 2,
-                          paddingHorizontal: 2,
-                          marginRight: index === item.categories.length - 1 ? 28 : 2
-                        }}
-                      />
-                    </View>
-                  ))
+                  // item.categories.map((category, index) => (
+                  //   <View style={{ paddingVertical: 2 }} key={category?._id}>
+                  //     <TagComponent
+                  //       bgColor={colors.danger2}
+                  //       label={category.name}
+                  //       textSize={8}
+                  //       styles={{
+                  //         minWidth: 50,
+                  //         paddingVertical: 2,
+                  //         paddingHorizontal: 2,
+                  //         marginRight: index === item.categories.length - 1 ? 28 : 2
+                  //       }}
+                  //     />
+                  //   </View>
+                  // ))
+                  <View style={{ paddingVertical: 2 }} key={item.category?._id}>
+                    <TagComponent
+                      bgColor={colors.primary}
+                      label={item.category.name}
+                      textSize={8}
+                      styles={{
+                        minWidth: 50,
+                        paddingVertical: 2,
+                        paddingHorizontal: 2,
+                        // marginRight: index === item.categories.length - 1 ? 28 : 2
+                      }}
+                    />
+                  </View>
                 }
               </RowComponent>
 
               {
                 (item.users && item.users.length > 0) && <AvatarGroup users={item.users} />
               }
-              <RowComponent styles={{ justifyContent: 'space-between' }}>
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} size={12} />
-
+              <RowComponent>
+                <Feather name="calendar" size={12} color={colors.white} />
+                <SpaceComponent width={4} />
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} color={colors.white} size={12} />
               </RowComponent>
             </View>
           </RowComponent>
         </>
           :
           <>
-            <ImageBackground style={{ height: 150, padding: 10, marginBottom: 12 }} source={{ uri: item.photoUrl }} imageStyle={{
+            <ImageBackground style={[{ height: 160, padding: 10, marginBottom: 12 }]} source={{ uri: item.photoUrl }} imageStyle={{
               borderRadius: 12,
               resizeMode: 'stretch',
+              
             }}>
               <RowComponent justify="space-between">
-                <CardComponent isShadow styles={{ alignItems: 'center', padding: 10, marginHorizontal: 0, marginVertical: 0, position: 'absolute', top: -22, left: -30 }} color={'#ffffff'}>
+                {/* <CardComponent isShadow styles={{ alignItems: 'center', padding: 10, marginHorizontal: 0, marginVertical: 0, position: 'absolute', top: -22, left: -30 }} color={'#ffffff'}>
                   <TextComponent text={`${numberToString(new Date(item.startAt).getDate())}`} font={fontFamilies.semiBold} color={colors.danger2} size={18} />
                   <TextComponent text={`Tháng ${new Date(item.startAt).getMonth() + 1}`} color={colors.danger2} size={12} />
-                </CardComponent>
+                </CardComponent> */}
                 {
                   followers && followers.length > 0 && followers.filter(item => item.user?._id === auth.id)[0]?.events.some(event => event._id === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard, { position: 'absolute', top: 0, right: 0 }]} color={'#ffffff4D'}>
-                    <FontAwesome name="bookmark" size={22} color={'white'} />
+                    <FontAwesome name="bookmark" size={22} color={colors.primary} />
                   </CardComponent>
                 }
 
               </RowComponent>
             </ImageBackground>
-            <TextComponent numberOfLine={2} text={item.title} title size={18} />
-            <TextComponent text={item?.price ? convertMoney(item?.price) : 'Vào cổng tự do'} title size={14} />
+            <TextComponent numberOfLine={2} text={item.title} title size={18} color={colors.white} />
+            <TextComponent text={item?.price ? convertMoney(item?.price) : 'Vào cổng tự do'} color={colors.primary} title size={14} />
             <RowComponent styles={{ flexWrap: 'wrap' }}>
               {
-                item.categories.map((category, index) => (
-                  <View style={{ paddingVertical: 2 }} key={category._id}>
-                    <TagComponent
-                      bgColor={colors.danger2}
-                      label={category.name}
-                      textSize={8}
-                      onPress={() => navigation.navigate('SearchEventsScreen', { categoriesSelected: [category._id] })}
-                      styles={{
-                        minWidth: 50,
-                        paddingVertical: 2,
-                        paddingHorizontal: 2,
-                        marginRight: index === item.categories.length - 1 ? 28 : 2
-                      }}
-                    />
-                  </View>
-                ))
+                // item.categories.map((category, index) => (
+                //   <View style={{ paddingVertical: 2 }} key={category._id}>
+                //     <TagComponent
+                //       bgColor={colors.danger2}
+                //       label={category.name}
+                //       textSize={8}
+                //       onPress={() => navigation.navigate('SearchEventsScreen', { categoriesSelected: [category._id] })}
+                //       styles={{
+                //         minWidth: 50,
+                //         paddingVertical: 2,
+                //         paddingHorizontal: 2,
+                //         marginRight: index === item.categories.length - 1 ? 28 : 2
+                //       }}
+                //     />
+                //   </View>
+                // ))
+                <View style={{ paddingVertical: 2 }} key={item.category?._id}>
+                  <TagComponent
+                    bgColor={colors.primary}
+                    label={item.category.name}
+                    textSize={8}
+                    styles={{
+                      minWidth: 50,
+                      paddingVertical: 2,
+                      paddingHorizontal: 2,
+                      // marginRight: index === item.categories.length - 1 ? 28 : 2
+                    }}
+                  />
+                </View>
               }
             </RowComponent>
             {
-              <AvatarGroup users={item.users} />
+              item.users && item.users?.length > 0 && <AvatarGroup users={item.users} />
             }
+            <RowComponent>
+              <Feather name="calendar" size={12} color={colors.white} />
+              <SpaceComponent width={4} />
+              <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} color={colors.white} size={12} />
+            </RowComponent>
             <RowComponent>
               {/* <Location size={18} color={colors.gray2} variant="Bold" />
               <SpaceComponent width={4} /> */}

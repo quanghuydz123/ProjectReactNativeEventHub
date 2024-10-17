@@ -61,9 +61,9 @@ export const globalStyles = StyleSheet.create({
     card:{
         borderRadius:12,
         backgroundColor:colors.white,
-        padding:12,
+        padding:10,
         marginVertical:6,
-        marginHorizontal:12,
+        marginHorizontal:4,
         marginBottom:16
     },
     noSpaceCard:{

@@ -8,7 +8,7 @@ const SearchFriendScreen = () => {
   return (
     <ContainerComponent back
     title={<SearchComponent isNotShowArrow onSearch={(val)=>setSearchKey(val)} value={searchKey}
-    titlePlaceholder="Tìm kiếm bạn bè"
+    titlePlaceholder="Tìm kiếm người dùng"
     />}
     >
       <SectionComponent styles={{
@@ -21,9 +21,9 @@ const SearchFriendScreen = () => {
             height: 120
           }} />
         </View>
-        <TextComponent text={'Tìm bạn bè'} title size={16} />
+        <TextComponent text={'Tìm người dùng'} title size={16} />
         <SpaceComponent height={4} />
-        <TextComponent text={'Hãy tìm bạn bè và người quen để kết nối với họ trên ứng dụng EventHub'} textAlign="center" />
+        <TextComponent text={'Hãy tìm người quen hoặc các đơn vị để kết nối với họ trên ứng dụng EventHub'} textAlign="center" />
 
       </SectionComponent>
     </ContainerComponent>

@@ -37,11 +37,12 @@ const CategoriesList = (props:Props)=>{
         paddingVertical:4,
         borderRadius:10,
         borderWidth:1,
-        borderColor:'#f6f6f3'}]}>
+        borderColor:colors.white}]}>
         <AvatarItem 
         size={60} 
         textName={item.name} 
-        
+        textColor={colors.white}
+        notBorderWidth
         photoUrl={item.image}
         />
       </TouchableOpacity >
@@ -49,7 +50,7 @@ const CategoriesList = (props:Props)=>{
     }
   return (
     <FlatList 
-    style={{paddingHorizontal:8}}
+    style={{paddingHorizontal:10}}
     horizontal 
     showsHorizontalScrollIndicator={false}
     data={categories}

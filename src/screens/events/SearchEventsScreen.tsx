@@ -258,7 +258,7 @@ const auth = useSelector(authSelector)
     setIsOpenModalizeFilter(false)
   }
   return (
-    <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'}>
+    <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'} bgColor={colors.background} colorTitle={colors.white}>
       <SectionComponent>
         <RowComponent>
           {/* <RowComponent styles={{ flex: 1, alignItems: 'center' }}>
@@ -269,7 +269,7 @@ const auth = useSelector(authSelector)
                value={searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear onEnd={()=>handleSearchEvent()} />
             </View>
           </RowComponent> */}
-          <SearchComponent isNotShowArrow styles={{width:'78%'}} onSearch={(val)=>setSearchKey(val)} value={searchKey} onEnd={()=>handleSearchEvent()}/>
+          <SearchComponent bgColor={colors.background} isNotShowArrow styles={{width:'78%'}} onSearch={(val)=>setSearchKey(val)} value={searchKey} onEnd={()=>handleSearchEvent()}/>
             <SpaceComponent width={4}/>
           <TagComponent
             onPress={() => {setIsOpenModalizeFilter(true),setIdsSelectedCategories(filterEvent.categoriesFilter ?? [])}}

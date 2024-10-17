@@ -14,10 +14,11 @@ interface Props {
   styles?: StyleProp<ViewStyle>,
   titlePlaceholder?: string,
   isNotShowArrow?: boolean,
-  onEnd?:()=>void
+  onEnd?:()=>void,
+  bgColor?:string,
 }
 const SearchComponent = (props: Props) => {
-  const { value, onSearch, onPressArrow, styles, titlePlaceholder, isNotShowArrow,onEnd } = props
+  const { value, onSearch, onPressArrow, styles, titlePlaceholder, isNotShowArrow,onEnd,bgColor } = props
   return <RowComponent styles={[styles]} justify="flex-end">
     {!isNotShowArrow && (
       <>
@@ -32,7 +33,7 @@ const SearchComponent = (props: Props) => {
         styles={[{
           marginBottom: 0,
           borderRadius:100,
-          backgroundColor:colors.backgroundSearchInput,
+          backgroundColor:bgColor ?? colors.backgroundSearchInput,
           minHeight:46,
           borderColor:colors.white,
           

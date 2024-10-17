@@ -2,7 +2,7 @@ import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, Sta
 import React, { Ref, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
-import { ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
+import { ArrowDown, ArrowDown2, ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
 import CardComponent from "../../components/CardComponent";
 import { globalStyles } from "../../styles/globalStyles";
@@ -32,6 +32,7 @@ import notificationAPI from "../../apis/notificationAPI";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { ToastMessaging } from "../../utils/showToast";
 import { useStatusBar } from "../../hooks/useStatusBar";
+import { Linking } from 'react-native';
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
@@ -166,6 +167,20 @@ const EventDetails = ({ navigation, route }: any) => {
   }
   const handleCreateBillPaymentEvent = async () => {
     navigation.navigate('PaymentScreen', { event: item })
+  }
+  const openMap = () => {
+    const encodedAddress = encodeURIComponent(event.Address); // Mã hóa địa chỉ
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log('Không thể mở URL:', url);
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
   return (
     <View style={{
@@ -374,7 +389,7 @@ const EventDetails = ({ navigation, route }: any) => {
             <TabBarComponent title={'Giới thiệu sự kiện'} textSizeTitle={18} />
             <SectionComponent isSpace mgSpaceTop={20}>
               <RowComponent styles={{ flexWrap: 'wrap' }}>
-                {
+                {/* {
                   item.categories.map((category, index) => (
                     <View style={{}} key={category?._id}>
                       <TagComponent
@@ -394,7 +409,24 @@ const EventDetails = ({ navigation, route }: any) => {
                       />
                     </View>
                   ))
-                }
+                } */}
+                 <View style={{}} key={item.category?._id}>
+                    <TagComponent
+                      bgColor={colors.primaryLight}
+                      label={item.category.name}
+                      textSize={12}
+                      textColor={colors.colorText}
+
+                      styles={{
+                        minWidth: 50,
+                        paddingVertical: 6,
+                        paddingHorizontal: 20,
+                        // marginRight: index === item.categories.length - 1 ? 28 : 8,
+                        borderWidth: 1,
+                        borderColor: colors.primary
+                      }}
+                    />
+                  </View>
               </RowComponent>
               <SpaceComponent height={8} />
               <TextComponent text={event?.description ? event.description : ''} />
@@ -407,14 +439,24 @@ const EventDetails = ({ navigation, route }: any) => {
             </SectionComponent> */}
             <TabBarComponent title={'Ví trí tổ chức'} textSizeTitle={18} />
             <SectionComponent isSpace mgSpaceTop={20}>
-              <RowComponent styles={{alignItems:'flex-start'}}>
+              <RowComponent styles={{ alignItems: 'flex-start' }}>
                 <Ionicons size={24} color={colors.primary} name="location-sharp" />
-                <SpaceComponent width={4}/>
-                <View style={{flex:1}}>
+                <SpaceComponent width={4} />
+                <View style={{ flex: 1 }}>
                   <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
                   <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
+                  <SpaceComponent height={6}/>
+                  <ButtonComponent
+                    text="Xem trên bảng đồ"
+                    type="link"
+                    textFont={fontFamilies.medium}
+                    icon={<ArrowDown2 size={16} color={colors.link}/>}
+                    iconFlex="right"
+                    onPress={()=>openMap()}
+                  />
                 </View>
               </RowComponent>
+
             </SectionComponent>
 
             <TabBarComponent title={'Đơn vị tổ chức'} textSizeTitle={18} />

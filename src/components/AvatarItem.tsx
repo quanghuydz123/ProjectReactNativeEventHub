@@ -21,9 +21,10 @@ interface Props {
     textName?:string,
     bgColor?:string,
     sizeName?:number,
+    textColor?:string
 }
 const AvatarItem = (props: Props) => {
-    const { photoUrl, size, colorBorderWidth, index, styles, notBorderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
+    const { photoUrl, size, colorBorderWidth, index,textColor, styles, notBorderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
     const ml = size ? -(size / 2) : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
     const renderIconAbsolute = (type?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
@@ -91,7 +92,7 @@ const AvatarItem = (props: Props) => {
                     isShowIconAbsolute && renderIconAbsolute(typeIcon)
                 }
             </TouchableOpacityComponent>
-            {textName && <TextComponent styles={{maxWidth:200}} numberOfLine={1} text={textName} title size={sizeName ?? 12} textAlign="center"/>}
+            {textName && <TextComponent styles={{maxWidth:200}} color={textColor} numberOfLine={1}  text={textName} title size={sizeName ?? 12} textAlign="center"/>}
         </View>
     )
 }

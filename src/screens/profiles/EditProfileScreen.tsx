@@ -83,6 +83,14 @@ const EditProfileScreen = ({navigation,route}:any)=>{
             multiline
             allowClear
             />
+            {/* <InputComponent 
+            value={profileData.bio || ''} 
+            onChange={(val)=>handleOnchageValue('bio',val)} 
+            title="Địa chỉ hiện tại"
+            numberOfLines={2}
+            multiline
+            allowClear
+            /> */}
             <ButtonComponent  text="Cập nhập" onPress={()=>handleUpdateProfile()} type="primary"/>
         </SectionComponent>
         <LoadingModal visible={isLoading}/>

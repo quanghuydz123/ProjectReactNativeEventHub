@@ -92,7 +92,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
         <SearchComponent
           isNotShowArrow onSearch={(val) => setSearchKey(val)}
           value={searchKey}
-          titlePlaceholder="Tìm kiếm bạn bè"
+          titlePlaceholder="Tìm kiếm người dùng"
           onEnd={() => console.log("ok")}
         />
       </SectionComponent>

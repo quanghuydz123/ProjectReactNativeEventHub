@@ -245,7 +245,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   //     extrapolate: 'clamp',
   //   }),
   // };
-
   const viewMoneyAnimation = {
     transform: [
       {
@@ -314,13 +313,16 @@ const HomeScreen = ({ navigation, route }: any) => {
     Geolocation.getCurrentPosition(position => {
       if (position.coords) {
         // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        if (auth.position) {
+        if (!auth.position) {
           if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
+            console.log("handleCallApiUpdatePostionUser")
             handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
           }
-        } else {
-          handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
         }
+        // else {
+        //   console.log("handleCallApiUpdatePostionUser")
+        //   handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+        // }
 
       }
     }, (error) => {
@@ -416,14 +418,14 @@ const HomeScreen = ({ navigation, route }: any) => {
   const featureIconCircleCustomAnimation = {
     backgroundColor: animatedValue.interpolate({
       inputRange: [0, 50],
-      outputRange: ['rgb(255, 255, 255)', 'rgb(175, 12, 110)'],
+      outputRange: [colors.white, colors.primary],
       extrapolate: 'clamp',
     })
   };
   const featureIconCustomAnimation = {
     color: animatedValue.interpolate({
       inputRange: [0, 50],
-      outputRange: ['rgb(175, 12, 110)', 'rgb(255, 255, 255)'],
+      outputRange: [colors.primary, colors.white],
       extrapolate: 'clamp',
     })
   };
@@ -525,10 +527,10 @@ const HomeScreen = ({ navigation, route }: any) => {
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => console.log('event')} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => navigation.navigate('FriendsScreen')}
+                onPress={() => console.log('FriendsScreen')}
               >
                 <AnimatedMaterialIcons name='bookmark-added' size={20} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -539,10 +541,10 @@ const HomeScreen = ({ navigation, route }: any) => {
           </Animated.View>
 
           <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => console.log('Vé')} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => navigation.navigate('FriendsScreen')}
+                onPress={() => console.log('Vé')}
               >
                 <AnimatedFontAwesome name='ticket' size={18} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -616,7 +618,7 @@ const HomeScreen = ({ navigation, route }: any) => {
         }}
         scrollEventThrottle={16}>
         <Animated.View style={[styles.spaceForHeader]} />
-        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: 'white' }}>
+        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: colors.background }}>
 
           {/* <Swiper style={{}} loop={false} onIndexChanged={(num)=>setIndex(num)}
           activeDotColor={colors.white}
@@ -769,6 +771,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     height: 500,
-    backgroundColor: 'white',
+    backgroundColor: colors.background,
   },
 });

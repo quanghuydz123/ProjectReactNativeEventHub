@@ -5,7 +5,7 @@ import QRCode from "react-native-qrcode-svg";
 
 export const TransactionHistoryScreen = ()=>{
   return (
-    <ContainerComponent back title={"Lịch sử giao dịch"}>
+    <ContainerComponent title={"Lịch sử giao dịch"}>
         <SectionComponent>
         <QRCode
           value={JSON.stringify({

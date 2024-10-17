@@ -186,7 +186,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                 <RowComponent>
                     <TagComponent
                         bgColor={colors.backgroundSearchInput}
-                        label={'Tìm kiếm bạn bè'}
+                        label={'Tìm kiếm người dùng'}
                         textColor={colors.black}
                         textSize={14}
                         onPress={() => navigation.push('FriendsScreen', { screen: 'FindFriendScreen' })}

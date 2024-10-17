@@ -1,5 +1,5 @@
 export const colors ={
-    primary:'#AF0C6E',
+    primary:'rgb(45, 194, 117)',
     primaryLight:'#FFD6E7',
     white:'#FFFFFF',
     white2:'#fcfcfc',
@@ -19,5 +19,6 @@ export const colors ={
     blue:'#1b96f3',
     orange:'#fc8527',
     green:'#56da78',
-    backgroundSearchInput:'rgb(228, 230, 235)'
+    backgroundSearchInput:'rgb(228, 230, 235)',
+    background:'#262626'
 }

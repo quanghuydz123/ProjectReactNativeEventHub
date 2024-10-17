@@ -232,7 +232,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   // },[follower])
   console.log(follower[0]?.users[0]?.idUser)
   return (
-    <ContainerComponent title="Hồ sơ người dùng" isScroll>
+    <ContainerComponent title="Tài khoản"  isScroll>
       <SectionComponent styles={[globalStyles.center]}>
         <RowComponent onPress={() => handleChangeImageAvatar()}>
           <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />

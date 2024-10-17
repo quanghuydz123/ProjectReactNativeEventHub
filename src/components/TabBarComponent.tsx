@@ -6,26 +6,29 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { colors } from "../constrants/color"
 import { ArrowRight2 } from "iconsax-react-native"
 import ButtonComponent from "./ButtonComponent"
+import { fontFamilies } from "../constrants/fontFamilies"
+import AntDesign from "react-native-vector-icons/AntDesign"
 interface Props{
     title:string,
     onPress?:()=>void,
     styles?:StyleProp<ViewStyle>,
     textSizeTitle?:number,
     isNotShowIconRight?:boolean,
-    titleRight?:string
+    titleRight?:string,
+    textColor?:string
 }
 const TabBarComponent = (props:Props)=>{
-    const {title,onPress,styles,textSizeTitle,isNotShowIconRight,titleRight} = props
+    const {title,onPress,styles,textSizeTitle,isNotShowIconRight,titleRight,textColor} = props
   return (
     <RowComponent styles={[{
-        paddingHorizontal:16,
-        marginBottom:10
+        paddingHorizontal:10,
+        marginBottom:6
     },styles]}>
-        <TextComponent text={title} title flex={1} size={textSizeTitle ?? 16}/>
+        <TextComponent color={textColor ?? colors.white} text={title} title flex={1} size={textSizeTitle ?? 16}/>
         {onPress && 
         <RowComponent onPress={onPress}>
-            <TextComponent text={titleRight ?? "Xem tất cả"} color={colors.text2} size={13}/>
-            {!isNotShowIconRight && <ArrowRight2 size={12} color={colors.text2} variant="Bold" style={{marginTop:2}}/>  }
+            <TextComponent text={titleRight ?? "Xem tất cả"} color={colors.primary} size={14} font={fontFamilies.medium}/>
+            {!isNotShowIconRight && <AntDesign size={18} color={colors.primary} name="right"  style={{marginTop:2}}/>  }
         </RowComponent>}
     </RowComponent>
   )

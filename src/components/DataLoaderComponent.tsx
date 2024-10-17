@@ -5,6 +5,7 @@ import { appInfo } from "../constrants/appInfo"
 import TextComponent from "./TextComponent"
 import LoadingComponent from "./LoadingComponent"
 import EmptyComponent from "./EmptyComponent"
+import { colors } from "../constrants/color"
 interface Props { // phải định nghĩa ra trước
     children:ReactNode,
     isLoading:boolean,
