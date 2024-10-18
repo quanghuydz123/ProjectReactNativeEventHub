@@ -21,7 +21,7 @@ const DataLoaderComponent = (props: Props) => {
     return <View style={{flex:isFlex ? 1 : 0}}>
     {
         isLoading  ? <LoadingComponent isLoading={isLoading} value={data?.length || 0} height={height}/> 
-        : (data && data?.length > 0) ?  children : <EmptyComponent message={messageEmpty ?? "Không có dữ liệu"} height={height}/>
+        : (data && data?.length > 0) ?  children : <EmptyComponent textColor={colors.white}  message={messageEmpty ?? "Không có dữ liệu"} height={height}/>
     }
 </View>
 }

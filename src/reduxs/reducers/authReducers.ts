@@ -16,6 +16,8 @@ export interface AuthState {
         lat: number,
         lng: number
     }
+    eventsInterested:string[]
+
 }
 
 const initialState: AuthState = {
@@ -36,7 +38,8 @@ const initialState: AuthState = {
     position: {
         lat: 0,
         lng: 0
-    }
+    },
+    eventsInterested:[]
 }
 
 const authSlice = createSlice({
@@ -62,10 +65,14 @@ const authSlice = createSlice({
         updateFcmToken: (state,action)=>{
             const { fcmTokens } = action.payload;
             state.authData.fcmTokens=fcmTokens ?? state.authData.fcmTokens
+        },
+        updateEventsInterested:(state,action)=>{
+            const { eventsInterested } = action.payload;
+            state.authData.eventsInterested= eventsInterested
         }
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

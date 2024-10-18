@@ -15,15 +15,15 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { EventModelNew } from "../../models/EventModelNew";
 import { DateTime } from "../../utils/DateTime";
 import { convertMoney } from "../../utils/convertMoney";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../reduxs/reducers/authReducers";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector, AuthState, updateEventsInterested } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
 import followAPI from "../../apis/followAPI";
 import { FollowModel } from "../../models/FollowModel";
 import socket from "../../utils/socket";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import AvatarItem from "../../components/AvatarItem";
 import { UserHandleCallAPI } from "../../utils/UserHandleCallAPI";
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -33,12 +33,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ToastMessaging } from "../../utils/showToast";
 import { useStatusBar } from "../../hooks/useStatusBar";
 import { Linking } from 'react-native';
+import styles from "rn-range-slider/styles";
+import userAPI from "../../apis/userApi";
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
-  const auth = useSelector(authSelector)
+  const auth:AuthState = useSelector(authSelector)
   const [isLoading, setIsLoading] = useState(false)
   const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
   const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
@@ -47,7 +49,9 @@ const EventDetails = ({ navigation, route }: any) => {
   const [allUser, setAllUser] = useState<UserModel[]>([])
   const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
   const [event, setEvent] = useState<EventModelNew>(item)
+  const dispatch = useDispatch()
   const [isInterested, setIsInterested] = useState(false)
+  const { getItem: getItemAuth } = useAsyncStorage('auth')
   useStatusBar('light-content')
 
   useEffect(() => {
@@ -60,6 +64,19 @@ const EventDetails = ({ navigation, route }: any) => {
     }
 
   }, [])
+  console.log(auth.eventsInterested)
+  // useEffect( ()=>{
+  //   a()
+  // },[])
+  // const a = async ()=>{
+  //   const authItem: any = await getItemAuth()
+  //   console.log("authItem",JSON.parse(authItem)?.eventsInterested)  
+  // }
+  useEffect(()=>{
+    setIsInterested(
+      auth?.eventsInterested?.some(event_id => event_id === item._id) || false
+    );
+  },[auth?.eventsInterested])
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
@@ -104,14 +121,35 @@ const EventDetails = ({ navigation, route }: any) => {
     const { height, width } = event.nativeEvent.layout;
     setHeightButton(height)
   };
-  const handleFlowerEvent = async () => {
-    const api = apis.follow.updateFollowEvent()
+  // const handleFlowerEvent = async () => {
+  //   const api = apis.follow.updateFollowEvent()
+  //   if (event?._id) {
+  //     try {
+  //       const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event?._id }, 'post')
+  //       if (res && res.data.event && res.status === 200) {
+  //         socket.emit("followers", { id: auth.id });
+  //         handleCallApiGetAllFollower()
+  //       }
+  //     } catch (error: any) {
+  //       const errorMessage = JSON.parse(error.message)
+  //       if (errorMessage.statusCode === 403) {
+  //         console.log(errorMessage.message)
+  //       } else {
+  //         console.log('Lỗi rồi EventDetails')
+  //       }
+  //     }
+  //   }
+  // }
+  const handleInterestEvent = async () => {
+    const api = '/interest-event'
     if (event?._id) {
       try {
-        const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idEvent: event?._id }, 'post')
-        if (res && res.data.event && res.status === 200) {
-          socket.emit("followers", { id: auth.id });
-          handleCallApiGetAllFollower()
+        const res:any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
+        console.log("res && res.status === 200",res && res.status === 200)
+        if (res && res.status === 200) {
+          dispatch(updateEventsInterested({eventsInterested:res.data.user.eventsInterested}))
+          const authItem: any = await getItemAuth()
+          await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), eventsInterested:res.data.user.eventsInterested }))
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -219,7 +257,7 @@ const EventDetails = ({ navigation, route }: any) => {
               }
             </CardComponent>
             <SpaceComponent width={8} /> */}
-            <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
+            {/* <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
               {
                 event?._id && <FontAwesome
                   name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? "bookmark" : 'bookmark-o'}
@@ -227,7 +265,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? colors.white : colors.black}
                 />
               }
-            </CardComponent>
+            </CardComponent> */}
 
           </RowComponent>
         </LinearGradient>
@@ -273,7 +311,7 @@ const EventDetails = ({ navigation, route }: any) => {
             </SectionComponent>
             <SectionComponent styles={{ paddingBottom: 26 }}>
               <RowComponent>
-                <AvatarItem photoUrl={event?.authorId?.photoUrl} size={24} />
+                <AvatarItem photoUrl={event?.authorId?.photoUrl} colorBorderWidth={colors.background} size={30} />
                 <SpaceComponent width={6} />
                 <TextComponent text={`Được tổ chức bởi ${event?.authorId?.fullname}`} font={fontFamilies.medium} />
               </RowComponent>
@@ -289,7 +327,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
                   icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.primary} />}
                   iconFlex="left"
-                  onPress={() => setIsInterested(!isInterested)}
+                  onPress={() => handleInterestEvent()}
                 />
 
                 <SpaceComponent width={8} />
@@ -382,12 +420,12 @@ const EventDetails = ({ navigation, route }: any) => {
                 </View>
               </RowComponent>
             </SectionComponent> */}
-            <SectionComponent styles={{ paddingVertical: 0 }} isSpace mgSpaceTop={10}>
-              <AvatarGroup users={event.users} size={40} />
+            <SectionComponent styles={{ paddingVertical: 0, }} isSpace mgSpaceTop={10}>
+              {<AvatarGroup  users={event?.usersInterested} size={40} />}
             </SectionComponent>
 
-            <TabBarComponent title={'Giới thiệu sự kiện'} textSizeTitle={18} />
-            <SectionComponent isSpace mgSpaceTop={20}>
+            <TabBarComponent title={'Giới thiệu sự kiện'} textColor={colors.colorText} textSizeTitle={18} />
+            <SectionComponent isSpace mgSpaceTop={20 } styles={{}}>
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 {/* {
                   item.categories.map((category, index) => (
@@ -412,18 +450,17 @@ const EventDetails = ({ navigation, route }: any) => {
                 } */}
                  <View style={{}} key={item.category?._id}>
                     <TagComponent
-                      bgColor={colors.primaryLight}
+                      bgColor={colors.primary}
                       label={item.category.name}
                       textSize={12}
-                      textColor={colors.colorText}
+                      textColor={colors.white}
 
                       styles={{
                         minWidth: 50,
                         paddingVertical: 6,
                         paddingHorizontal: 20,
                         // marginRight: index === item.categories.length - 1 ? 28 : 8,
-                        borderWidth: 1,
-                        borderColor: colors.primary
+                      
                       }}
                     />
                   </View>
@@ -437,7 +474,7 @@ const EventDetails = ({ navigation, route }: any) => {
               <TextComponent text={'abc'} />
 
             </SectionComponent> */}
-            <TabBarComponent title={'Ví trí tổ chức'} textSizeTitle={18} />
+            <TabBarComponent title={'Ví trí tổ chức'} textColor={colors.colorText} textSizeTitle={18} />
             <SectionComponent isSpace mgSpaceTop={20}>
               <RowComponent styles={{ alignItems: 'flex-start' }}>
                 <Ionicons size={24} color={colors.primary} name="location-sharp" />

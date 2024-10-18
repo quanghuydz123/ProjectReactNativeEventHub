@@ -26,7 +26,7 @@ export const globalStyles = StyleSheet.create({
         flexDirection:'row'
     },
     section:{
-        paddingHorizontal:16,
+        paddingHorizontal:8,
         paddingBottom:12
     },
     row:{
@@ -62,9 +62,7 @@ export const globalStyles = StyleSheet.create({
         borderRadius:12,
         backgroundColor:colors.white,
         padding:10,
-        marginVertical:6,
-        marginHorizontal:4,
-        marginBottom:16
+        marginVertical:4,
     },
     noSpaceCard:{
         justifyContent:'center',

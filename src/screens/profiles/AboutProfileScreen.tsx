@@ -31,14 +31,10 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
   const [numberOfFollowers,setNumberOfFollowers] = useState(0)
   const tabs = [{
     key:'about',
-    title:'About'
+    title:'Giới thiệu'
   },{
     key:'events',
-    title:'Events',
-  },
-  {
-    key:'reviews',
-    title:'Reviews'
+    title:'Các sự kiện đã tổ chức',
   }
 ]
   useEffect(()=>{
@@ -59,8 +55,6 @@ const AboutProfileScreen = ({navigation,route}:any)=>{
       case 'about':
         break
       case 'events':
-        break
-      case 'reviews':
         break
       default:
         content=<></>

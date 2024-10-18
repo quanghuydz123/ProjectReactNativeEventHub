@@ -179,7 +179,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
     // }
     return (
         <ContainerComponent back title="Bạn bè" 
-        right={<SearchNormal size={20} color={colors.gray} />}
+        right={<SearchNormal size={20} color={colors.white} />}
         onPressRight={() => navigation.push('FriendsScreen', { screen: 'SearchFriendScreen' })}
         >
             <SectionComponent>

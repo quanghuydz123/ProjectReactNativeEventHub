@@ -24,6 +24,7 @@ import { FollowModel } from "../../models/FollowModel";
 import followAPI from "../../apis/followAPI";
 import { apis } from "../../constrants/apis";
 import { appInfo } from "../../constrants/appInfo";
+import CardComponent from "../../components/CardComponent";
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth = useSelector(authSelector)
@@ -39,7 +40,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [idsFollowerCategory, setIdsFollowerCategory] = useState<string[]>([])
   const [searchCategory, setSearchCategory] = useState('')
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
-  const [isLoadingFollow,setIsLoadingFollow] = useState(false)
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
     handleCallApiGetProfile(true)
@@ -114,7 +115,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCallApiGetFollowerById = async (isLoading?:boolean) => {
+  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
     const api = apis.follow.getById(auth.id)
     setIsLoadingFollow(isLoading ? isLoading : false)
     try {
@@ -232,49 +233,53 @@ const ProfileScreen = ({ navigation, route }: any) => {
   // },[follower])
   console.log(follower[0]?.users[0]?.idUser)
   return (
-    <ContainerComponent title="Tài khoản"  isScroll>
-      <SectionComponent styles={[globalStyles.center]}>
-        <RowComponent onPress={() => handleChangeImageAvatar()}>
-          <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
+    <ContainerComponent title="Tài khoản" isScroll bgColor="rgb(245, 247, 252)">
+      <SectionComponent isNoPaddingBottom>
+        <CardComponent isShadow styles={[globalStyles.center]}>
+          <RowComponent onPress={() => handleChangeImageAvatar()}>
+            <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
 
-        </RowComponent>
-        <SpaceComponent height={8} />
-        <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
-        {profile?.phoneNumber && <>
-          <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
-          <SpaceComponent height={8} />
-        </>}
-        <RowComponent>
-          <View style={[globalStyles.center, { flex: 1 }]}>
-            <TextComponent text={`${numberOfFollowers}`} size={20} />
-            <TextComponent text="Người theo dõi" />
-          </View>
-          <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
-          <View style={[globalStyles.center, { flex: 1 }]}>
-            <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
-            <TextComponent text="Đang theo dõi" />
-          </View>
-        </RowComponent>
-      </SectionComponent>
-      <SectionComponent>
-        <View >
-          <RowComponent justify="center">
-            <ButtonComponent text="Cập nhập thông tin"
-              type="primary"
-              onPress={() => navigation.navigate('EditProfileScreen', { profile })}
-              color="white"
-              textColor={colors.primary}
-              styles={{ borderWidth: 1, borderColor: colors.primary }}
-              icon={<Feather name="edit" size={20} color={colors.primary} />}
-              iconFlex="left"
-            />
           </RowComponent>
-          {/* <TextComponent text="Thông tin về tôi" title size={18} />
-          <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
-        </View>
-        <SpaceComponent height={20} />
+          <SpaceComponent height={8} />
+          <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
+          {profile?.phoneNumber && <>
+            <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
+            <SpaceComponent height={8} />
+          </>}
+          <RowComponent>
+            <View style={[globalStyles.center, { flex: 1 }]}>
+              <TextComponent text={`${numberOfFollowers}`} size={20} />
+              <TextComponent text="Người theo dõi" />
+            </View>
+            <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
+            <View style={[globalStyles.center, { flex: 1 }]}>
+              <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
+              <TextComponent text="Đang theo dõi" />
+            </View>
+          </RowComponent>
+          <SpaceComponent height={20} />
+          <View >
+            <RowComponent justify="center">
+              <ButtonComponent text="Cập nhập thông tin"
+                type="primary"
+                onPress={() => navigation.navigate('EditProfileScreen', { profile })}
+                color="white"
+                textColor={colors.primary}
 
-        <View>
+                styles={{ borderWidth: 1, borderColor: colors.primary, marginBottom: 8 }}
+                icon={<Feather name="edit" size={20} color={colors.primary} />}
+                iconFlex="left"
+              />
+            </RowComponent>
+            {/* <TextComponent text="Thông tin về tôi" title size={18} />
+          <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
+          </View>
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent isNoPaddingBottom>
+
+
+        <CardComponent isShadow>
           <RowComponent>
             <TextComponent flex={1} text="Các thể loại sự kiện quan tâm" title size={18} />
             <RowComponent onPress={() => setIsOpenModalizeSelectCategory(true)} styles={{ paddingVertical: 6 }}>
@@ -303,7 +308,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
                 <AvatarItem size={70} styles={{paddingHorizontal:index!==0 ? 12 : 0}} textName={item?.name} photoUrl={item?.image}/>
               )}
             /> */}
-          <DataLoaderComponent data={follower[0]?.categories} height={appInfo.sizes.HEIGHT*0.1} isLoading={isLoadingFollow} children={
+          <DataLoaderComponent data={follower[0]?.categories} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
             <FlatList
               style={{ paddingHorizontal: 8 }}
               horizontal
@@ -317,7 +322,12 @@ const ProfileScreen = ({ navigation, route }: any) => {
           }
             messageEmpty={'Không có thể loại nào cả'}
           />
-        </View>
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent>
+        <CardComponent styles={{height:appInfo.sizes.HEIGHT*0.5}}>
+          <TextComponent text={'Cài đặt'}/>
+        </CardComponent>
       </SectionComponent>
       <LoadingModal visible={isLoading} />
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
@@ -350,6 +360,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </>
         }
       />
+
     </ContainerComponent >
   )
 }

@@ -12,8 +12,9 @@ export interface EventModelNew {
     price?: number
     category:Category,
     authorId: UserModel
-    users?: UserModel[]
-    followers?:UserModel[],
+    // users?: UserModel[]
+    // followers?:UserModel[],
+    usersInterested?:UserModel[],
     startAt: string
     endAt: string
     status: boolean

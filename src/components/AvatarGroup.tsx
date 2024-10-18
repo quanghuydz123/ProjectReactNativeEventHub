@@ -35,13 +35,13 @@ const AvatarGroup = (props: Props) => {
             {
               users && users.length && users.length < 99 ?
                 <TextComponent
-                  text={`${users.length} người đã quan tâm`}
+                  text={`${users.length} Người đã quan tâm`}
                   size={12 + (size ? (size - 24) / 12 : 0)}
                   color={colors.primary}
                   font={fontFamilies.semiBold}
                 /> :
                 <TextComponent
-                  text={`+${99} người đã quan tâm`}
+                  text={`+${99} Người đã quan tâm`}
                   size={12 + (size ? (size - 24) / 12 : 0)}
                   color={colors.primary}
                   font={fontFamilies.semiBold}

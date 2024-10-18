@@ -7,7 +7,7 @@ import { colors } from "../../constrants/color";
 const FindFriendScreen = ({navigation}:any)=>{
   return (
     <ContainerComponent back title="Tìm kiếm người dùng" 
-    right={<SearchNormal size={20} color={colors.gray} 
+    right={<SearchNormal size={20} color={colors.white} 
     />}
     onPressRight={() => navigation.push('FriendsScreen', { screen: 'SearchFriendScreen' })}
     >

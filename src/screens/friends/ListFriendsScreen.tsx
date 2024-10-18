@@ -78,7 +78,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
   }
   return (
     <ContainerComponent back title="Danh sách theo dõi"
-      right={<SearchNormal size={20} color={colors.gray} />}
+      right={<SearchNormal size={20} color={colors.white} />}
       onPressRight={() => navigation.push('FriendsScreen', { screen: 'SearchFriendScreen' })}
     >
       <SectionComponent>

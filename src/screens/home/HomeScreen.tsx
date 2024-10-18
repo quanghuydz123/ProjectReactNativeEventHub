@@ -87,7 +87,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   //   outputRange: [96,0],
   //   extrapolate: 'clamp',
   // })
-
   useEffect(() => {
     HandleNotification.checkNotifitionPersion(dispatch)
     messaging().onMessage(async (mess: FirebaseMessagingTypes.RemoteMessage) => {

@@ -15,10 +15,11 @@ const CardComponent = (props:Props)=>{
       ,isShadow ? globalStyles.shadow : undefined,
       {backgroundColor:color ?? colors.white},
       styles]
+  const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
   return (
-    <TouchableOpacity onPress={onPress} style={localStyle}>
+    <TouchableOpacityComponent onPress={onPress} style={localStyle}>
       {children}
-    </TouchableOpacity >
+    </TouchableOpacityComponent >
   )
 }
 export default memo(CardComponent);
