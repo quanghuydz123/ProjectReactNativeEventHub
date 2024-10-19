@@ -11,7 +11,7 @@ const OnboardingScreen = ({navigation}: any)=>{
   const [index,setIndex] = useState(0)
   return (
     <View style={[globalStyles.container]}>
-        <Swiper style={{}} loop={false} onIndexChanged={(num)=>setIndex(num)}
+        <Swiper loop={false} onIndexChanged={(num)=>setIndex(num)}
         activeDotColor={colors.white}
         index={index}
         >

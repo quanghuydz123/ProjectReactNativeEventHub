@@ -233,7 +233,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   // },[follower])
   console.log(follower[0]?.users[0]?.idUser)
   return (
-    <ContainerComponent title="Tài khoản" isScroll bgColor="rgb(245, 247, 252)">
+    <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
         <CardComponent isShadow styles={[globalStyles.center]}>
           <RowComponent onPress={() => handleChangeImageAvatar()}>

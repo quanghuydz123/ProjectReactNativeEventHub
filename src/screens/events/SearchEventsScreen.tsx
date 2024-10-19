@@ -217,7 +217,7 @@ const auth = useSelector(authSelector)
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
-        setResult(res.data.events)
+        setResult(res.data as EventModelNew[])
       }
       setIsLoading(false)
     } catch (error: any) {
@@ -236,7 +236,7 @@ const auth = useSelector(authSelector)
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
-        setResult(res.data.events)
+        setResult(res.data as EventModelNew[])
       }
       setIsLoading(false)
     } catch (error: any) {

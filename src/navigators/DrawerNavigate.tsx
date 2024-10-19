@@ -10,6 +10,8 @@ import { useStatusBar } from "../hooks/useStatusBar"
 import { ToastMessaging } from "../utils/showToast"
 import { Snackbar } from "react-native-paper"
 import { appInfo } from "../constrants/appInfo"
+import { useSelector } from "react-redux"
+import { constantSelector, constantState } from "../reduxs/reducers/constantReducers"
 
 const DrawerNavigate = ({ navigation }: any) => {
   const Drawer = createDrawerNavigator()
@@ -18,6 +20,8 @@ const DrawerNavigate = ({ navigation }: any) => {
   const [visible, setVisible] = useState(false);
   const onToggleSnackBar = () => setVisible(true);
   const onDismissSnackBar = () => setVisible(false);
+  const constant:constantState = useSelector(constantSelector)
+
   const resetTimeOut = () => {
     if (timeOutId) {
       clearTimeout(timeOutId);
@@ -42,7 +46,6 @@ const DrawerNavigate = ({ navigation }: any) => {
     const routes = state.routes;
     if (routes.length > 1) {
       const prevRoute = routes[routes.length - 2]; // Lấy route trước đó
-      console.log("prevRoute.name", prevRoute.name);
       navigation.goBack();
     } else {
       // Nếu không có màn hình trước đó, thoát ứng dụng
@@ -57,7 +60,6 @@ const DrawerNavigate = ({ navigation }: any) => {
     }
     return true;
   }
-  console.log("c", count)
   useEffect(() => {
 
     BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);

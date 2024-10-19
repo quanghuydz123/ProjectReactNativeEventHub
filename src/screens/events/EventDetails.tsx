@@ -64,7 +64,6 @@ const EventDetails = ({ navigation, route }: any) => {
     }
 
   }, [])
-  console.log(auth.eventsInterested)
   // useEffect( ()=>{
   //   a()
   // },[])
@@ -74,7 +73,7 @@ const EventDetails = ({ navigation, route }: any) => {
   // }
   useEffect(()=>{
     setIsInterested(
-      auth?.eventsInterested?.some(event_id => event_id === item._id) || false
+      auth?.eventsInterested?.some(event_id => event_id === event?._id) || false
     );
   },[auth?.eventsInterested])
   const handleCallApiGetEventById = async () => {
@@ -82,7 +81,7 @@ const EventDetails = ({ navigation, route }: any) => {
     try {
       const res = await eventAPI.HandleEvent(apis.event.getById(id))
       if (res && res.data && res.status === 200) {
-        setEvent(res.data.event)
+        setEvent(res.data as EventModelNew)
 
       }
       setIsLoading(false)
@@ -147,9 +146,8 @@ const EventDetails = ({ navigation, route }: any) => {
         const res:any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         console.log("res && res.status === 200",res && res.status === 200)
         if (res && res.status === 200) {
+          await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested:res.data.user.eventsInterested }))
           dispatch(updateEventsInterested({eventsInterested:res.data.user.eventsInterested}))
-          const authItem: any = await getItemAuth()
-          await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), eventsInterested:res.data.user.eventsInterested }))
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -204,7 +202,7 @@ const EventDetails = ({ navigation, route }: any) => {
     }
   }
   const handleCreateBillPaymentEvent = async () => {
-    navigation.navigate('PaymentScreen', { event: item })
+    navigation.navigate('PaymentScreen', { event: event })
   }
   const openMap = () => {
     const encodedAddress = encodeURIComponent(event.Address); // Mã hóa địa chỉ
@@ -299,7 +297,7 @@ const EventDetails = ({ navigation, route }: any) => {
               <View style={{
                 justifyContent: 'space-around',
               }}>
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(item?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(item?.endAt ?? Date.now()))}`} font={fontFamilies.medium} size={15} color={colors.blue} />
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} font={fontFamilies.medium} size={15} color={colors.blue} />
 
                 {/* <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} font={fontFamilies.medium} size={16}/>
                 <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} /> */}
@@ -448,13 +446,12 @@ const EventDetails = ({ navigation, route }: any) => {
                     </View>
                   ))
                 } */}
-                 <View style={{}} key={item.category?._id}>
+                 <View style={{}} key={event?.category?._id}>
                     <TagComponent
                       bgColor={colors.primary}
-                      label={item.category.name}
+                      label={event?.category.name}
                       textSize={12}
                       textColor={colors.white}
-
                       styles={{
                         minWidth: 50,
                         paddingVertical: 6,

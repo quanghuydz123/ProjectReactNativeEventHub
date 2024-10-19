@@ -227,7 +227,7 @@ const MapScreen = ({ navigation }: any) => {
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
       if (res && res.data && res.status === 200) {
-        setAllEvent(res.data.events)
+        setAllEvent(res.data as EventModelNew[])
       }
       setIsLoading(false)
 
@@ -245,9 +245,9 @@ const MapScreen = ({ navigation }: any) => {
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
       const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limit: '10', limitDate: `${new Date().toISOString()}` })
       try {
-        const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+        const res = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
-          setAllEventNear(res.data.events)
+          setAllEventNear(res.data as EventModelNew[])
         }
         setIsLoadingNearEvent(false)
 

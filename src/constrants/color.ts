@@ -20,5 +20,6 @@ export const colors ={
     orange:'#fc8527',
     green:'#56da78',
     backgroundSearchInput:'rgb(228, 230, 235)',
-    background:'#262626'
+    background:'#262626',   
+    backgroundBluishWhite:'rgb(245, 247, 252)'
 }

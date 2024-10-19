@@ -44,7 +44,7 @@ const ExploreEvent = ({navigation,route}:any) => {
         try {
             const res = await eventAPI.HandleEvent(api)
             if(res && res.data && res.status===200){
-                setEvents(res.data.events)
+                setEvents(res.data as EventModelNew[])
             }
             setIsLoading(false)
         } catch (error: any) {

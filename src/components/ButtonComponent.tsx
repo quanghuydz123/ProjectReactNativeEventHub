@@ -21,7 +21,8 @@ interface Props {
     disable?: boolean,
     numberOfLineText?:number,
     textSize?:number,
-    width?:any
+    width?:any,
+    alignItems?:'center' | 'flex-start' | 'flex-end'
 }
 const ButtonComponent = (props: Props) => {
     const {
@@ -38,24 +39,25 @@ const ButtonComponent = (props: Props) => {
         disable,
         numberOfLineText,
         textSize,
-        width
+        width,
+        alignItems
     } = props
     return (
         type === 'primary' ?
-            <View style={{ alignItems: 'center' }}>
+            <View style={{ alignItems: alignItems ??  'center' }}>
                 <TouchableOpacity
                     disabled={disable}
                     onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,
                         marginBottom: 17,
-                        width: width ?? '90%'
+                        width: width ?? '90%',
 
                     }, styles]}>
                     {icon && iconFlex === 'left' && icon}
                     {
-                        text && <TextComponent size={textSize ?? 12} numberOfLine={numberOfLineText} text={text} color={textColor ?? colors.white}
-                            styles={[{ marginLeft: icon ? 8 : 0, fontSize: 16, textAlign: 'center' }, textStyles]}
+                        text && <TextComponent size={textSize ?? 16} numberOfLine={numberOfLineText} text={text} color={textColor ?? colors.white}
+                            styles={[{ marginLeft: icon ? 8 : 0, textAlign: 'center' }, textStyles]}
                             flex={icon && iconFlex === 'right' ? 1 : 0
                             }
                             font={textFont ?? fontFamilies.medium}

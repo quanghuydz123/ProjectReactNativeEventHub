@@ -17,6 +17,7 @@ import SearchComponent from "./SearchComponent"
 import ListEventComponent from "./ListEventComponent"
 import EmptyComponent from "./EmptyComponent"
 import DataLoaderComponent from "./DataLoaderComponent"
+import ListVideoComponent from "./ListVideoComponent"
 
 export {
     SpaceComponent,
@@ -34,5 +35,6 @@ export {
     DateTimePickerComponent,
     UploadImagePicker,
     EmptyComponent,
-    DataLoaderComponent
+    DataLoaderComponent,
+    ListVideoComponent
 }

@@ -11,7 +11,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { CategoriesList, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { CategoriesList, CricleComponent, DataLoaderComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import LoadingComponent from '../../components/LoadingComponent';
 import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
@@ -48,6 +48,7 @@ import Swiper from 'react-native-swiper';
 import { Platform, PermissionsAndroid } from 'react-native';
 import { Screen } from 'react-native-screens';
 import { useStatusBar } from '../../hooks/useStatusBar';
+import { constantSelector } from '../../reduxs/reducers/constantReducers';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 const AnimatedFontAwesome = Animated.createAnimatedComponent(FontAwesome)
@@ -74,6 +75,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
   const [isShowMoney, setIsShowMoney] = useState(true)
   const auth = useSelector(authSelector)
+  
   useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -373,7 +375,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
       if (res && res.data && res.status === 200) {
-        setAllEvent(res.data.events)
+        setAllEvent(res.data as EventModelNew[])
       }
       setIsLoading(false)
 
@@ -393,7 +395,7 @@ const HomeScreen = ({ navigation, route }: any) => {
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
-          setAllEventNear(res.data.events)
+          setAllEventNear(res.data as EventModelNew[])
         }
         setIsLoadingNearEvent(false)
 
@@ -617,30 +619,13 @@ const HomeScreen = ({ navigation, route }: any) => {
         }}
         scrollEventThrottle={16}>
         <Animated.View style={[styles.spaceForHeader]} />
-        <SectionComponent styles={{ paddingHorizontal: 0, paddingTop: 20, backgroundColor: colors.background }}>
 
-          {/* <Swiper style={{}} loop={false} onIndexChanged={(num)=>setIndex(num)}
-          activeDotColor={colors.white}
-          height={200}
-          index={index}
-          >
-              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
-              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
-              />
-              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
-              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
-              />
-              <Image source={{uri:'https://xuongdancuong.com/public/libraries/libraryxhome-678/images/tin-tuc/am-nhac-la-gi.jpg'}}
-              style={{flex:1,width:appInfo.sizes.WIDTH,height:appInfo.sizes.HEIGHT,resizeMode:'cover'}}
-              />
-          </Swiper> */}
-          <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
-          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} height={appInfo.sizes.HEIGHT * 0.3} children={
-            <CategoriesList values={categories} />
-          }
-            messageEmpty={'Không có thể loại nào cả'}
-          />
-          <SpaceComponent height={16} />
+        <SectionComponent styles={{ paddingHorizontal: 0, backgroundColor: colors.background }}>
+          <View style={{margin:2}}>
+            <ListVideoComponent />
+          </View>
+
+          <SpaceComponent height={30} />
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
             // <FlatList
@@ -662,7 +647,13 @@ const HomeScreen = ({ navigation, route }: any) => {
               messageEmpty={'Không có sự kiên nào sắp xảy ra'}
             />
           }
-
+          <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
+          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} height={appInfo.sizes.HEIGHT * 0.3} children={
+            <CategoriesList values={categories} />
+          }
+            messageEmpty={'Không có thể loại nào cả'}
+          />
+          <SpaceComponent height={16} />
           <TabBarComponent title="Gần chỗ bạn" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện gần chỗ bạn', categories: categories, lat: auth.position.lat, long: auth.position.lng, distance: '10', follows: allFollower })} />
           {
 

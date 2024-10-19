@@ -1,11 +1,11 @@
 import { StatusBar, Text, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { SplashScreen } from "./src/screens"
 import MainNavigator from "./src/navigators/MainNavigator"
 import AuthNavigator from "./src/navigators/AuthNavigator"
-import { NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer, useNavigationState } from "@react-navigation/native"
 import { useAsyncStorage } from "@react-native-async-storage/async-storage"
-import { Provider } from "react-redux"
+import { Provider, useDispatch } from "react-redux"
 import store from "./src/reduxs/store"
 import AppRouters from "./src/navigators/AppRouters"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -21,6 +21,7 @@ import { PaperProvider } from 'react-native-paper';
 
 const App = () => {
   //GestureHandlerRootView, Host khai báo để sử dụng modalize
+  const [nameScreenPresent,setNameScreenPresent] = useState('')
   useEffect(() => {
     HandleNotification.checkNotifitionPersion()
     requestNotificationPermission()
@@ -31,7 +32,7 @@ const App = () => {
       Orientation.lockToPortrait() // khóa xoay ngang
     }
   }, [])
-
+ 
   const requestNotificationPermission = async () => {
     if (Platform.OS === "android") {
       try {
@@ -65,9 +66,15 @@ const App = () => {
       <Provider store={store}>
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <Host>
-          <NavigationContainer linking={linking}>
+          <NavigationContainer 
+            onStateChange={(state:any) => {
+              const currentRoute = state.routes[state.index];
+              setNameScreenPresent(currentRoute.name)
+            }}
+            
+          > 
             <PaperProvider>
-              <AppRouters />
+              <AppRouters nameScreenPresent={nameScreenPresent}/>
             </PaperProvider>
           </NavigationContainer>
         </Host>
