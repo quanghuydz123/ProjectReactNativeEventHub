@@ -2,8 +2,8 @@ import { ActivityIndicator, Button, FlatList, RefreshControl, Text, TouchableOpa
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../components";
 import { globalStyles } from "../styles/globalStyles";
-import { useSelector } from "react-redux";
-import { authSelector } from "../reduxs/reducers/authReducers";
+import { useDispatch, useSelector } from "react-redux";
+import { addAuth, authSelector } from "../reduxs/reducers/authReducers";
 import AvatarItem from "../components/AvatarItem";
 import { colors } from "../constrants/color";
 import { appInfo } from "../constrants/appInfo";
@@ -31,9 +31,11 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   const [toggle, setToggle] = useState(false)
   const [notificationSelected, setSotificationSelected] = useState<NotificationModel>()
   const [refreshing, setRefreshing] = useState(false);
+  const dispatch = useDispatch()
+  const auth = useSelector(authSelector)
   useEffect(() => {
-    if(!notifications){
-      handleCallAPIGetNotifications()
+    if (!notifications) {
+      handleCallAPIGetNotifications({})
     }
     handleCallAPIUpdateIsViewdNotifications()
     // handleCallAPIGetNotifications(true)
@@ -46,32 +48,36 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       setIsFirst(true)
     }
   }, [notificationSelected, toggle])
-  const handleCallAPIGetNotifications = async (isLoading?: boolean) => {
-    const api = apis.notification.getNotificationsById({ idUser: user.id })
-    setIsLoadng(isLoading ? isLoading : false)
-    try {
-      const res: any = await notificationAPI.HandleNotification(api)
-      if (res && res.data && res.status === 200) {
-        setNotifications(res.data.notifications)
+  const handleCallAPIGetNotifications = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
+    if (user.accesstoken) {
+      const api = apis.notification.getNotificationsById({ idUser: idUser ?? user.id })
+      setIsLoadng(isLoading ? isLoading : false)
+      try {
+        const res: any = await notificationAPI.HandleNotification(api)
+        if (res && res.data && res.status === 200) {
+          setNotifications(res.data.notifications)
+        }
+        setIsLoadng(false)
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
+        if (errorMessage.statusCode === 403) {
+          console.log(errorMessage.message)
+        } else {
+          console.log('Lỗi rồi')
+        }
+        setIsLoadng(false)
       }
-      setIsLoadng(false)
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
-      } else {
-        console.log('Lỗi rồi')
-      }
-      setIsLoadng(false)
     }
   }
   useEffect(() => {
 
-    const handleGetNotifications = () => {
-      handleCallAPIGetNotifications()
+    const handleGetNotifications = (idUser?:string) => {
+      handleCallAPIGetNotifications({idUser:idUser})
       console.log('notification cập nhật');
     };
-    socket.on('getNotifications', handleGetNotifications)
+    socket.on('getNotifications', ({idUser})=>{
+      handleGetNotifications(idUser)
+    })
     return () => {
       socket.off('getNotifications', handleGetNotifications);
     };
@@ -81,7 +87,8 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await notificationAPI.HandleNotification(api, { uid: user.id }, 'put')
       if (res && res.status === 200) {
-        socket.emit('getNotifications')
+        socket.emit('getNotifications',{idUser: auth?.id})
+
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -99,7 +106,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
       setIsLoadingModal(false)
       if (res && res.status === 200) {
-        socket.emit('getNotifications')
+        socket.emit('getNotifications',{idUser: auth?.id})
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -118,8 +125,8 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
       setIsLoadingModal(false)
       if (res && res.status === 200) {
-        socket.emit('getNotifications')
-        socket.emit('followUser')
+        socket.emit('getNotifications',{idUser: auth?.id})
+        socket.emit('followUser',{idUser:auth?.id})
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)

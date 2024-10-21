@@ -144,7 +144,6 @@ const EventDetails = ({ navigation, route }: any) => {
     if (event?._id) {
       try {
         const res:any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
-        console.log("res && res.status === 200",res && res.status === 200)
         if (res && res.status === 200) {
           await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested:res.data.user.eventsInterested }))
           dispatch(updateEventsInterested({eventsInterested:res.data.user.eventsInterested}))
@@ -192,7 +191,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res = await notificationAPI.HandleNotification(api, { SenderID: auth.id, RecipientIds: userSelected, eventId: event?._id }, 'post')
         if (res && res.status === 200 && res.data) {
-          socket.emit('getNotifications')
+          socket.emit('getNotifications',{idUser: auth.id})   
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -204,6 +203,7 @@ const EventDetails = ({ navigation, route }: any) => {
   const handleCreateBillPaymentEvent = async () => {
     navigation.navigate('PaymentScreen', { event: event })
   }
+  console.log("is",isLLoadingNotShow,isLoading)
   const openMap = () => {
     const encodedAddress = encodeURIComponent(event.Address); // Mã hóa địa chỉ
     const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
@@ -518,7 +518,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   color={colors.white}
                   textColor={colors.primary}
                   styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
-                  icon={<FontAwesome name={'star'} size={16} color={colors.primary} />}
+                  icon={<FontAwesome name={'star-o'} size={16} color={colors.primary} />}
                   iconFlex="left"
                 />
 

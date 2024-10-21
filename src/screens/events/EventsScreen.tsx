@@ -112,11 +112,34 @@ const EventsScreen = ({ navigation, route }: any) => {
       </View>
     )
   }
+  const videoRef = useRef<VideoRef>(null);
+  const background = require('../../assets/video/video1.mp4');
+  const [isPase,setIsPause] = useState(false)
+  const handleClick = ()=>{
+    if(videoRef.current){
+      setIsPause(!isPase)
+    }
+  }
   return (
 
     <ContainerComponent title={"Sự kiện"} bgColor={colors.background}>
         {/* <ListVideoComponent /> */}
         <TextComponent text={'abc'} title color='white'/>
+        {/* <Video
+                // Can be a URL or a local file.
+                source={{uri:require('../../assets/video/video1.mp4')}}
+                // Store reference  
+                ref={videoRef}
+                onBuffer={onBuffer}
+                onError={onError}
+                
+                style={[{ width: '100%', height: 220}]}
+                paused={isPase}
+                
+                repeat={true}
+                muted={true}//bỏ âm thanh
+                 */}
+            {/* /> */}
     </ContainerComponent>
   )
 }

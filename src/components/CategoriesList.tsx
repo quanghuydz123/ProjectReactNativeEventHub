@@ -46,6 +46,7 @@ const CategoriesList = (props:Props)=>{
         photoUrl={item.image}
         />
       </TouchableOpacity >
+      
       )
     }
   return (

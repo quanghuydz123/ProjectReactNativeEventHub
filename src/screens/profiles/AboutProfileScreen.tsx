@@ -49,7 +49,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
   }, [uidOthor])
   useEffect(() => {
     handleCallApiGetFollowerById(true)
-  }, [])
+  }, [auth])
   const renderTabContent = (key: String) => {
     let content = <></>
     switch (key) {
@@ -109,8 +109,8 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       if (res && res.data && res.status === 200) {
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
-        socket.emit('followUser')
-        socket.emit('getNotifications')
+        socket.emit('followUser',{idUser: auth?.id})
+        socket.emit('getNotifications',{idUser: auth?.id})      
       }
       setIsLoading(false)
     } catch (error: any) {

@@ -30,7 +30,6 @@ const EventItem = (props: Props) => {
   const { item, followers, isShownVertical } = props
   const navigation: any = useNavigation()
   const auth:AuthState = useSelector(authSelector)
-  console.log("asdb",item?.usersInterested)
   return (
     <CardComponent styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.97 : appInfo.sizes.WIDTH * 0.7 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }} color={colors.background}>
       {

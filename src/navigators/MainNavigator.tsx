@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, AddNewEvent, ChatsScreen, EditProfileScreen, EventDetails, ExploreEvent, NotFound, NotificationsScreen, PaymentScreen, QrScannerScreen, SearchEventsScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, AddNewEvent, ChatsScreen, EditProfileScreen, EventDetails, ExploreEvent, ForgotPasswordScreen, LoginScreen, NotFound, NotificationsScreen, PaymentScreen, QrScannerScreen, SearchEventsScreen, SignUpScreen, VerificationScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,36 +31,45 @@ const MainNavigator = ({navigation}:any) => {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
   const [toggle,setToggle] = useState(true)
   useEffect(() => {
-    const interval = setInterval(() => {
-      checkToken()
-    }, 5000);
-    setIntervalId(interval);
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
+    handleCheckToken()
   }, [])
   useEffect(() => {
     checkNetWork()
   }, [])
-  
+  const handleCheckToken = async ()=>{
+    const res = await AsyncStorage.getItem('auth')
+    if(res){
+      const interval = setInterval(() => {
+        checkToken()
+      }, 5000);
+      setIntervalId(interval);
+      return () => {
+        if (intervalId) clearInterval(intervalId);
+      };
+    }
+  }
   const checkNetWork = () => {
     NetInfo.addEventListener(state => { setIsOnline(state.isConnected ?? false),console.log("state",state) }) //lấy ra thông tin kết nối
   }
   const handleGetItem = async () => {
+
     const res = await getRememberItem()
     const resPassword = await getPasswordItem()
     resPassword && setPasswored(resPassword)
     setIsReMember(res === 'true')
   }
   const checkToken = async () => {
-    await handleGetItem()
-    const res = await getItem()
-    let token = res && JSON.parse(res).accesstoken;
-    let decodedToken = jwtDecode(token);
-    let currentDate = new Date();
-    // JWT exp is in seconds
-    if (decodedToken.exp && decodedToken.exp * 1000 < currentDate.getTime()) {
-      { AlertComponent({ title: 'Thông báo', message: 'Phiên đăng nhập đã hết hạn vui lòng đăng nhập lại !', onConfirm: () => handleLogout() }) }
+    const auth = await AsyncStorage.getItem('auth')
+    if(auth){
+      await handleGetItem()
+      const res = await getItem()
+      let token = res && JSON.parse(res).accesstoken;
+      let decodedToken = jwtDecode(token);
+      let currentDate = new Date();
+      // JWT exp is in seconds
+      if (decodedToken.exp && decodedToken.exp * 1000 < currentDate.getTime()) {
+        { AlertComponent({ title: 'Thông báo', message: 'Phiên đăng nhập đã hết hạn vui lòng đăng nhập lại !', onConfirm: () => handleLogout() }) }
+      }
     }
   }
   const handleLogout = async () => {
@@ -110,7 +119,10 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="AddEvent" component={AddNewEvent} />
         <Stack.Screen name="QrScannerScreen" component={QrScannerScreen} />
         <Stack.Screen name="TestQrcannerScreen" component={TestQrcannerScreen} />
-
+        <Stack.Screen name="LoginScreen" component={LoginScreen}/>
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen}/>
+        <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen}/>
+        <Stack.Screen name="VerificationScreen" component={VerificationScreen}/>
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'
         ,message:'Quý khách vui lòng kiểm tra kết nối Internet/3G/Wifi',

@@ -21,11 +21,12 @@ interface Props {
     bgColor?: string,
     colorTitle?: string,
     bgColorTitle?: string,
-    isCenterTitle?:boolean
+    isCenterTitle?:boolean,
+    pdTop?:number
 }
 //showsVerticalScrollIndicator ẩn thanh trượt xuống
 const ContainerComponent = (props: Props) => {
-    const { children, isScroll, isImageBackgound, title, back, right, onPressRight, bgColor, isCenterTitle,colorTitle, bgColorTitle } = props
+    const { children, isScroll, isImageBackgound, title, back, right,pdTop, onPressRight, bgColor, isCenterTitle,colorTitle, bgColorTitle } = props
     const navigation: any = useNavigation()
     const RightComponent: React.ComponentType<any> = onPressRight ? TouchableOpacity : View;
     const returnContainer = isScroll ? (
@@ -40,7 +41,7 @@ const ContainerComponent = (props: Props) => {
 
     const headerComponent = () => {
         return <View style={{ flex: 1 }}>
-            <View style={{ paddingTop: 30, backgroundColor: bgColorTitle ?? colors.primary }}>
+            <View style={{ paddingTop:pdTop ??  30, backgroundColor: bgColorTitle ?? colors.primary }}>
                 {(title || back || right) &&
                     <RowComponent styles={{
                         paddingHorizontal: 16

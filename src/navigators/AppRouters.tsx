@@ -33,7 +33,9 @@ const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{
     }
   return (
     <> 
-        {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />}
+        {/* {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />} */}
+        {isShowSlash ? <SplashScreen /> : <MainNavigator />}
+
     </>
   )
 }

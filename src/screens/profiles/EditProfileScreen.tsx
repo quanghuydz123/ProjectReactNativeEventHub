@@ -35,7 +35,7 @@ const EditProfileScreen = ({navigation,route}:any)=>{
                 const jsonResStorage = JSON.parse(resStorage || '')
                 await AsyncStorage.setItem('auth',JSON.stringify({...jsonResStorage,...res.data.user}))
                 dispatch(addAuth({...auth,...res.data.user}))
-                socket.emit('updateUser')
+                socket.emit('updateUser',{isUser:auth?.id})
                 ToastMessaging.Success({})
                 setIsLoading(false)
             }
@@ -63,20 +63,20 @@ const EditProfileScreen = ({navigation,route}:any)=>{
         <SectionComponent>
             <InputComponent 
             
-            value={profileData.fullname} 
+            value={profileData?.fullname || ''} 
             onChange={(val)=>handleOnchageValue('fullname',val)} 
             title="Họ tên"
             allowClear
             />
             <InputComponent 
-            value={profileData.phoneNumber || ''} 
+            value={profileData?.phoneNumber || ''} 
             onChange={(val)=>handleOnchageValue('phoneNumber',val)} 
             title="Số điện thoại"
             type="number-pad"
             allowClear
             />
             <InputComponent 
-            value={profileData.bio || ''} 
+            value={profileData?.bio || ''} 
             onChange={(val)=>handleOnchageValue('bio',val)} 
             title="Giới thiệu bản thân"
             numberOfLines={5}

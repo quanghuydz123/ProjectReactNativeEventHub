@@ -22,7 +22,7 @@ export const globalStyles = StyleSheet.create({
         backgroundColor:colors.white,
         paddingHorizontal:16,
         paddingVertical:16,
-        minHeight:56,
+        // minHeight:56,
         flexDirection:'row'
     },
     section:{

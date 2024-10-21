@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
-import { addAuth, authSelector } from "../../reduxs/reducers/authReducers";
+import { addAuth, authSelector, AuthState } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize, SelectedImageModal } from "../../../modals";
 import AvatarItem from "../../components/AvatarItem";
@@ -27,7 +27,7 @@ import { appInfo } from "../../constrants/appInfo";
 import CardComponent from "../../components/CardComponent";
 
 const ProfileScreen = ({ navigation, route }: any) => {
-  const auth = useSelector(authSelector)
+  const auth: AuthState = useSelector(authSelector)
   const [profile, setProfile] = useState<UserModel>()
   const [isLoading, setIsLoading] = useState(false)
   const [profileId, setProfileId] = useState('')
@@ -42,11 +42,13 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const [isLoadingFollow, setIsLoadingFollow] = useState(false)
   const dispatch = useDispatch()
-  useEffect(() => {
-    handleCallApiGetProfile(true)
+  useEffect(()=>{
     handleGetAllCategory()
-    handleCallApiGetFollowerById(true)
-  }, [])
+  },[])
+  useEffect(() => {
+    handleCallApiGetProfile({isLoading:true})
+    handleCallApiGetFollowerById({isLoading:true})
+  }, [auth.accesstoken])
   useEffect(() => {
     if (follower) {
       const ids: string[] = []
@@ -55,7 +57,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       })
       setIdsFollowerCategory(ids)
     }
-  }, [follower, isOpenModalizeSelectCategory])
+  }, [follower, isOpenModalizeSelectCategory,auth])
   useEffect(() => {
     if (isUpdateImageProfile) {
       if (profile?.photoUrl) {
@@ -85,15 +87,19 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }, [isUpdateImageProfile])
   useEffect(() => {
-    const handleUpdateProfile = () => {
-      handleCallApiGetProfile()
+    const handleUpdateProfile = (idUser?:string) => {
+      handleCallApiGetProfile({idUser:idUser})
     }
-    const handleFollowByid = () => {
-      handleCallApiGetFollowerById();
+    const handleFollowByid = (idUser?:string) => {
+      handleCallApiGetFollowerById({idUser:idUser});
       console.log('followers cập nhật');
     };
-    socket.on('updateUser', handleUpdateProfile)
-    socket.on('followUser', handleFollowByid)
+    socket.on('updateUser', ({idUser})=>{
+      handleUpdateProfile(idUser)
+    })
+    socket.on('followUser', ({idUser})=>{
+      handleFollowByid(idUser)
+    })
     return () => {
       socket.off('updateUser', handleUpdateProfile)
       socket.off('followUser', handleFollowByid)
@@ -115,10 +121,12 @@ const ProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
-    const api = apis.follow.getById(auth.id)
-    setIsLoadingFollow(isLoading ? isLoading : false)
+  const handleCallApiGetFollowerById = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
+ 
+   if(auth.accesstoken){
     try {
+      const api = apis.follow.getById(idUser ?? auth.id)
+      setIsLoadingFollow(isLoading ? isLoading : false)
       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setFollower(res.data.followers)
@@ -126,16 +134,21 @@ const ProfileScreen = ({ navigation, route }: any) => {
       }
       setIsLoadingFollow(false)
     } catch (error: any) {
+      
       setIsLoadingFollow(false)
       const errorMessage = JSON.parse(error.message)
       console.log("FollowerScreen", errorMessage)
 
     }
+   }else{
+      setFollower([])
+      setNumberOfFollowers(0)
+   }
   }
-  const handleCallApiGetProfile = async (isLoading?: boolean) => {
-    if (auth) {
+  const handleCallApiGetProfile = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
+    if (auth.accesstoken) {
       setIsLoading(isLoading ? isLoading : false)
-      const api = `/get-user-byId?uid=${auth.id}`
+      const api = `/get-user-byId?uid=${idUser ?? auth.id}`
       try {
         const res = await userAPI.HandleUser(api)
         if (res && res.data && res.status === 200) {
@@ -147,6 +160,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
         console.log("HomeScreen", errorMessage)
         setIsLoading(false)
       }
+    }else{
+      setProfile(undefined)
     }
   }
   const handleChangeImageAvatar = async () => {
@@ -177,7 +192,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         const jsonResStorage = JSON.parse(resStorage || '')
         await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
         dispatch(addAuth({ ...auth, ...res.data.user }))
-        socket.emit('updateUser')
+        socket.emit('updateUser',{isUser:auth?.id})
         setIsLoading(false)
         setIsUpdateProfile(false)
         ToastMessaging.Success({ message: "Cập nhập ảnh đại điện thành công" })
@@ -211,7 +226,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await followAPI.HandleFollwer(api, { idUser: auth.id, idsCategory: idsFollowerCategory }, 'put')
       if (res && res.data && res.status === 200) {
-        handleCallApiGetFollowerById()
+        handleCallApiGetFollowerById({})
       }
       setIsLoading(false)
       setIsOpenModalizeSelectCategory(false)
@@ -231,54 +246,64 @@ const ProfileScreen = ({ navigation, route }: any) => {
   //   },0)  
   //   return ``
   // },[follower])
-  console.log(follower[0]?.users[0]?.idUser)
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
         <CardComponent isShadow styles={[globalStyles.center]}>
-          <RowComponent onPress={() => handleChangeImageAvatar()}>
-            <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
+          {auth.accesstoken ? <>
+            <RowComponent onPress={() => handleChangeImageAvatar()}>
+              <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
 
-          </RowComponent>
-          <SpaceComponent height={8} />
-          <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
-          {profile?.phoneNumber && <>
-            <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
-            <SpaceComponent height={8} />
-          </>}
-          <RowComponent>
-            <View style={[globalStyles.center, { flex: 1 }]}>
-              <TextComponent text={`${numberOfFollowers}`} size={20} />
-              <TextComponent text="Người theo dõi" />
-            </View>
-            <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
-            <View style={[globalStyles.center, { flex: 1 }]}>
-              <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
-              <TextComponent text="Đang theo dõi" />
-            </View>
-          </RowComponent>
-          <SpaceComponent height={20} />
-          <View >
-            <RowComponent justify="center">
-              <ButtonComponent text="Cập nhập thông tin"
-                type="primary"
-                onPress={() => navigation.navigate('EditProfileScreen', { profile })}
-                color="white"
-                textColor={colors.primary}
-
-                styles={{ borderWidth: 1, borderColor: colors.primary, marginBottom: 8 }}
-                icon={<Feather name="edit" size={20} color={colors.primary} />}
-                iconFlex="left"
-              />
             </RowComponent>
-            {/* <TextComponent text="Thông tin về tôi" title size={18} />
+            <SpaceComponent height={8} />
+            <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />
+            {profile?.phoneNumber && <>
+              <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
+              <SpaceComponent height={8} />
+            </>}
+            <RowComponent>
+              <View style={[globalStyles.center, { flex: 1 }]}>
+                <TextComponent text={`${numberOfFollowers}`} size={20} />
+                <TextComponent text="Người theo dõi" />
+              </View>
+              <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
+              <View style={[globalStyles.center, { flex: 1 }]}>
+                <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
+                <TextComponent text="Đang theo dõi" />
+              </View>
+            </RowComponent>
+            <SpaceComponent height={20} />
+            <View >
+              <RowComponent justify="center">
+                <ButtonComponent text="Cập nhập thông tin"
+                  type="primary"
+                  onPress={() => navigation.navigate('EditProfileScreen', { profile })}
+                  color="white"
+                  textColor={colors.primary}
+
+                  styles={{ borderWidth: 1, borderColor: colors.primary, marginBottom: 8 }}
+                  icon={<Feather name="edit" size={20} color={colors.primary} />}
+                  iconFlex="left"
+                />
+              </RowComponent>
+              {/* <TextComponent text="Thông tin về tôi" title size={18} />
           <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
-          </View>
+            </View>
+          </>:
+          <SectionComponent>
+            <SpaceComponent height={16}/>
+            <ButtonComponent 
+            onPress={()=>navigation.navigate('LoginScreen')}
+            mrBottom={0} text="Đăng nhập/Đăng ký" 
+            type="primary" 
+            styles={{borderRadius:100,paddingVertical:10}} textSize={14}/>
+            <SpaceComponent height={6}/>
+            <TextComponent text={'Để trả nghiệm toàn bộ tính năng'} size={14} textAlign="center" font={fontFamilies.medium}/>
+          </SectionComponent>
+          }
         </CardComponent>
       </SectionComponent>
-      <SectionComponent isNoPaddingBottom>
-
-
+      {auth.accesstoken && <SectionComponent isNoPaddingBottom>
         <CardComponent isShadow>
           <RowComponent>
             <TextComponent flex={1} text="Các thể loại sự kiện quan tâm" title size={18} />
@@ -289,26 +314,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
             </RowComponent>
           </RowComponent>
           <SpaceComponent height={8} />
-          {/* <RowComponent styles={{
-            flexWrap: 'wrap', justifyContent: 'flex-start'
-          }}>
-            {
-              
-              follower[0]?.categories ? follower[0]?.categories.map((category)=><AvatarItem size={60} textName={category?.name} photoUrl={category?.image}/>) : ''
-            }              
-            
-          </RowComponent> */}
-          {/* <FlatList
-              style={{paddingHorizontal:8}}
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              data={follower[0]?.categories}
-              contentContainerStyle={{}}
-              renderItem={({item,index}) => (
-                <AvatarItem size={70} styles={{paddingHorizontal:index!==0 ? 12 : 0}} textName={item?.name} photoUrl={item?.image}/>
-              )}
-            /> */}
-          <DataLoaderComponent data={follower[0]?.categories} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
+         
+          {follower[0]?.categories && follower[0]?.categories.length>0 ?<DataLoaderComponent data={follower[0]?.categories} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
             <FlatList
               style={{ paddingHorizontal: 8 }}
               horizontal
@@ -321,15 +328,19 @@ const ProfileScreen = ({ navigation, route }: any) => {
             />
           }
             messageEmpty={'Không có thể loại nào cả'}
-          />
+          /> : 
+          <View style={{paddingVertical:20}}>
+                <TextComponent textAlign="center" text={'HÃY CHỌN THỂ LOẠI YÊU THÍCH'}/>
+          </View>
+        }
         </CardComponent>
-      </SectionComponent>
+      </SectionComponent>}
       <SectionComponent>
-        <CardComponent styles={{height:appInfo.sizes.HEIGHT*0.5}}>
-          <TextComponent text={'Cài đặt'}/>
+        <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
+          <TextComponent text={'Cài đặt'} />
         </CardComponent>
       </SectionComponent>
-      <LoadingModal visible={isLoading} />
+      {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
       <SelectModalize
         key={"ProfileScreen"}

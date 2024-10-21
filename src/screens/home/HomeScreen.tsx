@@ -17,7 +17,7 @@ import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
 import { FollowModel } from '../../models/FollowModel';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPositionUser, authSelector } from '../../reduxs/reducers/authReducers';
+import { addAuth, addPositionUser, authSelector } from '../../reduxs/reducers/authReducers';
 import eventAPI from '../../apis/eventAPI';
 import { apis } from '../../constrants/apis';
 import followAPI from '../../apis/followAPI';
@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
   const [isShowMoney, setIsShowMoney] = useState(true)
   const auth = useSelector(authSelector)
-  
+  console.log("authauthauth1231321312",auth.fullname)
   useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -109,14 +109,16 @@ const HomeScreen = ({ navigation, route }: any) => {
       }
     })
   }, [])
-  useEffect(() => {
-    getLocationUser()
+  useEffect(()=>{
     handleCallApiGetAllEvent(true)
     handleCallApiGetAllFollower()
     handleGetAllCategory()
+  },[])
+  useEffect(() => {
+    getLocationUser()
     handleCallAPIGetNotifications()
     // checkfcmToken()
-  }, [])
+  }, [auth.accesstoken])
   useEffect(() => {
     handleCallApiGetEventsNearYou(true)
   }, [auth.position])
@@ -124,40 +126,42 @@ const HomeScreen = ({ navigation, route }: any) => {
     setRefreshList(prev => !prev);
   }, [allFollower])
   useEffect(() => {
-    const handleFollowers = () => {
-      handleCallApiGetAllFollower();
-      console.log('followers cập nhật');
-    };
+    // const handleFollowers = () => {
+    //   handleCallApiGetAllFollower();
+    //   console.log('followers cập nhật');
+    // };
 
-    const handleEvents = () => {
-      handleCallApiGetAllEvent();
-      handleCallApiGetEventsNearYou();
-      console.log('events cập nhật');
-    };
+    // const handleEvents = () => {
+    //   handleCallApiGetAllEvent();
+    //   handleCallApiGetEventsNearYou();
+    //   console.log('events cập nhật');
+    // };
 
-    const handleUpdateUser = () => {
-      handleCallApiGetAllEvent();
-      handleCallApiGetEventsNearYou();
-      console.log('user cập nhật');
-    };
+    // const handleUpdateUser = () => {
+    //   handleCallApiGetAllEvent();
+    //   handleCallApiGetEventsNearYou();
+    //   console.log('user cập nhật');
+    // };
 
-    const handleGetNotifications = () => {
-      handleCallAPIGetNotifications()
+    const handleGetNotifications = (idUser?:string) => {
+      handleCallAPIGetNotifications(idUser)
       console.log('notification cập nhật');
     };
 
-    socket.on('followers', (idUser) => {
-      if (idUser === auth.id) {
-        handleCallApiGetAllFollower()
-      }
-    });
-    socket.on('events', handleEvents);
-    socket.on('updateUser', handleUpdateUser);
-    socket.on('getNotifications', handleGetNotifications)
+    // socket.on('followers', (idUser) => {
+    //   if (idUser === auth.id) {
+    //     handleCallApiGetAllFollower()
+    //   }
+    // });
+    // socket.on('events', handleEvents);
+    // socket.on('updateUser', handleUpdateUser);
+    socket.on('getNotifications', ({idUser})=>{
+      handleGetNotifications(idUser)
+    })
     return () => {
-      socket.off('followers', handleFollowers);
-      socket.off('events', handleEvents);
-      socket.off('updateUser', handleUpdateUser);
+      // socket.off('followers', handleFollowers);
+      // socket.off('events', handleEvents);
+      // socket.off('updateUser', handleUpdateUser);
       socket.off('getNotifications', handleGetNotifications);
     };
   }, [])
@@ -311,37 +315,41 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const getLocationUser = async () => {
-    Geolocation.getCurrentPosition(position => {
-      if (position.coords) {
-        // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-        if (!auth.position) {
-          if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
-            console.log("handleCallApiUpdatePostionUser")
-            handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+    if (auth.accesstoken) {
+      Geolocation.getCurrentPosition(position => {
+        if (position.coords) {
+          // reverseGeoCode(position.coords.latitude,position.coords.longitude)
+          if (!auth.position) {
+            if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
+              console.log("handleCallApiUpdatePostionUser")
+              handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+            }
           }
-        }
-        // else {
-        //   console.log("handleCallApiUpdatePostionUser")
-        //   handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
-        // }
+          // else {
+          //   console.log("handleCallApiUpdatePostionUser")
+          //   handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+          // }
 
-      }
-    }, (error) => {
-      console.log('Lấy vị trí bị lỗi', error)
-    }, {});
+        }
+      }, (error) => {
+        console.log('Lấy vị trí bị lỗi', error)
+      }, {});
+    }
   }
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
-    const api = apis.user.updatePositionUser()
-    try {
-      const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
-      const authItem: any = await getItemAuth()
-      if (res && res.data && res.status === 200) {
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), position: res.data.user.position }))
+    if (auth.accesstoken) {
+      const api = apis.user.updatePositionUser()
+      try {
+        const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
+        const authItem: any = await getItemAuth()
+        if (res && res.data && res.status === 200) {
+          await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), position: res.data.user.position }))
+        }
+        dispatch(addPositionUser({ lat: res.data.user.position.lat, lng: res.data.user.position.lng }))
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
+        console.log("HomeScreen", errorMessage)
       }
-      dispatch(addPositionUser({ lat: res.data.user.position.lat, lng: res.data.user.position.lng }))
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      console.log("HomeScreen", errorMessage)
     }
   }
   const handleCheckViewedNotifications = async (notifications123: NotificationModel[]) => {
@@ -351,22 +359,28 @@ const HomeScreen = ({ navigation, route }: any) => {
     setNumberOfUnseenNotifications(numberOfUnseenNotifications);
     setIsViewNotifications(!isCheck)
   }
-  const handleCallAPIGetNotifications = async () => {
-    const api = apis.notification.getNotificationsById({ idUser: auth.id })
-    try {
-      const res: any = await notificationAPI.HandleNotification(api)
-      if (res && res.data && res.status === 200) {
-        // console.log("res.data.notificatios", res.data.notifications.length)
-        setNotifications(res.data.notifications)
-        await handleCheckViewedNotifications(res.data.notifications)
+  const handleCallAPIGetNotifications = async (idUser?:string) => {
+    if (auth.accesstoken) {
+      console.log("idUser ?? auth.id",idUser , auth.id)
+      const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id })
+      try {
+        const res: any = await notificationAPI.HandleNotification(api)
+        if (res && res.data && res.status === 200) {
+          // console.log("res.data.notificatios", res.data.notifications.length)
+          setNotifications(res.data.notifications)
+          await handleCheckViewedNotifications(res.data.notifications)
+        }
+
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
+        if (errorMessage.statusCode === 403) {
+          console.log(errorMessage.message)
+        } else {
+          console.log('Lỗi rồi')
+        }
       }
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
-      } else {
-        console.log('Lỗi rồi')
-      }
+    } else {
+      setNotifications([])
     }
   }
   const handleCallApiGetAllEvent = async (isLoading?: boolean) => {
@@ -446,6 +460,13 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     }),
   };
+  const checkLogin = ()=>{
+    if(!auth.accesstoken){
+      navigation.navigate('LoginScreen')
+      return false
+    }
+    return true
+  }
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -475,7 +496,11 @@ const HomeScreen = ({ navigation, route }: any) => {
             <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />
           </RowComponent>
           <SpaceComponent width={16} />
-          <TouchableOpacity onPress={() => navigation.navigate('NotificationsScreen', { notificationRoute: notifications })}>
+          <TouchableOpacity onPress={() => {
+            if(checkLogin()){
+              navigation.navigate('NotificationsScreen', { notificationRoute: notifications })
+            }
+          }}>
             <Notification size={22} color={colors.white} />
             {
               !isViewdNotifications && <View style={{
@@ -528,10 +553,10 @@ const HomeScreen = ({ navigation, route }: any) => {
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => console.log('event')} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => checkLogin()} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => console.log('FriendsScreen')}
+                onPress={() => checkLogin()}
               >
                 <AnimatedMaterialIcons name='bookmark-added' size={20} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -542,10 +567,10 @@ const HomeScreen = ({ navigation, route }: any) => {
           </Animated.View>
 
           <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => console.log('Vé')} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => checkLogin()} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => console.log('Vé')}
+                onPress={() => checkLogin()}
               >
                 <AnimatedFontAwesome name='ticket' size={18} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -565,10 +590,18 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
               </CricleComponent> */}
 
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('FriendsScreen')} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+              if(checkLogin()){
+                navigation.navigate('FriendsScreen')
+              }
+            }} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => navigation.navigate('FriendsScreen')}
+                onPress={() => {
+                  if(checkLogin()){
+                    navigation.navigate('FriendsScreen')
+                  }
+                }}
               >
                 <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -580,10 +613,18 @@ const HomeScreen = ({ navigation, route }: any) => {
 
           <Animated.View style={[styles.feature, scanViewAnimation]} >
 
-            <TouchableOpacity onPress={() => navigation.navigate('ChatsScreen')} style={{ alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => {
+              if(checkLogin()){
+                navigation.navigate('ChatsScreen')
+              }
+            }} style={{ alignItems: 'center' }}>
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => navigation.navigate('ChatsScreen')}
+                onPress={() => {
+                  if(checkLogin()){
+                    navigation.navigate('ChatsScreen')
+                  }
+                }}
               >
                 <AnimatedMaterialCommunityIcons name="facebook-messenger" size={22} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -621,7 +662,7 @@ const HomeScreen = ({ navigation, route }: any) => {
         <Animated.View style={[styles.spaceForHeader]} />
 
         <SectionComponent styles={{ paddingHorizontal: 0, backgroundColor: colors.background }}>
-          <View style={{margin:2}}>
+          <View style={{ margin: 0 }}>
             <ListVideoComponent />
           </View>
 

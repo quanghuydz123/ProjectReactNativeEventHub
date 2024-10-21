@@ -62,15 +62,19 @@ const DrawerCustom = ({ navigation }: any) => {
         await HandleNotification.Update(auth.id, items)
       }
     }
-    if (isRemember === true) {
-      await AsyncStorage.setItem('auth', JSON.stringify({ email: auth.email, password: password }))
-      dispatch(removeAuth())
-    } else {
-      await AsyncStorage.setItem('auth', JSON.stringify({ email: '', password: '' }))
-      await AsyncStorage.removeItem('isRemember')
-      await AsyncStorage.removeItem('password')
-      dispatch(removeAuth())
-    }
+    await AsyncStorage.removeItem('auth')
+    dispatch(removeAuth())
+    // await AsyncStorage.removeItem('isRemember')
+    // await AsyncStorage.removeItem('password')
+    // if (isRemember === true) {
+    //   await AsyncStorage.setItem('auth', JSON.stringify({ email: auth.email, password: password }))
+    //   dispatch(removeAuth())
+    // } else {
+    //   await AsyncStorage.setItem('auth', JSON.stringify({ email: '', password: '' }))
+    //   await AsyncStorage.removeItem('isRemember')
+    //   await AsyncStorage.removeItem('password')
+    //   dispatch(removeAuth())
+    // }
   }
   const handleClickItemMenu = (key: string) => {
     switch (key) {
@@ -91,21 +95,21 @@ const DrawerCustom = ({ navigation }: any) => {
 
   return (
     <View style={[localStyles.container]}>
-      <TouchableOpacity
+      {auth.accesstoken && <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          navigation.closeDrawer()
-          navigation.navigate('Profile', {
-            screen: 'ProfileScreen',
-            // params: { id: auth.id } 
-          })// screen chọn màn hỉnh để chuyển qua trong ProfileNavigator
+          // navigation.closeDrawer()
+          // navigation.navigate('Profile', {
+          //   screen: 'ProfileScreen',
+          //   // params: { id: auth.id } 
+          // })// screen chọn màn hỉnh để chuyển qua trong ProfileNavigator
         }
         }>
         {
           <AvatarItem size={52} photoUrl={user.photoUrl} notBorderWidth styles={{ marginBottom: 8 }} />
         }
         <TextComponent text={user?.fullname} title size={18} />
-      </TouchableOpacity >
+      </TouchableOpacity >}
       <FlatList
         showsVerticalScrollIndicator={false}
         data={Menu} style={{ marginVertical: 20, flex: 1 }}

@@ -22,7 +22,9 @@ interface Props {
     numberOfLineText?:number,
     textSize?:number,
     width?:any,
-    alignItems?:'center' | 'flex-start' | 'flex-end'
+    alignItems?:'center' | 'flex-start' | 'flex-end',
+    mrBottom?:number
+
 }
 const ButtonComponent = (props: Props) => {
     const {
@@ -40,17 +42,19 @@ const ButtonComponent = (props: Props) => {
         numberOfLineText,
         textSize,
         width,
-        alignItems
+        alignItems,
+        mrBottom
     } = props
     return (
         type === 'primary' ?
             <View style={{ alignItems: alignItems ??  'center' }}>
+                
                 <TouchableOpacity
                     disabled={disable}
                     onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,
-                        marginBottom: 17,
+                        marginBottom: mrBottom ?? 17,
                         width: width ?? '90%',
 
                     }, styles]}>

@@ -16,6 +16,7 @@ import { EventHubLogo } from "../../assets/svgs";
 import { appInfo } from "../../constrants/appInfo";
 import { apis } from "../../constrants/apis";
 import { ToastMessaging } from "../../utils/showToast";
+import { HandleNotification } from "../../utils/handleNotification";
 
 const LoginScreen = ({ navigation,route }: any) => {
   const { emailRoute, passwordRoute, status }:{ emailRoute: string, passwordRoute: string, status: number } = route.params || {}
@@ -53,15 +54,20 @@ const LoginScreen = ({ navigation,route }: any) => {
         setIsLoading(true)
         try {
           const res:any = await authenticationAPI.HandleAuthentication(apis.auth.login(), { email, password }, 'post');
-          if (isRemember) {
-            await AsyncStorage.setItem('isRemember', 'true')
+          // if (isRemember) {
+          //   await AsyncStorage.setItem('isRemember', 'true')
+          //   await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
+          //   await AsyncStorage.setItem('password', password)
+          // } else {
+          //   await AsyncStorage.setItem('isRemember', 'false')
+          //   await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
+          // }
+          if(res && res.status===200){
             await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
-            await AsyncStorage.setItem('password', password)
-          } else {
-            await AsyncStorage.setItem('isRemember', 'false')
-            await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))
+            dispatch(addAuth({...res.data,loginMethod:'account'}))
+            HandleNotification.checkNotifitionPersion()
+            navigation.goBack()
           }
-          dispatch(addAuth({...res.data,loginMethod:'account'}))
           setIsLoading(false)
         } catch (error:any) {
           setIsLoading(false)
@@ -84,8 +90,8 @@ const LoginScreen = ({ navigation,route }: any) => {
 
   }
   return (
-    <ContainerComponent isScroll>
-      <SectionComponent styles={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
+    <ContainerComponent isScroll back title={'Đăng nhập'}>
+      <SectionComponent styles={{ justifyContent: 'center', alignItems: 'center', marginTop: 16 }}>
         <EventHubLogo width={appInfo.sizes.WIDTH*0.8}/>
         <SpaceComponent height={16}/>
       </SectionComponent>
@@ -102,12 +108,12 @@ const LoginScreen = ({ navigation,route }: any) => {
           isPassword
           affix={<Lock size={22} color={colors.gray} />}
         />
-        <RowComponent justify={'space-between'}>
-          <RowComponent onPress={() => setIsReMember(!isRemember)}>
+        <RowComponent justify={'flex-end'}>
+          {/* <RowComponent onPress={() => setIsReMember(!isRemember)}>
             <Switch thumbColor={colors.white} trackColor={{ true: colors.primary }} value={isRemember} onChange={() => setIsReMember(!isRemember)} />
             <SpaceComponent width={4} />
             <TextComponent text={'Lưu thông tin đăng nhập'} />
-          </RowComponent>
+          </RowComponent> */}
           <ButtonComponent text="Quên mật khẩu" onPress={() => navigation.navigate('ForgotPasswordScreen')} type={'link'} />
         </RowComponent>
       </SectionComponent>

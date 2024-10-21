@@ -10,6 +10,8 @@ import authenticationAPI from "../../../apis/authApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addAuth } from "../../../reduxs/reducers/authReducers";
 import { useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { HandleNotification } from "../../../utils/handleNotification";
 GoogleSignin.configure({
   webClientId:'989926603372-o490b46k8a8o4qrticlharlh7nf290hf.apps.googleusercontent.com', //lấy trên api console
   scopes: ['profile', 'email'],
@@ -22,6 +24,7 @@ interface Props{
 const SocialLogin = (props:Props)=>{
   const {setIsLoading} = props
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const handleLoginGoogle = async ()=>{
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog:true,// hiện bảng đăng nhập
@@ -35,8 +38,9 @@ const SocialLogin = (props:Props)=>{
       const res:any = await authenticationAPI.HandleAuthentication(api,user,'post')
       if(res && res.data && res.status===200){
         await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'google'}))
-        await AsyncStorage.removeItem('isRemember')
         dispatch(addAuth({...res.data,loginMethod:'google'}))
+        HandleNotification.checkNotifitionPersion()
+        navigation.goBack()
       }
       setIsLoading(false)
 

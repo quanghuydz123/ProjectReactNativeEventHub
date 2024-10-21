@@ -28,6 +28,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
     const [follow, setFollower] = useState<FollowModel[]>([])
     const user = useSelector(authSelector)
     const [yourFollowers, setYourFollowers] = useState<FollowModel[]>([])
+    const auth = useSelector(authSelector)
     useEffect(() => {
         handleCallAPIGetNotifications(true)
         handleCallApiGetFollowerById()
@@ -107,7 +108,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             setIsLoadingModal(false)
             if (res && res.status === 200) {
                 handleRemoveNotification(notification)
-                socket.emit('getNotifications')
+                socket.emit('getNotifications',{idUser: auth?.id})
             }
         } catch (error: any) {
             const errorMessage = JSON.parse(error.message)
@@ -127,8 +128,8 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             setIsLoadingModal(false)
             if (res && res.status === 200) {
                 handleRemoveNotification(notification)
-                socket.emit('getNotifications')
-                socket.emit('followUser')
+                socket.emit('getNotifications',{idUser: auth?.id})
+                socket.emit('followUser',{idUser:auth?.id})
             }
         } catch (error: any) {
             const errorMessage = JSON.parse(error.message)
@@ -184,7 +185,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
         >
             <SectionComponent>
                 <RowComponent>
-                    <TagComponent
+                    {/* <TagComponent
                         bgColor={colors.backgroundSearchInput}
                         label={'Tìm kiếm người dùng'}
                         textColor={colors.black}
@@ -196,7 +197,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                             maxWidth: appInfo.sizes.WIDTH * 0.4
                         }}
                     />
-                    <SpaceComponent width={8} />
+                    <SpaceComponent width={8} /> */}
                     <TagComponent
                         bgColor={colors.backgroundSearchInput}
                         label={'Danh sách theo dõi'}
@@ -210,21 +211,21 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                         }}
                     />
                 </RowComponent>
-                <SpaceComponent height={20} />
-                <View style={{
+                <SpaceComponent height={0} />
+                {/* <View style={{
                     width: '100%',
                     backgroundColor: colors.gray3,
                     height: 1
-                }} />
+                }} /> */}
             </SectionComponent>
-            <SectionComponent styles={{}}>
+            {/* <SectionComponent styles={{}}>
                 <TabBarComponent
                     styles={{ paddingHorizontal: 0, paddingVertical: 0, marginBottom: 0 }}
                     title={`Lời mời theo dõi  ${notifications?.length || ''}`}
                     onPress={() => console.log("ok")}
                     textSizeTitle={20}
                 />
-            </SectionComponent>
+            </SectionComponent> */}
             {/* <View>
                 {
                     isLoading  ? <LoadingComponent isLoading={isLoading} value={notifications?.length || 0} /> 
@@ -236,7 +237,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                 /> : <EmptyComponent message="Không có lời mời theo dõi nào" />
                 }
             </View> */}
-            <DataLoaderComponent data={notifications} isLoading={isLoading} 
+            {/* <DataLoaderComponent data={notifications} isLoading={isLoading} 
             messageEmpty="Không có lời mời theo dõi nào"
             children={
                 <FlatList
@@ -245,7 +246,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                 data={notifications}
                 renderItem={({ item, index }) => renderNofitications(item)}
             />
-            }/>
+            }/> */}
 
 
            {

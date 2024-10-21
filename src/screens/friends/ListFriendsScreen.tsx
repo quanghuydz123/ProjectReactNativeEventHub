@@ -108,6 +108,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
           onPress={() => console.log("ok")}
           isNotShowIconRight
           titleRight="Sắp xếp"
+          textColor={colors.background}
         />
         <SpaceComponent height={16} />
         {/* <FlatList
@@ -146,6 +147,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
           onPress={() => console.log("ok")}
           isNotShowIconRight
           titleRight="Sắp xếp"
+          textColor={colors.background}
         />
         <SpaceComponent height={16} />
         {/* <FlatList
