@@ -249,10 +249,10 @@ const ProfileScreen = ({ navigation, route }: any) => {
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
-        <CardComponent isShadow styles={[globalStyles.center]}>
+        <CardComponent  styles={[globalStyles.center]} >
           {auth.accesstoken ? <>
             <RowComponent onPress={() => handleChangeImageAvatar()}>
-              <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth isShowIconAbsolute />
+              <AvatarItem size={80} photoUrl={profile?.photoUrl} borderWidth={0} isShowIconAbsolute />
 
             </RowComponent>
             <SpaceComponent height={8} />
@@ -304,7 +304,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </CardComponent>
       </SectionComponent>
       {auth.accesstoken && <SectionComponent isNoPaddingBottom>
-        <CardComponent isShadow>
+        <CardComponent >
           <RowComponent>
             <TextComponent flex={1} text="Các thể loại sự kiện quan tâm" title size={18} />
             <RowComponent onPress={() => setIsOpenModalizeSelectCategory(true)} styles={{ paddingVertical: 6 }}>

@@ -4,12 +4,16 @@ import { EventModelNew } from "../models/EventModelNew"
 import { FlatList } from "react-native-gesture-handler"
 import EventItem from "./EventItem"
 import { FollowModel } from "../models/FollowModel"
+import RowComponent from "./RowComponent"
+import { colors } from "../constrants/color"
 interface Props {
     items:EventModelNew[],
-    follows:FollowModel[]
+    follows:FollowModel[],
+    isShownVertical?:boolean,
+    bgColor?:string
 }
 const ListEventComponent = (props:Props)=>{
-    const {items,follows} = props
+    const {items,follows,isShownVertical,bgColor} = props
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = useCallback(() => {
@@ -23,13 +27,18 @@ const ListEventComponent = (props:Props)=>{
     <View style={{flex:1}}>
       <FlatList
       // style={{flex:1}}
+      key={items[0]?._id}
       showsVerticalScrollIndicator={false}
       data={items} 
       // contentContainerStyle={{flex:1}}
       // refreshControl={
       //   <RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />
       // }
-      renderItem={({item})=><EventItem followers={follows} item={item} key={item._id} isShownVertical/>}/>
+      numColumns={2}
+      renderItem={({item})=>{
+        return <EventItem  
+        bgColor={bgColor} followers={follows} item={item} key={item._id} isShownVertical={isShownVertical}/>
+      }}/>
     </View>
   )
 }

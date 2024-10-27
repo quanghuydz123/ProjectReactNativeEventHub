@@ -82,7 +82,7 @@ const ButtonComponent = (props: Props) => {
                 {
                     text && <TextComponent size={textSize} text={text} numberOfLine={numberOfLineText} 
                     font={textFont ?? fontFamilies.medium} 
-                    color={type === 'link' ? colors.link : textColor ? textColor : colors.colorText} 
+                    color={textColor ?? colors.link} 
                     />
                 }
                 {icon && iconFlex === 'right' && <SpaceComponent width={4}/>}

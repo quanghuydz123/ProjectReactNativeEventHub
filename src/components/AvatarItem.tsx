@@ -13,7 +13,7 @@ interface Props {
     colorBorderWidth?: string,
     index?: number,
     styles?: StyleProp<ViewStyle>,
-    notBorderWidth?: boolean,
+    borderWidth?: number,
     bdRadius?: number,
     onPress?: () => void,
     isShowIconAbsolute?: boolean,
@@ -24,8 +24,8 @@ interface Props {
     textColor?:string
 }
 const AvatarItem = (props: Props) => {
-    const { photoUrl, size, colorBorderWidth, index,textColor, styles, notBorderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
-    const ml = size ? -(size / 2) : -12
+    const { photoUrl, size, colorBorderWidth, index,textColor, styles, borderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
+    const ml = size ? -(size / 2)+4 : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
     const renderIconAbsolute = (type?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
         let content = <></>
@@ -71,10 +71,10 @@ const AvatarItem = (props: Props) => {
                             width: size ?? 24,
                             height: size ?? 24,
                             borderRadius: bdRadius ?? 100,
-                            borderWidth: notBorderWidth ? 0 : 1,
+                            borderWidth: borderWidth ?? 1,
                             borderColor: colorBorderWidth ?? colors.white,
                             marginLeft: (index && index !== 0) ? ml : 0,
-                            backgroundColor:bgColor 
+                            backgroundColor:bgColor
                         }}
                     /> : <Image
                         source={{ uri: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' }}
@@ -82,7 +82,7 @@ const AvatarItem = (props: Props) => {
                             width: size ?? 24,
                             height: size ?? 24,
                             borderRadius: bdRadius ?? 100,
-                            borderWidth: notBorderWidth ? 0 : 1,
+                            borderWidth: borderWidth ?? 1,
                             borderColor: colorBorderWidth ?? colors.white,
                             marginLeft: (index && index !== 0) ? ml : 0,
                         }}

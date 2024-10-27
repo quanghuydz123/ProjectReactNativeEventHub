@@ -148,7 +148,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
         <CardComponent isShadow styles={[globalStyles.center,{paddingBottom:20}]}>
 
           <RowComponent>
-            <AvatarItem size={80} photoUrl={profile?.photoUrl} notBorderWidth />
+            <AvatarItem size={80} photoUrl={profile?.photoUrl} borderWidth={0} />
           </RowComponent>
           <SpaceComponent height={8} />
           <TextComponent text={profile?.fullname || profile?.email || ''} title size={24} />

@@ -11,16 +11,18 @@ interface Props {
   mgSpaceTop?: number,
   mgSpaceBottom?: number,
   colorSpace?: string,
-  isNoPaddingBottom?: boolean
+  isNoPaddingBottom?: boolean,
+  bgColor?:string
 
 }
 const SectionComponent = (props: Props) => {
 
-  const { children, styles, isSpace, mgSpaceTop, colorSpace, mgSpaceBottom, isNoPaddingBottom } = props
+  const { children, styles, isSpace, mgSpaceTop, colorSpace, mgSpaceBottom, isNoPaddingBottom,bgColor } = props
   return (
     <View style={[{
-      paddingHorizontal: 10,
-      paddingBottom:isNoPaddingBottom ? 0 : 12
+      paddingHorizontal: 12,
+      paddingBottom:isNoPaddingBottom ? 0 : 12,
+      backgroundColor:bgColor ? bgColor : ''
     }, styles]}>
       {children}
       {isSpace && <SpaceComponent height={1} styles={{ marginTop: mgSpaceTop ?? 0, marginBottom: mgSpaceBottom ?? 0 }} color={colorSpace ?? colors.gray7} />}

@@ -106,7 +106,7 @@ const DrawerCustom = ({ navigation }: any) => {
         }
         }>
         {
-          <AvatarItem size={52} photoUrl={user.photoUrl} notBorderWidth styles={{ marginBottom: 8 }} />
+          <AvatarItem size={52} photoUrl={user.photoUrl} borderWidth={0} styles={{ marginBottom: 8 }} />
         }
         <TextComponent text={user?.fullname} title size={18} />
       </TouchableOpacity >}

@@ -19,6 +19,7 @@ import axios from "axios"
 import { useSelector } from "react-redux"
 import { authSelector } from "../../reduxs/reducers/authReducers"
 import SearchComponent from "../../components/SearchComponent"
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 interface routeParams {
   items: EventModelNew[],
   follows: FollowModel[],
@@ -51,7 +52,7 @@ const initFilterEvent:FilterEvent = {
 const SearchEventsScreen = ({ navigation, route }: any) => {
   const { items,follows,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [allFollower, setAllFollower] = useState<FollowModel[]>(follows)
   const [result,setResult] = useState<EventModelNew[]>(items)
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
@@ -258,7 +259,7 @@ const auth = useSelector(authSelector)
     setIsOpenModalizeFilter(false)
   }
   return (
-    <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'} bgColor={colors.background} colorTitle={colors.white}>
+    <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'} bgColor={colors.black} colorTitle={colors.white}>
       <SectionComponent>
         <RowComponent>
           {/* <RowComponent styles={{ flex: 1, alignItems: 'center' }}>
@@ -269,13 +270,13 @@ const auth = useSelector(authSelector)
                value={searchKey ?? ''} placeholder="Tìm kiếm sự kiện..." allowClear onEnd={()=>handleSearchEvent()} />
             </View>
           </RowComponent> */}
-          <SearchComponent bgColor={colors.background} isNotShowArrow styles={{width:'78%'}} onSearch={(val)=>setSearchKey(val)} value={searchKey} onEnd={()=>handleSearchEvent()}/>
+          <SearchComponent textColor={colors.backgroundBluishWhite} bgColor={colors.black}  isNotShowArrow styles={{width:'78%'}} onSearch={(val)=>setSearchKey(val)} value={searchKey} onEnd={()=>handleSearchEvent()}/>
             <SpaceComponent width={4}/>
           <TagComponent
             onPress={() => {setIsOpenModalizeFilter(true),setIdsSelectedCategories(filterEvent.categoriesFilter ?? [])}}
             
             label="Lọc"
-            icon={<CricleComponent size={20} color={'#FFD6E7'}><Sort size={18} color={colors.primary} /></CricleComponent>}
+            icon={<CricleComponent size={20} color={colors.primary}><FontAwesome name="filter" size={18} color={colors.white} /></CricleComponent>}
             bgColor={colors.primary}
           />
         </RowComponent>
@@ -284,7 +285,7 @@ const auth = useSelector(authSelector)
         <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent  items={result} follows={allFollower} />
+              <ListEventComponent bgColor={colors.black} isShownVertical items={result} follows={allFollower} />
 
             }/>
         

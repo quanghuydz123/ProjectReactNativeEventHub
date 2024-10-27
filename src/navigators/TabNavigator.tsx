@@ -19,6 +19,9 @@ import * as Animatable from 'react-native-animatable';
 import Octicons from 'react-native-vector-icons/Octicons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { appInfo } from "../constrants/appInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { constantSelector, constantState, updateIndexTabSelected } from "../reduxs/reducers/constantReducers";
+import { fontFamilies } from "../constrants/fontFamilies";
 const TabNavigator = ({navigation}:any) => {
   const Tab = createBottomTabNavigator();
   const nameTab: { [key in keyof ParamListBase]: string } = {
@@ -33,14 +36,16 @@ const TabNavigator = ({navigation}:any) => {
   const [width,setWidth] = useState(getWidth()-24)
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const [index,setIndex] = useState(0)
+  const dispatch = useDispatch()
+  const constant:constantState = useSelector(constantSelector)
   useEffect(()=>{
     setWidth(getWidth()-24)
     Animated.spring(tabOffsetValue, {
-      toValue: getWidth() * index,
+      toValue: getWidth() * constant.indexTabSelected,
       useNativeDriver: true,
       speed:250
     }).start();
-  },[index])
+  },[constant.indexTabSelected])
   
 
   return <>
@@ -94,6 +99,7 @@ const TabNavigator = ({navigation}:any) => {
             text={nameTab[route.name]}
             styles={{ marginBottom: Platform.OS === 'android' ? 12 : 0 }}
             size={10}
+            font={focused ? fontFamilies.bold : fontFamilies.regular}
             color={focused ? colors.primary : colors.gray} />
         },
 
@@ -101,28 +107,29 @@ const TabNavigator = ({navigation}:any) => {
 
       <Tab.Screen name="Explore" component={ExploreNavigator} listeners={{
         tabPress: e => {
-          setIndex(0)
+          dispatch(updateIndexTabSelected({indexTabSelected:0}))
         }
       }}/>
       <Tab.Screen name="Events" component={EventsNavigator} listeners={{
         tabPress: e => {
-          setIndex(1)
+          dispatch(updateIndexTabSelected({indexTabSelected:1}))
         }
       }}/>
       <Tab.Screen name="QrScan" component={QrScannerScreen} listeners={{
         tabPress: e => {
          e.preventDefault();
          navigation.navigate('QrScannerScreen')
+        //  dispatch(updateIndexTabSelected({indexTabSelected:2}))
         }
       }}/>
       <Tab.Screen name="Transaction" component={TransactionNavigator} listeners={{
         tabPress: e => {
-          setIndex(3)
+          dispatch(updateIndexTabSelected({indexTabSelected:3}))
         }
       }}/>
       <Tab.Screen name="Profile" component={ProfileNavigator} listeners={{
         tabPress: e => {
-          setIndex(4)
+          dispatch(updateIndexTabSelected({indexTabSelected:4}))
         }
       }}/>
 

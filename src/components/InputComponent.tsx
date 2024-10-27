@@ -23,7 +23,8 @@ interface Props {
   multiline?: boolean,
   numberOfLines?: number,
   styles?: StyleProp<ViewStyle>,
-  title?:string
+  title?:string,
+  textColor?:string
 }
 //secureTextEntry chuyển thành ****
 //ReactNode Có thẻ đóng thẻ mở ví dụ <Text />
@@ -31,7 +32,7 @@ interface Props {
 //autoCapitalize bỏ tự động viết 
 //onEndEditing khi ngừng nhập
 const InputComponent = (props: Props) => {
-  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines } = props
+  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines,textColor } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
 
   return (
@@ -48,7 +49,7 @@ const InputComponent = (props: Props) => {
         alignItems: multiline ? 'flex-start' : 'center'
       }, styles]}>
         {affix && affix}
-        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto'}]}
+        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto',color:textColor ?? colors.colorText}]}
           placeholder={placeholder ?? ''}
           multiline={multiline}
           onChangeText={val => onChange(val)}

@@ -3,13 +3,13 @@ import { UserModel } from "./UserModel"
 export interface EventModelNew {
     _id: string
     title: string
-    description?: string
+    description?: any
     Address: string
     photoUrl: string
     addressDetals: AddressDetals
     Location: string
     position: Position
-    price?: number
+    price: number
     category:Category,
     authorId: UserModel
     // users?: UserModel[]

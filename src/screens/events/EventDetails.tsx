@@ -1,4 +1,4 @@
-import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
@@ -33,8 +33,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ToastMessaging } from "../../utils/showToast";
 import { useStatusBar } from "../../hooks/useStatusBar";
 import { Linking } from 'react-native';
-import styles from "rn-range-slider/styles";
 import userAPI from "../../apis/userApi";
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import ListTicketComponent from "./components/ListTicketComponent";
+import RenderHTML from "react-native-render-html";
 const EventDetails = ({ navigation, route }: any) => {
 
   const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
@@ -218,113 +220,70 @@ const EventDetails = ({ navigation, route }: any) => {
       })
       .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
-  return (
-    <View style={{
-      flex: 1,
-      backgroundColor: colors.white
-    }}>
-      <ImageBackground style={[{
-        flex: 1,
-        height: appInfo.sizes.HEIGHT * 0.315,
-
-      }]} imageStyle={[{
-        resizeMode: 'stretch',
-        height: appInfo.sizes.HEIGHT * 0.315,
-        width: appInfo.sizes.WIDTH,
-      }]} source={{ uri: event?.photoUrl ?? 'https://static6.depositphotos.com/1181438/670/v/450/depositphotos_6708849-stock-illustration-magic-spotlights-with-blue-rays.jpg' }}>
-        <LinearGradient colors={['rgba(0,0,0,0.4)', 'rgba(0,0,0,0)']}>
-          <RowComponent styles={[{
-            padding: 16,
-            paddingTop: 30,
-          }]} justify="space-between" >
-            <RowComponent styles={{ flex: 1 }}>
-              <TouchableOpacity onPress={() => navigation.goBack()}
-                style={{ minHeight: 48, minWidth: 48, justifyContent: 'center' }}
-              >
-                <ArrowLeft size={24} color={colors.white} />
-              </TouchableOpacity>
-              {/* <TextComponent flex={1} text="Chi tiết sự kiện" size={20} title color={colors.white} /> */}
-            </RowComponent>
-            {/* <CardComponent onPress={() => console.log("ok")} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-              {
-                <FontAwesome
-                  size={22}
-                  name="heart-o"
-
-                />
-              }
+    return (
+   
+    <>
+    <ContainerComponent back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop bgColor={colors.backgroundBluishWhite}>
+      <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.50 },styles.shadow]}>
+        
+        <ImageBackground
+          source={{ uri: event?.photoUrl }}
+          imageStyle={{ flex: 1, objectFit: 'fill' }}
+          style={[globalStyles.shadow, { height: '100%' }]}
+          blurRadius={4}
+        >
+          
+          <SectionComponent styles={{ paddingTop: 10 }}>
+            <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
+              <Image source={{ uri: event?.photoUrl }} style={{ height: '55%',objectFit:'fill',
+                borderTopLeftRadius:12,
+                borderTopRightRadius:12
+                }}/>
+              <SectionComponent styles={{ paddingTop: 12 }}>
+                <TextComponent text={event?.title} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
+                <SpaceComponent height={8} />
+                <RowComponent styles={{}}>
+                  <FontAwesome6 name="calendar" size={16} color={colors.white} />
+                  <SpaceComponent width={8} />
+                  <TextComponent text={`19:00 - 21:30, 22 Tháng 11, 2024`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
+                </RowComponent>
+                <SpaceComponent height={8} />
+                <RowComponent styles={{ alignItems: 'flex-start' }}>
+                  <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
+                  <SpaceComponent width={8} />
+                  <View style={{ flex: 1 }}>
+                    <TextComponent text={event?.Location} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
+                    <TextComponent numberOfLine={2} text={event?.Address} size={12} color={colors.gray4} />
+                    <ButtonComponent
+                    text="Xem trên bảng đồ"
+                    type="link"
+                    textFont={fontFamilies.medium}
+                    icon={<ArrowDown2 size={14} color={colors.primary}/>}
+                    iconFlex="right"
+                    textSize={11}
+                    textColor={colors.primary}
+                    onPress={()=>openMap()}
+                  />
+                  </View>
+                </RowComponent>
+              </SectionComponent>
             </CardComponent>
-            <SpaceComponent width={8} /> */}
-            {/* <CardComponent onPress={() => handleFlowerEvent()} isShadow styles={[globalStyles.noSpaceCard]} color={'#ffffff4D'}>
-              {
-                event?._id && <FontAwesome
-                  name={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? "bookmark" : 'bookmark-o'}
-                  size={22}
-                  color={followerEvent && followerEvent.length > 0 && followerEvent.filter(item => item.user?._id === auth.id)[0]?.events.some(eventa => eventa?._id === event?._id) ? colors.white : colors.black}
-                />
-              }
-            </CardComponent> */}
-
-          </RowComponent>
-        </LinearGradient>
-        <View style={{
-          flex: 1,
-          paddingTop: 244 - 80,
-
-        }}>
-          <SectionComponent styles={{ paddingBottom: 0, paddingHorizontal: 12 }}>
-            <View style={{
-              marginTop: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-
-            }}>
-              {/* <RowComponent styles={[{
-                backgroundColor: colors.white, borderRadius: 100, paddingHorizontal: event?.users && event?.users?.length > 0 ? 12 : 0,
-                width: '96%'
-              }, globalStyles.shadow]}>
-                <AvatarGroup size={36} isShowButton users={event?.users} onPressInvity={(event: any) => { event.persist(), setIsOpenModalizeInityUser(true) }} />
-              </RowComponent> */}
-            </View>
           </SectionComponent>
-          <SpaceComponent height={8} />
-          <ScrollView
-
-            onScroll={handleScroll}
-            showsVerticalScrollIndicator={false}
-          >
-            <SectionComponent styles={{ paddingBottom: 4, paddingTop: 8 }}>
-              <View style={{
-                justifyContent: 'space-around',
-              }}>
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} font={fontFamilies.medium} size={15} color={colors.blue} />
-
-                {/* <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} font={fontFamilies.medium} size={16}/>
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} /> */}
-
-              </View>
-            </SectionComponent>
-            <SectionComponent styles={{ paddingBottom: 4 }}>
-              <TextComponent text={event?.title ?? ''} title size={30} font={fontFamilies.medium} />
-            </SectionComponent>
-            <SectionComponent styles={{ paddingBottom: 26 }}>
-              <RowComponent>
-                <AvatarItem photoUrl={event?.authorId?.photoUrl} colorBorderWidth={colors.background} size={30} />
-                <SpaceComponent width={6} />
-                <TextComponent text={`Được tổ chức bởi ${event?.authorId?.fullname}`} font={fontFamilies.medium} />
-              </RowComponent>
-            </SectionComponent>
-            <SectionComponent styles={{ paddingBottom: 0 }}>
-              <RowComponent justify="center" >
+        </ImageBackground>
+      </View>
+      <SectionComponent styles={{paddingTop:14}}>
+        <CardComponent isShadow>
+        <RowComponent justify="center" styles={{paddingVertical:10}}>
                 <ButtonComponent
                   text={isInterested ? 'Đã quan tâm' : 'Quan tâm'}
                   textFont={'12'} type="primary"
-                  width={appInfo.sizes.WIDTH * 0.45}
+                  width={appInfo.sizes.WIDTH * 0.42}
                   color={colors.white}
-                  textColor={colors.primary}
-                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
-                  icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.primary} />}
+                  textColor={colors.background}
+                  styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
+                  icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.background} />}
                   iconFlex="left"
+                  mrBottom={0}
                   onPress={() => handleInterestEvent()}
                 />
 
@@ -333,256 +292,72 @@ const EventDetails = ({ navigation, route }: any) => {
                   text={'Mời bạn bè'}
                   textFont={'12'}
                   type="primary"
-                  width={appInfo.sizes.WIDTH * 0.45}
+                  width={appInfo.sizes.WIDTH * 0.42}
                   color={colors.white}
-                  textColor={colors.primary}
-                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
-                  icon={<Ionicons name="person-add" size={16} color={colors.primary} />}
+                  textColor={colors.background}
+                  styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
+                  icon={<Ionicons name="person-add" size={16} color={colors.background} />}
                   iconFlex="left"
+                  mrBottom={0}
                   onPress={() => { setIsOpenModalizeInityUser(true) }}
                 />
+                
               </RowComponent>
-            </SectionComponent>
-            {/* <SectionComponent>
-              <RowComponent>
-                <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
-                  <MaterialIcons size={30} color={colors.primary} name="attach-money" />
-                </CardComponent>
-                <SpaceComponent width={16} />
-                <View style={{
-                  justifyContent: 'space-around',
-                  height: 48
-                }}>
-                  {
-                    event?.price ? <>
-                      <TextComponent text={convertMoney(event.price ?? 0)} font={fontFamilies.medium} size={16} />
-                      <TextComponent text="Áp dụng mã giảm giá ngay !" color={colors.gray} /></> :
-                      <>
-                        <TextComponent text={'Vào cổng tự do'} font={fontFamilies.medium} size={16} />
-                      </>
-                  }
+              {/* {<AvatarGroup  users={event?.usersInterested} textColor={colors.background} size={40}  />} */}
+              {event && event?.usersInterested && event?.usersInterested.length>0 && <>
+              <SpaceComponent height={12}/>
+              <RowComponent styles={{alignItems:'flex-start'}}>
+                <MaterialCommunityIcons size={20} color={colors.primary} name="account-heart-outline" />
+                <SpaceComponent width={8}/>
+                <View>
+                    <TextComponent text={`${event?.usersInterested.length} Người đã quan tâm`} size={14} styles={{fontWeight:'bold'} } color={colors.primary}/>
+                    {<AvatarGroup isShowButton isShowText={false} users={event?.usersInterested} textColor={colors.background} size={26}  />}
 
                 </View>
               </RowComponent>
-            </SectionComponent> */}
-            {/* <SectionComponent>
-              <RowComponent>
-                <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
-                  <Calendar size={30} color={colors.primary} variant="Bold" />
-                </CardComponent>
-                <SpaceComponent width={16} />
-                <View style={{
-                  justifyContent: 'space-around',
-                  height: 48
-                }}>
-                  <TextComponent text={DateTime.GetDateNew(new Date(event?.startAt ?? Date.now()), new Date(event?.endAt ?? Date.now()))} font={fontFamilies.medium} size={16} />
-                  <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(event?.startAt ?? Date.now()).getDay())}, ${DateTime.GetTime(new Date(event?.startAt ?? Date.now()))} - ${DateTime.GetTime(new Date(event?.endAt ?? Date.now()))}`} color={colors.gray} />
-                </View>
-              </RowComponent>
-            </SectionComponent> */}
-            {/* <SectionComponent>
-              <RowComponent>
-                <CardComponent styles={[globalStyles.noSpaceCard, { width: 48, height: 48 }]} color={`${colors.primary}20`}>
-                  <Ionicons size={30} color={colors.primary} name="location-sharp" />
-                </CardComponent>
-                <SpaceComponent width={16} />
-                <View style={{
-                  justifyContent: 'space-around',
-                  height: 48,
-                  flex: 1
-                }}>
-                  <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <SpaceComponent height={12} />
-                  <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
-                </View>
-              </RowComponent>
-            </SectionComponent>
-            <SectionComponent>
-              <RowComponent onPress={() => {
-                if (event?.authorId?._id === auth.id) {
-                  { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
-                }
-                else {
-                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId?._id })
-                }
-              }}
-              >
-                <AvatarItem photoUrl={event?.authorId?.photoUrl} size={48} bdRadius={12} />
-                <SpaceComponent width={16} />
-                <View style={{
-                  justifyContent: 'space-around',
-                  height: 48
-                }}>
-                  <TextComponent text={event?.authorId.fullname || ''} font={fontFamilies.medium} size={16} />
-                  <TextComponent text="Đơn vị tổ chức" color={colors.gray} />
-                </View>
-              </RowComponent>
-            </SectionComponent> */}
-            <SectionComponent styles={{ paddingVertical: 0, }} isSpace mgSpaceTop={10}>
-              {<AvatarGroup  users={event?.usersInterested} size={40} />}
-            </SectionComponent>
-
-            <TabBarComponent title={'Giới thiệu sự kiện'} textColor={colors.colorText} textSizeTitle={18} />
-            <SectionComponent isSpace mgSpaceTop={20 } styles={{}}>
-              <RowComponent styles={{ flexWrap: 'wrap' }}>
-                {/* {
-                  item.categories.map((category, index) => (
-                    <View style={{}} key={category?._id}>
-                      <TagComponent
-                        bgColor={colors.primaryLight}
-                        label={category.name}
-                        textSize={12}
-                        textColor={colors.colorText}
-
-                        styles={{
-                          minWidth: 50,
-                          paddingVertical: 6,
-                          paddingHorizontal: 20,
-                          marginRight: index === item.categories.length - 1 ? 28 : 8,
-                          borderWidth: 1,
-                          borderColor: colors.primary
-                        }}
-                      />
-                    </View>
-                  ))
-                } */}
-                 <View style={{}} key={event?.category?._id}>
-                    <TagComponent
-                      bgColor={colors.primary}
-                      label={event?.category.name}
-                      textSize={12}
-                      textColor={colors.white}
-                      styles={{
-                        minWidth: 50,
-                        paddingVertical: 6,
-                        paddingHorizontal: 20,
-                        // marginRight: index === item.categories.length - 1 ? 28 : 8,
-                      
-                      }}
-                    />
-                  </View>
-              </RowComponent>
-              <SpaceComponent height={8} />
-              <TextComponent text={event?.description ? event.description : ''} />
-
-            </SectionComponent >
-            {/* <TabBarComponent title={'Ngày diễn ra'} textSizeTitle={18} />
-            <SectionComponent isSpace mgSpaceTop={20}>
-              <TextComponent text={'abc'} />
-
-            </SectionComponent> */}
-            <TabBarComponent title={'Ví trí tổ chức'} textColor={colors.colorText} textSizeTitle={18} />
-            <SectionComponent isSpace mgSpaceTop={20}>
-              <RowComponent styles={{ alignItems: 'flex-start' }}>
-                <Ionicons size={24} color={colors.primary} name="location-sharp" />
-                <SpaceComponent width={4} />
-                <View style={{ flex: 1 }}>
-                  <TextComponent text={event?.Location ?? ''} numberOfLine={1} font={fontFamilies.medium} size={16} />
-                  <TextComponent numberOfLine={2} text={event?.Address ?? ''} color={colors.gray} />
-                  <SpaceComponent height={6}/>
-                  <ButtonComponent
-                    text="Xem trên bảng đồ"
-                    type="link"
-                    textFont={fontFamilies.medium}
-                    icon={<ArrowDown2 size={16} color={colors.link}/>}
-                    iconFlex="right"
-                    onPress={()=>openMap()}
-                  />
-                </View>
-              </RowComponent>
-
-            </SectionComponent>
-
-            <TabBarComponent title={'Đơn vị tổ chức'} textSizeTitle={18} />
-            <SectionComponent isSpace mgSpaceTop={20}>
-              <AvatarItem
-                photoUrl={event?.authorId?.photoUrl}
-                size={100}
-                textName={event?.authorId?.fullname}
-                sizeName={18}
-                onPress={() => {
-                  if (event?.authorId?._id === auth.id) {
-                    { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
-                  }
-                  else {
-                    navigation.navigate("AboutProfileScreen", { uid: event?.authorId?._id })
-                  }
-                }}
-              />
-              <SpaceComponent height={8} />
-              <RowComponent justify="center" >
-                <ButtonComponent
-                  text={'Theo dõi'}
-                  textFont={'12'} type="primary"
-                  width={appInfo.sizes.WIDTH * 0.4}
-                  color={colors.white}
-                  textColor={colors.primary}
-                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
-                  icon={<FontAwesome name={'star-o'} size={16} color={colors.primary} />}
-                  iconFlex="left"
-                />
-
-                <SpaceComponent width={12} />
-                <ButtonComponent
-                  text={'Nhắn tin'}
-                  textFont={'12'}
-                  type="primary"
-                  width={appInfo.sizes.WIDTH * 0.4}
-                  color={colors.white}
-                  textColor={colors.primary}
-                  styles={{ borderWidth: 1, borderColor: colors.primary, minHeight: 0, paddingVertical: 12 }}
-                  icon={<AntDesign name="message1" size={22} color={colors.primary} />}
-                  iconFlex="left"
-                />
-              </RowComponent>
-            </SectionComponent>
-            <SpaceComponent height={20} />
-          </ScrollView>
-        </View>
-      </ImageBackground>
-      {
-        event?.price && <RowComponent justify="space-between">
-          <TouchableOpacity style={{ flex: 1, alignItems: 'center', backgroundColor: colors.primary, paddingVertical: 4 }} onPress={() => handleCreateBillPaymentEvent()}>
-            <TextComponent text={'Mua vé ngay'} size={12} color={colors.white} />
-            <TextComponent text={convertMoney(event?.price ?? 0)} font={fontFamilies.medium} size={14} color={colors.white} />
-          </TouchableOpacity>
-        </RowComponent>
-      }
-      {/* {
-        isAtEnd ?
-          <View onLayout={onLayout} style={{
-            padding: 12
-          }}>
-            <ButtonComponent text="Mua vé ngay" type="primary"
-              icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
-                <ArrowRight
-                  size={18}
-                  color={colors.white}
-                /></View>}
-              iconFlex="right"
-              onPress={() => handleCreateBillPaymentEvent()}
-            />
-          </View>
-          :
-          <LinearGradient colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']} style={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            left: 0,
-            padding: 12
-          }}>
-            {event.price ? <ButtonComponent text="Mua vé ngay" type="primary"
-              icon={<View style={[globalStyles.iconContainer, { backgroundColor: colors.primary }]}>
-                <ArrowRight
-                  size={18}
-                  color={colors.white}
-                /></View>}
-              iconFlex="right"
-              onPress={() => handleCreateBillPaymentEvent()}
-            /> :
-              <ButtonComponent text="Đăng ký tham dự" type="primary"/>}
-          </LinearGradient>
-      } */}
+              </>}
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent >
+        <CardComponent isShadow title='Giới thiệu'>
+          {/* <TextComponent text={event?.description ?? ''} /> */}
+          <RenderHTML
+        contentWidth={appInfo.sizes.WIDTH - 20}
+                
+        source={{ html: event?.description }}
+        // tagsStyles={{
+        //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
+        //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
+        //   li: { fontSize: 16, lineHeight: 22 },
+        // }}
+        
+        tagsStyles={{
+          img:{
+            objectFit:'fill',
+          },
+          
+        p:{
+          margin:0
+        }
+        }}
+        computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
+        
+      />
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent >
+        <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
+          <ListTicketComponent />
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent >
+        <CardComponent isShadow title='Ban tổ chức'>
+          <AvatarItem size={120} bdRadius={2} photoUrl='https://i.scdn.co/image/ab676161000051745a79a6ca8c60e4ec1440be53'/>
+          <TextComponent text={'8Wonder'} paddingVertical={8} size={16} font={fontFamilies.bold}/>
+          <TextComponent text={'Siêu nhạc hội đẳng cấp quốc tế 8Wonder'}/>
+        </CardComponent>
+      </SectionComponent>
+     
       <LoadingModal visible={isLoading} />
       <LoadingModal visible={isLLoadingNotShow} notShowContent />
       <SelectModalize
@@ -632,9 +407,37 @@ const EventDetails = ({ navigation, route }: any) => {
             />
           </View>
           {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
-        </RowComponent>}
-      />
-    </View>
+        </RowComponent>}/>
+    </ContainerComponent>
+    {
+      <SectionComponent isNoPaddingBottom styles={{backgroundColor:colors.black,height:70,justifyContent:'center'}}>
+        <RowComponent justify="space-between">
+          <Text style={{
+            color:colors.white,
+            fontSize:15}}>Từ <Text style={{
+              color:colors.white,
+              fontSize:19,
+              fontFamily:fontFamilies.medium
+              }}>{convertMoney(event?.price)}
+              </Text>
+          </Text>
+          <ButtonComponent text="Mua vé ngay" alignItems="flex-end" type="primary" width={'70%'}  styles={{paddingVertical:8,marginBottom:0}} textSize={14}/>
+        </RowComponent>
+      </SectionComponent>
+      }
+    </>
   )
 }
+const styles = StyleSheet.create({
+  shadow:{
+    shadowColor:'#262626',       // Màu của bóng đổ, sử dụng giá trị RGBA để xác định màu và độ trong suốt.
+    shadowOffset:{
+        width:0,                         // Độ lệch bóng đổ theo trục X. Giá trị 0 nghĩa là bóng đổ không lệch theo chiều ngang.
+        height:4                         // Độ lệch bóng đổ theo trục Y. Giá trị 4 nghĩa là bóng đổ sẽ lệch xuống dưới 4 đơn vị.
+    },
+    shadowOpacity:0.25,                  // Độ mờ của bóng đổ, giá trị từ 0 đến 1. Giá trị 0.25 nghĩa là bóng đổ sẽ có độ mờ 25%.
+    shadowRadius:8,                      // Bán kính mờ của bóng đổ, giá trị lớn hơn sẽ làm bóng đổ trở nên mờ hơn và mềm hơn.
+    elevation:8                      // Độ cao của phần tử trên Android, ảnh hưởng đến độ mờ và kích thước của bóng đổ.
+},
+});
 export default EventDetails;

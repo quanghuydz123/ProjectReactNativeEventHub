@@ -16,9 +16,10 @@ interface Props {
   isNotShowArrow?: boolean,
   onEnd?:()=>void,
   bgColor?:string,
+  textColor?:string
 }
 const SearchComponent = (props: Props) => {
-  const { value, onSearch, onPressArrow, styles, titlePlaceholder, isNotShowArrow,onEnd,bgColor } = props
+  const { value, onSearch, onPressArrow, styles, titlePlaceholder, textColor,isNotShowArrow,onEnd,bgColor } = props
   return <RowComponent styles={[styles]} justify="flex-end">
     {!isNotShowArrow && (
       <>
@@ -38,9 +39,11 @@ const SearchComponent = (props: Props) => {
           borderColor:colors.white,
           
         }]}
+        textColor={textColor}
         affix={<SearchNormal size={20} color={colors.gray} />}
         value={value}
         onEnd={onEnd}
+        
         placeholder={titlePlaceholder ?? "Tìm kiếm..."}
         
         allowClear

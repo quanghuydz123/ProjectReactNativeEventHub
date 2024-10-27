@@ -42,7 +42,7 @@ const CategoriesList = (props:Props)=>{
         size={60} 
         textName={item.name} 
         textColor={colors.white}
-        notBorderWidth
+        borderWidth={0}
         photoUrl={item.image}
         />
       </TouchableOpacity >

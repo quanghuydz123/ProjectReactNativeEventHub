@@ -64,9 +64,9 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [allEvent, setAllEvent] = useState<EventModelNew[]>([])
   const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
   const [allFollower, setAllFollower] = useState<FollowModel[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
-  const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true)
+  const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(true)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [refreshList, setRefreshList] = useState(false);
   const [categories, setCategories] = useState<CategoryModel[]>([])
@@ -75,7 +75,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
   const [isShowMoney, setIsShowMoney] = useState(true)
   const auth = useSelector(authSelector)
-  console.log("authauthauth1231321312",auth.fullname)
   useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -701,6 +700,7 @@ const HomeScreen = ({ navigation, route }: any) => {
 
             <DataLoaderComponent data={allEventNear} isLoading={isLoadingNearEvent} height={appInfo.sizes.HEIGHT * 0.3} children={
               <FlatList
+                
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={allEventNear}

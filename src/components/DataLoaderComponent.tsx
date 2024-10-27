@@ -16,8 +16,8 @@ interface Props { // phải định nghĩa ra trước
     
 }
 const DataLoaderComponent = (props: Props) => {
-    const {children,isLoading,data ,messageEmpty , height,isFlex} = props
-    // console.log("data && data?.length > 0)",data?.length)
+    const {children,isLoading=true,data ,messageEmpty , height,isFlex} = props
+    // console.log("data && data?.length > 0)",data?.length)\
     return <View style={{flex:isFlex ? 1 : 0}}>
     {
         isLoading  ? <LoadingComponent isLoading={isLoading} value={data?.length || 0} height={height}/> 

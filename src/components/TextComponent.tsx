@@ -16,12 +16,13 @@ interface Props {
   textAlign?: 'center' | 'left' | 'auto' | 'right' | 'justify';
   isAnimationHiden?: boolean;
   animatedValue?: any;
+  paddingVertical?:number
 }
 
 const TextComponent = (props: Props) => {
   const {
     text, size, flex, font, color, styles, title,
-    numberOfLine, textAlign, isAnimationHiden, animatedValue
+    numberOfLine, textAlign, isAnimationHiden, animatedValue,paddingVertical
   } = props;
 
   const fontSizeDefault = Platform.OS === 'ios' ? 16 : 14;
@@ -35,7 +36,8 @@ const TextComponent = (props: Props) => {
       fontSize: size ?? (title ? 24 : fontSizeDefault),
       fontFamily: font ?? (title ? fontFamilies.medium : fontFamilies.regular),
       lineHeight,
-      textAlign: textAlign ?? 'left'
+      textAlign: textAlign ?? 'left',
+      paddingVertical:paddingVertical ?? paddingVertical
     },
     styles
   ];

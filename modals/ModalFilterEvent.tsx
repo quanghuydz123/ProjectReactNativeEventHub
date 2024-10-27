@@ -12,6 +12,8 @@ import { DateTime } from "../src/utils/DateTime";
 import { numberToString } from "../src/utils/numberToString";
 import { Address } from "../src/models/LocationModel";
 import RnRangeSlider from "rn-range-slider";
+import Slider from "@react-native-community/slider";
+import { appInfo } from "../src/constrants/appInfo";
 interface Props {
     visible: boolean,
     onClose: () => void,
@@ -29,27 +31,27 @@ interface Props {
     }) => void,
     selectedAddress: string,
     onSelectAddress: (val: string) => void,
-    selectedPriceRenge:{
+    selectedPriceRenge: {
         low: number,
         high: number
     },
-    onSelectPriceRange:(val:{
+    onSelectPriceRange: (val: {
         low: number,
         high: number
-    })=>void
+    }) => void
 }
 const ModalFilterEvent = (props: Props) => {
     const { visible, onClose, categories, selectedCategories, selectedAddress, onSelectAddress
-        , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime,selectedPriceRenge,onSelectPriceRange } = props
+        , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime, selectedPriceRenge, onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
     const [allFollow, setAllFollow] = useState<FollowModel[]>([])
-    const [rangePriceCopy,setRangePriceCopy] = useState<{
+    const [rangePriceCopy, setRangePriceCopy] = useState<{
         low: number,
         high: number
     }>({
-        low:0,
-        high:1000000
+        low: 0,
+        high: 1000000
     })
     const [filterDate, setFilterDate] = useState('')
     const timeChoises = [{
@@ -68,7 +70,7 @@ const ModalFilterEvent = (props: Props) => {
 
     useEffect(() => {
         setAllCategory(categories)
-        
+
     }, [categories])
     useEffect(() => {
         if (filterDate === 'today') {
@@ -131,7 +133,8 @@ const ModalFilterEvent = (props: Props) => {
     const handleValueChange = useCallback((low: number, high: number) => {
         onSelectPriceRange({ low, high });
     }, []);
-        return (
+    console.log("asda,",selectedPriceRenge)
+    return (
         <Portal>
             <Modalize
                 adjustToContentHeight
@@ -159,7 +162,7 @@ const ModalFilterEvent = (props: Props) => {
                 <View style={{ paddingTop: 10 }}>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
-                            categories && categories.map((item,index) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={`categoriesModalFilter${index}`}>
+                            categories && categories.map((item, index) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={`categoriesModalFilter${index}`}>
                                 <TagComponent key={item._id} onPress={() => handleFollowerCategory(item._id)} label={item.name}
                                     bgColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.primary : colors.white}
                                     textColor={selectedCategories?.some(idCategory => idCategory === item._id) ? colors.white : colors.black}
@@ -174,7 +177,7 @@ const ModalFilterEvent = (props: Props) => {
                         <TextComponent text={'Thời gian diễn ra'} title size={14} />
                         <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
                             {
-                                timeChoises.map((item,index) => <>
+                                timeChoises.map((item, index) => <>
                                     <TouchableOpacity
                                         onPress={() => handleChoiseFilterDate(item.key)}
                                         key={`time${index}`} style={[globalStyles.button,
@@ -191,60 +194,91 @@ const ModalFilterEvent = (props: Props) => {
                         </RowComponent>
                     </View>
                     <SectionComponent styles={{ paddingHorizontal: 0 }}>
-                    <RowComponent justify="space-between">
-                        <TextComponent text={'Giá (VNĐ)'} title size={14} />
-                        {/* <TextComponent text={`0 - 1000000 (VNĐ)`}/> */}
-                    </RowComponent>
-                    <SpaceComponent height={20  }/>
+                        <RowComponent justify="space-between">
+                            <TextComponent text={'Giá (VNĐ)'} title size={14} />
+                        </RowComponent>
+                        <SpaceComponent height={20} />
                         <RowComponent>
-                            <View style={{flex:1,paddingHorizontal:4}}>
-                            <RnRangeSlider
-                                min={0} max={1000000} step={1000}
-                                // low={selectedPriceRenge.low}
-                                // high={selectedPriceRenge.high}
-                                style={{height: 5, backgroundColor: colors.gray2, borderRadius: 10,marginHorizontal:12, justifyContent: 'center' }}
-                                renderThumb={(name) => (
-                                    <View style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderRadius: 100,
-                                        borderWidth:2,
-                                        borderColor:colors.primary,
-                                        backgroundColor: colors.white
-                                        
-                                    }}>
+                            <View style={{ flex: 1, paddingHorizontal: 4 }}>
+                                <RnRangeSlider
+                                    min={0} max={1000000} step={10000}
+                               
+                                    style={{ height: 5, backgroundColor: colors.gray2, borderRadius: 10, marginHorizontal: 12, justifyContent: 'center' }}
+                                    renderThumb={(name) => (
                                         <View style={{
-                                            position:'absolute',
-                                            right:0,
-                                            left:-20,
-                                            bottom:16,
-                                            width:50,
-                                            alignItems:'center'
-                                        }}>
-                                            <TextComponent size={12} color={colors.gray} text={name === 'low' ? selectedPriceRenge.low : selectedPriceRenge.high}/>
-                                        </View>
-                                    </View>
-                                )}
-                                renderRail={() => <></>}
-                                renderRailSelected={() => <View style={{
-                                    height:5,
-                                    backgroundColor:colors.primary,
-                                    borderRadius:10,
-                                }}></View>}
-                                onValueChanged={handleValueChange}
+                                            width: 20,
+                                            height: 20,
+                                            borderRadius: 100,
+                                            borderWidth: 2,
+                                            borderColor: colors.primary,
+                                            backgroundColor: colors.white
 
-                            />
+                                        }}>
+                                            <View style={{
+                                                position: 'absolute',
+                                                right: 0,
+                                                left: -20,
+                                                bottom: 16,
+                                                width: 50,
+                                                alignItems: 'center'
+                                            }}>
+                                                <TextComponent size={12} color={colors.gray} text={name === 'low' ? selectedPriceRenge.low : selectedPriceRenge.high} />
+                                            </View>
+                                        </View>
+                                    )}
+                                    renderRail={() => <></>}
+                                    renderRailSelected={() => <View style={{
+                                        height: 5,
+                                        backgroundColor: colors.primary,
+                                        borderRadius: 10,
+                                    }}></View>}
+                                    onValueChanged={handleValueChange}
+
+                                />
                             </View>
                         </RowComponent>
                     </SectionComponent >
                     <View>
                         <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: string) => handleOnSelectLocation(val)} />
                     </View>
+                    {/* <TextComponent text={`Giá ${selectedPriceRenge.low} - ${selectedPriceRenge.high} (VNĐ)`} title size={14} /> */}
+                   {/* <RowComponent>
+                    <View>
+                            <Slider
+                                    style={{ width: appInfo.sizes.WIDTH/2 -20, height: 40 }}
+                                    minimumValue={0}
+                                    maximumValue={500000}
+                                    minimumTrackTintColor={colors.primary}
+                                    step={10000}
+                                    value={selectedPriceRenge.low}
+                                    maximumTrackTintColor={colors.background}
+                                    onValueChange={(value:number)=>onSelectPriceRange({low:value,high:selectedPriceRenge.high})}
+                                    
+                                />
+                        </View>
+                        <View>
+                            <Slider
+                                style={{ width: appInfo.sizes.WIDTH/2 -20, height: 40 }}
+                                minimumValue={500000}
+                                maximumValue={1000000}
+                                minimumTrackTintColor={`${colors.gray2}`}
+                                maximumTrackTintColor={`${colors.primary}`}
+                                
+                                value={selectedPriceRenge.high}
+                                onValueChange={(value:number)=>onSelectPriceRange({low:selectedPriceRenge.low,high:value})}
+                                step={10000}
+                                
+                            />
+                            
+                        </View>
+                   </RowComponent> */}
+                        
                     
                     <SpaceComponent height={16} />
 
                 </View>
             </Modalize>
+            
         </Portal>
     )
 }

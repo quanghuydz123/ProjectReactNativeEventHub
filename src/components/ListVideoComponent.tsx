@@ -35,12 +35,12 @@ const ListVideoComponent = () => {
     }
     const [index, setIndex] = useState(0)
     useEffect(()=>{
-        if(constant.nameScreen === 'Main'){
+        if(constant.nameScreen === 'Main' && constant.indexTabSelected===0){
             setIsPauseVideo(true)
         }else{
             setIsPauseVideo(false)
         }
-    },[constant.nameScreen])
+    },[constant.nameScreen,constant.indexTabSelected])
     const toggleSound = () => {
         setIsSound(!isSound);
         // setIsPauseVideo(!isPauseVideo)
