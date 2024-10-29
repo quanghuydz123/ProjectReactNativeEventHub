@@ -24,30 +24,29 @@ import Feather from "react-native-vector-icons/Feather"
 interface Props {
   item: EventModelNew,
   isShownVertical?: boolean,
-  followers: FollowModel[],
   bgColor?:string
 }
 const EventItem = (props: Props) => {
-  const { item, followers, isShownVertical,bgColor } = props
+  const { item,  isShownVertical,bgColor } = props
   const navigation: any = useNavigation()
   const auth:AuthState = useSelector(authSelector)
   return (
-    <CardComponent color={bgColor ?? colors.background}  styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.5 : appInfo.sizes.WIDTH * 0.65,paddingRight:isShownVertical ? 10 : 1 }} onPress={() => { navigation.navigate('EventDetails', { item, followers, id: item._id }) }}>
+    <CardComponent color={bgColor ?? colors.background}  styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.5 : appInfo.sizes.WIDTH * 0.65,paddingRight:isShownVertical ? 10 : 1 }} onPress={() => { navigation.navigate('EventDetails', {  id: item._id }) }}>
       {
         isShownVertical ? <>
           <View>
             <Image source={{ uri: item.photoUrl }} style={{ width: appInfo.sizes.WIDTH*0.45, height: 110, borderRadius: 12, resizeMode: 'stretch' }} />
-            <View style={{
+            {/* <View style={{
               position: 'absolute',
               top: 6,
               left: appInfo.sizes.WIDTH*0.38
             }}>
               {
                 auth?.eventsInterested &&
-                auth?.eventsInterested.length > 0 && auth?.eventsInterested.some(event_id => event_id === item?._id)
+                auth?.eventsInterested.length > 0 && auth?.eventsInterested.some(eventIntersted => eventIntersted.event === item?._id)
                 && <FontAwesome name="star" size={18} color={colors.primary} />
-              }
-            </View>
+              }   
+            </View> */}
             <SpaceComponent width={12} />
             <View style={{ height: '100%', flex: 1 }}>
               <RowComponent justify="space-between" styles={{}}>
@@ -105,19 +104,19 @@ const EventItem = (props: Props) => {
               resizeMode: 'stretch',
               
             }}>
-              <RowComponent justify="space-between">
-                {/* <CardComponent isShadow styles={{ alignItems: 'center', padding: 10, marginHorizontal: 0, marginVertical: 0, position: 'absolute', top: -22, left: -30 }} color={'#ffffff'}>
+              {/* <RowComponent justify="space-between">
+                <CardComponent isShadow styles={{ alignItems: 'center', padding: 10, marginHorizontal: 0, marginVertical: 0, position: 'absolute', top: -22, left: -30 }} color={'#ffffff'}>
                   <TextComponent text={`${numberToString(new Date(item.startAt).getDate())}`} font={fontFamilies.semiBold} color={colors.danger2} size={18} />
                   <TextComponent text={`Tháng ${new Date(item.startAt).getMonth() + 1}`} color={colors.danger2} size={12} />
-                </CardComponent> */}
+                </CardComponent>
                 {
                   auth?.eventsInterested &&
-                  auth?.eventsInterested.length > 0 && auth?.eventsInterested.some(event_id => event_id === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard, { position: 'absolute', top: 0, right: 0 }]} color={'#ffffff4D'}>
+                  auth?.eventsInterested.length > 0 && auth?.eventsInterested.some(eventIntersted => eventIntersted.event === item._id) && <CardComponent isShadow styles={[globalStyles.noSpaceCard, { position: 'absolute', top: 0, right: 0 }]} color={'#ffffff4D'}>
                     <FontAwesome name="star" size={22} color={colors.primary} />
                   </CardComponent>
                 }
 
-              </RowComponent>
+              </RowComponent> */}
             </ImageBackground>
             <TextComponent numberOfLine={2} text={item.title} title size={17} color={colors.white} />
             <TextComponent text={item?.price ? `Từ  ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
@@ -155,7 +154,7 @@ const EventItem = (props: Props) => {
               }
             </RowComponent>
             {
-                (item.usersInterested && item.usersInterested.length > 0) && <AvatarGroup users={item.usersInterested} />
+                (item.usersInterested && item.usersInterested.length > 0) && <AvatarGroup  users={item.usersInterested} />
               }
             <RowComponent>
               <Feather name="calendar" size={12} color={colors.white} />

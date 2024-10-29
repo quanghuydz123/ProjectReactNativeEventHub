@@ -8,12 +8,11 @@ import RowComponent from "./RowComponent"
 import { colors } from "../constrants/color"
 interface Props {
     items:EventModelNew[],
-    follows:FollowModel[],
     isShownVertical?:boolean,
     bgColor?:string
 }
 const ListEventComponent = (props:Props)=>{
-    const {items,follows,isShownVertical,bgColor} = props
+    const {items,isShownVertical,bgColor} = props
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = useCallback(() => {
@@ -37,7 +36,7 @@ const ListEventComponent = (props:Props)=>{
       numColumns={2}
       renderItem={({item})=>{
         return <EventItem  
-        bgColor={bgColor} followers={follows} item={item} key={item._id} isShownVertical={isShownVertical}/>
+        bgColor={bgColor}  item={item} key={item._id} isShownVertical={isShownVertical}/>
       }}/>
     </View>
   )

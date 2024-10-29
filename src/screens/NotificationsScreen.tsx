@@ -181,7 +181,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
               <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
               <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-                onPress={() => navigation.navigate('EventDetails', { item: value.eventId })}>
+                onPress={() => navigation.navigate('EventDetails', { id: value.eventId?._id })}>
 
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
                   {`${value.senderID?.fullname} `}

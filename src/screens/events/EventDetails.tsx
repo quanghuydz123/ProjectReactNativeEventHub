@@ -39,31 +39,32 @@ import ListTicketComponent from "./components/ListTicketComponent";
 import RenderHTML from "react-native-render-html";
 const EventDetails = ({ navigation, route }: any) => {
 
-  const { item, followers, id }: { item: EventModelNew, followers: FollowModel[], id: string } = route.params
+  const { id }: {   id: string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
   const auth:AuthState = useSelector(authSelector)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
-  const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
+  const [isLoading, setIsLoading] = useState(true)
+  // const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
+  // const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
   const [searchUser, setSearchUser] = useState('')
   const [userSelected, setUserSelected] = useState<string[]>([])
   const [allUser, setAllUser] = useState<UserModel[]>([])
   const [isOpenModalizeInvityUser, setIsOpenModalizeInityUser] = useState(false)
-  const [event, setEvent] = useState<EventModelNew>(item)
+  const [event, setEvent] = useState<EventModelNew>()
   const dispatch = useDispatch()
   const [isInterested, setIsInterested] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
+  const [interestText,setInterestText] = useState('')
   useStatusBar('light-content')
-
+  console.log("isLoading",isLoading)
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
     if (!event) {
       handleCallApiGetEventById()
     }
-    if (!followers) {
-      handleCallApiGetAllFollower()
-    }
+    // if (!followers) {
+    //   handleCallApiGetAllFollower()
+    // }
 
   }, [])
   // useEffect( ()=>{
@@ -74,10 +75,20 @@ const EventDetails = ({ navigation, route }: any) => {
   //   console.log("authItem",JSON.parse(authItem)?.eventsInterested)  
   // }
   useEffect(()=>{
+    const userCount = event?.usersInterested?.length || 0;
+    const isUserInterested = event?.usersInterested?.some(item => item.user._id === auth.id);
+    
+    setInterestText(isUserInterested
+      ? userCount - 1 > 0 
+        ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
+        : `Bạn đã quan tâm`
+      : `${userCount} Người đã quan tâm`)
+  },[event])
+  useEffect(()=>{
     setIsInterested(
-      auth?.eventsInterested?.some(event_id => event_id === event?._id) || false
+      auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id) 
     );
-  },[auth?.eventsInterested])
+  },[auth?.eventsInterested,event])
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
@@ -95,22 +106,22 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
-  const handleCallApiGetAllFollower = async () => {
-    const api = apis.follow.getAll()
-    setIsLoading(true)
-    try {
-      const res: any = await followAPI.HandleFollwer(api, {}, 'get')
-      if (res && res.data && res.status === 200) {
-        setFollowerEvent(res.data.followers)
-      }
-      setIsLoading(false)
+  // const handleCallApiGetAllFollower = async () => {
+  //   const api = apis.follow.getAll()
+  //   setIsLoading(true)
+  //   try {
+  //     const res: any = await followAPI.HandleFollwer(api, {}, 'get')
+  //     if (res && res.data && res.status === 200) {
+  //       setFollowerEvent(res.data.followers)
+  //     }
+  //     setIsLoading(false)
 
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      console.log("HomeScreen", errorMessage)
-      setIsLoading(false)
-    }
-  }
+  //   } catch (error: any) {
+  //     const errorMessage = JSON.parse(error.message)
+  //     console.log("HomeScreen", errorMessage)
+  //     setIsLoading(false)
+  //   }
+  // }
   const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
@@ -205,9 +216,8 @@ const EventDetails = ({ navigation, route }: any) => {
   const handleCreateBillPaymentEvent = async () => {
     navigation.navigate('PaymentScreen', { event: event })
   }
-  console.log("is",isLLoadingNotShow,isLoading)
   const openMap = () => {
-    const encodedAddress = encodeURIComponent(event.Address); // Mã hóa địa chỉ
+    const encodedAddress = encodeURIComponent(event?.Address || ''); // Mã hóa địa chỉ
     const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
     Linking.canOpenURL(url)
@@ -227,7 +237,7 @@ const EventDetails = ({ navigation, route }: any) => {
       <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.50 },styles.shadow]}>
         
         <ImageBackground
-          source={{ uri: event?.photoUrl }}
+          source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }}
           imageStyle={{ flex: 1, objectFit: 'fill' }}
           style={[globalStyles.shadow, { height: '100%' }]}
           blurRadius={4}
@@ -235,12 +245,12 @@ const EventDetails = ({ navigation, route }: any) => {
           
           <SectionComponent styles={{ paddingTop: 10 }}>
             <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
-              <Image source={{ uri: event?.photoUrl }} style={{ height: '55%',objectFit:'fill',
+              <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{ height: '55%',objectFit:'fill',
                 borderTopLeftRadius:12,
                 borderTopRightRadius:12
                 }}/>
               <SectionComponent styles={{ paddingTop: 12 }}>
-                <TextComponent text={event?.title} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
+                <TextComponent text={event?.title || ''} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
                 <SpaceComponent height={8} />
                 <RowComponent styles={{}}>
                   <FontAwesome6 name="calendar" size={16} color={colors.white} />
@@ -252,8 +262,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
                   <SpaceComponent width={8} />
                   <View style={{ flex: 1 }}>
-                    <TextComponent text={event?.Location} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
-                    <TextComponent numberOfLine={2} text={event?.Address} size={12} color={colors.gray4} />
+                    <TextComponent text={event?.Location || ''} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
+                    <TextComponent numberOfLine={2} text={event?.Address || ''} size={12} color={colors.gray4} />
                     <ButtonComponent
                     text="Xem trên bảng đồ"
                     type="link"
@@ -310,8 +320,12 @@ const EventDetails = ({ navigation, route }: any) => {
                 <MaterialCommunityIcons size={20} color={colors.primary} name="account-heart-outline" />
                 <SpaceComponent width={8}/>
                 <View>
-                    <TextComponent text={`${event?.usersInterested.length} Người đã quan tâm`} size={14} styles={{fontWeight:'bold'} } color={colors.primary}/>
-                    {<AvatarGroup isShowButton isShowText={false} users={event?.usersInterested} textColor={colors.background} size={26}  />}
+                    <TextComponent 
+                    text={interestText} 
+                    size={14} 
+                    styles={{fontWeight:'bold'} } color={colors.primary}
+                    />
+                    {<AvatarGroup  isShowButton isShowText={false} users={event?.usersInterested} textColor={colors.background} size={26}  />}
 
                 </View>
               </RowComponent>
@@ -321,10 +335,10 @@ const EventDetails = ({ navigation, route }: any) => {
       <SectionComponent >
         <CardComponent isShadow title='Giới thiệu'>
           {/* <TextComponent text={event?.description ?? ''} /> */}
-          <RenderHTML
+          {event?.description && <RenderHTML
         contentWidth={appInfo.sizes.WIDTH - 20}
                 
-        source={{ html: event?.description }}
+        source={{ html: event.description }}
         // tagsStyles={{
         //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
         //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
@@ -342,7 +356,7 @@ const EventDetails = ({ navigation, route }: any) => {
         }}
         computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
         
-      />
+      />}
         </CardComponent>
       </SectionComponent>
       <SectionComponent >
@@ -358,8 +372,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </CardComponent>
       </SectionComponent>
      
-      <LoadingModal visible={isLoading} />
-      <LoadingModal visible={isLLoadingNotShow} notShowContent />
+      <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" bgColor={colors.background} styles={{marginTop:78}}/>
       <SelectModalize
         adjustToContentHeight
         title="Danh sách người dùng đang theo dõi"
@@ -418,7 +431,7 @@ const EventDetails = ({ navigation, route }: any) => {
               color:colors.white,
               fontSize:19,
               fontFamily:fontFamilies.medium
-              }}>{convertMoney(event?.price)}
+              }}>{convertMoney(event?.price || 0)}
               </Text>
           </Text>
           <ButtonComponent text="Mua vé ngay" alignItems="flex-end" type="primary" width={'70%'}  styles={{paddingVertical:8,marginBottom:0}} textSize={14}/>

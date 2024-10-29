@@ -106,7 +106,12 @@ const MainNavigator = ({navigation}:any) => {
         
       >
         <Stack.Screen name="Main" component={DrawerNavigate} />
-        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="EventDetails" component={EventDetails} 
+        // options={{
+        //   animationTypeForReplace: 'push',
+        //   animation:'fade'
+        // }}
+        />
         <Stack.Screen name="AboutProfileScreen" component={AboutProfileScreen} />
         <Stack.Screen name="NotFound" component={NotFound} />
         <Stack.Screen name="ExploreEvent" component={ExploreEvent} />

@@ -492,7 +492,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             <SearchNormal size={20} color={colors.white} />
             {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
             <SpaceComponent width={12} />
-            <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.gray2} size={18} animatedValue={animatedValue} isAnimationHiden />
+            <TextComponent text="Tìm kiếm sự kiện..." flex={1} color={colors.white} size={18} animatedValue={animatedValue} isAnimationHiden />
           </RowComponent>
           <SpaceComponent width={16} />
           <TouchableOpacity onPress={() => {
@@ -560,7 +560,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <AnimatedMaterialIcons name='bookmark-added' size={20} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
               <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                SỰ KIỆN LƯU
+                SỰ KIỆN QT
               </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
@@ -605,7 +605,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 <AnimatedFontAwesome5 name='user-friends' size={16} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
               <Animated.Text style={[styles.featureName, featureNameAnimation]}>
-                CÔNG ĐỒNG
+                THEO DÕI
               </Animated.Text>
             </TouchableOpacity>
           </Animated.View>
@@ -681,7 +681,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 horizontal
                 data={allEvent}
                 extraData={refreshList}
-                renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+                renderItem={({ item, index }) => <EventItem  item={item} key={item?._id} />}
               />
             }
               messageEmpty={'Không có sự kiên nào sắp xảy ra'}
@@ -705,7 +705,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 horizontal
                 data={allEventNear}
                 extraData={refreshList}
-                renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
+                renderItem={({ item, index }) => <EventItem  item={item} key={item?._id} />}
               />
             }
               messageEmpty={'Không có sự kiên nào gần chỗ bạn'}

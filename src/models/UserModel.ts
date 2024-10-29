@@ -13,6 +13,10 @@ export interface UserModel {
       lat:number,
       lng:number
     }
+    eventsInterested?:{
+      event:string,
+      createdAt:Date
+    }
     idRole:RoleModel
     createAt: string
     updateAt: string

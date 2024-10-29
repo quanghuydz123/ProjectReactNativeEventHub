@@ -5,6 +5,7 @@ import QRCode from "react-native-qrcode-svg";
 import Accordion from 'react-native-collapsible/Accordion';
 import { colors } from "../../constrants/color";
 import ListTicketComponent from "../events/components/ListTicketComponent";
+import LottieView from "lottie-react-native";
 const TransactionHistoryScreen = ()=>{
   
   return (
@@ -12,6 +13,8 @@ const TransactionHistoryScreen = ()=>{
       flex: 1,
       backgroundColor: colors.white
     }}>
+          {/* <LottieView style={{flex:1,width:30,height:30}} source={require('../../assets/icon/icon1.json')} autoPlay loop /> */}
+
       {/* <ImageBackground style={[{
         flex: 1,
         height: appInfo.sizes.HEIGHT * 0.315,

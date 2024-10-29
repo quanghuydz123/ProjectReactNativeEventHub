@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
-import { addAuth, authSelector, AuthState } from "../../reduxs/reducers/authReducers";
+import { addAuth, authSelector, AuthState, updateCategoriesInterested } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize, SelectedImageModal } from "../../../modals";
 import AvatarItem from "../../components/AvatarItem";
@@ -50,14 +50,14 @@ const ProfileScreen = ({ navigation, route }: any) => {
     handleCallApiGetFollowerById({isLoading:true})
   }, [auth.accesstoken])
   useEffect(() => {
-    if (follower) {
+    if (auth.categoriesInterested) {
       const ids: string[] = []
-      follower[0]?.categories.map((category) => {
-        ids.push(category?._id)
+      auth.categoriesInterested.map((item) => {
+        ids.push(item.category._id)
       })
       setIdsFollowerCategory(ids)
     }
-  }, [follower, isOpenModalizeSelectCategory,auth])
+  }, [isOpenModalizeSelectCategory,auth])
   useEffect(() => {
     if (isUpdateImageProfile) {
       if (profile?.photoUrl) {
@@ -221,15 +221,16 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiUpdateFollowerCategory = async () => {
-    const api = apis.follow.updateFollowCategory()
+    const api = '/interest-category'
+    setIsOpenModalizeSelectCategory(false)
     setIsLoading(true)
     try {
-      const res: any = await followAPI.HandleFollwer(api, { idUser: auth.id, idsCategory: idsFollowerCategory }, 'put')
+      const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idsCategory: idsFollowerCategory }, 'post')
       if (res && res.data && res.status === 200) {
-        handleCallApiGetFollowerById({})
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, categoriesInterested:res.data.user.categoriesInterested }))
+        dispatch(updateCategoriesInterested({categoriesInterested:res.data.user.categoriesInterested}))
       }
       setIsLoading(false)
-      setIsOpenModalizeSelectCategory(false)
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       if (errorMessage.statusCode === 403) {
@@ -315,15 +316,15 @@ const ProfileScreen = ({ navigation, route }: any) => {
           </RowComponent>
           <SpaceComponent height={8} />
          
-          {follower[0]?.categories && follower[0]?.categories.length>0 ?<DataLoaderComponent data={follower[0]?.categories} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
+          {auth?.categoriesInterested && auth?.categoriesInterested.length>0 ?<DataLoaderComponent data={auth?.categoriesInterested} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
             <FlatList
               style={{ paddingHorizontal: 8 }}
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={follower[0]?.categories}
+              data={auth?.categoriesInterested}
               contentContainerStyle={{}}
               renderItem={({ item, index }) => (
-                <AvatarItem size={70} styles={{ paddingHorizontal: index !== 0 ? 12 : 0 }} textName={item?.name} photoUrl={item?.image} />
+                <AvatarItem size={70} styles={{ paddingHorizontal: index !== 0 ? 12 : 0 }} textName={item.category.name} photoUrl={item.category.image} />
               )}
             />
           }
@@ -339,6 +340,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
           <TextComponent text={'Cài đặt'} />
         </CardComponent>
+        <LoadingModal visible={isLoading} message="Đang cập nhập"/>
       </SectionComponent>
       {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
@@ -362,7 +364,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </View>}
         renderItem={(item: CategoryModel) => <>
           <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={item?._id}>
-            <TagComponent key={item?._id} onPress={() => handleFollowerCategory(item?._id)} label={item.name}
+          <TagComponent key={item?._id} onPress={() => handleFollowerCategory(item?._id)} label={item.name}
               bgColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.white}
               textColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.white : colors.black}
               styles={[globalStyles.shadow, { borderWidth: 1, borderColor: idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.gray }]} />

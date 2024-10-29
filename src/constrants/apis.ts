@@ -3,7 +3,7 @@ export const apis = {
     follow:{
         getAll:()=>'/get-all',
         getById:(uid:string)=>`/get-byId?uid=${uid}`,
-        updateFollowEvent:()=>'/update-follower-event',
+        // updateFollowEvent:()=>'/update-follower-event',
         updateFollowCategory:()=>'/update-follower-category',
         updateFollowUserOther:()=>'/update-follower-userOther',
 

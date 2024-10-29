@@ -45,7 +45,7 @@ const DrawerNavigate = ({ navigation }: any) => {
     const state = navigation.getState();
     const routes = state.routes;
     if (routes.length > 1) {
-      const prevRoute = routes[routes.length - 2]; // Lấy route trước đó
+      // const prevRoute = routes[routes.length - 2]; // Lấy route trước đó
       navigation.goBack();
     } else {
       // Nếu không có màn hình trước đó, thoát ứng dụng

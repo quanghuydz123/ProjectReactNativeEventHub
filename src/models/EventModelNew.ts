@@ -14,7 +14,10 @@ export interface EventModelNew {
     authorId: UserModel
     // users?: UserModel[]
     // followers?:UserModel[],
-    usersInterested?:UserModel[],
+    usersInterested?:[{
+      user:UserModel,
+      createdAt:Date
+    }],
     startAt: string
     endAt: string
     status: boolean

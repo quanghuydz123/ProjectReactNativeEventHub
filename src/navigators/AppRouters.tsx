@@ -19,7 +19,7 @@ const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{
       checkLogin()
       const timeout = setTimeout(()=>{
         setIsShowSlash(false)
-      },1500)
+      },3000)
   
       return ()=>clearTimeout(timeout)
     },[])
@@ -35,7 +35,7 @@ const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{
     <> 
         {/* {isShowSlash ? <SplashScreen /> : auth?.accesstoken ? <MainNavigator /> : <AuthNavigator />} */}
         {isShowSlash ? <SplashScreen /> : <MainNavigator />}
-
+        {/* <SplashScreen /> */}
     </>
   )
 }

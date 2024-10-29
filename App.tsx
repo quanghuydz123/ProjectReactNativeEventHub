@@ -72,6 +72,7 @@ const App = () => {
               setNameScreenPresent(currentRoute.name)
             }}
             
+            
           > 
             <PaperProvider>
               <AppRouters nameScreenPresent={nameScreenPresent}/>

@@ -50,10 +50,9 @@ const initFilterEvent:FilterEvent = {
   },
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { items,follows,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
+  const { items,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
   const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(true)
-  const [allFollower, setAllFollower] = useState<FollowModel[]>(follows)
   const [result,setResult] = useState<EventModelNew[]>(items)
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
   const [isOpenModelizeFilter,setIsOpenModalizeFilter] = useState(false)
@@ -80,9 +79,7 @@ const auth = useSelector(authSelector)
   const [filterEvent,setFilterEvent] = useState<FilterEvent>(initFilterEvent)
   useEffect(() => {
     handleSetFilterEvent()
-    if(!allFollower){
-      handleCallApiGetAllFollower()
-    }
+   
     if(!allCategory){
       handleGetAllCategory()
     }
@@ -178,20 +175,20 @@ const auth = useSelector(authSelector)
     }
   }
 
-  const handleCallApiGetAllFollower = async () => {
-    const api = apis.follow.getAll()
-    try {
-      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
-      if (res && res.data && res.status === 200) {
-        setAllFollower(res.data.followers)
-      }
+  // const handleCallApiGetAllFollower = async () => {
+  //   const api = apis.follow.getAll()
+  //   try {
+  //     const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+  //     if (res && res.data && res.status === 200) {
+  //       setAllFollower(res.data.followers)
+  //     }
 
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      console.log("HomeScreen", errorMessage)
+  //   } catch (error: any) {
+  //     const errorMessage = JSON.parse(error.message)
+  //     console.log("HomeScreen", errorMessage)
 
-    }
-  }
+  //   }
+  // }
   // useEffect(()=>{//call api get lat and long
   //   const api = `https://geocode.search.hereapi.com/v1/geocode?q=${addressFilter}&limit=20&lang=vi-VI&in=countryCode:VNM&apiKey=${process.env.API_KEY_REVGEOCODE}`
   //   handleCallApiGetLatAndLong(api)
@@ -285,7 +282,7 @@ const auth = useSelector(authSelector)
         <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent bgColor={colors.black} isShownVertical items={result} follows={allFollower} />
+              <ListEventComponent bgColor={colors.black} isShownVertical items={result} />
 
             }/>
         

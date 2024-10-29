@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RoleModel } from "../../models/RoleModel";
+import { CategoryModel } from "../../models/CategoryModel";
 
 export interface AuthState {
     id: string,
@@ -16,7 +17,13 @@ export interface AuthState {
         lat: number,
         lng: number
     }
-    eventsInterested:string[]
+    eventsInterested:[{
+        event:string,
+        createdAt:Date | string
+    }],
+    categoriesInterested:[{
+        category:CategoryModel,
+    }],
 
 }
 
@@ -39,7 +46,17 @@ const initialState: AuthState = {
         lat: 0,
         lng: 0
     },
-    eventsInterested:[]
+    eventsInterested:[{
+        event:'',
+        createdAt:new Date().toISOString() as string
+    }],
+    categoriesInterested:[{
+        category:{
+            name:'',
+            image:'',
+            _id:''
+        },
+    }],
 }
 
 const authSlice = createSlice({
@@ -69,10 +86,14 @@ const authSlice = createSlice({
         updateEventsInterested:(state,action)=>{
             const { eventsInterested } = action.payload;
             state.authData.eventsInterested= eventsInterested
+        },
+        updateCategoriesInterested:(state,action)=>{
+            const { categoriesInterested } = action.payload;
+            state.authData.categoriesInterested= categoriesInterested
         }
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested,updateCategoriesInterested } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;
