@@ -47,25 +47,20 @@ const EventItem = (props: Props) => {
                 && <FontAwesome name="star" size={18} color={colors.primary} />
               }   
             </View> */}
+            {item.statusEvent === 'Ended' &&  <View style={{position:'absolute',
+                right:0,
+                top:0,
+                backgroundColor:colors.warning,
+                paddingHorizontal:8,
+                paddingVertical:3,
+                borderBottomLeftRadius:10,
+                borderTopRightRadius:10,
+              }}>
+                <TextComponent text={'Đã diễn ra'} size={12} font={fontFamilies.medium} color="white"/>
+              </View>}
             <SpaceComponent width={12} />
             <View style={{ height: '100%', flex: 1 }}>
-              <RowComponent justify="space-between" styles={{}}>
-                <RowComponent>
-                  
-                  <TextComponent text={item.addressDetals.county ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
-                 
-                  <SpaceComponent width={4} />
-                  <RowComponent>
-                    <FontAwesome name="eye" color={colors.primary} size={16} />
-                    <SpaceComponent width={2} />
-                    <TextComponent text={'78654'} size={12} color={colors.primary} />
-                  </RowComponent>
-                  <SpaceComponent width={4} />
-
-                </RowComponent>
-              
-
-              </RowComponent>
+             
               <TextComponent numberOfLine={2} text={item.title} title size={14} color={colors.white} />
               <TextComponent text={item?.price ? `Từ ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
               <RowComponent styles={{ flexWrap: 'wrap' }}>
@@ -92,17 +87,32 @@ const EventItem = (props: Props) => {
               <RowComponent>
                 <Feather name="calendar" size={12} color={colors.white} />
                 <SpaceComponent width={4} />
-                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} `} color={colors.white} size={12} />
+                <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.showTimes[0]?.startDate ?? Date.now()).getDay())} - ${DateTime.GetDateNew1(item?.showTimes[0]?.startDate ?? new Date(),item?.showTimes[0]?.endDate || new Date())} `} color={colors.white} size={12} />
+              </RowComponent>
+              <RowComponent justify="space-between" styles={{}}>
+                <RowComponent>
+                  
+                  <TextComponent text={item.addressDetals.county ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
+                 
+                  <SpaceComponent width={4} />
+                  <RowComponent>
+                    <FontAwesome name="eye" color={colors.primary} size={16} />
+                    <SpaceComponent width={2} />
+                    <TextComponent text={'78654'} size={12} color={colors.primary} />
+                  </RowComponent>
+                  <SpaceComponent width={4} />
+                </RowComponent>
+              
+
               </RowComponent>
             </View>
           </View>
         </>
           :
           <>
-            <ImageBackground style={[{ height: 160, padding: 10, marginBottom: 12 }]} source={{ uri: item.photoUrl }} imageStyle={{
+            <ImageBackground style={[{ height: 160, padding: 10, marginBottom: 12, }]} source={{ uri: item.photoUrl }} imageStyle={{
               borderRadius: 12,
               resizeMode: 'stretch',
-              
             }}>
               {/* <RowComponent justify="space-between">
                 <CardComponent isShadow styles={{ alignItems: 'center', padding: 10, marginHorizontal: 0, marginVertical: 0, position: 'absolute', top: -22, left: -30 }} color={'#ffffff'}>
@@ -117,6 +127,17 @@ const EventItem = (props: Props) => {
                 }
 
               </RowComponent> */}
+              {item.statusEvent === 'Ended' &&  <View style={{position:'absolute',
+                right:0,
+                top:0,
+                backgroundColor:colors.warning,
+                paddingHorizontal:8,
+                paddingVertical:4,
+                borderBottomLeftRadius:12,
+                borderTopRightRadius:12,
+              }}>
+                <TextComponent text={'Đã diễn ra'} size={12} font={fontFamilies.medium} color="white"/>
+              </View>}
             </ImageBackground>
             <TextComponent numberOfLine={2} text={item.title} title size={17} color={colors.white} />
             <TextComponent text={item?.price ? `Từ  ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
@@ -159,7 +180,7 @@ const EventItem = (props: Props) => {
             <RowComponent>
               <Feather name="calendar" size={12} color={colors.white} />
               <SpaceComponent width={4} />
-              <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.startAt ?? Date.now()).getDay())} ${DateTime.GetDateShort(new Date(item?.startAt ?? Date.now()), new Date(item?.endAt ?? Date.now()))} `} color={colors.white} size={12} />
+              <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.showTimes[0]?.startDate ?? Date.now()).getDay())} - ${DateTime.GetDateNew1(item?.showTimes[0]?.startDate ?? new Date(),item?.showTimes[0]?.endDate || new Date())} `} color={colors.white} size={12} />
             </RowComponent>
             <RowComponent>
               {/* <Location size={18} color={colors.gray2} variant="Bold" />

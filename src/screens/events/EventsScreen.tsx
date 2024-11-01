@@ -116,11 +116,11 @@ const EventsScreen = ({ navigation, route }: any) => {
           <TextComponent text={'Vượt lên mọi kì vọng của các fan hâm mộ, Siêu nhạc hội Quốc tế 8WONDER HCMC hứa hẹn sẽ trở thành bom tấn khuấy đảo toàn bộ mùa nhạc hội cuối năm của khu vực châu Á, với sự góp mặt của Imagine Dragons – ban nhạc rock đương đại hàng đầu thế giới cùng sự đồng hành của các ngôi sao trẻ thống lĩnh VPOP. '} />
         </CardComponent>
       </SectionComponent>
-      <SectionComponent >
+      {/* <SectionComponent >
         <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
           <ListTicketComponent />
         </CardComponent>
-      </SectionComponent>
+      </SectionComponent> */}
       <SectionComponent >
         <CardComponent isShadow title='Ban tổ chức'>
           <AvatarItem size={120} photoUrl='https://i.scdn.co/image/ab676161000051745a79a6ca8c60e4ec1440be53'/>

@@ -16,28 +16,13 @@ const ExploreEvent = ({navigation,route}:any) => {
     const {items}:{items:EventModelNew[]} = route.params || {}
     const [events, setEvents] = useState<EventModelNew[]>(items)
     const [isLoading, setIsLoading] = useState(false)
-    const [allFollower, setAllFollower] = useState<FollowModel[]>([])
 
     useEffect(() => {
         if(!events){
             getEvents()
         }
-        handleCallApiGetAllFollower()
     }, [])
-    const handleCallApiGetAllFollower = async () => {
-        const api = apis.follow.getAll()
-        try {
-          const res: any = await followAPI.HandleFollwer(api, {}, 'get');
-          if (res && res.data && res.status === 200) {
-            setAllFollower(res.data.followers)
-          }
-    
-        } catch (error: any) {
-          const errorMessage = JSON.parse(error.message)
-          console.log("HomeScreen", errorMessage)
-    
-        }
-      }
+   
     const getEvents = async () => {
         const api = apis.event.getAll({})
         setIsLoading(true)
@@ -60,7 +45,7 @@ const ExploreEvent = ({navigation,route}:any) => {
             {
                 (events && events?.length > 0 ) ? <>
 
-                <ListEventComponent items={events} follows={allFollower}/>
+                <ListEventComponent items={events}/>
                 </> : 
                 <LoadingComponent isLoading={isLoading} value={events?.length}/>
             }

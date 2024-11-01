@@ -36,7 +36,7 @@ import { Linking } from 'react-native';
 import userAPI from "../../apis/userApi";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import ListTicketComponent from "./components/ListTicketComponent";
-import RenderHTML from "react-native-render-html";
+import RenderHTML, { HTMLElementModel } from "react-native-render-html";
 const EventDetails = ({ navigation, route }: any) => {
 
   const { id }: {   id: string } = route.params
@@ -216,6 +216,7 @@ const EventDetails = ({ navigation, route }: any) => {
   const handleCreateBillPaymentEvent = async () => {
     navigation.navigate('PaymentScreen', { event: event })
   }
+ 
   const openMap = () => {
     const encodedAddress = encodeURIComponent(event?.Address || ''); // Mã hóa địa chỉ
     const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
@@ -230,6 +231,7 @@ const EventDetails = ({ navigation, route }: any) => {
       })
       .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
+  console.log(event?.statusEvent)
     return (
    
     <>
@@ -242,7 +244,7 @@ const EventDetails = ({ navigation, route }: any) => {
           style={[globalStyles.shadow, { height: '100%' }]}
           blurRadius={4}
         >
-          
+
           <SectionComponent styles={{ paddingTop: 10 }}>
             <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
               <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{ height: '55%',objectFit:'fill',
@@ -255,7 +257,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 <RowComponent styles={{}}>
                   <FontAwesome6 name="calendar" size={16} color={colors.white} />
                   <SpaceComponent width={8} />
-                  <TextComponent text={`19:00 - 21:30, 22 Tháng 11, 2024`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
+                  <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(),event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
                 </RowComponent>
                 <SpaceComponent height={8} />
                 <RowComponent styles={{ alignItems: 'flex-start' }}>
@@ -337,7 +339,7 @@ const EventDetails = ({ navigation, route }: any) => {
           {/* <TextComponent text={event?.description ?? ''} /> */}
           {event?.description && <RenderHTML
         contentWidth={appInfo.sizes.WIDTH - 20}
-                
+
         source={{ html: event.description }}
         // tagsStyles={{
         //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
@@ -351,7 +353,7 @@ const EventDetails = ({ navigation, route }: any) => {
           },
           
         p:{
-          margin:0
+          margin:0,
         }
         }}
         computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
@@ -361,7 +363,7 @@ const EventDetails = ({ navigation, route }: any) => {
       </SectionComponent>
       <SectionComponent >
         <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
-          <ListTicketComponent />
+          {(event?.showTimes && event?.showTimes.length>0) && <ListTicketComponent showTimes={event.showTimes}/>}
         </CardComponent>
       </SectionComponent>
       <SectionComponent >

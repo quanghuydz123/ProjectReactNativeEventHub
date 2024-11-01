@@ -107,9 +107,9 @@ const AddNewEvent = ()=>{
   const handleGetAllCategory = async ()=>{
     const api = apis.category.getAll()
     try {
-      const res:any = await categoryAPI.HandleCategory(api)
-      if(res && res.data && res.statusCode===200){
-        setAllCategory(res.data.categories)
+      const res = await categoryAPI.HandleCategory(api)
+      if(res && res.data && res.status===200){
+        setAllCategory(res.data as CategoryModel[])
       }
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)

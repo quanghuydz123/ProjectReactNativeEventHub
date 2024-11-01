@@ -21,7 +21,6 @@ import { authSelector } from "../../reduxs/reducers/authReducers"
 import SearchComponent from "../../components/SearchComponent"
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 interface routeParams {
-  items: EventModelNew[],
   follows: FollowModel[],
   lat:string,
   long:string,
@@ -50,10 +49,10 @@ const initFilterEvent:FilterEvent = {
   },
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { items,categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
-  const [events, setEvents] = useState<EventModelNew[]>(items)
+  const { categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
+  // const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(true)
-  const [result,setResult] = useState<EventModelNew[]>(items)
+  const [result,setResult] = useState<EventModelNew[]>()
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
   const [isOpenModelizeFilter,setIsOpenModalizeFilter] = useState(false)
   const [allCategory, setAllCategory] = useState<CategoryModel[]>(categories)
@@ -66,7 +65,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     high: number
   }>({
       low:0,
-      high:1000000
+      high:5000000
   })
   const [dateTime,setDateTime] = useState<{
     startAt:string,
@@ -131,7 +130,6 @@ const auth = useSelector(authSelector)
       setFirst(true)
     }
   },[filterEvent])
-  
 
   const handleSetFilterEvent = async ()=>{
     const filterCopy:FilterEvent = {...filterEvent}
@@ -161,9 +159,9 @@ const auth = useSelector(authSelector)
   const handleGetAllCategory = async () => {
     const api = apis.category.getAll()
     try {
-      const res: any = await categoryAPI.HandleCategory(api)
-      if (res && res.data && res.statusCode === 200) {
-        setAllCategory(res.data.categories)
+      const res = await categoryAPI.HandleCategory(api)
+      if (res && res.data && res.status === 200) {
+        setAllCategory(res.data as CategoryModel[])
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -282,7 +280,7 @@ const auth = useSelector(authSelector)
         <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent bgColor={colors.black} isShownVertical items={result} />
+              <ListEventComponent bgColor={colors.black} isShownVertical items={result ?? []} />
 
             }/>
         

@@ -186,7 +186,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
                 <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
                   {`${value.senderID?.fullname} `}
                   <Text style={[globalStyles.text]}>
-                    {value.content}
+                    đã mời bạn tham gia sự kiện {value?.eventId?.title} hãy tham gia ngay !!!
                   </Text>
                 </Text>
                 <SpaceComponent height={2} />

@@ -45,14 +45,7 @@ const ModalFilterEvent = (props: Props) => {
         , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime, selectedPriceRenge, onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
-    const [allFollow, setAllFollow] = useState<FollowModel[]>([])
-    const [rangePriceCopy, setRangePriceCopy] = useState<{
-        low: number,
-        high: number
-    }>({
-        low: 0,
-        high: 1000000
-    })
+    
     const [filterDate, setFilterDate] = useState('')
     const timeChoises = [{
         key: 'today',
@@ -201,7 +194,7 @@ const ModalFilterEvent = (props: Props) => {
                         <RowComponent>
                             <View style={{ flex: 1, paddingHorizontal: 4 }}>
                                 <RnRangeSlider
-                                    min={0} max={1000000} step={10000}
+                                    min={0} max={5000000} step={10000}
                                
                                     style={{ height: 5, backgroundColor: colors.gray2, borderRadius: 10, marginHorizontal: 12, justifyContent: 'center' }}
                                     renderThumb={(name) => (

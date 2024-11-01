@@ -108,9 +108,9 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const handleGetAllCategory = async () => {
     const api = apis.category.getAll()
     try {
-      const res: any = await categoryAPI.HandleCategory(api)
-      if (res && res.data && res.statusCode === 200) {
-        setAllCategory(res.data.categories)
+      const res = await categoryAPI.HandleCategory(api)
+      if (res && res.data && res.status === 200) {
+        setAllCategory(res.data as CategoryModel[])
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -340,7 +340,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
           <TextComponent text={'Cài đặt'} />
         </CardComponent>
-        <LoadingModal visible={isLoading} message="Đang cập nhập"/>
+        <LoadingModal visible={isLoading} message="Hệ thống đang xử lý"/>
       </SectionComponent>
       {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />

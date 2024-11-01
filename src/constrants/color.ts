@@ -23,6 +23,6 @@ export const colors ={
     background:'#262626',  
     background1:'rgb(55,55,60)',   
     background2:'rgb(46,47,50)',   
- 
-    backgroundBluishWhite:'rgb(245, 247, 252)'
+    backgroundBluishWhite:'rgb(245, 247, 252)', 
+    warning:'rgb(252,130,10)',
 }

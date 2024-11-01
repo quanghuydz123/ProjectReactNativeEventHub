@@ -10,6 +10,10 @@ export class DateTime {
         const date = new Date(num)
         return `Ngày ${numberToString(date.getDate())} tháng ${numberToString(date.getMonth() + 1)} năm ${date.getFullYear()}`
     }
+    static GetDate1 = (num: Date) => {
+        const date = new Date(num)
+        return `Ngày ${numberToString(date.getDate())} - ${numberToString(date.getMonth() + 1)} - ${date.getFullYear()}`
+    }
     static GetDateNew = (dateStart: Date, DateEnd: Date) => {
         const date1 = new Date(dateStart)
         const date2 = new Date(DateEnd)
@@ -27,6 +31,26 @@ export class DateTime {
             return `Ngày ${fullDate1.day} tháng ${fullDate1.month} năm ${fullDate1.year}`
         } else {
             return `Ngày ${fullDate1.day}-${fullDate2.day} tháng ${fullDate1.month} năm ${fullDate1.year}`
+        }
+    }
+
+    static GetDateNew1 = (dateStart: Date, DateEnd: Date) => {
+        const date1 = new Date(dateStart)
+        const date2 = new Date(DateEnd)
+        const fullDate1 = {
+            day: numberToString(date1.getDate()),
+            month: numberToString(date1.getMonth() + 1),
+            year: date1.getFullYear()
+        }
+        const fullDate2 = {
+            day: numberToString(date2.getDate()),
+            month: numberToString(date2.getMonth() + 1),
+            year: date2.getFullYear()
+        }
+        if (fullDate1.day === fullDate2.day) {
+            return `${fullDate1.day} tháng ${fullDate1.month}, ${fullDate1.year}`
+        } else {
+            return `${fullDate1.day}-${fullDate2.day} tháng ${fullDate1.month}, ${fullDate1.year}`
         }
     }
     static GetDateShort = (dateStart: Date, DateEnd: Date) => {

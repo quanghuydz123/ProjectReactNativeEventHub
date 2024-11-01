@@ -284,9 +284,9 @@ const HomeScreen = ({ navigation, route }: any) => {
     const api = apis.category.getAll()
     setIsLoadingCategories(true)
     try {
-      const res: any = await categoryAPI.HandleCategory(api)
-      if (res && res.data && res.statusCode === 200) {
-        setCategories(res.data.categories)
+      const res = await categoryAPI.HandleCategory(api)
+      if (res && res.data && res.status === 200) {
+        setCategories(res.data as CategoryModel[])
       }
       setIsLoadingCategories(false)
     } catch (error: any) {

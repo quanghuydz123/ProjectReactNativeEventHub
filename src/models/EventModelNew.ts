@@ -1,3 +1,4 @@
+import { ShowTimeModel } from "./ShowTimeModel"
 import { UserModel } from "./UserModel"
 
 export interface EventModelNew {
@@ -12,12 +13,12 @@ export interface EventModelNew {
     price: number
     category:Category,
     authorId: UserModel
-    // users?: UserModel[]
-    // followers?:UserModel[],
     usersInterested?:[{
       user:UserModel,
       createdAt:Date
     }],
+    showTimes:[ShowTimeModel]
+    statusEvent: 'PendingApproval' | "NotStarted" | 'Ongoing' | 'Ended' | 'Cancelled' | 'OnSale' | 'SoldOut',
     startAt: string
     endAt: string
     status: boolean
