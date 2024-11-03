@@ -1,3 +1,4 @@
+import { OrganizerModel } from "./OrganizerModel"
 import { ShowTimeModel } from "./ShowTimeModel"
 import { UserModel } from "./UserModel"
 
@@ -12,7 +13,7 @@ export interface EventModelNew {
     position: Position
     price: number
     category:Category,
-    authorId: UserModel
+    authorId: OrganizerModel
     usersInterested?:[{
       user:UserModel,
       createdAt:Date

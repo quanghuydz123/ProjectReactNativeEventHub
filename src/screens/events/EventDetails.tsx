@@ -7,11 +7,9 @@ import { colors } from "../../constrants/color";
 import CardComponent from "../../components/CardComponent";
 import { globalStyles } from "../../styles/globalStyles";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import LinearGradient from 'react-native-linear-gradient';
 import AvatarGroup from "../../components/AvatarGroup";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { fontFamilies } from "../../constrants/fontFamilies";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { EventModelNew } from "../../models/EventModelNew";
 import { DateTime } from "../../utils/DateTime";
 import { convertMoney } from "../../utils/convertMoney";
@@ -20,8 +18,6 @@ import { authSelector, AuthState, updateEventsInterested } from "../../reduxs/re
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
-import followAPI from "../../apis/followAPI";
-import { FollowModel } from "../../models/FollowModel";
 import socket from "../../utils/socket";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import AvatarItem from "../../components/AvatarItem";
@@ -37,12 +33,14 @@ import userAPI from "../../apis/userApi";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import ListTicketComponent from "./components/ListTicketComponent";
 import RenderHTML, { HTMLElementModel } from "react-native-render-html";
+import LinearGradient from "react-native-linear-gradient";
+import LottieView from "lottie-react-native";
 const EventDetails = ({ navigation, route }: any) => {
 
-  const { id }: {   id: string } = route.params
+  const { id }: { id: string } = route.params
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [heightButton, setHeightButton] = useState(0);
-  const auth:AuthState = useSelector(authSelector)
+  const auth: AuthState = useSelector(authSelector)
   const [isLoading, setIsLoading] = useState(true)
   // const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
   // const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
@@ -54,9 +52,10 @@ const EventDetails = ({ navigation, route }: any) => {
   const dispatch = useDispatch()
   const [isInterested, setIsInterested] = useState(false)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
-  const [interestText,setInterestText] = useState('')
+  const [interestText, setInterestText] = useState('')
+  const [isShowDes, setIsShowDes] = useState(false)
   useStatusBar('light-content')
-  console.log("isLoading",isLoading)
+  console.log("id",id)
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
     if (!event) {
@@ -74,30 +73,30 @@ const EventDetails = ({ navigation, route }: any) => {
   //   const authItem: any = await getItemAuth()
   //   console.log("authItem",JSON.parse(authItem)?.eventsInterested)  
   // }
-  useEffect(()=>{
+  useEffect(() => {
     const userCount = event?.usersInterested?.length || 0;
     const isUserInterested = event?.usersInterested?.some(item => item.user._id === auth.id);
-    
+
     setInterestText(isUserInterested
-      ? userCount - 1 > 0 
+      ? userCount - 1 > 0
         ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
         : `Bạn đã quan tâm`
       : `${userCount} Người đã quan tâm`)
-  },[event])
-  useEffect(()=>{
+  }, [event])
+  useEffect(() => {
     setIsInterested(
-      auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id) 
+      auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id)
     );
-  },[auth?.eventsInterested,event])
+  }, [auth?.eventsInterested, event])
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
       const res = await eventAPI.HandleEvent(apis.event.getById(id))
       if (res && res.data && res.status === 200) {
         setEvent(res.data as EventModelNew)
+        setIsLoading(false)
 
       }
-      setIsLoading(false)
 
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -156,10 +155,10 @@ const EventDetails = ({ navigation, route }: any) => {
     const api = '/interest-event'
     if (event?._id) {
       try {
-        const res:any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
+        const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.status === 200) {
-          await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested:res.data.user.eventsInterested }))
-          dispatch(updateEventsInterested({eventsInterested:res.data.user.eventsInterested}))
+          await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested: res.data.user.eventsInterested }))
+          dispatch(updateEventsInterested({ eventsInterested: res.data.user.eventsInterested }))
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -204,7 +203,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res = await notificationAPI.HandleNotification(api, { SenderID: auth.id, RecipientIds: userSelected, eventId: event?._id }, 'post')
         if (res && res.status === 200 && res.data) {
-          socket.emit('getNotifications',{idUser: auth.id})   
+          socket.emit('getNotifications', { idUser: auth.id })
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -216,7 +215,7 @@ const EventDetails = ({ navigation, route }: any) => {
   const handleCreateBillPaymentEvent = async () => {
     navigation.navigate('PaymentScreen', { event: event })
   }
- 
+
   const openMap = () => {
     const encodedAddress = encodeURIComponent(event?.Address || ''); // Mã hóa địa chỉ
     const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
@@ -231,228 +230,282 @@ const EventDetails = ({ navigation, route }: any) => {
       })
       .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
-  console.log(event?.statusEvent)
-    return (
-   
+  return (
+
     <>
-    <ContainerComponent back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop bgColor={colors.backgroundBluishWhite}>
-      <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.50 },styles.shadow]}>
-        
-        <ImageBackground
-          source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }}
-          imageStyle={{ flex: 1, objectFit: 'fill' }}
-          style={[globalStyles.shadow, { height: '100%' }]}
-          blurRadius={4}
-        >
+      <ContainerComponent back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop bgColor={colors.backgroundBluishWhite}>
+        <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.50 }, styles.shadow]}>
 
-          <SectionComponent styles={{ paddingTop: 10 }}>
-            <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
-              <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{ height: '55%',objectFit:'fill',
-                borderTopLeftRadius:12,
-                borderTopRightRadius:12
-                }}/>
-              <SectionComponent styles={{ paddingTop: 12 }}>
-                <TextComponent text={event?.title || ''} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
-                <SpaceComponent height={8} />
-                <RowComponent styles={{}}>
-                  <FontAwesome6 name="calendar" size={16} color={colors.white} />
-                  <SpaceComponent width={8} />
-                  <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(),event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
-                </RowComponent>
-                <SpaceComponent height={8} />
-                <RowComponent styles={{ alignItems: 'flex-start' }}>
-                  <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
-                  <SpaceComponent width={8} />
-                  <View style={{ flex: 1 }}>
-                    <TextComponent text={event?.Location || ''} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
-                    <TextComponent numberOfLine={2} text={event?.Address || ''} size={12} color={colors.gray4} />
-                    <ButtonComponent
-                    text="Xem trên bảng đồ"
-                    type="link"
-                    textFont={fontFamilies.medium}
-                    icon={<ArrowDown2 size={14} color={colors.primary}/>}
-                    iconFlex="right"
-                    textSize={11}
-                    textColor={colors.primary}
-                    onPress={()=>openMap()}
-                  />
-                  </View>
-                </RowComponent>
-              </SectionComponent>
-            </CardComponent>
-          </SectionComponent>
-        </ImageBackground>
-      </View>
-      <SectionComponent styles={{paddingTop:14}}>
-        <CardComponent isShadow>
-        <RowComponent justify="center" styles={{paddingVertical:10}}>
-                <ButtonComponent
-                  text={isInterested ? 'Đã quan tâm' : 'Quan tâm'}
-                  textFont={'12'} type="primary"
-                  width={appInfo.sizes.WIDTH * 0.42}
-                  color={colors.white}
-                  textColor={colors.background}
-                  styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
-                  icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.background} />}
-                  iconFlex="left"
-                  mrBottom={0}
-                  onPress={() => handleInterestEvent()}
-                />
+          <ImageBackground
+            source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }}
+            imageStyle={{ flex: 1, objectFit: 'fill' }}
+            style={[globalStyles.shadow, { height: '100%' }]}
+            blurRadius={4}
+          >
 
-                <SpaceComponent width={8} />
-                <ButtonComponent
-                  text={'Mời bạn bè'}
-                  textFont={'12'}
-                  type="primary"
-                  width={appInfo.sizes.WIDTH * 0.42}
-                  color={colors.white}
-                  textColor={colors.background}
-                  styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
-                  icon={<Ionicons name="person-add" size={16} color={colors.background} />}
-                  iconFlex="left"
-                  mrBottom={0}
-                  onPress={() => { setIsOpenModalizeInityUser(true) }}
-                />
-                
-              </RowComponent>
-              {/* {<AvatarGroup  users={event?.usersInterested} textColor={colors.background} size={40}  />} */}
-              {event && event?.usersInterested && event?.usersInterested.length>0 && <>
-              <SpaceComponent height={12}/>
-              <RowComponent styles={{alignItems:'flex-start'}}>
+            <SectionComponent styles={{ paddingTop: 10 }}>
+              <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
+                <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{
+                  height: '55%', objectFit: 'fill',
+                  borderTopLeftRadius: 12,
+                  borderTopRightRadius: 12
+                }} />
+                <SectionComponent styles={{ paddingTop: 12 }}>
+                  <TextComponent text={event?.title || ''} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
+                  <SpaceComponent height={8} />
+                  <RowComponent styles={{alignItems:'flex-start'}}>
+                    <FontAwesome6 name="calendar" size={16} color={colors.white} />
+                    <SpaceComponent width={8} />
+                    <View>
+                      <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(), event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
+                      {(event?.showTimes && event?.showTimes.length > 1) && <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: colors.white, padding: 2 }}>
+                        <TextComponent text={`+${event?.showTimes.length - 1} thời gian khác`} color={colors.white} font={fontFamilies.medium} size={8} />
+                      </View>}
+                    </View>
+                  </RowComponent>
+
+
+
+                  {!(event?.showTimes && event?.showTimes.length > 1) && <SpaceComponent height={8} />}
+                  <RowComponent styles={{ alignItems: 'flex-start' }}>
+                    <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
+                    <SpaceComponent width={8} />
+                    <View style={{ flex: 1 }}>
+                      <TextComponent text={event?.Location || ''} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
+                      <TextComponent numberOfLine={2} text={event?.Address || ''} size={12} color={colors.gray4} />
+                      <ButtonComponent
+                        text="Xem trên bảng đồ"
+                        type="link"
+                        textFont={fontFamilies.medium}
+                        icon={<ArrowDown2 size={14} color={colors.primary} />}
+                        iconFlex="right"
+                        textSize={11}
+                        textColor={colors.primary}
+                        onPress={() => openMap()}
+                      />
+                    </View>
+                  </RowComponent>
+                </SectionComponent>
+              </CardComponent>
+            </SectionComponent>
+          </ImageBackground>
+        </View>
+        <SectionComponent styles={{ paddingTop: 14 }}>
+          <CardComponent isShadow>
+            <RowComponent justify="center" styles={{ paddingVertical: 10 }}>
+              <ButtonComponent
+                text={isInterested ? 'Đã quan tâm' : 'Quan tâm'}
+                textFont={'12'} type="primary"
+                width={appInfo.sizes.WIDTH * 0.42}
+                color={colors.white}
+                textColor={colors.background}
+                styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
+                icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.background} />}
+                iconFlex="left"
+                textSize={14}
+                mrBottom={0}
+                onPress={() => handleInterestEvent()}
+              />
+              {/* <LottieView source={require('../../../src/assets/icon/star.json')} style={{width:20,height:20,marginTop:10}} speed={1} autoPlay loop={true}  renderMode="HARDWARE" /> */}
+
+              <SpaceComponent width={8} />
+              <ButtonComponent
+                text={'Mời bạn bè'}
+                textFont={'12'}
+                type="primary"
+                width={appInfo.sizes.WIDTH * 0.42}
+                color={colors.white}
+                textColor={colors.background}
+                styles={{ borderWidth: 1, borderColor: colors.background, minHeight: 0, paddingVertical: 12 }}
+                icon={<Ionicons name="person-add" size={16} color={colors.background} />}
+                iconFlex="left"
+                mrBottom={0}
+                textSize={14}
+                onPress={() => { setIsOpenModalizeInityUser(true) }}
+              />
+
+            </RowComponent>
+            {/* {<AvatarGroup  users={event?.usersInterested} textColor={colors.background} size={40}  />} */}
+            {event && event?.usersInterested && event?.usersInterested.length > 0 && <>
+              <SpaceComponent height={12} />
+              <RowComponent styles={{ alignItems: 'flex-start' }}>
                 <MaterialCommunityIcons size={20} color={colors.primary} name="account-heart-outline" />
-                <SpaceComponent width={8}/>
+                <SpaceComponent width={8} />
                 <View>
-                    <TextComponent 
-                    text={interestText} 
-                    size={14} 
-                    styles={{fontWeight:'bold'} } color={colors.primary}
-                    />
-                    {<AvatarGroup  isShowButton isShowText={false} users={event?.usersInterested} textColor={colors.background} size={26}  />}
+                  <TextComponent
+                    text={interestText}
+                    size={14}
+                    styles={{ fontWeight: 'bold' }} color={colors.primary}
+                  />
+                  {<AvatarGroup isShowButton isShowText={false} users={event?.usersInterested} textColor={colors.background} size={26} />}
 
                 </View>
               </RowComponent>
-              </>}
-        </CardComponent>
-      </SectionComponent>
-      <SectionComponent >
-        <CardComponent isShadow title='Giới thiệu'>
-          {/* <TextComponent text={event?.description ?? ''} /> */}
-          {event?.description && <RenderHTML
-        contentWidth={appInfo.sizes.WIDTH - 20}
+            </>}
+          </CardComponent>
+        </SectionComponent>
+        <SectionComponent>
+          <CardComponent isShadow title='Giới thiệu' styles={{ paddingBottom: 26 }}>
+            <View style={{ maxHeight: isShowDes ? 5000 : 480, overflow: 'hidden' }}>
+              {/* <TextComponent text={event?.description ?? ''} /> */}
+              {event?.description && !isLoading && <RenderHTML
+                contentWidth={appInfo.sizes.WIDTH - 20}
 
-        source={{ html: event.description }}
-        // tagsStyles={{
-        //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
-        //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
-        //   li: { fontSize: 16, lineHeight: 22 },
-        // }}
-        
-        tagsStyles={{
-          img:{
-            objectFit:'fill',
-          },
-          
-        p:{
-          margin:0,
-        }
-        }}
-        computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
-        
-      />}
-        </CardComponent>
-      </SectionComponent>
-      <SectionComponent >
-        <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
-          {(event?.showTimes && event?.showTimes.length>0) && <ListTicketComponent showTimes={event.showTimes}/>}
-        </CardComponent>
-      </SectionComponent>
-      <SectionComponent >
-        <CardComponent isShadow title='Ban tổ chức'>
-          <AvatarItem size={120} bdRadius={2} photoUrl='https://i.scdn.co/image/ab676161000051745a79a6ca8c60e4ec1440be53'/>
-          <TextComponent text={'8Wonder'} paddingVertical={8} size={16} font={fontFamilies.bold}/>
-          <TextComponent text={'Siêu nhạc hội đẳng cấp quốc tế 8Wonder'}/>
-        </CardComponent>
-      </SectionComponent>
-     
-      <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" bgColor={colors.background} styles={{marginTop:78}}/>
-      <SelectModalize
-        adjustToContentHeight
-        title="Danh sách người dùng đang theo dõi"
-        data={allUser}
-        onClose={() => setIsOpenModalizeInityUser(false)}
-        onSearch={(val: string) => setSearchUser(val)}
-        valueSearch={searchUser}
-        visible={isOpenModalizeInvityUser}
-        footerComponent={<View style={{
-          paddingBottom: 10,
-        }}>
-          <ButtonComponent disable={userSelected.length <= 0} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
-            textColor={colors.primary} type="primary" onPress={() => handleInviteUsers()} />
-        </View>}
-        renderItem={(item: UserModel) => <RowComponent
-          key={item.email} styles={[
-            {
-              paddingVertical: 6,
-              borderBottomWidth: 1,
-              borderBlockColor: colors.gray6,
-            }
-          ]}
-        >
-          <AvatarItem photoUrl={item?.photoUrl} size={38} onPress={() => {
-            if (item?._id == auth?.id) {
-              setIsOpenModalizeInityUser(false)
-              navigation.navigate('Profile', {
-                screen: 'ProfileScreen'
-              })
-            }
-            else {
-              setIsOpenModalizeInityUser(false)
-              navigation.navigate("AboutProfileScreen", { uid: item?._id })
-            }
-          }} />
-          <SpaceComponent width={8} />
-          <View style={{ flex: 1 }}>
-            <ButtonComponent
-              text={`${item.fullname} (${item.email})`}
-              onPress={() => handleSelectItem(item?._id)}
-              textColor={userSelected.includes(item?._id) ?
-                colors.primary : colors.colorText}
-              numberOfLineText={1}
-              textFont={fontFamilies.regular}
+                source={{ html: event.description }}
+                // tagsStyles={{
+                //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
+                //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
+                //   li: { fontSize: 16, lineHeight: 22 },
+                // }}
+
+                tagsStyles={{
+                  img: {
+                    objectFit: 'fill',
+                  },
+                  li: {
+                    color: colors.black
+                  },
+                  p: {
+                    margin: 0,
+                  }
+                }}
+                computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
+
+              />}
+            </View>
+            <View style={{ position: 'absolute', bottom: 0, width: '100%', left: 10 }}>
+              <LinearGradient
+                colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,1)']}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: 70, // Độ cao mờ
+                  bottom: 0,
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => setIsShowDes(!isShowDes)}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  paddingTop: 8,
+                  paddingBottom: 8,
+
+                }}
+              >
+                <AntDesign name={isShowDes ? 'caretup' : 'caretdown'} size={10} color={colors.gray4} />
+              </TouchableOpacity>
+            </View>
+
+
+          </CardComponent>
+        </SectionComponent>
+        <SectionComponent >
+          <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
+            {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} />}
+          </CardComponent>
+        </SectionComponent>
+        <SectionComponent >
+          <CardComponent isShadow title='Ban tổ chức'>
+            <AvatarItem
+              size={120}
+              bdRadius={2}
+              photoUrl={event?.authorId.user.photoUrl || 'https://i.scdn.co/image/ab676161000051745a79a6ca8c60e4ec1440be53'}
+              onPress={() => {
+                if (event?.authorId?.user._id === auth.id) {
+                  { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
+                }
+                else {
+                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId?.user._id, organizer: event?.authorId })
+                }
+              }}
             />
-          </View>
-          {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
-        </RowComponent>}/>
-    </ContainerComponent>
-    {
-      <SectionComponent isNoPaddingBottom styles={{backgroundColor:colors.black,height:70,justifyContent:'center'}}>
-        <RowComponent justify="space-between">
-          <Text style={{
-            color:colors.white,
-            fontSize:15}}>Từ <Text style={{
-              color:colors.white,
-              fontSize:19,
-              fontFamily:fontFamilies.medium
-              }}>{convertMoney(event?.price || 0)}
+            <TextComponent text={event?.authorId.user.fullname || ''} paddingVertical={8} size={16} font={fontFamilies.bold} />
+            <TextComponent text={event?.authorId.user.bio || 'Siêu nhạc hội đẳng cấp quốc tế 8Wonder'} />
+          </CardComponent>
+        </SectionComponent>
+
+        <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" bgColor={colors.background} styles={{ marginTop: 78 }} />
+        <SelectModalize
+          adjustToContentHeight
+          title="Danh sách người dùng đang theo dõi"
+          data={allUser}
+          onClose={() => setIsOpenModalizeInityUser(false)}
+          onSearch={(val: string) => setSearchUser(val)}
+          valueSearch={searchUser}
+          visible={isOpenModalizeInvityUser}
+          footerComponent={<View style={{
+            paddingBottom: 10,
+          }}>
+            <ButtonComponent disable={userSelected.length <= 0} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
+              textColor={colors.primary} type="primary" onPress={() => handleInviteUsers()} />
+          </View>}
+          renderItem={(item: UserModel) => <RowComponent
+            key={item.email} styles={[
+              {
+                paddingVertical: 6,
+                borderBottomWidth: 1,
+                borderBlockColor: colors.gray6,
+              }
+            ]}
+          >
+            <AvatarItem photoUrl={item?.photoUrl} size={38} onPress={() => {
+              if (item?._id == auth?.id) {
+                setIsOpenModalizeInityUser(false)
+                navigation.navigate('Profile', {
+                  screen: 'ProfileScreen'
+                })
+              }
+              else {
+                setIsOpenModalizeInityUser(false)
+                navigation.navigate("AboutProfileScreen", { uid: item?._id })
+              }
+            }} />
+            <SpaceComponent width={8} />
+            <View style={{ flex: 1 }}>
+              <ButtonComponent
+                text={`${item.fullname} (${item.email})`}
+                onPress={() => handleSelectItem(item?._id)}
+                textColor={userSelected.includes(item?._id) ?
+                  colors.primary : colors.colorText}
+                numberOfLineText={1}
+                textFont={fontFamilies.regular}
+              />
+            </View>
+            {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
+          </RowComponent>} />
+      </ContainerComponent>
+      {
+        <SectionComponent isNoPaddingBottom styles={{ backgroundColor: colors.black, height: 70, justifyContent: 'center' }}>
+          <RowComponent justify="space-between">
+            <Text style={{
+              color: colors.white,
+              fontSize: 15
+            }}>Từ <Text style={{
+              color: colors.white,
+              fontSize: 19,
+              fontFamily: fontFamilies.medium
+            }}>{convertMoney(event?.price || 0)}
               </Text>
-          </Text>
-          <ButtonComponent text="Mua vé ngay" alignItems="flex-end" type="primary" width={'70%'}  styles={{paddingVertical:8,marginBottom:0}} textSize={14}/>
-        </RowComponent>
-      </SectionComponent>
+            </Text>
+            <ButtonComponent text="Mua vé ngay" alignItems="flex-end" type="primary" width={'70%'} styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14} />
+          </RowComponent>
+        </SectionComponent>
       }
     </>
   )
 }
 const styles = StyleSheet.create({
-  shadow:{
-    shadowColor:'#262626',       // Màu của bóng đổ, sử dụng giá trị RGBA để xác định màu và độ trong suốt.
-    shadowOffset:{
-        width:0,                         // Độ lệch bóng đổ theo trục X. Giá trị 0 nghĩa là bóng đổ không lệch theo chiều ngang.
-        height:4                         // Độ lệch bóng đổ theo trục Y. Giá trị 4 nghĩa là bóng đổ sẽ lệch xuống dưới 4 đơn vị.
+  shadow: {
+    shadowColor: '#262626',       // Màu của bóng đổ, sử dụng giá trị RGBA để xác định màu và độ trong suốt.
+    shadowOffset: {
+      width: 0,                         // Độ lệch bóng đổ theo trục X. Giá trị 0 nghĩa là bóng đổ không lệch theo chiều ngang.
+      height: 4                         // Độ lệch bóng đổ theo trục Y. Giá trị 4 nghĩa là bóng đổ sẽ lệch xuống dưới 4 đơn vị.
     },
-    shadowOpacity:0.25,                  // Độ mờ của bóng đổ, giá trị từ 0 đến 1. Giá trị 0.25 nghĩa là bóng đổ sẽ có độ mờ 25%.
-    shadowRadius:8,                      // Bán kính mờ của bóng đổ, giá trị lớn hơn sẽ làm bóng đổ trở nên mờ hơn và mềm hơn.
-    elevation:8                      // Độ cao của phần tử trên Android, ảnh hưởng đến độ mờ và kích thước của bóng đổ.
-},
+    shadowOpacity: 0.25,                  // Độ mờ của bóng đổ, giá trị từ 0 đến 1. Giá trị 0.25 nghĩa là bóng đổ sẽ có độ mờ 25%.
+    shadowRadius: 8,                      // Bán kính mờ của bóng đổ, giá trị lớn hơn sẽ làm bóng đổ trở nên mờ hơn và mềm hơn.
+    elevation: 8                      // Độ cao của phần tử trên Android, ảnh hưởng đến độ mờ và kích thước của bóng đổ.
+  },
 });
 export default EventDetails;

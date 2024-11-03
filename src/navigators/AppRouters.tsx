@@ -19,7 +19,7 @@ const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{
       checkLogin()
       const timeout = setTimeout(()=>{
         setIsShowSlash(false)
-      },3000)
+      },1000)
   
       return ()=>clearTimeout(timeout)
     },[])

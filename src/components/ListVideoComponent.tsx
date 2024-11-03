@@ -33,6 +33,7 @@ const ListVideoComponent = () => {
     const onError = (error: any) => {
         console.log('Lỗi phát video:', error);
     }
+    const navigation:any = useNavigation()
     const [index, setIndex] = useState(0)
     useEffect(()=>{
         if(constant.nameScreen === 'Main' && constant.indexTabSelected===0){
@@ -104,6 +105,7 @@ const ListVideoComponent = () => {
                                 textSize={12}
                                 styles={{ minHeight: 0, paddingVertical: 8 }}
                                 alignItems='flex-start'
+                                onPress={()=>navigation.navigate('EventDetails', {  id: '67225e52aa7197d74d0ccf10'})}
                             />
                             <CardComponent onPress={toggleSound} isShadow styles={[globalStyles.noSpaceCard, { height: 24, width: 28, borderRadius: 4 }]} color={`rgba(255,255,255,0.6)`}>
                                 <Entypo name={isSound ? "sound-mute" : "sound"} size={14} color={colors.black} />

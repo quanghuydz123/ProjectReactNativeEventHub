@@ -20,7 +20,7 @@ const LoadingModal = (props:Props)=>{
             {
                 <>
                     {/* <ActivityIndicator color={colors.white} size={32}/> */}
-                    <LottieView source={require('../src/assets/icon/loading.json')} style={{width:130,height:130}} autoPlay loop />
+                    <LottieView source={require('../src/assets/icon/loading.json')}  style={{width:130,height:130}} autoPlay loop />
                     <RowComponent>
                         <TextComponent text={message ? `${message}` : 'Đang tải'} flex={0} size={12} font={fontFamilies.medium}  color={colors.white}/>
                         <LottieView source={require('../src/assets/icon/icon1.json')} style={{width:20,height:20,marginTop:10}} speed={1.5} autoPlay loop />

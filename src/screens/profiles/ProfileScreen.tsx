@@ -253,7 +253,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         <CardComponent  styles={[globalStyles.center]} >
           {auth.accesstoken ? <>
             <RowComponent onPress={() => handleChangeImageAvatar()}>
-              <AvatarItem size={80} photoUrl={profile?.photoUrl} borderWidth={0} isShowIconAbsolute />
+              <AvatarItem size={90} photoUrl={profile?.photoUrl} isShowIconAbsolute borderWidth={1} colorBorderWidth={colors.gray4} />
 
             </RowComponent>
             <SpaceComponent height={8} />
