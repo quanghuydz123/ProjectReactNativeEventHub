@@ -50,6 +50,7 @@ const ListTicketComponent = (props:Props) => {
         textSize={14}
         color={colors.background}
         textColor={colors.gray4}
+        
         styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
       }else if(section.status==='Ongoing'){
         content=<ButtonComponent 
@@ -65,6 +66,26 @@ const ListTicketComponent = (props:Props) => {
       }else if(section.status==='SoldOut'){
         content=<ButtonComponent 
         text={'Suất diễn đã hết vé'} 
+        type="primary" 
+        mrBottom={0} 
+        width={'auto'} 
+        textSize={14}
+        color={colors.background}
+        textColor={colors.gray4}
+        styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
+      } else if(section.status==='NotYetOnSale'){
+        content=<ButtonComponent 
+        text={'Suất diễn chưa mở bán'} 
+        type="primary" 
+        mrBottom={0} 
+        width={'auto'} 
+        textSize={14}
+        color={colors.background}
+        textColor={colors.gray4}
+        styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
+      }else if(section.status==='SaleStopped'){
+        content=<ButtonComponent 
+        text={'Suất diễn đã ngừng bán vé'} 
         type="primary" 
         mrBottom={0} 
         width={'auto'} 

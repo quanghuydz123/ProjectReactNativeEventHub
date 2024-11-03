@@ -1,4 +1,4 @@
-import { Button, Text, View } from "react-native"
+import { Button, ScrollView, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { ButtonComponent, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import SearchComponent from "../../components/SearchComponent";
@@ -80,6 +80,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
     <ContainerComponent back title="Danh sách theo dõi"
       right={<SearchNormal size={20} color={colors.white} />}
       onPressRight={() => navigation.push('FriendsScreen', { screen: 'SearchFriendScreen' })}
+
     >
       <SectionComponent>
         <View style={{
@@ -96,79 +97,80 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
           onEnd={() => console.log("ok")}
         />
       </SectionComponent>
-      <SectionComponent styles={{ paddingBottom: 0 }}>
+      <ScrollView>
+        <SectionComponent styles={{ paddingBottom: 0 }}>
 
-        <TabBarComponent
-          styles={{
-            paddingHorizontal: 0,
-            marginBottom: 0
-          }}
-          title={`Bạn đang theo dõi ${follower[0]?.users ? follower[0]?.users.reduce((acc, user) => acc + (user.status === true ? 1 : 0), 0) : ''} người`}
-          textSizeTitle={20}
-          onPress={() => console.log("ok")}
-          isNotShowIconRight
-          titleRight="Sắp xếp"
-          textColor={colors.background}
-        />
-        <SpaceComponent height={16} />
-        {/* <FlatList
-          key={'flatlist1'}
-          contentContainerStyle={{ paddingBottom: 16 }}
-          showsVerticalScrollIndicator={false}
-          data={follower[0]?.users}
-          renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
-        /> */}
-        <DataLoaderComponent data={follower[0]?.users.filter((item) => item.status === true)} isLoading={isLoading} children={
-          <FlatList
-            key={'flatlist1'}
-            contentContainerStyle={{ paddingBottom: 16 }}
-            showsVerticalScrollIndicator={false}
-            data={follower[0]?.users}
-            renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
+          <TabBarComponent
+            styles={{
+              paddingHorizontal: 0,
+              marginBottom: 0
+            }}
+            title={`Bạn đang theo dõi ${follower[0]?.users ? follower[0]?.users.reduce((acc, user) => acc + (user.status === true ? 1 : 0), 0) : ''} người`}
+            textSizeTitle={20}
+            onPress={() => console.log("ok")}
+            isNotShowIconRight
+            titleRight="Sắp xếp"
+            textColor={colors.background}
           />
-        }
-          messageEmpty={'Bạn chưa theo dõi ai'}
-        />
-      </SectionComponent>
-      <SectionComponent>
-        <View style={{
-          width: '100%',
-          backgroundColor: colors.gray3,
-          height: 1
-        }} />
-        <SpaceComponent height={16} />
-        <TabBarComponent
-          styles={{
-            paddingHorizontal: 0,
-            marginBottom: 0
-          }}
-          title={`${yourFollowers.length} Người đang theo dõi bạn`}
-          textSizeTitle={20}
-          onPress={() => console.log("ok")}
-          isNotShowIconRight
-          titleRight="Sắp xếp"
-          textColor={colors.background}
-        />
-        <SpaceComponent height={16} />
-        {/* <FlatList
-          key={'flatlist2'}
-          contentContainerStyle={{ paddingBottom: 16 }}
-          showsVerticalScrollIndicator={false}
-          data={yourFollowers}
-          renderItem={({ item, index }) => renderListFriend(item.user, true)}
-        /> */}
-        <DataLoaderComponent data={yourFollowers} isLoading={isLoading} children={
-          <FlatList
-            key={'flatlist2'}
-            contentContainerStyle={{ paddingBottom: 16 }}
-            showsVerticalScrollIndicator={false}
-            data={yourFollowers}
-            renderItem={({ item, index }) => renderListFriend(item.user, true)}
+          <SpaceComponent height={16} />
+          {/* <FlatList
+  key={'flatlist1'}
+  contentContainerStyle={{ paddingBottom: 16 }}
+  showsVerticalScrollIndicator={false}
+  data={follower[0]?.users}
+  renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
+/> */}
+          <DataLoaderComponent data={follower[0]?.users.filter((item) => item.status === true)} isLoading={isLoading} children={
+            // <FlatList
+            //   key={'flatlist1'}
+            //   contentContainerStyle={{ paddingBottom: 16 }}
+            //   showsVerticalScrollIndicator={false}
+            //   data={follower[0]?.users}
+            //   renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
+            // />
+            follower[0]?.users.map((item, index) => {
+              return renderListFriend(item.idUser, item.status)
+            })
+          }
+            messageEmpty={'Bạn chưa theo dõi ai'}
           />
-        }
-          messageEmpty={'Chưa có ai theo dõi bạn'}
-        />
-      </SectionComponent>
+        </SectionComponent>
+        <SectionComponent>
+          <View style={{
+            width: '100%',
+            backgroundColor: colors.gray3,
+            height: 1
+          }} />
+          <SpaceComponent height={16} />
+          <TabBarComponent
+            styles={{
+              paddingHorizontal: 0,
+              marginBottom: 0
+            }}
+            title={`${yourFollowers.length} Người đang theo dõi bạn`}
+            textSizeTitle={20}
+            onPress={() => console.log("ok")}
+            isNotShowIconRight
+            titleRight="Sắp xếp"
+            textColor={colors.background}
+          />
+          <SpaceComponent height={16} />
+          {/* <FlatList
+  key={'flatlist2'}
+  contentContainerStyle={{ paddingBottom: 16 }}
+  showsVerticalScrollIndicator={false}
+  data={yourFollowers}
+  renderItem={({ item, index }) => renderListFriend(item.user, true)}
+/> */}
+          <DataLoaderComponent data={yourFollowers} isLoading={isLoading} children={
+            yourFollowers.map((item, index) => {
+              return renderListFriend(item.user, true)
+            })
+          }
+            messageEmpty={'Chưa có ai theo dõi bạn'}
+          />
+        </SectionComponent>
+      </ScrollView>
     </ContainerComponent>
   )
 }

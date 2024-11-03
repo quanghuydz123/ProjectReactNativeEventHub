@@ -688,7 +688,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             />
           }
           <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
-          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} height={appInfo.sizes.HEIGHT * 0.3} children={
+          <DataLoaderComponent data={categories} isLoading={isLoadingCategories} height={appInfo.sizes.HEIGHT * 0.2} children={
             <CategoriesList values={categories} />
           }
             messageEmpty={'Không có thể loại nào cả'}

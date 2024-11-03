@@ -53,14 +53,16 @@ const ButtonComponent = (props: Props) => {
                     disabled={disable}
                     onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
-                        backgroundColor: color ? color : disable ? colors.gray3 : colors.primary,
+                        backgroundColor: color ? color : disable ? colors.black : colors.primary,
                         marginBottom: mrBottom ?? 17,
                         width: width ?? '90%',
-
+                        paddingVertical:disable ? 6 : 16,
+                        borderWidth:disable ? 1 : 0,
+                        borderColor:disable ? colors.gray4 : ''
                     }, styles]}>
                     {icon && iconFlex === 'left' && icon}
                     {
-                        text && <TextComponent size={textSize ?? 14} numberOfLine={numberOfLineText} text={text} color={textColor ?? colors.white}
+                        text && <TextComponent size={textSize ?? 14} numberOfLine={numberOfLineText} text={text} color={textColor ??( disable ? colors.gray4 : colors.white)}
                             styles={[{ marginLeft: icon ? 8 : 0, textAlign: 'center' }, textStyles]}
                             flex={icon && iconFlex === 'right' ? 1 : 0
                             }
@@ -82,7 +84,7 @@ const ButtonComponent = (props: Props) => {
                 {
                     text && <TextComponent size={textSize} text={text} numberOfLine={numberOfLineText} 
                     font={textFont ?? fontFamilies.medium} 
-                    color={textColor ?? colors.link} 
+                    color={textColor ?? (disable ? colors.gray4 : colors.link)} 
                     />
                 }
                 {icon && iconFlex === 'right' && <SpaceComponent width={4}/>}

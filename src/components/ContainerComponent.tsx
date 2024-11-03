@@ -23,15 +23,16 @@ interface Props {
     bgColorTitle?: string,
     isCenterTitle?:boolean,
     pdTop?:number,
-    isHiddenSpaceTop?:boolean
+    isHiddenSpaceTop?:boolean,
+    scrollRef?:any
 }
 //showsVerticalScrollIndicator ẩn thanh trượt xuống
 const ContainerComponent = (props: Props) => {
-    const { children, isScroll, isImageBackgound, title, back, right,isHiddenSpaceTop,pdTop, onPressRight, bgColor, isCenterTitle,colorTitle, bgColorTitle } = props
+    const { children, isScroll,scrollRef, isImageBackgound, title, back, right,isHiddenSpaceTop,pdTop, onPressRight, bgColor, isCenterTitle,colorTitle, bgColorTitle } = props
     const navigation: any = useNavigation()
     const RightComponent: React.ComponentType<any> = onPressRight ? TouchableOpacity : View;
     const returnContainer = isScroll ? (
-        <ScrollView style={{ flex: 1, backgroundColor: bgColor ?? 'white' }} showsVerticalScrollIndicator={false}>
+        <ScrollView ref={scrollRef} style={{ flex: 1, backgroundColor: bgColor ?? 'white' }} showsVerticalScrollIndicator={false}>
             {children}
         </ScrollView>
     ) : (
@@ -59,7 +60,7 @@ const ContainerComponent = (props: Props) => {
                         }
                         <View style={{ flex: 1 }}>{typeof title === 'string' ? <TextComponent text={title} textAlign={isCenterTitle ? 'center' : 'left'} color={colorTitle ?? colors.white} font={fontFamilies.medium} size={18} /> : title}
                         </View>
-                        {right && <RightComponent onPress={onPressRight}>{right}</RightComponent>}
+                        {right && <RightComponent  onPress={onPressRight}>{right}</RightComponent>}
                     </RowComponent>}
             </View>
             {!isHiddenSpaceTop && <SpaceComponent height={10} color={bgColor ?? colors.white}/>}

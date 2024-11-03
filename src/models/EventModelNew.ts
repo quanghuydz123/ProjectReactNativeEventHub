@@ -19,7 +19,7 @@ export interface EventModelNew {
       createdAt:Date
     }],
     showTimes:[ShowTimeModel]
-    statusEvent: 'PendingApproval' | "NotStarted" | 'Ongoing' | 'Ended' | 'Cancelled' | 'OnSale' | 'SoldOut',
+    statusEvent: 'PendingApproval' | "NotStarted" | 'Ongoing' | 'Ended' | 'Cancelled' | 'OnSale' | 'SoldOut' | 'SaleStopped' | 'NotYetOnSale'
     startAt: string
     endAt: string
     status: boolean

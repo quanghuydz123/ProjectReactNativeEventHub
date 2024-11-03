@@ -1,4 +1,4 @@
-import { Alert, Button, Image, ImageBackground, Platform, ScrollView, Share, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Button, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
@@ -34,7 +34,9 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import ListTicketComponent from "./components/ListTicketComponent";
 import RenderHTML, { HTMLElementModel } from "react-native-render-html";
 import LinearGradient from "react-native-linear-gradient";
-import LottieView from "lottie-react-native";
+import Feather from 'react-native-vector-icons/Feather'
+import Share from 'react-native-share';
+
 const EventDetails = ({ navigation, route }: any) => {
 
   const { id }: { id: string } = route.params
@@ -55,7 +57,6 @@ const EventDetails = ({ navigation, route }: any) => {
   const [interestText, setInterestText] = useState('')
   const [isShowDes, setIsShowDes] = useState(false)
   useStatusBar('light-content')
-  console.log("id",id)
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
     if (!event) {
@@ -87,7 +88,7 @@ const EventDetails = ({ navigation, route }: any) => {
     setIsInterested(
       auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id)
     );
-  }, [auth?.eventsInterested, event])
+  }, [auth?.eventsInterested,event])
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
@@ -157,6 +158,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.status === 200) {
+          setIsInterested(!isInterested)
           await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested: res.data.user.eventsInterested }))
           dispatch(updateEventsInterested({ eventsInterested: res.data.user.eventsInterested }))
         }
@@ -178,25 +180,25 @@ const EventDetails = ({ navigation, route }: any) => {
       setUserSelected([...userSelected, id])
     }
   }
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message:
-          'React Native | A framework for building native apps using React',
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error: any) {
-      Alert.alert(error.message);
-    }
-  };
+  // const onShare = async () => {
+  //   try {
+  //     const result = await Share.share({
+  //       message:
+  //         'React Native | A framework for building native apps using React',
+  //     });
+  //     if (result.action === Share.sharedAction) {
+  //       if (result.activityType) {
+  //         // shared with activity type of result.activityType
+  //       } else {
+  //         // shared
+  //       }
+  //     } else if (result.action === Share.dismissedAction) {
+  //       // dismissed
+  //     }
+  //   } catch (error: any) {
+  //     Alert.alert(error.message);
+  //   }
+  // };
   const handleInviteUsers = async () => {
     if (event?._id) {
       const api = apis.notification.handleSendNotificationInviteUserToEvent()
@@ -230,11 +232,78 @@ const EventDetails = ({ navigation, route }: any) => {
       })
       .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
+  const share = ()=>{
+    const options = {
+      message:'Vào đây xem sự kiện siêu "xịn sò" nè! Đặt vé ngay để không bỏ lỡ nha!',
+      url:'https://ticketbox.vn/baotangcuanuoitiec-hn-vu-22907?utm_medium=hero-banner&utm_source=tkb-homepage'
+    }
+    Share.open(options)
+    .then(res =>console.log(res))
+    .catch(err=>console.log(err))
+  }
+  const renderButton = ()=>{
+    let text = 'Mua vé ngay'
+    let disable = false
+    let width = '70%'
+    let onPress = ()=>console.log('ok')
+    if(event?.statusEvent === 'NotYetOnSale'){
+      text='Sự kiện chưa mở bán'
+      width='80%'
+      disable=true
+    }else if(event?.statusEvent==='SoldOut'){
+      text='Đã hết vé'
+      width='80%'
+      disable=true
+    }else if(event?.statusEvent==='Ended'){
+      text='Sự kiện đã hết thúc'
+      width='80%'
+      disable=true
+    }else if(event?.statusEvent==='SaleStopped'){
+      text = 'Đã ngưng bán vé'
+      width='80%'
+      disable=true
+    }else if(event?.statusEvent==='Ongoing'){
+      text = 'Sự kiện đang diễn ra'
+      width='80%'
+      disable =  true
+    }else if(event?.showTimes && event?.showTimes?.length > 1){
+      text='Chọn lịch diễn'
+      onPress=()=>scrollToComponent()
+    }
+    return (
+      <ButtonComponent 
+      text={text}
+      alignItems="flex-end" 
+      type="primary" 
+      width={width} 
+      styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14} 
+      onPress={onPress}
+      disable={disable}
+      />
+    )
+  }
+
+  const scrollViewRef:any = useRef(null); //tự scroll đến mục tiêu khi click
+  const targetRef:any = useRef(null);
+  const scrollToComponent = () => {
+    targetRef.current?.measureLayout(
+      scrollViewRef?.current?.getInnerViewNode(),
+      (x:number, y:number) => {
+        scrollViewRef?.current?.scrollTo({ y: y, animated: true });
+      }
+    );
+  };
   return (
 
     <>
-      <ContainerComponent back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop bgColor={colors.backgroundBluishWhite}>
-        <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.50 }, styles.shadow]}>
+      <ContainerComponent scrollRef={scrollViewRef} back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop 
+      bgColor={colors.backgroundBluishWhite} 
+      right={!isLoading ? <TouchableOpacity style={{borderWidth:1,borderColor:'white',borderRadius:100,padding:6}} onPress={()=>share()}>
+        <FontAwesome name="share" size={16} color={colors.white} />
+      </TouchableOpacity> : <></>}
+      >
+
+        <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.52 }, styles.shadow]}>
 
           <ImageBackground
             source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }}
@@ -244,7 +313,7 @@ const EventDetails = ({ navigation, route }: any) => {
           >
 
             <SectionComponent styles={{ paddingTop: 10 }}>
-              <CardComponent color={colors.background1} styles={{ padding: 0, height: '98.5%' }} isShadow>
+              <CardComponent color={colors.background1} styles={{ padding: 0, height: '99%' }} isShadow>
                 <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{
                   height: '55%', objectFit: 'fill',
                   borderTopLeftRadius: 12,
@@ -401,7 +470,7 @@ const EventDetails = ({ navigation, route }: any) => {
 
           </CardComponent>
         </SectionComponent>
-        <SectionComponent >
+        <SectionComponent  sectionRef={targetRef}>
           <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
             {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} />}
           </CardComponent>
@@ -489,7 +558,7 @@ const EventDetails = ({ navigation, route }: any) => {
             }}>{convertMoney(event?.price || 0)}
               </Text>
             </Text>
-            <ButtonComponent text="Mua vé ngay" alignItems="flex-end" type="primary" width={'70%'} styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14} />
+            {renderButton()}
           </RowComponent>
         </SectionComponent>
       }

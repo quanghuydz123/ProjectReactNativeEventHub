@@ -247,10 +247,11 @@ const ProfileScreen = ({ navigation, route }: any) => {
   //   },0)  
   //   return ``
   // },[follower])
+  
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
-        <CardComponent  styles={[globalStyles.center]} >
+        <CardComponent  styles={[globalStyles.center]} isShadow >
           {auth.accesstoken ? <>
             <RowComponent onPress={() => handleChangeImageAvatar()}>
               <AvatarItem size={90} photoUrl={profile?.photoUrl} isShowIconAbsolute borderWidth={1} colorBorderWidth={colors.gray4} />
@@ -305,7 +306,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </CardComponent>
       </SectionComponent>
       {auth.accesstoken && <SectionComponent isNoPaddingBottom>
-        <CardComponent >
+        <CardComponent isShadow >
           <RowComponent>
             <TextComponent flex={1} text="Các thể loại sự kiện quan tâm" title size={18} />
             <RowComponent onPress={() => setIsOpenModalizeSelectCategory(true)} styles={{ paddingVertical: 6 }}>
@@ -337,7 +338,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </CardComponent>
       </SectionComponent>}
       <SectionComponent>
-        <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
+        <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }} isShadow>
           <TextComponent text={'Cài đặt'} />
         </CardComponent>
         <LoadingModal visible={isLoading} message="Hệ thống đang xử lý"/>

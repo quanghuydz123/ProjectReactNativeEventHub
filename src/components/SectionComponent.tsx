@@ -12,14 +12,17 @@ interface Props {
   mgSpaceBottom?: number,
   colorSpace?: string,
   isNoPaddingBottom?: boolean,
-  bgColor?:string
+  bgColor?:string,
+  sectionRef?:any
 
 }
 const SectionComponent = (props: Props) => {
 
-  const { children, styles, isSpace, mgSpaceTop, colorSpace, mgSpaceBottom, isNoPaddingBottom,bgColor } = props
+  const { children, styles, isSpace, mgSpaceTop, colorSpace, mgSpaceBottom, isNoPaddingBottom,bgColor ,sectionRef} = props
   return (
-    <View style={[{
+    <View 
+    ref={sectionRef}
+    style={[{
       paddingHorizontal: 12,
       paddingBottom:isNoPaddingBottom ? 0 : 12,
       backgroundColor:bgColor ? bgColor : ''

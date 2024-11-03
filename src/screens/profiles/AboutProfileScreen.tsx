@@ -66,7 +66,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
   }, [])
   useEffect(() => {
     handleCallApiGetFollowerById(true)
-  }, [auth])
+  }, [auth.id])
   // const renderTabContent = (key: String) => {
   //   let content = <></>
   //   switch (key) {
@@ -113,7 +113,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
+  const   handleCallApiGetFollowerById = async (isLoading?: boolean) => {
     if (auth.id) {
       const api = apis.follow.getById(auth.id)
       setIsLoading(isLoading ? isLoading : false)
@@ -186,7 +186,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
             keyExtractor={(item) => item._id} // đảm bảo mỗi item có một key duy nhất
             renderItem={({item})=>{
               return (
-                <CardComponent styles={{ padding: 0}} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
+                <CardComponent styles={{ paddingVertical:0,paddingHorizontal:0 ,backgroundColor:colors.white}} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
                 <RowComponent>
                   <View>
                     <Image source={{ uri: item?.photoUrl }} style={{ width: appInfo.sizes.WIDTH * 0.35, height: 90, borderRadius: 12, resizeMode: 'stretch' }} />

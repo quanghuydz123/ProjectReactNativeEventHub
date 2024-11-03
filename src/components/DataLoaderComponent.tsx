@@ -7,7 +7,7 @@ import LoadingComponent from "./LoadingComponent"
 import EmptyComponent from "./EmptyComponent"
 import { colors } from "../constrants/color"
 interface Props { // phải định nghĩa ra trước
-    children:ReactNode,
+    children:ReactNode ,
     isLoading:boolean,
     data:any,
     messageEmpty?:string,
