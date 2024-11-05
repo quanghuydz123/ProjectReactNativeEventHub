@@ -308,7 +308,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
               iconFlex="left"
             />
             <SpaceComponent width={10} />
-            <ButtonComponent text="Nhắn tin"
+            <ButtonComponent text="Liên hệ"
               type="primary"
               color="white"
               textColor={colors.primary}

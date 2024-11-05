@@ -25,19 +25,12 @@ import { ArrowDown2 } from 'iconsax-react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import WebView from 'react-native-webview';
 const EventsScreen = ({ navigation, route }: any) => {
-  
-
- 
- 
-
-  
   return (
-    <SafeAreaView style={{flex:1}}>
-        {/* <WebView 
-         style={{flex:1}}
-         source={{uri:'http://localhost:8888/order/create_payment_url'}}
-        /> */}
-    </SafeAreaView>
+   <ContainerComponent>
+        <SectionComponent>
+            <TextComponent text={'Giao dịch thành công'}/>
+        </SectionComponent>
+   </ContainerComponent>
   )
 }
 

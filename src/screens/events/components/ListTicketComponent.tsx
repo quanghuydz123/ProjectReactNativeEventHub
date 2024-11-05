@@ -14,6 +14,7 @@ import { convertMoney } from "../../../utils/convertMoney";
 import { DateTime } from "../../../utils/DateTime";
 import { appInfo } from "../../../constrants/appInfo";
 import RenderHTML from "react-native-render-html";
+import { useNavigation } from "@react-navigation/native";
 interface Props{
   showTimes:ShowTimeModel[]
 }
@@ -31,7 +32,7 @@ const ListTicketComponent = (props:Props) => {
 
   const [state, setState] = useState([])
   const [stateChild, setStateChild] = useState([])
-  
+  const navigation:any = useNavigation()  
   const renderHeader = (section: ShowTimeModel, index: number, isActive: boolean, sections: any) => {
     const renderContentRight = (section:ShowTimeModel)=>{
       let content = <ButtonComponent 
@@ -40,6 +41,7 @@ const ListTicketComponent = (props:Props) => {
       mrBottom={0} 
       width={'auto'} 
       textSize={14} 
+      onPress={()=>navigation.navigate('ChooseTicketScreen',{totalPrice:20000})}
       styles={{ paddingVertical: 6 }} />
       if(section.status==='Ended'){
         content=<ButtonComponent 

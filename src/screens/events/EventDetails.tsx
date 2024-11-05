@@ -245,7 +245,7 @@ const EventDetails = ({ navigation, route }: any) => {
     let text = 'Mua vé ngay'
     let disable = false
     let width = '70%'
-    let onPress = ()=>console.log('ok')
+    let onPress = ()=>console.log('ChooseTicketScreen')
     if(event?.statusEvent === 'NotYetOnSale'){
       text='Sự kiện chưa mở bán'
       width='80%'
@@ -340,7 +340,7 @@ const EventDetails = ({ navigation, route }: any) => {
                     <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
                     <SpaceComponent width={8} />
                     <View style={{ flex: 1 }}>
-                      <TextComponent text={event?.Location || ''} numberOfLine={1} color={colors.primary} font={fontFamilies.medium} size={12.5} />
+                      <TextComponent text={event?.Location || ''} numberOfLine={2} color={colors.primary} font={fontFamilies.medium} size={12.5} />
                       <TextComponent numberOfLine={2} text={event?.Address || ''} size={12} color={colors.gray4} />
                       <ButtonComponent
                         text="Xem trên bảng đồ"
@@ -436,6 +436,21 @@ const EventDetails = ({ navigation, route }: any) => {
                   },
                   p: {
                     margin: 0,
+                  },
+                  h1:{
+                    fontSize:20
+                  },
+                  h2:{
+                    fontSize:18
+                  },
+                  h3:{
+                    fontSize:16
+                  },
+                  h4:{
+                    fontSize:14
+                  },
+                  h5:{
+                    fontSize:12
                   }
                 }}
                 computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
@@ -448,7 +463,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 style={{
                   position: 'absolute',
                   width: '100%',
-                  height: 70, // Độ cao mờ
+                  height: 80, // Độ cao mờ
                   bottom: 0,
                 }}
               />
