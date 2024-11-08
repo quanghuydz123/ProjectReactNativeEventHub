@@ -33,13 +33,21 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
+  const [limitGetNotifi,setLimitGetNotifi] = useState(10)
+  console.log("notifications",notifications.length)
+  useEffect(()=>{
+      handleCallAPIUpdateIsViewdNotifications()
+  },[])
   useEffect(() => {
-    if (!notifications) {
-      handleCallAPIGetNotifications({})
+    if(isFirst){
+      if(notifications){
+        if((notifications.length - limitGetNotifi >= -10) && (notifications.length - limitGetNotifi <= 0)){
+          handleCallAPIGetNotifications({isLoading:true})
+        }
+      }
     }
-    handleCallAPIUpdateIsViewdNotifications()
     // handleCallAPIGetNotifications(true)
-  }, [])
+  }, [limitGetNotifi])
   useEffect(() => {
     if (isFirst) {
       modalizeRef.current?.open();
@@ -50,7 +58,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   }, [notificationSelected, toggle])
   const handleCallAPIGetNotifications = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
     if (user.accesstoken) {
-      const api = apis.notification.getNotificationsById({ idUser: idUser ?? user.id })
+      const api = apis.notification.getNotificationsById({ idUser: idUser ?? user.id,limit:limitGetNotifi.toString() })
       setIsLoadng(isLoading ? isLoading : false)
       try {
         const res: any = await notificationAPI.HandleNotification(api)
@@ -73,7 +81,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
 
     const handleGetNotifications = (idUser?:string) => {
       handleCallAPIGetNotifications({idUser:idUser})
-      console.log('notification cập nhật');
+      console.log('notification cập nhật1');
     };
     socket.on('getNotifications', ({idUser})=>{
       handleGetNotifications(idUser)
@@ -307,7 +315,6 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         )
     }
   }
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     console.log("ok")
@@ -318,10 +325,10 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   return (
     <ContainerComponent back title="Thông báo">
       {
-        !isLoading && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0, flex: 1 }}>
+        !false && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0, flex: 1 }}>
           <TextComponent text={'Trước đó'} title size={16} styles={{ paddingHorizontal: 12 }} />
           <SpaceComponent height={8} />
-          <DataLoaderComponent isFlex data={notifications} isLoading={isLoading}
+          <DataLoaderComponent isFlex data={notifications} isLoading={false}
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
               <FlatList
@@ -331,7 +338,13 @@ const NotificationsScreen = ({ navigation, route }: any) => {
                 }
                 data={notifications}
                 renderItem={({ item, index }) => renderNofitications(item)}
-
+                onEndReached={()=>setLimitGetNotifi(prev => prev + 10)}
+                ListFooterComponent={()=><View>
+                        {isLoading && <ActivityIndicator />}
+                </View>}
+                ListFooterComponentStyle={{paddingBottom:20}}
+                // onEndReachedThreshold={0.5}
+                // onScrollBeginDrag={()=>setIsLoadng(false)}
               />
 
             } />

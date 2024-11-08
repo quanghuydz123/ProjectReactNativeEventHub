@@ -18,6 +18,7 @@ import ListEventComponent from "./ListEventComponent"
 import EmptyComponent from "./EmptyComponent"
 import DataLoaderComponent from "./DataLoaderComponent"
 import ListVideoComponent from "./ListVideoComponent"
+import InputSpinnerComponent from "./InputSpinnerComponent"
 
 export {
     SpaceComponent,
@@ -36,5 +37,6 @@ export {
     UploadImagePicker,
     EmptyComponent,
     DataLoaderComponent,
-    ListVideoComponent
+    ListVideoComponent,
+    InputSpinnerComponent
 }

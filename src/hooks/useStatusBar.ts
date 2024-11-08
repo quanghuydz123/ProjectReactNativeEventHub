@@ -3,10 +3,10 @@ import { useCallback } from "react"
 import { StatusBar } from "react-native"
 
 
-export const useStatusBar = (style:any)=>{
+export const useStatusBar = (style:'light-content' | 'dark-content',animated?:boolean)=>{
     useFocusEffect(
         useCallback(()=>{
-            StatusBar.setBarStyle(style)
-        },[])
+            StatusBar.setBarStyle(style,animated)
+        },[style,animated])
     )
 }

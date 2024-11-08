@@ -62,7 +62,7 @@ const EventItem = (props: Props) => {
             <View style={{ height: '100%', flex: 1 }}>
              
               <TextComponent numberOfLine={2} text={item.title} title size={14} color={colors.white} />
-              <TextComponent text={item?.price ? `Từ ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
+              <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 {
                   
@@ -140,7 +140,7 @@ const EventItem = (props: Props) => {
               </View>}
             </ImageBackground>
             <TextComponent numberOfLine={2} text={item.title} title size={17} color={colors.white} />
-            <TextComponent text={item?.price ? `Từ  ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
+            <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
             <RowComponent styles={{ flexWrap: 'wrap' }}>
               {
                 // item.categories.map((category, index) => (

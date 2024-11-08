@@ -144,7 +144,7 @@ const HomeScreen = ({ navigation, route }: any) => {
 
     const handleGetNotifications = (idUser?:string) => {
       handleCallAPIGetNotifications(idUser)
-      console.log('notification cập nhật');
+      console.log('notification cập nhật123');
     };
 
     // socket.on('followers', (idUser) => {
@@ -360,8 +360,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
   const handleCallAPIGetNotifications = async (idUser?:string) => {
     if (auth.accesstoken) {
-      console.log("idUser ?? auth.id",idUser , auth.id)
-      const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id })
+      const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id})
       try {
         const res: any = await notificationAPI.HandleNotification(api)
         if (res && res.data && res.status === 200) {
@@ -383,7 +382,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetAllEvent = async (isLoading?: boolean) => {
-    const api = `/get-events?limit=${10}&limitDate=${new Date().toISOString()}`
+    const api = `/get-events?limitDate=${new Date().toISOString()}`
     setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
@@ -404,7 +403,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     if (auth.position) {
       setIsLoadingNearEvent(isLoading ? isLoading : false)
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
-      const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limit: '10', limitDate: `${new Date().toISOString()}` })
+      const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limitDate: `${new Date().toISOString()}` })
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
@@ -497,7 +496,7 @@ const HomeScreen = ({ navigation, route }: any) => {
           <SpaceComponent width={16} />
           <TouchableOpacity onPress={() => {
             if(checkLogin()){
-              navigation.navigate('NotificationsScreen', { notificationRoute: notifications })
+              navigation.navigate('NotificationsScreen', { notificationRoute: notifications.slice(0,10) })
             }
           }}>
             <Notification size={22} color={colors.white} />
@@ -584,7 +583,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             {/* <CricleComponent color={colors.primary} borderRadius={10} size={32} 
               featureIconAnimation={featureIconAnimation}
               styles={[styles.featureIcon,{width:20}]}
-              onPress={() => navigation.navigate('ChatsScreen')}
+                    console.log("ok")
               >
                 <FontAwesome5 name='user-friends' size={16} color={colors.white}/>
               </CricleComponent> */}
@@ -614,14 +613,14 @@ const HomeScreen = ({ navigation, route }: any) => {
 
             <TouchableOpacity onPress={() => {
               if(checkLogin()){
-                navigation.navigate('ChatsScreen')
+                console.log("ok")
               }
             }} style={{ alignItems: 'center' }}>
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
                   if(checkLogin()){
-                    navigation.navigate('ChatsScreen')
+                    console.log("ok")
                   }
                 }}
               >

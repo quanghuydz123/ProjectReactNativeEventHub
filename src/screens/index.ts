@@ -19,7 +19,6 @@ import ExploreEvent from "./events/ExploreEvent"
 import PaymentScreen from "./events/PaymentScreen"
 import NewScreen from "./NewScreen"
 import NotificationsScreen from "./NotificationsScreen"
-import ChatsScreen from "./chat/ChatsScreen"
 import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen"
 import HomeFriendsScreen from "./friends/HomeFriendsScreen"
 import ListFriendsScreen from "./friends/ListFriendsScreen"
@@ -51,7 +50,6 @@ export {
     PaymentScreen,
     NewScreen,
     NotificationsScreen,
-    ChatsScreen,
     TransactionHistoryScreen,
     HomeFriendsScreen,
     ListFriendsScreen,

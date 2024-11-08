@@ -280,7 +280,7 @@ const auth = useSelector(authSelector)
         <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent bgColor={colors.black} isShownVertical items={result ?? []} />
+              <ListEventComponent numColumns={2} bgColor={colors.black} isShownVertical items={result ?? []} />
 
             }/>
         

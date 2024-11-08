@@ -487,7 +487,11 @@ const EventDetails = ({ navigation, route }: any) => {
         </SectionComponent>
         <SectionComponent  sectionRef={targetRef}>
           <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
-            {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} />}
+            {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} idEvent={event?._id}
+             titleEvent={event?.title ?? ''} 
+             addRessEvent={event?.Address ?? ''}
+             locationEvent={event?.Location ?? ''}
+            />}
           </CardComponent>
         </SectionComponent>
         <SectionComponent >
@@ -570,7 +574,7 @@ const EventDetails = ({ navigation, route }: any) => {
               color: colors.white,
               fontSize: 19,
               fontFamily: fontFamilies.medium
-            }}>{convertMoney(event?.price || 0)}
+            }}>{convertMoney(event?.showTimes[0]?.typeTickets[event?.showTimes[0].typeTickets?.length - 1].price ?? 0)}
               </Text>
             </Text>
             {renderButton()}

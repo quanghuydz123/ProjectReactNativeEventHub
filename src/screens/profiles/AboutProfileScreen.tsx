@@ -206,7 +206,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
                   <View style={{flex:1}}>
 
                     <TextComponent numberOfLine={1} text={item?.title} title size={14} color={colors.background} />
-                    <TextComponent text={item?.price ? `Từ ${convertMoney(item?.price)}` : 'Vào cổng tự do'} title size={13} color={`${colors.primary}`} />
+                    <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
                     <RowComponent styles={{ flexWrap: 'wrap' }}>
                       {
                   

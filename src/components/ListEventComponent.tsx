@@ -9,10 +9,11 @@ import { colors } from "../constrants/color"
 interface Props {
     items:EventModelNew[],
     isShownVertical?:boolean,
-    bgColor?:string
+    bgColor?:string,
+    numColumns?:number
 }
 const ListEventComponent = (props:Props)=>{
-    const {items,isShownVertical,bgColor} = props
+    const {items,isShownVertical,bgColor,numColumns} = props
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = useCallback(() => {
@@ -33,7 +34,7 @@ const ListEventComponent = (props:Props)=>{
       // refreshControl={
       //   <RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />
       // }
-      numColumns={2}
+      numColumns={numColumns}
       renderItem={({item})=>{
         return <EventItem  
         bgColor={bgColor}  item={item} key={item._id} isShownVertical={isShownVertical}/>

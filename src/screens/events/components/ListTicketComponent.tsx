@@ -16,10 +16,14 @@ import { appInfo } from "../../../constrants/appInfo";
 import RenderHTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 interface Props{
-  showTimes:ShowTimeModel[]
+  showTimes:ShowTimeModel[],
+  idEvent:string,
+  titleEvent:string,
+  addRessEvent:string,
+  locationEvent:String
 }
 const ListTicketComponent = (props:Props) => {
-  const {showTimes} = props
+  const {showTimes,idEvent,titleEvent,addRessEvent,locationEvent} = props
   const ShowTimes = [
     {
       typeTicket: ['First','First'],
@@ -41,7 +45,7 @@ const ListTicketComponent = (props:Props) => {
       mrBottom={0} 
       width={'auto'} 
       textSize={14} 
-      onPress={()=>navigation.navigate('ChooseTicketScreen',{totalPrice:20000})}
+      onPress={()=>navigation.navigate('ChooseTicketScreen',{showTimes:section,idEvent:idEvent,titleEvent:titleEvent,addRessEvent:addRessEvent,locationEvent:locationEvent})}
       styles={{ paddingVertical: 6 }} />
       if(section.status==='Ended'){
         content=<ButtonComponent 
