@@ -56,7 +56,7 @@ const ButtonComponent = (props: Props) => {
                         backgroundColor: color ? color : disable ? colors.black : colors.primary,
                         marginBottom: mrBottom ?? 17,
                         width: width ?? '90%',
-                        paddingVertical:disable ? 6 : 16,
+                        paddingVertical:disable ? 10 : 10,
                         borderWidth:disable ? 1 : 0,
                         borderColor:disable ? colors.gray4 : ''
                     }, styles]}>

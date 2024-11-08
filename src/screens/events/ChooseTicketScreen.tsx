@@ -1,6 +1,6 @@
 import { Button, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../components";
+import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import { EventModelNew } from "../../models/EventModelNew";
 import { convertMoney } from "../../utils/convertMoney";
 import axios from "axios";
@@ -31,9 +31,9 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const auth: AuthState = useSelector(authSelector)
     const modalieRef = useRef<Modalize>()
     const [openModalize, setOpenModalize] = useState(false)
-    const [disableButton,setDisableButton] = useState(true)
-    const [totalTicketChose,setTotalTicketChose] = useState(0)
-    const [totalPrice,setTotalPrice] = useState(0)
+    const [disableButton, setDisableButton] = useState(true)
+    const [totalTicketChose, setTotalTicketChose] = useState(0)
+    const [totalPrice, setTotalPrice] = useState(0)
     // useStatusBar('light-content')
     useEffect(() => {
         if (paymentUrl) {
@@ -56,13 +56,13 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             setLoading(false);
         }
     };
-    useEffect(()=>{
-        if(ticketChose.length >= 1){
+    useEffect(() => {
+        if (ticketChose.length >= 1) {
             setDisableButton(false)
-        }else{
+        } else {
             setDisableButton(true)
         }
-    },[ticketChose])
+    }, [ticketChose])
     useEffect(() => {
         if (openModalize) {
             modalieRef.current?.open()
@@ -72,6 +72,58 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     }, [openModalize])
     const renderTypeTicket = (typeTicket: TypeTicketModel) => {
         const [amountChose, setAmountChose] = useState(0)
+        const renderText = () => {
+            let text = 'Tạm thời chưa biết'
+            if (typeTicket.status === 'Ended') {
+                text = "Đã ngừng bán vé onnile"
+            } else if (typeTicket.status === 'SoldOut') {
+                text = 'Hết vé'
+            } else if (typeTicket.status === 'NotStarted') {
+                text = `Mở bán từ ${DateTime.GetTime(typeTicket.startSaleTime)} ${DateTime.GetDate1(typeTicket.startSaleTime)}`
+            }
+            return text
+        }
+        const renderInputSpinner = () => {
+            let context = <InputSpinnerComponent value={amountChose} setValue={(val) => setAmountChose(val)} />
+            if (typeTicket.status === 'NotStarted') {
+                context = <TagComponent
+                    bgColor={colors.danger2}
+                    label={renderText()}
+                    textSize={10}
+                    font={fontFamilies.medium}
+                    textColor={colors.danger}
+                    styles={{
+                        paddingVertical: 2,
+                        minWidth: 20,
+                    }}
+                />
+            } else if (typeTicket.status === 'SoldOut') {
+                context = <TagComponent
+                    bgColor={colors.danger2}
+                    label={renderText()}
+                    textSize={12}
+                    font={fontFamilies.medium}
+                    textColor={colors.danger}
+                    styles={{
+                        paddingVertical: 2,
+                        minWidth: 20,
+                    }}
+                />
+            } else if (typeTicket.status === 'Ended') {
+                context = <TagComponent
+                    bgColor={colors.danger2}
+                    label={renderText()}
+                    textSize={10}
+                    font={fontFamilies.medium}
+                    textColor={colors.danger}
+                    styles={{
+                        paddingVertical: 2,
+                        minWidth: 20,
+                    }}
+                />
+            }
+            return context
+        }
         useEffect(() => {
             setTicketChose((prevTickets) => {
                 let updatedTickets;
@@ -86,13 +138,13 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                 } else {
                     updatedTickets = prevTickets.filter(item => item.ticket._id !== typeTicket._id);
                 }
-    
+
                 const totalTickets = updatedTickets.reduce((sum, item) => sum + item.amount, 0);
                 const totalAmount = updatedTickets.reduce((sum, item) => sum + item.amount * item.ticket.price, 0);
-    
+
                 setTotalTicketChose(totalTickets);
                 setTotalPrice(totalAmount);
-    
+
                 return updatedTickets;
             });
         }, [amountChose, typeTicket]);
@@ -112,8 +164,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
 
                         <TextComponent text={convertMoney(typeTicket.price)} size={14} font={fontFamilies.regular} color={colors.white} />
                     </View>
-                    <InputSpinnerComponent value={amountChose} setValue={(val) => setAmountChose(val)} />
-
+                    {renderInputSpinner()}
                 </RowComponent>
                 {typeTicket.description ? <>
                     <CardComponent styles={{}}>
@@ -154,7 +205,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                             />
                         </RowComponent>
                     </CardComponent>
-                    <SpaceComponent height={6} />
+                    <SpaceComponent height={8} />
                 </> : <></>}
                 <Svg height="2" width="100%">
                     <Line x1="0" y1="0" x2="100%" y2="0" stroke={colors.gray2} strokeWidth="1" strokeDasharray="3" />
@@ -163,25 +214,25 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             </>
         )
     }
-    const renderButtonContinue = ()=>{
+    const renderButtonContinue = () => {
         return (
             <SectionComponent styles={{
                 height: totalTicketChose > 0 ? 108 : 74, backgroundColor: colors.background,
                 justifyContent: 'center',
                 paddingBottom: 0,
-                
+
             }}>
                 {totalTicketChose > 0 && <>
                     <RowComponent>
-                        <FontAwesome5 name="ticket-alt" color={colors.white} size={26}/>
-                        <SpaceComponent width={4}/>
-                        <TextComponent text={`x ${totalTicketChose}`} color={colors.white} font={fontFamilies.bold}/>
+                        <FontAwesome5 name="ticket-alt" color={colors.white} size={26} />
+                        <SpaceComponent width={4} />
+                        <TextComponent text={`x ${totalTicketChose}`} color={colors.white} font={fontFamilies.bold} />
                     </RowComponent>
-                    <SpaceComponent height={10}/>
+                    <SpaceComponent height={10} />
                 </>}
                 <View>
                     <ButtonComponent type="primary"
-                        styles={{ paddingVertical: 10,width:'100%' }}
+                        styles={{ paddingVertical: 10, width: '100%' }}
                         mrBottom={0}
                         disable={disableButton}
                         text={disableButton ? "Vui lòng chọn vé" : `Tiếp tục - ${convertMoney(totalPrice)}`}
@@ -282,10 +333,10 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                                 <TextComponent text={'Giá vé'} color={colors.white} font={fontFamilies.medium} size={15} />
                                 <SpaceComponent height={10} />
                                 {showTimes.typeTickets.map((typeTicket) => {
-                                    const renderPrice = ()=>{
+                                    const renderPrice = () => {
                                         let text = convertMoney(typeTicket.price)
-                                        const existingIndex = ticketChose.findIndex((item)=>item.ticket._id === typeTicket._id)
-                                        if(existingIndex !== -1){
+                                        const existingIndex = ticketChose.findIndex((item) => item.ticket._id === typeTicket._id)
+                                        if (existingIndex !== -1) {
                                             text = `${ticketChose[existingIndex].amount} x ${convertMoney(typeTicket.price)}`
                                         }
                                         return text
@@ -301,7 +352,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
 
                             </View>
                         </View>
-                        
+
                     </View>
                 </Modalize>
             </Portal>

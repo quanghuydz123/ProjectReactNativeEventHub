@@ -245,7 +245,7 @@ const EventDetails = ({ navigation, route }: any) => {
     let text = 'Mua vé ngay'
     let disable = false
     let width = '70%'
-    let onPress = ()=>console.log('ChooseTicketScreen')
+    let onPress = ()=>navigation.navigate('ChooseTicketScreen',{showTimes:event?.showTimes[0],idEvent:event?._id,titleEvent:event?.title,addRessEvent:event?.Address,locationEvent:event?.Location})
     if(event?.statusEvent === 'NotYetOnSale'){
       text='Sự kiện chưa mở bán'
       width='80%'
@@ -526,7 +526,7 @@ const EventDetails = ({ navigation, route }: any) => {
           footerComponent={<View style={{
             paddingBottom: 10,
           }}>
-            <ButtonComponent disable={userSelected.length <= 0} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
+            <ButtonComponent disable={false} text="Mời ngay" color="white" styles={{ borderWidth: 1, borderColor: colors.primary }}
               textColor={colors.primary} type="primary" onPress={() => handleInviteUsers()} />
           </View>}
           renderItem={(item: UserModel) => <RowComponent
