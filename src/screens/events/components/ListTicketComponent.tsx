@@ -15,6 +15,8 @@ import { DateTime } from "../../../utils/DateTime";
 import { appInfo } from "../../../constrants/appInfo";
 import RenderHTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { addShowTimeChose } from "../../../reduxs/reducers/billingReducer";
 interface Props{
   showTimes:ShowTimeModel[],
   idEvent:string,
@@ -33,10 +35,20 @@ const ListTicketComponent = (props:Props) => {
       typeTicket: ['Second','Second','Second'],
     },
   ];
-
+  const dispatch = useDispatch()
   const [state, setState] = useState([])
   const [stateChild, setStateChild] = useState([])
   const navigation:any = useNavigation()  
+  const handleNavigationChoseTicketScreen = (section:ShowTimeModel)=>{
+    dispatch(addShowTimeChose({
+      showTimes:section,
+      idEvent:idEvent,
+      titleEvent:titleEvent,
+      addRessEvent:addRessEvent,
+      locationEvent:locationEvent
+    }))
+    navigation.navigate('ChooseTicketScreen')
+  }
   const renderHeader = (section: ShowTimeModel, index: number, isActive: boolean, sections: any) => {
     const renderContentRight = (section:ShowTimeModel)=>{
       let content = <ButtonComponent 
@@ -45,7 +57,7 @@ const ListTicketComponent = (props:Props) => {
       mrBottom={0} 
       width={'auto'} 
       textSize={14} 
-      onPress={()=>navigation.navigate('ChooseTicketScreen',{showTimes:section,idEvent:idEvent,titleEvent:titleEvent,addRessEvent:addRessEvent,locationEvent:locationEvent})}
+      onPress={()=>handleNavigationChoseTicketScreen(section)}
       styles={{ paddingVertical: 6 }} />
       if(section.status==='Ended'){
         content=<ButtonComponent 

@@ -25,8 +25,9 @@ import ListFriendsScreen from "./friends/ListFriendsScreen"
 import FindFriendScreen from "./friends/FindFriendScreen"
 import SearchFriendScreen from "./friends/SearchFriendScreen"
 import QrScannerScreen from "./QrScannerScreen"
-import ChooseTicketScreen from "./events/ChooseTicketScreen"
+import ChooseTicketScreen from "./events/payment/ChooseTicketScreen"
 import PaymentSucessScreen from "./events/PaymentSucessScreen"
+import QuestionScreen from "./events/payment/QuestionScreen"
 
 export {
     HomeScreen,
@@ -57,5 +58,6 @@ export {
     SearchFriendScreen,
     QrScannerScreen,
     ChooseTicketScreen,
-    PaymentSucessScreen
+    PaymentSucessScreen,
+    QuestionScreen
 }

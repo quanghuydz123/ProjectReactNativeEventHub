@@ -1,30 +1,31 @@
 import { Button, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
-import { EventModelNew } from "../../models/EventModelNew";
-import { convertMoney } from "../../utils/convertMoney";
+import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../../components";
+import { EventModelNew } from "../../../models/EventModelNew";
+import { convertMoney } from "../../../utils/convertMoney";
 import axios from "axios";
-import { LoadingModal } from "../../../modals";
-import { useSelector } from "react-redux";
-import { authSelector, AuthState } from "../../reduxs/reducers/authReducers";
-import { colors } from "../../constrants/color";
-import { fontFamilies } from "../../constrants/fontFamilies";
-import { useStatusBar } from "../../hooks/useStatusBar";
-import { appInfo } from "../../constrants/appInfo";
+import { LoadingModal } from "../../../../modals";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers";
+import { colors } from "../../../constrants/color";
+import { fontFamilies } from "../../../constrants/fontFamilies";
+import { useStatusBar } from "../../../hooks/useStatusBar";
+import { appInfo } from "../../../constrants/appInfo";
 import Svg, { Line } from "react-native-svg";
-import CardComponent from "../../components/CardComponent";
+import CardComponent from "../../../components/CardComponent";
 import { Warning2 } from "iconsax-react-native";
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
-import { TypeTicketModel } from "../../models/TypeTicketModel";
-import { ShowTimeModel } from "../../models/ShowTimeModel";
-import { DateTime } from "../../utils/DateTime";
+import { TypeTicketModel } from "../../../models/TypeTicketModel";
+import { ShowTimeModel } from "../../../models/ShowTimeModel";
+import { DateTime } from "../../../utils/DateTime";
 import RenderHTML from "react-native-render-html";
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import { addtotalPriceAndTicket, billingSelector, billingState } from "../../../reduxs/reducers/billingReducer";
 const ChooseTicketScreen = ({ navigation, route }: any) => {
-    const { showTimes, idEvent, titleEvent, addRessEvent, locationEvent }: { showTimes: ShowTimeModel, idEvent: string, titleEvent: string, addRessEvent: string, locationEvent: string } = route.params
+    // const { showTimes, idEvent, titleEvent, addRessEvent, locationEvent }: { showTimes: ShowTimeModel, idEvent: string, titleEvent: string, addRessEvent: string, locationEvent: string } = route.params
     const [loading, setLoading] = useState(false);
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [ticketChose, setTicketChose] = useState<{ ticket: TypeTicketModel, amount: number }[]>([])
@@ -34,6 +35,8 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const [disableButton, setDisableButton] = useState(true)
     const [totalTicketChose, setTotalTicketChose] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
+    const eventChose:billingState = useSelector(billingSelector)
+    const dispatch = useDispatch()
     // useStatusBar('light-content')
     useEffect(() => {
         if (paymentUrl) {
@@ -84,7 +87,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             return text
         }
         const renderInputSpinner = () => {
-            let context = <InputSpinnerComponent value={amountChose} setValue={(val) => setAmountChose(val)} />
+            let context = <InputSpinnerComponent key={typeTicket._id} value={amountChose} setValue={(val) => setAmountChose(val)} />
             if (typeTicket.status === 'NotStarted') {
                 context = <TagComponent
                     bgColor={colors.danger2}
@@ -192,7 +195,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                                     ul: {
                                         color: colors.gray4,
                                         paddingLeft: 20,
-                                        marginTop: 4
+                                        marginTop: 2
                                     },
                                     span: {
                                         fontSize: 10,
@@ -205,7 +208,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                             />
                         </RowComponent>
                     </CardComponent>
-                    <SpaceComponent height={8} />
+                    <SpaceComponent height={10} />
                 </> : <></>}
                 <Svg height="2" width="100%">
                     <Line x1="0" y1="0" x2="100%" y2="0" stroke={colors.gray2} strokeWidth="1" strokeDasharray="3" />
@@ -238,6 +241,10 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                         text={disableButton ? "Vui lòng chọn vé" : `Tiếp tục - ${convertMoney(totalPrice)}`}
                         textSize={16}
                         textFont={fontFamilies.semiBold}
+                        onPress={()=>{
+                            dispatch(addtotalPriceAndTicket({totalPrice:totalPrice,totalTicketChose:totalTicketChose,ticketChose:ticketChose}))
+                            navigation.navigate('QuestionScreen')
+                        }}
                     />
                 </View>
             </SectionComponent>
@@ -256,7 +263,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                 <SectionComponent>
                     {/* {renderTypeTicket()}
                 {renderTypeTicket()} */}
-                    {showTimes.typeTickets.map((typeTicket) => {
+                    {eventChose.showTimes.typeTickets.map((typeTicket) => {
                         return renderTypeTicket(typeTicket)
                     })}
 
@@ -275,13 +282,13 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     <SpaceComponent width={12} />
                     <View>
                         <TextComponent
-                            text={titleEvent ?? 'Chưa biết'}
+                            text={eventChose.titleEvent ?? 'Chưa biết'}
                             color={colors.white}
                             numberOfLine={1}
                             size={14}
                             font={fontFamilies.bold}
                         />
-                        <TextComponent text={`${DateTime.GetTime(showTimes.startDate || new Date())} - ${DateTime.GetTime(showTimes.endDate || new Date())}, ${DateTime.GetDateNew1(showTimes.startDate, showTimes.endDate)}`}
+                        <TextComponent text={`${DateTime.GetTime(eventChose.showTimes.startDate || new Date())} - ${DateTime.GetTime(eventChose.showTimes.endDate || new Date())}, ${DateTime.GetDateNew1(eventChose.showTimes.startDate, eventChose.showTimes.endDate)}`}
                             color={colors.white}
                             size={11.5}
                             numberOfLine={1} />
@@ -303,13 +310,13 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     <View style={{}}>
                         <View style={{}}>
                             <View style={{ paddingVertical: 24, borderBottomWidth: 5, borderColor: colors.background }}>
-                                <TextComponent text={titleEvent} size={18} font={fontFamilies.medium} color={colors.white} textAlign="center" />
+                                <TextComponent text={eventChose.titleEvent} size={18} font={fontFamilies.medium} color={colors.white} textAlign="center" />
                             </View>
                             <View style={{ paddingVertical: 24, borderBottomWidth: 5, borderColor: colors.background }}>
                                 <RowComponent styles={{ alignItems: 'flex-start', paddingHorizontal: 10 }}>
                                     <FontAwesome6 size={16} color={colors.primary} name="location-dot" style={{}} />
                                     <SpaceComponent width={8} />
-                                    <TextComponent text={locationEvent}
+                                    <TextComponent text={eventChose.locationEvent}
                                         color={colors.white}
                                         size={13}
                                         numberOfLine={1}
@@ -320,7 +327,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                                 <RowComponent styles={{ alignItems: 'flex-start', paddingHorizontal: 10 }}>
                                     <FontAwesome6 name="calendar" size={16} color={colors.primary} />
                                     <SpaceComponent width={8} />
-                                    <TextComponent text={`${DateTime.GetTime(showTimes.startDate || new Date())} - ${DateTime.GetTime(showTimes.endDate || new Date())}, ${DateTime.GetDateNew1(showTimes.startDate, showTimes.endDate)}`}
+                                    <TextComponent text={`${DateTime.GetTime(eventChose.showTimes.startDate || new Date())} - ${DateTime.GetTime(eventChose.showTimes.endDate || new Date())}, ${DateTime.GetDateNew1(eventChose.showTimes.startDate, eventChose.showTimes.endDate)}`}
                                         color={colors.white}
                                         size={13}
                                         numberOfLine={1}
@@ -332,7 +339,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                             <View style={{ paddingVertical: 6, paddingHorizontal: 10 }}>
                                 <TextComponent text={'Giá vé'} color={colors.white} font={fontFamilies.medium} size={15} />
                                 <SpaceComponent height={10} />
-                                {showTimes.typeTickets.map((typeTicket) => {
+                                {eventChose.showTimes.typeTickets.map((typeTicket) => {
                                     const renderPrice = () => {
                                         let text = convertMoney(typeTicket.price)
                                         const existingIndex = ticketChose.findIndex((item) => item.ticket._id === typeTicket._id)

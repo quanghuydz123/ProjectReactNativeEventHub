@@ -12,7 +12,7 @@ export const colors ={
     gray5:"#D9D9D9",
     gray6:'#FAFAFA',
     gray7:'#e9e9e9',
-    link:'#5669FF',
+    link:'#0783fe',
     danger:'rgb(200,66,79)',
     danger2:'rgb(255,184,188)',
     black:'#000000',
@@ -21,8 +21,9 @@ export const colors ={
     green:'#56da78',
     backgroundSearchInput:'rgb(228, 230, 235)',
     background:'#262626',  
-    background1:'rgb(55,55,60)',   
+    background1:'rgb(56,55,60)',   
     background2:'rgb(46,47,50)',   
     backgroundBluishWhite:'rgb(245, 247, 252)', 
     warning:'rgb(252,130,10)',
+    yellow:'rgb(255, 213, 48)'
 }

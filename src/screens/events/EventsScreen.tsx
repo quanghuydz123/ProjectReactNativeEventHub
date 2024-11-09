@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonComponent, ContainerComponent, CricleComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
 import { View } from 'react-native-animatable';
@@ -15,7 +15,7 @@ import { globalStyles } from '../../styles/globalStyles';
 import CardComponent from '../../components/CardComponent';
 import Entypo from 'react-native-vector-icons/Entypo'
 import Swiper from 'react-native-swiper';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { fontFamilies } from '../../constrants/fontFamilies';
 import { BlurView } from '@react-native-community/blur';
@@ -24,20 +24,162 @@ import ListTicketComponent from './components/ListTicketComponent';
 import { ArrowDown2 } from 'iconsax-react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import WebView from 'react-native-webview';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 const EventsScreen = ({ navigation, route }: any) => {
-  
 
- 
- 
 
-  
+
+
+
+  const renderTypeTicket = ()=>{
+    return (
+      <>
+      <RowComponent justify='space-between'>
+      <View>
+          <TextComponent text={'LOVE ME'} size={16} font={fontFamilies.medium}/>
+          <TextComponent text={'2.200.000 đ'}/>
+        </View>
+        <View>
+          <TextComponent text={'1'} textAlign='right'/>
+          <TextComponent text={'2.200.000 đ'}/>
+        </View>
+    </RowComponent>
+    <SpaceComponent height={6}/>
+      </>
+    )
+  }
   return (
-    <SafeAreaView style={{flex:1}}>
-        {/* <WebView 
-         style={{flex:1}}
-         source={{uri:'http://localhost:8888/order/create_payment_url'}}
-        /> */}
-    </SafeAreaView>
+    <>
+      {/* <ContainerComponent back title={'Bảng câu hỏi'} bgColor={colors.black} isScroll isHiddenSpaceTop>
+      <RowComponent justify='space-between' styles={{ paddingHorizontal: 30, backgroundColor: colors.background1, height: appInfo.sizes.HEIGHT * 0.08 }} >
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <CricleComponent children={<><Fontisto name='check' size={8} color={colors.black} /></>} size={16} color={colors.white} styles={{ borderWidth: 0.5, borderColor: colors.gray }} />
+          <SpaceComponent height={4} />
+          <TextComponent text={'Chọn vé'} color={colors.white} size={12} />
+        </View>
+        <SpaceComponent width={20} color={colors.gray} height={2} />
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <CricleComponent children={<></>} size={16} color={colors.background1} styles={{ borderWidth: 1.5, borderColor: colors.yellow }} />
+          <SpaceComponent height={4} />
+          <TextComponent text={'Bảng câu hỏi'} color={colors.yellow} font={fontFamilies.semiBold} size={12} />
+        </View>
+        <SpaceComponent width={20} color={colors.gray} height={2} />
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <CricleComponent children={<></>} size={16} color={colors.background1} styles={{ borderWidth: 1.5, borderColor: colors.gray }} />
+          <SpaceComponent height={4} />
+          <TextComponent text={'Thanh toán'} color={colors.gray4} size={12} />
+        </View>
+      </RowComponent>
+      <LinearGradient colors={['rgba(76,55,74,1)', 'rgba(43,80,62,1)']} start={{ x: 0, y: 1 }} end={{ x: 1, y: 1 }} >
+        <View>
+          <SectionComponent>
+            <View style={{paddingVertical:14  }}>
+              <TextComponent text={'DeloDelo Show : Liveshow "Yêu Là Như Thế" - Hương Tràm & Phạm Anh Duy [Hà Nội]'} size={18} font={fontFamilies.medium} color={colors.white}/>
+            </View>
+            <SpaceComponent height={1} color={colors.gray3}/>
+            <SpaceComponent height={16}/>
+            <View style={{ }}>
+              <RowComponent styles={{ alignItems: 'flex-start'}}>
+                <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
+                <SpaceComponent width={8} />
+                <View>
+                <TextComponent text={'Khuôn Viên Ngoài Trời - Bảo Tàng Hà Nội'}
+                  color={colors.white}
+                  size={13}
+                  numberOfLine={1}
+                  font={fontFamilies.medium}
+                />
+                <TextComponent text={'đường Phạm Hùng, Quận Nam Từ Liêm, Thành Phố Hà Nội'}
+                  color={colors.white}
+                  size={12}
+                  numberOfLine={1}
+                  font={fontFamilies.regular}
+                />
+                </View>
+              </RowComponent>
+              <SpaceComponent height={8} />
+              <RowComponent styles={{ alignItems: 'flex-start'}}>
+                <FontAwesome6 name="calendar" size={16} color={colors.white} />
+                <SpaceComponent width={8} />
+                <TextComponent text={`20:00 - 23:00, 10 tháng 11, 2024`}
+                  color={colors.white}
+                  size={13}
+                  numberOfLine={1}
+                  font={fontFamilies.medium}
+                />
+              </RowComponent>
+            </View>
+            <SpaceComponent height={10}/>
+            <View>
+              <View style={{borderWidth:1,borderRadius:10,borderColor:colors.white,paddingVertical:16,paddingHorizontal:10}}>
+                 <View style={{justifyContent:'center',alignItems:'center'}}>
+                    <TextComponent text={'Hoàn tất đặt vé trong'} textAlign='center' color={colors.white}/>
+                    <SpaceComponent height={6}/>
+                    <RowComponent>
+                      <CricleComponent children={<TextComponent text={'14'} size={18} font={fontFamilies.medium} color={colors.white}/>} borderRadius={10}/>
+                      <TextComponent text={':'} size={20} color={colors.white} styles={{marginHorizontal:6}}/>
+                      <CricleComponent children={<TextComponent text={'48'} size={18} font={fontFamilies.medium} color={colors.white}/>} borderRadius={10}/>
+                    </RowComponent>
+                 </View>
+              </View>
+            </View>
+          </SectionComponent>
+        </View>
+      </LinearGradient>
+      <SpaceComponent height={8}/>
+      <SectionComponent>
+        <TextComponent text={'BẢNG CÂU HỎI'} font={fontFamilies.bold} size={20} color={colors.primary}/>
+        <CardComponent color={colors.background1}>
+          <TextComponent text={'Tôi đồng ý cho EventHub & BTC sử dụng thông tin đặt vé nhằm mục đích vận hành sự kiện'} color={colors.white} font={fontFamilies.medium} size={14}/>
+          <SpaceComponent height={8}/>
+          <InputComponent  value={''} borderColor={colors.gray4} require bgColor={colors.background2} title="Họ tên" colorTitle={colors.white} allowClear onChange={val => console.log(val)}/> 
+
+          <InputComponent  value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Làm sao bạn biết đến sự kiện này ? " colorTitle={colors.white} allowClear onChange={val => console.log(val)}/>
+
+          <InputComponent  value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Bạn có câu hỏi gì cho BTC không ? " colorTitle={colors.white} allowClear onChange={val => console.log(val)}/>
+
+          <InputComponent  value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Ghi chú thêm" colorTitle={colors.white} allowClear onChange={val => console.log(val)}/>
+
+        </CardComponent>
+      </SectionComponent>
+      <SectionComponent>
+        <CardComponent>
+          <RowComponent justify='space-between' >
+            <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold}/>
+            <ButtonComponent text='Chọn lại vé' textSize={14}/>
+          </RowComponent>
+          <SpaceComponent height={10}/>
+          <RowComponent justify='space-between' >
+            <TextComponent text={'Loại vé'} size={16} font={fontFamilies.medium}/>
+            <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium}/>
+          </RowComponent>
+          <SpaceComponent height={10}/>
+          {renderTypeTicket()}
+          {renderTypeTicket()}
+          <SpaceComponent height={8}/>
+          <RowComponent justify='space-between' >
+            <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium}/>
+            <TextComponent text={'2.200.000 đ'} size={18} color={colors.primary} font={fontFamilies.semiBold}/>
+          </RowComponent>
+          <View style={{paddingTop:26}}>
+              <TextComponent text={'Vui lòng trả tất cả câu hỏi để tiếp tục'} textAlign='center' size={12} font={fontFamilies.medium}/>
+          </View>
+        </CardComponent>
+      </SectionComponent>
+    </ContainerComponent>
+    <SectionComponent bgColor={colors.black} styles={{paddingVertical:8}}>
+      <RowComponent justify='space-between'>
+        <View>
+          <TextComponent text={'Tổng tiền'} size={18} font={fontFamilies.medium} color={colors.white}/>
+          <SpaceComponent height={4}/>
+          <RowComponent>
+            <TextComponent text={'2.200.000 đ'} size={20} font={fontFamilies.medium} color={colors.primary}/>
+          </RowComponent>
+        </View>
+        <ButtonComponent text='Tiếp tục' type='primary' mrBottom={0} width={'auto'} styles={{paddingVertical:8}} />
+      </RowComponent>
+    </SectionComponent> */}
+    </>
   )
 }
 

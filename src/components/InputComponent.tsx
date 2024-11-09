@@ -9,6 +9,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import TextComponent from "./TextComponent"
 import SpaceComponent from "./SpaceComponent"
 import { fontFamilies } from "../constrants/fontFamilies"
+import RowComponent from "./RowComponent"
 interface Props {
   value: string,
   onChange: (val: string) => void,
@@ -24,7 +25,11 @@ interface Props {
   numberOfLines?: number,
   styles?: StyleProp<ViewStyle>,
   title?:string,
-  textColor?:string
+  textColor?:string,
+  bgColor?:string,
+  borderColor?:string,
+  colorTitle?:string,
+  require?:boolean
 }
 //secureTextEntry chuyển thành ****
 //ReactNode Có thẻ đóng thẻ mở ví dụ <Text />
@@ -32,7 +37,7 @@ interface Props {
 //autoCapitalize bỏ tự động viết 
 //onEndEditing khi ngừng nhập
 const InputComponent = (props: Props) => {
-  const { value, onChange, affix, placeholder, suffix, allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines,textColor } = props
+  const { value, onChange, affix, placeholder,colorTitle, suffix,require,borderColor,bgColor,allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines,textColor } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
 
   return (
@@ -40,13 +45,19 @@ const InputComponent = (props: Props) => {
       {
         title && (
           <>
-            <TextComponent text={title} title size={14} />
+            <RowComponent>
+              <TextComponent text={title} title size={14} color={colorTitle}/>
+              {require && <>
+                <SpaceComponent width={2}/>
+                <TextComponent text={'*'} color="red" size={14}/>
+              </>}
+            </RowComponent>
             <SpaceComponent height={8} />
           </>
         )
       }
       <View style={[globalStyles.inputContainer, {
-        alignItems: multiline ? 'flex-start' : 'center'
+        alignItems: multiline ? 'flex-start' : 'center',backgroundColor: bgColor ?? colors.white, borderColor: borderColor ??  colors.gray3,
       }, styles]}>
         {affix && affix}
         <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto',color:textColor ?? colors.colorText}]}
@@ -61,6 +72,7 @@ const InputComponent = (props: Props) => {
           onEndEditing={onEnd}
           editable={disabled}
           numberOfLines={numberOfLines}
+
           
         />
         {suffix && suffix}

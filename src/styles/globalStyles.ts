@@ -77,15 +77,13 @@ export const globalStyles = StyleSheet.create({
     },
     inputContainer: {
         flexDirection: 'row',
-        borderRadius: 12,
+        borderRadius: 4,
         borderWidth: 1,
-        borderColor: colors.gray3,
         width: '100%',
-        minHeight: 56,
+        minHeight: 50,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 15,
-        backgroundColor: colors.white,
         marginBottom: 19,
       },
       input: {

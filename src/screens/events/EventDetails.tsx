@@ -36,6 +36,7 @@ import RenderHTML, { HTMLElementModel } from "react-native-render-html";
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather'
 import Share from 'react-native-share';
+import { addShowTimeChose, billingSelector } from "../../reduxs/reducers/billingReducer";
 
 const EventDetails = ({ navigation, route }: any) => {
 
@@ -56,6 +57,8 @@ const EventDetails = ({ navigation, route }: any) => {
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [interestText, setInterestText] = useState('')
   const [isShowDes, setIsShowDes] = useState(false)
+  const event123 = useSelector(billingSelector)
+  const [isLoadingChoseShowTime,setIsLoadingChoseShowTime] = useState(false)
   useStatusBar('light-content')
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
@@ -241,11 +244,19 @@ const EventDetails = ({ navigation, route }: any) => {
     .then(res =>console.log(res))
     .catch(err=>console.log(err))
   }
+  console.log("setIsLoadingChoseShowTime",isLoadingChoseShowTime)
   const renderButton = ()=>{
     let text = 'Mua vé ngay'
     let disable = false
     let width = '70%'
-    let onPress = ()=>navigation.navigate('ChooseTicketScreen',{showTimes:event?.showTimes[0],idEvent:event?._id,titleEvent:event?.title,addRessEvent:event?.Address,locationEvent:event?.Location})
+    let onPress = ()=>{
+      setIsLoadingChoseShowTime(true)
+      dispatch(addShowTimeChose({
+        showTimes:event?.showTimes[0],idEvent:event?._id,titleEvent:event?.title,addRessEvent:event?.Address,locationEvent:event?.Location
+      }))
+      setIsLoadingChoseShowTime(false)
+      navigation.navigate('ChooseTicketScreen')
+    }
     if(event?.statusEvent === 'NotYetOnSale'){
       text='Sự kiện chưa mở bán'
       width='80%'
@@ -514,7 +525,7 @@ const EventDetails = ({ navigation, route }: any) => {
           </CardComponent>
         </SectionComponent>
 
-        <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" bgColor={colors.background} styles={{ marginTop: 78 }} />
+        <LoadingModal visible={isLoading || isLoadingChoseShowTime} message="Hệ thống đang xử lý" bgColor={isLoading ? colors.background : 'rgba(0,0,0,0.5)'} styles={{ marginTop:isLoading ? 78 : 0 }} />
         <SelectModalize
           adjustToContentHeight
           title="Danh sách người dùng đang theo dõi"
