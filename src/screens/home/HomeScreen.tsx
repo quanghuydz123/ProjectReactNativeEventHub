@@ -382,7 +382,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const handleCallApiGetAllEvent = async (isLoading?: boolean) => {
-    const api = `/get-events?limitDate=${new Date().toISOString()}`
+    const api = apis.event.getAll({limit:'10'})
     setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
@@ -403,7 +403,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     if (auth.position) {
       setIsLoadingNearEvent(isLoading ? isLoading : false)
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
-      const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limitDate: `${new Date().toISOString()}` })
+      const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limitDate: `${new Date().toISOString()}`,limit:'10' })
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {

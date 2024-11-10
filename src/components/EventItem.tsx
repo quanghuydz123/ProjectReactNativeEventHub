@@ -31,7 +31,7 @@ const EventItem = (props: Props) => {
   const navigation: any = useNavigation()
   const auth:AuthState = useSelector(authSelector)
   return (
-    <CardComponent color={bgColor ?? colors.background}  styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.5 : appInfo.sizes.WIDTH * 0.65,paddingRight:isShownVertical ? 10 : 1 }} onPress={() => { navigation.navigate('EventDetails', {  id: item._id }) }}>
+    <CardComponent color={bgColor ?? colors.background}  styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.5 : appInfo.sizes.WIDTH * 0.65,paddingRight:isShownVertical ? 10 : 1 }} onPress={() => { navigation.push('EventDetails', {  id: item._id }) }}>
       {
         isShownVertical ? <>
           <View>

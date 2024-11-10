@@ -1,6 +1,6 @@
 import { Alert, Button, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
+import { ButtonComponent, ContainerComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowDown, ArrowDown2, ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
@@ -37,6 +37,8 @@ import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather'
 import Share from 'react-native-share';
 import { addShowTimeChose, billingSelector } from "../../reduxs/reducers/billingReducer";
+import ListEventComponent from "../../components/ListEventComponent";
+import EventItem from "../../components/EventItem";
 
 const EventDetails = ({ navigation, route }: any) => {
 
@@ -58,7 +60,8 @@ const EventDetails = ({ navigation, route }: any) => {
   const [interestText, setInterestText] = useState('')
   const [isShowDes, setIsShowDes] = useState(false)
   const event123 = useSelector(billingSelector)
-  const [isLoadingChoseShowTime,setIsLoadingChoseShowTime] = useState(false)
+  const [isLoadingChoseShowTime, setIsLoadingChoseShowTime] = useState(false)
+  const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
   useStatusBar('light-content')
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
@@ -86,12 +89,13 @@ const EventDetails = ({ navigation, route }: any) => {
         ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
         : `Bạn đã quan tâm`
       : `${userCount} Người đã quan tâm`)
+    haneleGetAPIRelatedEvents()
   }, [event])
   useEffect(() => {
     setIsInterested(
       auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id)
     );
-  }, [auth?.eventsInterested,event])
+  }, [auth?.eventsInterested, event])
   const handleCallApiGetEventById = async () => {
     setIsLoading(true)
     try {
@@ -109,22 +113,22 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
-  // const handleCallApiGetAllFollower = async () => {
-  //   const api = apis.follow.getAll()
-  //   setIsLoading(true)
-  //   try {
-  //     const res: any = await followAPI.HandleFollwer(api, {}, 'get')
-  //     if (res && res.data && res.status === 200) {
-  //       setFollowerEvent(res.data.followers)
-  //     }
-  //     setIsLoading(false)
+  const haneleGetAPIRelatedEvents = async () => {
+    const api = apis.event.getAll({categoriesFilter:[event?.category._id || ''],limit:'8'})
+    // setIsLoading(isLoading ? isLoading : false)
+    try {
+      const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setRelatedEvents(res.data as EventModelNew[])
+      }
+      // setIsLoading(false)
 
-  //   } catch (error: any) {
-  //     const errorMessage = JSON.parse(error.message)
-  //     console.log("HomeScreen", errorMessage)
-  //     setIsLoading(false)
-  //   }
-  // }
+    } catch (error: any) {
+      // setIsLoading(false)
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+    }
+  }
   const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
@@ -235,71 +239,71 @@ const EventDetails = ({ navigation, route }: any) => {
       })
       .catch((err) => console.error('Lỗi khi mở bản đồ:', err));
   }
-  const share = ()=>{
+  const share = () => {
     const options = {
-      message:'Vào đây xem sự kiện siêu "xịn sò" nè! Đặt vé ngay để không bỏ lỡ nha!',
-      url:'https://ticketbox.vn/baotangcuanuoitiec-hn-vu-22907?utm_medium=hero-banner&utm_source=tkb-homepage'
+      message: 'Vào đây xem sự kiện siêu "xịn sò" nè! Đặt vé ngay để không bỏ lỡ nha!',
+      url: 'https://ticketbox.vn/baotangcuanuoitiec-hn-vu-22907?utm_medium=hero-banner&utm_source=tkb-homepage'
     }
     Share.open(options)
-    .then(res =>console.log(res))
-    .catch(err=>console.log(err))
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
   }
-  console.log("setIsLoadingChoseShowTime",isLoadingChoseShowTime)
-  const renderButton = ()=>{
+  console.log("setIsLoadingChoseShowTime", isLoadingChoseShowTime)
+  const renderButton = () => {
     let text = 'Mua vé ngay'
     let disable = false
     let width = '70%'
-    let onPress = ()=>{
+    let onPress = () => {
       setIsLoadingChoseShowTime(true)
       dispatch(addShowTimeChose({
-        showTimes:event?.showTimes[0],idEvent:event?._id,titleEvent:event?.title,addRessEvent:event?.Address,locationEvent:event?.Location
+        showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, locationEvent: event?.Location
       }))
       setIsLoadingChoseShowTime(false)
       navigation.navigate('ChooseTicketScreen')
     }
-    if(event?.statusEvent === 'NotYetOnSale'){
-      text='Sự kiện chưa mở bán'
-      width='80%'
-      disable=true
-    }else if(event?.statusEvent==='SoldOut'){
-      text='Đã hết vé'
-      width='80%'
-      disable=true
-    }else if(event?.statusEvent==='Ended'){
-      text='Sự kiện đã hết thúc'
-      width='80%'
-      disable=true
-    }else if(event?.statusEvent==='SaleStopped'){
+    if (event?.statusEvent === 'NotYetOnSale') {
+      text = 'Sự kiện chưa mở bán'
+      width = '80%'
+      disable = true
+    } else if (event?.statusEvent === 'SoldOut') {
+      text = 'Đã hết vé'
+      width = '80%'
+      disable = true
+    } else if (event?.statusEvent === 'Ended') {
+      text = 'Sự kiện đã hết thúc'
+      width = '80%'
+      disable = true
+    } else if (event?.statusEvent === 'SaleStopped') {
       text = 'Đã ngưng bán vé'
-      width='80%'
-      disable=true
-    }else if(event?.statusEvent==='Ongoing'){
+      width = '80%'
+      disable = true
+    } else if (event?.statusEvent === 'Ongoing') {
       text = 'Sự kiện đang diễn ra'
-      width='80%'
-      disable =  true
-    }else if(event?.showTimes && event?.showTimes?.length > 1){
-      text='Chọn lịch diễn'
-      onPress=()=>scrollToComponent()
+      width = '80%'
+      disable = true
+    } else if (event?.showTimes && event?.showTimes?.length > 1) {
+      text = 'Chọn lịch diễn'
+      onPress = () => scrollToComponent()
     }
     return (
-      <ButtonComponent 
-      text={text}
-      alignItems="flex-end" 
-      type="primary" 
-      width={width} 
-      styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14} 
-      onPress={onPress}
-      disable={disable}
+      <ButtonComponent
+        text={text}
+        alignItems="flex-end"
+        type="primary"
+        width={width}
+        styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14}
+        onPress={onPress}
+        disable={disable}
       />
     )
   }
 
-  const scrollViewRef:any = useRef(null); //tự scroll đến mục tiêu khi click
-  const targetRef:any = useRef(null);
+  const scrollViewRef: any = useRef(null); //tự scroll đến mục tiêu khi click
+  const targetRef: any = useRef(null);
   const scrollToComponent = () => {
     targetRef.current?.measureLayout(
       scrollViewRef?.current?.getInnerViewNode(),
-      (x:number, y:number) => {
+      (x: number, y: number) => {
         scrollViewRef?.current?.scrollTo({ y: y, animated: true });
       }
     );
@@ -307,11 +311,11 @@ const EventDetails = ({ navigation, route }: any) => {
   return (
 
     <>
-      <ContainerComponent scrollRef={scrollViewRef} back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop 
-      bgColor={colors.backgroundBluishWhite} 
-      right={!isLoading ? <TouchableOpacity style={{borderWidth:1,borderColor:'white',borderRadius:100,padding:6}} onPress={()=>share()}>
-        <FontAwesome name="share" size={16} color={colors.white} />
-      </TouchableOpacity> : <></>}
+      <ContainerComponent scrollRef={scrollViewRef} back title={"Chi tiết sự kiện"} isScroll isHiddenSpaceTop
+        bgColor={colors.backgroundBluishWhite}
+        right={!isLoading ? <TouchableOpacity style={{ borderWidth: 1, borderColor: 'white', borderRadius: 100, padding: 6 }} onPress={() => share()}>
+          <FontAwesome name="share" size={16} color={colors.white} />
+        </TouchableOpacity> : <></>}
       >
 
         <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.52 }, styles.shadow]}>
@@ -333,7 +337,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 <SectionComponent styles={{ paddingTop: 12 }}>
                   <TextComponent text={event?.title || ''} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
                   <SpaceComponent height={8} />
-                  <RowComponent styles={{alignItems:'flex-start'}}>
+                  <RowComponent styles={{ alignItems: 'flex-start' }}>
                     <FontAwesome6 name="calendar" size={16} color={colors.white} />
                     <SpaceComponent width={8} />
                     <View>
@@ -448,20 +452,20 @@ const EventDetails = ({ navigation, route }: any) => {
                   p: {
                     margin: 0,
                   },
-                  h1:{
-                    fontSize:20
+                  h1: {
+                    fontSize: 20
                   },
-                  h2:{
-                    fontSize:18
+                  h2: {
+                    fontSize: 18
                   },
-                  h3:{
-                    fontSize:16
+                  h3: {
+                    fontSize: 16
                   },
-                  h4:{
-                    fontSize:14
+                  h4: {
+                    fontSize: 14
                   },
-                  h5:{
-                    fontSize:12
+                  h5: {
+                    fontSize: 12
                   }
                 }}
                 computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
@@ -496,12 +500,12 @@ const EventDetails = ({ navigation, route }: any) => {
 
           </CardComponent>
         </SectionComponent>
-        <SectionComponent  sectionRef={targetRef}>
+        <SectionComponent sectionRef={targetRef}>
           <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
             {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} idEvent={event?._id}
-             titleEvent={event?.title ?? ''} 
-             addRessEvent={event?.Address ?? ''}
-             locationEvent={event?.Location ?? ''}
+              titleEvent={event?.title ?? ''}
+              addRessEvent={event?.Address ?? ''}
+              locationEvent={event?.Location ?? ''}
             />}
           </CardComponent>
         </SectionComponent>
@@ -525,7 +529,7 @@ const EventDetails = ({ navigation, route }: any) => {
           </CardComponent>
         </SectionComponent>
 
-        <LoadingModal visible={isLoading || isLoadingChoseShowTime} message="Hệ thống đang xử lý" bgColor={isLoading ? colors.background : 'rgba(0,0,0,0.5)'} styles={{ marginTop:isLoading ? 78 : 0 }} />
+        <LoadingModal visible={isLoading || isLoadingChoseShowTime} message="Hệ thống đang xử lý" bgColor={isLoading ? colors.background : 'rgba(0,0,0,0.5)'} styles={{ marginTop: isLoading ? 78 : 0 }} />
         <SelectModalize
           adjustToContentHeight
           title="Danh sách người dùng đang theo dõi"
@@ -574,11 +578,52 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
             {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
           </RowComponent>} />
-          <View style={{backgroundColor:colors.black}}>
-            <TextComponent text={'Có thể bạn cũng thích'} color={colors.white} textAlign="center" font={fontFamilies.medium} 
-              size={16}
-            />
-          </View>
+        <View style={{ backgroundColor: colors.black }}>
+          <TextComponent
+            text={'Có thể bạn cũng thích'}
+            styles={{ paddingVertical: 10 }}
+            color={colors.white}
+            textAlign="center"
+            font={fontFamilies.bold}
+            size={17}
+          />
+          {(relatedEvents && relatedEvents.length > 0) ? (
+            relatedEvents.reduce((rows:any, event:EventModelNew, index) => {
+              // Mỗi nhóm chứa 2 phần tử
+              if (index % 2 === 0) {
+                rows.push([event]);
+              } else {
+                rows[rows.length - 1].push(event);
+              }
+              return rows;
+            }, []).map((row:EventModelNew[], rowIndex:number) => (
+              <View key={rowIndex} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                {row.map((event) => (
+                  <EventItem
+                    bgColor={colors.black}
+                    item={event}
+                    key={event._id}
+                    isShownVertical={true}
+                  />
+                ))}
+              </View>
+            ))
+          ) : (
+            <View style={{ paddingVertical: 50 }}>
+              <TextComponent text={'Không có sự kiện nào'} color={colors.white} textAlign="center" />
+            </View>
+          )}
+          <SpaceComponent height={10}/>
+          <ButtonComponent type="primary" 
+          text="Xem thêm sự kiện" 
+          width={'auto'} 
+          styles={{borderRadius:100}}
+          textSize={14}
+          onPress={() => navigation.push('SearchEventsScreen', {
+          })}
+          />
+        </View>
+
       </ContainerComponent>
       {
         <SectionComponent isNoPaddingBottom styles={{ backgroundColor: colors.black, height: 70, justifyContent: 'center' }}>
