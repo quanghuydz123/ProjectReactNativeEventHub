@@ -574,6 +574,11 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
             {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
           </RowComponent>} />
+          <View style={{backgroundColor:colors.black}}>
+            <TextComponent text={'Có thể bạn cũng thích'} color={colors.white} textAlign="center" font={fontFamilies.medium} 
+              size={16}
+            />
+          </View>
       </ContainerComponent>
       {
         <SectionComponent isNoPaddingBottom styles={{ backgroundColor: colors.black, height: 70, justifyContent: 'center' }}>

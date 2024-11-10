@@ -45,7 +45,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
     Animated.spring(tabOffsetValue, {
       toValue: width * (tabSelected === 'about' ? 0 : 1),
       useNativeDriver: true,
-      speed: 250
+      speed: 100
     }).start();
   }, [tabSelected])
   const tabs = [{

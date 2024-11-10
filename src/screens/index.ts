@@ -28,6 +28,7 @@ import QrScannerScreen from "./QrScannerScreen"
 import ChooseTicketScreen from "./events/payment/ChooseTicketScreen"
 import PaymentSucessScreen from "./events/PaymentSucessScreen"
 import QuestionScreen from "./events/payment/QuestionScreen"
+import InvoiceComfirmScreen from "./events/payment/InvoiceComfirmScreen"
 
 export {
     HomeScreen,
@@ -59,5 +60,6 @@ export {
     QrScannerScreen,
     ChooseTicketScreen,
     PaymentSucessScreen,
-    QuestionScreen
+    QuestionScreen,
+    InvoiceComfirmScreen
 }

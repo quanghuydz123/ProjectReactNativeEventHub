@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native"
+import { Image, Text, TouchableOpacity, View } from "react-native"
 import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../../components"
 import { colors } from "../../../constrants/color"
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -15,12 +15,43 @@ import { convertMoney } from "../../../utils/convertMoney"
 import { TypeTicketModel } from "../../../models/TypeTicketModel"
 import { Portal } from "react-native-portalize"
 import { Modalize } from "react-native-modalize"
-import { useEffect, useRef, useState } from "react"
-const QuestionScreen = ({ navigation, route }: any) => {
+import { useEffect, useMemo, useRef, useState } from "react"
+import { RadioButton } from "react-native-paper"
+import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group"
+import { size } from "lodash"
+import axios from "axios"
+import { authSelector } from "../../../reduxs/reducers/authReducers"
+import { LoadingModal } from "../../../../modals"
 
+const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
+    const [methodPayment, setMethodPayment] = useState('first');
+    const [paymentUrl, setPaymentUrl] = useState(null);
+    const [isLoading,setIsLoading] = useState(false)
+    const auth = useSelector(authSelector)
+    useEffect(() => {
+        if (paymentUrl) {
+            navigation.navigate('PaymentScreen', { url: paymentUrl })
+        }
+    }, [paymentUrl])
+    const createPaymentUrl = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.post('http://localhost:8888/order/create_payment_url', {
+                uid: auth.id,
+                amount: showTimeChose.totalPrice ?? 0, // Số tiền cần thanh toán
+                language: 'vn',
+                bankCode: ''
+            });
+            setPaymentUrl(response?.data?.url)
+        } catch (error: any) {
+            console.error('Lỗi khi tạo URL thanh toán:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     useEffect(() => {
         if (openModalize) {
             modalieRef.current?.open()
@@ -28,17 +59,43 @@ const QuestionScreen = ({ navigation, route }: any) => {
             modalieRef.current?.close()
         }
     }, [openModalize])
-    const renderTypeTicket = (item:{ticket:TypeTicketModel,amount:number}) => {
+    const radioButtons:RadioButtonProps[] = useMemo(() => ([
+        {
+            id: '1', // acts as primary key, should be unique and non-empty string
+            label: <>
+                <SpaceComponent width={8}/>
+                <RowComponent>
+                    <Image source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp1v7T287-ikP1m7dEUbs2n1SbbLEqkMd1ZA&s'}}
+                     width={26} height={26} style={{borderRadius:4}}
+                    />
+                    <SpaceComponent width={8}/>
+                    <TextComponent text={'VNPAY'} color={colors.white} font={fontFamilies.medium}/>
+                </RowComponent>
+            </>,
+            value:'vnpay',
+            containerStyle:{flex:1,width:'100%'},
+            color:colors.primary,
+            borderColor:'white',
+            borderSize:2,
+            size:20
+        },
+        
+    ]), []);
+
+    const [selectedId, setSelectedId] = useState('1');
+    const renderTypeTicket = (item: { ticket: TypeTicketModel, amount: number }) => {
         return (
             <>
-                <RowComponent justify='space-between' key={item.ticket._id}>
+                <RowComponent 
+                styles={{}}
+                justify='space-between' key={item.ticket._id}>
                     <View>
                         <TextComponent text={item.ticket.name} size={16} font={fontFamilies.medium} />
                         <TextComponent text={convertMoney(item.ticket.price)} />
                     </View>
                     <View>
                         <TextComponent text={item.amount} textAlign='right' />
-                        <TextComponent text={convertMoney(item.ticket.price*item.amount)} />
+                        <TextComponent text={convertMoney(item.ticket.price * item.amount)} />
                     </View>
                 </RowComponent>
                 <SpaceComponent height={6} />
@@ -56,15 +113,15 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     </View>
                     <SpaceComponent width={20} color={colors.gray} height={2} />
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <CricleComponent children={<></>} size={16} color={colors.background1} styles={{ borderWidth: 1.5, borderColor: colors.yellow }} />
+                        <CricleComponent children={<><Fontisto name='check' size={8} color={colors.black} /></>} size={16} color={colors.white} styles={{ borderWidth: 0.5, borderColor: colors.gray }} />
                         <SpaceComponent height={4} />
-                        <TextComponent text={'Bảng câu hỏi'} color={colors.yellow} font={fontFamilies.semiBold} size={12} />
+                        <TextComponent text={'Bảng câu hỏi'} color={colors.white} size={12} />
                     </View>
                     <SpaceComponent width={20} color={colors.gray} height={2} />
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <CricleComponent children={<></>} size={16} color={colors.background1} styles={{ borderWidth: 1.5, borderColor: colors.gray }} />
+                        <CricleComponent children={<></>} size={16} color={colors.background1} styles={{ borderWidth: 1.5, borderColor: colors.yellow }} />
                         <SpaceComponent height={4} />
-                        <TextComponent text={'Thanh toán'} color={colors.gray4} size={12} />
+                        <TextComponent text={'Thanh Toán'}  color={colors.yellow} font={fontFamilies.semiBold} size={12} />
                     </View>
                 </RowComponent>
                 <LinearGradient colors={['rgba(76,55,74,1)', 'rgba(43,80,62,1)']} start={{ x: 0, y: 1 }} end={{ x: 1, y: 1 }} >
@@ -125,17 +182,27 @@ const QuestionScreen = ({ navigation, route }: any) => {
                 </LinearGradient>
                 <SpaceComponent height={8} />
                 <SectionComponent>
-                    <TextComponent text={'BẢNG CÂU HỎI'} font={fontFamilies.bold} size={20} color={colors.primary} />
                     <CardComponent color={colors.background1}>
-                        <TextComponent text={'Tôi đồng ý cho EventHub & BTC sử dụng thông tin đặt vé nhằm mục đích vận hành sự kiện'} color={colors.white} font={fontFamilies.medium} size={14} />
-                        <SpaceComponent height={8} />
-                        <InputComponent value={''} borderColor={colors.gray4} require bgColor={colors.background2} title="Họ tên" colorTitle={colors.white} allowClear onChange={val => console.log(val)} />
+                        <RowComponent justify="space-between">
+                            <TextComponent text={'Thông tin nhận vé'} color={colors.primary} font={fontFamilies.medium} size={16} />
+                            <TextComponent text={'Sửa'} color={colors.primary} font={fontFamilies.medium} size={16} />
+                        </RowComponent>
 
-                        <InputComponent value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Làm sao bạn biết đến sự kiện này ? " colorTitle={colors.white} allowClear onChange={val => console.log(val)} />
 
-                        <InputComponent value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Bạn có câu hỏi gì cho BTC không ? " colorTitle={colors.white} allowClear onChange={val => console.log(val)} />
-
-                        <InputComponent value={''} borderColor={colors.gray4} bgColor={colors.background2} title="Ghi chú thêm" colorTitle={colors.white} allowClear onChange={val => console.log(val)} />
+                    </CardComponent>
+                </SectionComponent>
+                <SectionComponent>
+                    <CardComponent color={colors.background1}>
+                        <TextComponent text={'Phương thức thanh toán'} color={colors.primary} font={fontFamilies.medium} size={16} />
+                        <SpaceComponent height={10}/>
+                        <RadioGroup 
+                            radioButtons={radioButtons} 
+                            onPress={setSelectedId}
+                            selectedId={selectedId}
+                            containerStyle={{alignItems:'flex-start'}}
+                            labelStyle={{backgroundColor:'red'}}
+                            
+                        />
 
                     </CardComponent>
                 </SectionComponent>
@@ -143,7 +210,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     <CardComponent>
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={()=>navigation.goBack()}/>
+                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.pop(2)} />
                         </RowComponent>
                         <SpaceComponent height={10} />
                         <RowComponent justify='space-between' >
@@ -151,8 +218,8 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
                         </RowComponent>
                         <SpaceComponent height={10} />
-                        {showTimeChose.ticketChose?.map((item)=>{
-                           return renderTypeTicket(item)
+                        {showTimeChose.ticketChose?.map((item) => {
+                            return renderTypeTicket(item)
                         })}
                         <SpaceComponent height={8} />
                         <RowComponent justify='space-between' >
@@ -160,14 +227,14 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             <TextComponent text={convertMoney(showTimeChose.totalPrice || 0)} size={18} color={colors.primary} font={fontFamilies.semiBold} />
                         </RowComponent>
                         <View style={{ paddingTop: 26 }}>
-                            <TextComponent text={'Vui lòng trả tất cả câu hỏi để tiếp tục'} textAlign='center' size={12} font={fontFamilies.medium} />
+                            <TextComponent text={'Bằng việc tiến hanh thanh toán, bạn đã đồng ý với Điều Kiện Giao Dịch Chung'} textAlign='center' size={12} font={fontFamilies.medium} />
                         </View>
                     </CardComponent>
                 </SectionComponent>
             </ContainerComponent>
             <SectionComponent bgColor={colors.black} styles={{ paddingVertical: 8 }}>
                 <RowComponent justify='space-between'>
-                    <TouchableOpacity style={{flex:1}} onPress={()=>setOpenModalize(true)}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => setOpenModalize(true)}>
                         <TextComponent text={'Tổng tiền'} size={18} font={fontFamilies.medium} color={colors.white} />
                         <SpaceComponent height={4} />
                         <RowComponent>
@@ -176,7 +243,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             <FontAwesome name="chevron-up" color={colors.primary} size={14} />
                         </RowComponent>
                     </TouchableOpacity>
-                    <ButtonComponent text='Tiếp tục' onPress={()=>navigation.navigate('InvoiceComfirmScreen')} type='primary' mrBottom={0} width={'auto'} styles={{ paddingVertical: 8 }} />
+                    <ButtonComponent text='Thanh toán' onPress={()=>createPaymentUrl()} type='primary' mrBottom={0} width={'auto'} styles={{ paddingVertical: 8 }} />
                 </RowComponent>
             </SectionComponent>
             <Portal>
@@ -193,37 +260,36 @@ const QuestionScreen = ({ navigation, route }: any) => {
 
                     </>}
                 >
-                     <SectionComponent>
-                    <CardComponent>
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={()=>navigation.goBack()}/>
-                        </RowComponent>
-                        <SpaceComponent height={10} />
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Loại vé'} size={16} font={fontFamilies.medium} />
-                            <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
-                        </RowComponent>
-                        <SpaceComponent height={10} />
-                        {showTimeChose.ticketChose?.map((item)=>{
-                           return renderTypeTicket(item)
-                        })}
-                        <SpaceComponent height={8} />
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
-                            <TextComponent text={convertMoney(showTimeChose.totalPrice || 0)} size={18} color={colors.primary} font={fontFamilies.semiBold} />
-                        </RowComponent>
-                        <View style={{ paddingTop: 26 }}>
-                            <TextComponent text={'Vui lòng trả tất cả câu hỏi để tiếp tục'}  textAlign='center' size={12} font={fontFamilies.medium} />
-                        </View>
-                    </CardComponent>
-                </SectionComponent>
+                    <SectionComponent>
+                        <CardComponent>
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
+                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
+                            </RowComponent>
+                            <SpaceComponent height={10} />
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Loại vé'} size={16} font={fontFamilies.medium} />
+                                <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
+                            </RowComponent>
+                            <SpaceComponent height={10} />
+                            {showTimeChose.ticketChose?.map((item) => {
+                                return renderTypeTicket(item)
+                            })}
+                            <SpaceComponent height={8} />
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
+                                <TextComponent text={convertMoney(showTimeChose.totalPrice || 0)} size={18} color={colors.primary} font={fontFamilies.semiBold} />
+                            </RowComponent>
+                            <View style={{ paddingTop: 26 }}>
+                                <TextComponent text={'Bằng việc tiến hanh thanh toán, bạn đã đồng ý với Điều Kiện Giao Dịch Chung'} textAlign='center' size={12} font={fontFamilies.medium} />
+                            </View>
+                        </CardComponent>
+                    </SectionComponent>
                 </Modalize>
             </Portal>
+            <LoadingModal visible={isLoading} />
         </>
     )
 }
 
-
-
-export default QuestionScreen
+export default InvoiceComfirmScreen

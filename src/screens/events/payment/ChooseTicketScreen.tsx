@@ -38,27 +38,27 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const eventChose:billingState = useSelector(billingSelector)
     const dispatch = useDispatch()
     // useStatusBar('light-content')
-    useEffect(() => {
-        if (paymentUrl) {
-            navigation.navigate('PaymentScreen', { url: paymentUrl })
-        }
-    }, [paymentUrl])
-    const createPaymentUrl = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.post('http://localhost:8888/order/create_payment_url', {
-                uid: auth.id,
-                amount: 20000, // Số tiền cần thanh toán
-                language: 'vn',
-                bankCode: ''
-            });
-            setPaymentUrl(response?.data?.url)
-        } catch (error: any) {
-            console.error('Lỗi khi tạo URL thanh toán:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // useEffect(() => {
+    //     if (paymentUrl) {
+    //         navigation.navigate('PaymentScreen', { url: paymentUrl })
+    //     }
+    // }, [paymentUrl])
+    // const createPaymentUrl = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await axios.post('http://localhost:8888/order/create_payment_url', {
+    //             uid: auth.id,
+    //             amount: 20000, // Số tiền cần thanh toán
+    //             language: 'vn',
+    //             bankCode: ''
+    //         });
+    //         setPaymentUrl(response?.data?.url)
+    //     } catch (error: any) {
+    //         console.error('Lỗi khi tạo URL thanh toán:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     useEffect(() => {
         if (ticketChose.length >= 1) {
             setDisableButton(false)

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, AddNewEvent, ChooseTicketScreen, EditProfileScreen, EventDetails, ExploreEvent, ForgotPasswordScreen, LoginScreen, NotFound, NotificationsScreen, PaymentScreen, PaymentSucessScreen, QrScannerScreen, QuestionScreen, SearchEventsScreen, SignUpScreen, VerificationScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, AddNewEvent, ChooseTicketScreen, EditProfileScreen, EventDetails, ExploreEvent, ForgotPasswordScreen, InvoiceComfirmScreen, LoginScreen, NotFound, NotificationsScreen, PaymentScreen, PaymentSucessScreen, QrScannerScreen, QuestionScreen, SearchEventsScreen, SignUpScreen, VerificationScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -130,6 +130,7 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="ChooseTicketScreen" component={ChooseTicketScreen}/>
         <Stack.Screen name="PaymentSucessScreen" component={PaymentSucessScreen}/>
         <Stack.Screen name="QuestionScreen" component={QuestionScreen}/>
+        <Stack.Screen name="InvoiceComfirmScreen" component={InvoiceComfirmScreen}/>
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

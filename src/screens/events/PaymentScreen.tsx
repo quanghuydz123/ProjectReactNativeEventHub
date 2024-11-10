@@ -46,7 +46,7 @@ const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
       const routes = state.routes;
       console.log("routes",routes)
       if (count >= 1) {
-        navigation.goBack()
+        navigation.pop(3)
       } else {
         // ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
         onToggleSnackBar()
@@ -67,12 +67,13 @@ const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
         switch(paymentStatus){
           case '00':
             if(uid === auth.id){
+              navigation.pop(3)
               navigation.replace('PaymentSucessScreen')
             }
             break
           case '24':
             if(uid === auth.id){
-              navigation.goBack()
+              navigation.pop(3)
             }
             break;
           default:
