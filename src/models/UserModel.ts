@@ -1,3 +1,4 @@
+import { EventModelNew } from "./EventModelNew"
 import { RoleModel } from "./RoleModel"
 
 export interface UserModel {
@@ -17,6 +18,10 @@ export interface UserModel {
       event:string,
       createdAt:Date
     }
+    viewedEvents:[{
+      event:EventModelNew,
+      createdAt?:Date
+    }]
     idRole:RoleModel
     createAt: string
     updateAt: string

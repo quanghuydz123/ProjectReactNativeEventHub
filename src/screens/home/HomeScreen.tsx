@@ -381,6 +381,7 @@ const HomeScreen = ({ navigation, route }: any) => {
       setNotifications([])
     }
   }
+
   const handleCallApiGetAllEvent = async (isLoading?: boolean) => {
     const api = apis.event.getAll({limit:'10'})
     setIsLoading(isLoading ? isLoading : false)

@@ -293,6 +293,7 @@ const EventDetails = ({ navigation, route }: any) => {
         width={width}
         styles={{ paddingVertical: 8, marginBottom: 0 }} textSize={14}
         onPress={onPress}
+        isCheckLogin={true}
         disable={disable}
       />
     )
@@ -308,6 +309,13 @@ const EventDetails = ({ navigation, route }: any) => {
       }
     );
   };
+  const checkLogin = ()=>{
+    if(!auth.accesstoken){
+      navigation.navigate('LoginScreen')
+      return false
+    }
+    return true
+  }
   return (
 
     <>
@@ -388,7 +396,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 iconFlex="left"
                 textSize={14}
                 mrBottom={0}
-                onPress={() => handleInterestEvent()}
+                onPress={() => {if(checkLogin()){handleInterestEvent()}}}
               />
               {/* <LottieView source={require('../../../src/assets/icon/star.json')} style={{width:20,height:20,marginTop:10}} speed={1} autoPlay loop={true}  renderMode="HARDWARE" /> */}
 
@@ -405,7 +413,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 iconFlex="left"
                 mrBottom={0}
                 textSize={14}
-                onPress={() => { setIsOpenModalizeInityUser(true) }}
+                onPress={() => {if(checkLogin()){ setIsOpenModalizeInityUser(true) }}}
               />
 
             </RowComponent>

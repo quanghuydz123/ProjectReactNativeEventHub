@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RoleModel } from "../../models/RoleModel";
 import { CategoryModel } from "../../models/CategoryModel";
+import { EventModelNew } from "../../models/EventModelNew";
 
 export interface AuthState {
     id: string,
@@ -24,7 +25,9 @@ export interface AuthState {
     categoriesInterested:[{
         category:CategoryModel,
     }],
-
+    viewedEvents:[{
+        event:EventModelNew | null,
+    }] | []
 }
 
 const initialState: AuthState = {
@@ -57,6 +60,9 @@ const initialState: AuthState = {
             _id:''
         },
     }],
+    viewedEvents:[{
+        event:null
+    }]
 }
 
 const authSlice = createSlice({

@@ -6,6 +6,9 @@ import { colors } from "../constrants/color"
 import { fontFamilies } from "../constrants/fontFamilies"
 import { AsyncStorageStatic } from "@react-native-async-storage/async-storage"
 import SpaceComponent from "./SpaceComponent"
+import { useSelector } from "react-redux"
+import { authSelector } from "../reduxs/reducers/authReducers"
+import { useNavigation } from "@react-navigation/native"
 
 interface Props {
     icon?: ReactNode,
@@ -23,7 +26,8 @@ interface Props {
     textSize?:number,
     width?:any,
     alignItems?:'center' | 'flex-start' | 'flex-end',
-    mrBottom?:number
+    mrBottom?:number,
+    isCheckLogin?:boolean
 
 }
 const ButtonComponent = (props: Props) => {
@@ -43,15 +47,29 @@ const ButtonComponent = (props: Props) => {
         textSize,
         width,
         alignItems,
-        mrBottom
+        mrBottom,
+        isCheckLogin
     } = props
+    const auth = useSelector(authSelector)
+    const navigation:any = useNavigation()
+    const onPessButton = ()=>{
+        if(isCheckLogin){
+            if(!auth.accesstoken){
+                navigation.navigate('LoginScreen')
+                return false
+              }
+        }
+        if (onPress) {
+            onPress();
+        }
+    }
     return (
         type === 'primary' ?
             <View style={{ alignItems: alignItems ??  'center' }}>
                 
                 <TouchableOpacity
                     disabled={disable}
-                    onPress={onPress}
+                    onPress={onPessButton}
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.black : colors.primary,
                         marginBottom: mrBottom ?? 17,
