@@ -17,7 +17,7 @@ import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
 import { FollowModel } from '../../models/FollowModel';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAuth, addPositionUser, authSelector } from '../../reduxs/reducers/authReducers';
+import { addAuth, addPositionUser, authSelector, AuthState } from '../../reduxs/reducers/authReducers';
 import eventAPI from '../../apis/eventAPI';
 import { apis } from '../../constrants/apis';
 import followAPI from '../../apis/followAPI';
@@ -74,7 +74,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [isViewdNotifications, setIsViewNotifications] = useState(true)
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
   const [isShowMoney, setIsShowMoney] = useState(true)
-  const auth = useSelector(authSelector)
+  const auth:AuthState = useSelector(authSelector)
   useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -318,11 +318,13 @@ const HomeScreen = ({ navigation, route }: any) => {
       Geolocation.getCurrentPosition(position => {
         if (position.coords) {
           // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-          if (!auth.position) {
+          // if (!auth.position) {
+            console.log("handleCallApiUpdatePostionUser123123")
+
             if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
               console.log("handleCallApiUpdatePostionUser")
               handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
-            }
+            // }
           }
           // else {
           //   console.log("handleCallApiUpdatePostionUser")
@@ -404,7 +406,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     if (auth.position) {
       setIsLoadingNearEvent(isLoading ? isLoading : false)
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
-      const api = apis.event.getAll({ lat: auth.position.lat, long: auth.position.lng, distance: '10', limitDate: `${new Date().toISOString()}`,limit:'10' })
+      const api = apis.event.getAll({ lat: auth.position.lat.toString(), long: auth.position.lng.toString(), distance: '10', limitDate: `${new Date().toISOString()}`,limit:'10' })
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
@@ -700,7 +702,6 @@ const HomeScreen = ({ navigation, route }: any) => {
 
             <DataLoaderComponent data={allEventNear} isLoading={isLoadingNearEvent} height={appInfo.sizes.HEIGHT * 0.3} children={
               <FlatList
-                
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={allEventNear}
@@ -711,6 +712,22 @@ const HomeScreen = ({ navigation, route }: any) => {
               messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
             />
           }
+
+        {(auth.viewedEvents && auth.viewedEvents.length > 0) && <>
+        <TabBarComponent title="Sự kiện xem gần đây" onPress={() => console.log("ok")} />
+            <DataLoaderComponent data={auth.viewedEvents} isLoading={false} height={appInfo.sizes.HEIGHT * 0.3} children={
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={auth.viewedEvents}
+                extraData={refreshList}
+                renderItem={({ item, index }) => <EventItem  item={item.event} key={item?.event._id} />}
+              />
+            }
+              messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
+            />
+          
+        </>}
           <View style={styles.scrollViewContent} />
         </SectionComponent>
       </ScrollView>

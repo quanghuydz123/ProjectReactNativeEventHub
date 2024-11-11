@@ -29,6 +29,7 @@ const ListEventComponent = (props:Props)=>{
       // style={{flex:1}}
       key={items[0]?._id}
       showsVerticalScrollIndicator={false}
+      
       data={items} 
       // contentContainerStyle={{flex:1}}
       // refreshControl={

@@ -66,7 +66,7 @@ export const apis = {
             addEvent:()=>`/get-all`,
             updateFollowEvent:()=>`/update-followers`,
             updateEvent:()=>`/update-event`,
-
+            incViewEvent:()=>`/incView-event`
             
     },
     category:{

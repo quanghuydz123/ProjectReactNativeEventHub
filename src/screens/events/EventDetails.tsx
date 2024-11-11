@@ -14,7 +14,7 @@ import { EventModelNew } from "../../models/EventModelNew";
 import { DateTime } from "../../utils/DateTime";
 import { convertMoney } from "../../utils/convertMoney";
 import { useDispatch, useSelector } from "react-redux";
-import { authSelector, AuthState, updateEventsInterested } from "../../reduxs/reducers/authReducers";
+import { addViewedEvent, authSelector, AuthState, updateEventsInterested } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize } from "../../../modals";
 import eventAPI from "../../apis/eventAPI";
@@ -59,7 +59,6 @@ const EventDetails = ({ navigation, route }: any) => {
   const { getItem: getItemAuth } = useAsyncStorage('auth')
   const [interestText, setInterestText] = useState('')
   const [isShowDes, setIsShowDes] = useState(false)
-  const event123 = useSelector(billingSelector)
   const [isLoadingChoseShowTime, setIsLoadingChoseShowTime] = useState(false)
   const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
   useStatusBar('light-content')
@@ -68,10 +67,6 @@ const EventDetails = ({ navigation, route }: any) => {
     if (!event) {
       handleCallApiGetEventById()
     }
-    // if (!followers) {
-    //   handleCallApiGetAllFollower()
-    // }
-
   }, [])
   // useEffect( ()=>{
   //   a()
@@ -89,8 +84,13 @@ const EventDetails = ({ navigation, route }: any) => {
         ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
         : `Bạn đã quan tâm`
       : `${userCount} Người đã quan tâm`)
-    haneleGetAPIRelatedEvents()
-  }, [event])
+    if(event){
+      haneleGetAPIRelatedEvents()
+      handleIncViewEvent()
+    }
+
+  }, [event]) 
+  
   useEffect(() => {
     setIsInterested(
       auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id)
@@ -111,6 +111,26 @@ const EventDetails = ({ navigation, route }: any) => {
       console.log(errorMessage)
       setIsLoading(false)
 
+    }
+  }
+  const handleIncViewEvent = async ()=>{
+    try {
+      const api = apis.event.incViewEvent()
+      const res = await eventAPI.HandleEvent(api,{idUser:auth.id ?? '',idEvent:event?._id},'put')
+      if(res && res.data && res.status===200){
+        const data = res.data as EventModelNew
+        const viewedEvents = [...auth.viewedEvents]
+        const index = viewedEvents.findIndex((item)=>item.event._id === data?._id)
+        if(index !== -1){
+            viewedEvents.splice(index,1)
+        }
+        viewedEvents.unshift({event:data})
+        dispatch(addViewedEvent({viewedEvents:viewedEvents}))
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, viewedEvents: viewedEvents}))
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("EventDetails", errorMessage)
     }
   }
   const haneleGetAPIRelatedEvents = async () => {
@@ -395,8 +415,9 @@ const EventDetails = ({ navigation, route }: any) => {
                 icon={<FontAwesome name={isInterested ? "star" : "star-o"} size={16} color={colors.background} />}
                 iconFlex="left"
                 textSize={14}
+                isCheckLogin={true}
                 mrBottom={0}
-                onPress={() => {if(checkLogin()){handleInterestEvent()}}}
+                onPress={() => {handleInterestEvent()}}
               />
               {/* <LottieView source={require('../../../src/assets/icon/star.json')} style={{width:20,height:20,marginTop:10}} speed={1} autoPlay loop={true}  renderMode="HARDWARE" /> */}
 
@@ -412,8 +433,9 @@ const EventDetails = ({ navigation, route }: any) => {
                 icon={<Ionicons name="person-add" size={16} color={colors.background} />}
                 iconFlex="left"
                 mrBottom={0}
+                isCheckLogin
                 textSize={14}
-                onPress={() => {if(checkLogin()){ setIsOpenModalizeInityUser(true) }}}
+                onPress={() => setIsOpenModalizeInityUser(true) }
               />
 
             </RowComponent>
@@ -564,9 +586,9 @@ const EventDetails = ({ navigation, route }: any) => {
             <AvatarItem photoUrl={item?.photoUrl} size={38} onPress={() => {
               if (item?._id == auth?.id) {
                 setIsOpenModalizeInityUser(false)
-                navigation.navigate('Profile', {
-                  screen: 'ProfileScreen'
-                })
+                // navigation.navigate('Profile', {
+                //   screen: 'ProfileScreen'
+                // })
               }
               else {
                 setIsOpenModalizeInityUser(false)

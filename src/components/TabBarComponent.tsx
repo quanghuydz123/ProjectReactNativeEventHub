@@ -27,8 +27,8 @@ const TabBarComponent = (props:Props)=>{
         <TextComponent color={textColor ?? colors.white} text={title} title flex={1} size={textSizeTitle ?? 16}/>
         {onPress && 
         <RowComponent onPress={onPress}>
-            <TextComponent text={titleRight ?? "Xem tất cả"} color={colors.primary} size={14} font={fontFamilies.medium}/>
-            {!isNotShowIconRight && <AntDesign size={18} color={colors.primary} name="right"  style={{marginTop:2}}/>  }
+            <TextComponent text={titleRight ?? "Xem tất cả"} color={colors.primary} size={12} font={fontFamilies.medium}/>
+            {!isNotShowIconRight && <AntDesign size={14} color={colors.primary} name="right"  style={{marginTop:2}}/>  }
         </RowComponent>}
     </RowComponent>
   )

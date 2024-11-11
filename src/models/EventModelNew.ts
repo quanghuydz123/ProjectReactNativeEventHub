@@ -23,6 +23,7 @@ export interface EventModelNew {
     startAt: string
     endAt: string
     status: boolean
+    viewCount:number
     createdAt: string
     updatedAt: string
     __v: number

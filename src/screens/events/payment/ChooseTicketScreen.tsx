@@ -273,7 +273,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             <SectionComponent styles={{
                 backgroundColor: colors.background1, justifyContent: 'center',
                 paddingTop: 8,
-                paddingBottom: 8
+                paddingBottom: 8,
             }}
 
             >

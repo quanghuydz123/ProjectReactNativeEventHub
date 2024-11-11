@@ -40,7 +40,7 @@ interface Props {
 const SelectModalize = (props: Props) => {
     const {multibale,visible,onClose,data,renderItem,hidenHeader,styles,adjustToContentHeight,onSearch ,valueSearch,title,footerComponent} = props
     // const [isVisibleModalize, setIsVisibleModalize] = useState(false)
-    const modalieRef = useRef<Modalize>()
+    const modalieRef = useRef<Modalize>(null)
     // const [selectedItems, setSelectItems] = useState<string[]>([])
     // useEffect(()=>{
     //     selected && setSelectItems(selected)

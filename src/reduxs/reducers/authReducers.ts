@@ -25,9 +25,7 @@ export interface AuthState {
     categoriesInterested:[{
         category:CategoryModel,
     }],
-    viewedEvents:[{
-        event:EventModelNew | null,
-    }] | []
+    viewedEvents: { event: EventModelNew }[];
 }
 
 const initialState: AuthState = {
@@ -60,9 +58,7 @@ const initialState: AuthState = {
             _id:''
         },
     }],
-    viewedEvents:[{
-        event:null
-    }]
+    viewedEvents:[]
 }
 
 const authSlice = createSlice({
@@ -96,10 +92,15 @@ const authSlice = createSlice({
         updateCategoriesInterested:(state,action)=>{
             const { categoriesInterested } = action.payload;
             state.authData.categoriesInterested= categoriesInterested
-        }
+        },
+        addViewedEvent:(state,action)=>{
+            const { viewedEvents } = action.payload;
+           
+            state.authData.viewedEvents = viewedEvents
+        },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested,updateCategoriesInterested } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested,updateCategoriesInterested,addViewedEvent } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

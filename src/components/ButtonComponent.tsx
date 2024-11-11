@@ -51,25 +51,26 @@ const ButtonComponent = (props: Props) => {
         isCheckLogin
     } = props
     const auth = useSelector(authSelector)
-    const navigation:any = useNavigation()
-    const onPessButton = ()=>{
-        if(isCheckLogin){
-            if(!auth.accesstoken){
-                navigation.navigate('LoginScreen')
-                return false
-              }
-        }
-        if (onPress) {
-            onPress();
-        }
-    }
+    
+    // const onPessButton = ()=>{
+    //     if(isCheckLogin){
+    //         if(!auth.accesstoken){
+    //             const navigation:any = useNavigation()
+    //             navigation.navigate('LoginScreen')
+    //             return false
+    //           }
+    //     }
+    //     if (onPress) {
+    //         onPress();
+    //     }
+    // }
     return (
         type === 'primary' ?
             <View style={{ alignItems: alignItems ??  'center' }}>
                 
                 <TouchableOpacity
                     disabled={disable}
-                    onPress={onPessButton}
+                    onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
                         backgroundColor: color ? color : disable ? colors.black : colors.primary,
                         marginBottom: mrBottom ?? 17,
