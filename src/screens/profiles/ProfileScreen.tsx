@@ -1,5 +1,5 @@
 import { Button, FlatList, Text, View } from "react-native"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { ReactNode, useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +25,10 @@ import followAPI from "../../apis/followAPI";
 import { apis } from "../../constrants/apis";
 import { appInfo } from "../../constrants/appInfo";
 import CardComponent from "../../components/CardComponent";
+import Ticket from '../../assets/svgs/ticket.svg'
+import BookMark from '../../assets/svgs/bookmark-svgrepo-com.svg'
+import Star from '../../assets/svgs/star.svg'
+import UserGroup from '../../assets/svgs/user-group-svgrepo-com.svg'
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
@@ -42,12 +46,12 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const [isLoadingFollow, setIsLoadingFollow] = useState(false)
   const dispatch = useDispatch()
-  useEffect(()=>{
-    handleGetAllCategory()
-  },[])
   useEffect(() => {
-    handleCallApiGetProfile({isLoading:true})
-    handleCallApiGetFollowerById({isLoading:true})
+    handleGetAllCategory()
+  }, [])
+  useEffect(() => {
+    handleCallApiGetProfile({ isLoading: true })
+    handleCallApiGetFollowerById({ isLoading: true })
   }, [auth.accesstoken])
   useEffect(() => {
     if (auth.categoriesInterested) {
@@ -57,7 +61,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       })
       setIdsFollowerCategory(ids)
     }
-  }, [isOpenModalizeSelectCategory,auth])
+  }, [isOpenModalizeSelectCategory, auth])
   useEffect(() => {
     if (isUpdateImageProfile) {
       if (profile?.photoUrl) {
@@ -87,17 +91,17 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
   }, [isUpdateImageProfile])
   useEffect(() => {
-    const handleUpdateProfile = (idUser?:string) => {
-      handleCallApiGetProfile({idUser:idUser})
+    const handleUpdateProfile = (idUser?: string) => {
+      handleCallApiGetProfile({ idUser: idUser })
     }
-    const handleFollowByid = (idUser?:string) => {
-      handleCallApiGetFollowerById({idUser:idUser});
+    const handleFollowByid = (idUser?: string) => {
+      handleCallApiGetFollowerById({ idUser: idUser });
       console.log('followers cập nhật');
     };
-    socket.on('updateUser', ({idUser})=>{
+    socket.on('updateUser', ({ idUser }) => {
       handleUpdateProfile(idUser)
     })
-    socket.on('followUser', ({idUser})=>{
+    socket.on('followUser', ({ idUser }) => {
       handleFollowByid(idUser)
     })
     return () => {
@@ -121,31 +125,31 @@ const ProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCallApiGetFollowerById = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
- 
-   if(auth.accesstoken){
-    try {
-      const api = apis.follow.getById(idUser ?? auth.id)
-      setIsLoadingFollow(isLoading ? isLoading : false)
-      const res: any = await followAPI.HandleFollwer(api, {}, 'get');
-      if (res && res.data && res.status === 200) {
-        setFollower(res.data.followers)
-        setNumberOfFollowers(res.data.numberOfFollowers)
-      }
-      setIsLoadingFollow(false)
-    } catch (error: any) {
-      
-      setIsLoadingFollow(false)
-      const errorMessage = JSON.parse(error.message)
-      console.log("FollowerScreen", errorMessage)
+  const handleCallApiGetFollowerById = async ({ isLoading, idUser }: { isLoading?: boolean, idUser?: string }) => {
 
-    }
-   }else{
+    if (auth.accesstoken) {
+      try {
+        const api = apis.follow.getById(idUser ?? auth.id)
+        setIsLoadingFollow(isLoading ? isLoading : false)
+        const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+        if (res && res.data && res.status === 200) {
+          setFollower(res.data.followers)
+          setNumberOfFollowers(res.data.numberOfFollowers)
+        }
+        setIsLoadingFollow(false)
+      } catch (error: any) {
+
+        setIsLoadingFollow(false)
+        const errorMessage = JSON.parse(error.message)
+        console.log("FollowerScreen", errorMessage)
+
+      }
+    } else {
       setFollower([])
       setNumberOfFollowers(0)
-   }
+    }
   }
-  const handleCallApiGetProfile = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
+  const handleCallApiGetProfile = async ({ isLoading, idUser }: { isLoading?: boolean, idUser?: string }) => {
     if (auth.accesstoken) {
       setIsLoading(isLoading ? isLoading : false)
       const api = `/get-user-byId?uid=${idUser ?? auth.id}`
@@ -160,7 +164,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         console.log("HomeScreen", errorMessage)
         setIsLoading(false)
       }
-    }else{
+    } else {
       setProfile(undefined)
     }
   }
@@ -192,7 +196,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         const jsonResStorage = JSON.parse(resStorage || '')
         await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
         dispatch(addAuth({ ...auth, ...res.data.user }))
-        socket.emit('updateUser',{isUser:auth?.id})
+        socket.emit('updateUser', { isUser: auth?.id })
         setIsLoading(false)
         setIsUpdateProfile(false)
         ToastMessaging.Success({ message: "Cập nhập ảnh đại điện thành công" })
@@ -227,8 +231,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idsCategory: idsFollowerCategory }, 'post')
       if (res && res.data && res.status === 200) {
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, categoriesInterested:res.data.user.categoriesInterested }))
-        dispatch(updateCategoriesInterested({categoriesInterested:res.data.user.categoriesInterested}))
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, categoriesInterested: res.data.user.categoriesInterested }))
+        dispatch(updateCategoriesInterested({ categoriesInterested: res.data.user.categoriesInterested }))
       }
       setIsLoading(false)
     } catch (error: any) {
@@ -247,11 +251,19 @@ const ProfileScreen = ({ navigation, route }: any) => {
   //   },0)  
   //   return ``
   // },[follower])
-  
+  const renderCardHalf = ({title,icon,onPress}:{title:string,icon:ReactNode,onPress?:()=>void})=>{
+    return  <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.09, width: appInfo.sizes.WIDTH * 0.46, paddingVertical:12 }} isShadow onPress={onPress}>
+    <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
+      {icon}
+      <TextComponent text={title} font={fontFamilies.medium} />
+    </View>
+
+  </CardComponent>
+  }
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
-        <CardComponent  styles={[globalStyles.center]} isShadow >
+        <CardComponent styles={[globalStyles.center]} isShadow >
           {auth.accesstoken ? <>
             <RowComponent onPress={() => handleChangeImageAvatar()}>
               <AvatarItem size={90} photoUrl={profile?.photoUrl} isShowIconAbsolute borderWidth={1} colorBorderWidth={colors.gray4} />
@@ -291,17 +303,17 @@ const ProfileScreen = ({ navigation, route }: any) => {
               {/* <TextComponent text="Thông tin về tôi" title size={18} />
           <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
             </View>
-          </>:
-          <SectionComponent>
-            <SpaceComponent height={16}/>
-            <ButtonComponent 
-            onPress={()=>navigation.navigate('LoginScreen')}
-            mrBottom={0} text="Đăng nhập/Đăng ký" 
-            type="primary" 
-            styles={{borderRadius:100,paddingVertical:10}} textSize={14}/>
-            <SpaceComponent height={6}/>
-            <TextComponent text={'Để trả nghiệm toàn bộ tính năng'} size={14} textAlign="center" font={fontFamilies.medium}/>
-          </SectionComponent>
+          </> :
+            <SectionComponent>
+              <SpaceComponent height={16} />
+              <ButtonComponent
+                onPress={() => navigation.navigate('LoginScreen')}
+                mrBottom={0} text="Đăng nhập/Đăng ký"
+                type="primary"
+                styles={{ borderRadius: 100, paddingVertical: 10 }} textSize={14} />
+              <SpaceComponent height={6} />
+              <TextComponent text={'Để trả nghiệm toàn bộ tính năng'} size={14} textAlign="center" font={fontFamilies.medium} />
+            </SectionComponent>
           }
         </CardComponent>
       </SectionComponent>
@@ -316,8 +328,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
             </RowComponent>
           </RowComponent>
           <SpaceComponent height={8} />
-         
-          {auth?.categoriesInterested && auth?.categoriesInterested.length>0 ?<DataLoaderComponent data={auth?.categoriesInterested} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
+
+          {auth?.categoriesInterested && auth?.categoriesInterested.length > 0 ? <DataLoaderComponent data={auth?.categoriesInterested} height={appInfo.sizes.HEIGHT * 0.1} isLoading={isLoadingFollow} children={
             <FlatList
               style={{ paddingHorizontal: 8 }}
               horizontal
@@ -330,19 +342,41 @@ const ProfileScreen = ({ navigation, route }: any) => {
             />
           }
             messageEmpty={'Không có thể loại nào cả'}
-          /> : 
-          <View style={{paddingVertical:20}}>
-                <TextComponent textAlign="center" text={'HÃY CHỌN THỂ LOẠI YÊU THÍCH'}/>
-          </View>
-        }
+          /> :
+            <View style={{ paddingVertical: 20 }}>
+              <TextComponent textAlign="center" text={'HÃY CHỌN THỂ LOẠI YÊU THÍCH'} />
+            </View>
+          }
         </CardComponent>
       </SectionComponent>}
+      {auth.accesstoken && <SectionComponent isNoPaddingBottom>
+        <RowComponent>
+          {renderCardHalf({title:'Vé đã mua',icon:<Ticket />})}
+          
+          <SpaceComponent width={8} />
+          {renderCardHalf({title:'Danh sách theo dõi',icon: <UserGroup />})}
+
+          
+        </RowComponent>
+          
+        <RowComponent>
+         {renderCardHalf({title:'Sự kiện đã quan tâm',icon: <Star />})}
+
+         
+          <SpaceComponent width={8} />
+
+          {renderCardHalf({title:'Sự kiện xem gần đây',icon: <BookMark />,onPress:()=>navigation.navigate('ViewedEventScreen')})}
+
+          
+        </RowComponent>
+      </SectionComponent>}
       <SectionComponent>
-        <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.5 }} isShadow>
-          <TextComponent text={'Cài đặt'} />
+        <CardComponent isShadow styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
+          <TextComponent text={'Hỗ trợ'} size={18} font={fontFamilies.medium} />
         </CardComponent>
-        <LoadingModal visible={isLoading} message="Hệ thống đang xử lý"/>
       </SectionComponent>
+      <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />
+      <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" />
       {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />
       <SelectModalize
@@ -365,7 +399,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </View>}
         renderItem={(item: CategoryModel) => <>
           <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={item?._id}>
-          <TagComponent key={item?._id} onPress={() => handleFollowerCategory(item?._id)} label={item.name}
+            <TagComponent key={item?._id} onPress={() => handleFollowerCategory(item?._id)} label={item.name}
               bgColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.white}
               textColor={idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.white : colors.black}
               styles={[globalStyles.shadow, { borderWidth: 1, borderColor: idsFollowerCategory.some(idCategory => idCategory === item?._id) ? colors.primary : colors.gray }]} />

@@ -647,8 +647,9 @@ const EventDetails = ({ navigation, route }: any) => {
           <ButtonComponent type="primary" 
           text="Xem thêm sự kiện" 
           width={'auto'} 
-          styles={{borderRadius:100}}
-          textSize={14}
+          styles={{borderRadius:100,paddingVertical:8}}
+          textSize={13}
+          mrBottom={0}
           onPress={() => navigation.push('SearchEventsScreen', {
           })}
           />

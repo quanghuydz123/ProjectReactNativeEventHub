@@ -12,16 +12,17 @@ interface Props { // phải định nghĩa ra trước
     data:any,
     messageEmpty?:string,
     height?:number,
-    isFlex?:boolean
+    isFlex?:boolean,
+    messTextColor?:string
     
 }
 const DataLoaderComponent = (props: Props) => {
-    const {children,isLoading=true,data ,messageEmpty , height,isFlex} = props
+    const {children,isLoading=true,data ,messageEmpty , height,isFlex,messTextColor} = props
     // console.log("data && data?.length > 0)",data?.length)\
     return <View style={{flex:isFlex ? 1 : 0}}>
     {
         isLoading  ? <LoadingComponent isLoading={isLoading} value={data?.length || 0} height={height}/> 
-        : (data && data?.length > 0) ?  children : <EmptyComponent textColor={colors.white}  message={messageEmpty ?? "Không có dữ liệu"} height={height}/>
+        : (data && data?.length > 0) ?  children : <EmptyComponent textColor={messTextColor ?? colors.white}  message={messageEmpty ?? "Không có dữ liệu"} height={height}/>
     }
 </View>
 }

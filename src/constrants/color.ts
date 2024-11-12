@@ -12,6 +12,7 @@ export const colors ={
     gray5:"#D9D9D9",
     gray6:'#FAFAFA',
     gray7:'#e9e9e9',
+    gray8:'rgb(226,229,233)',
     link:'#0783fe',
     danger:'rgb(200,66,79)',
     danger2:'rgb(255,184,188)',

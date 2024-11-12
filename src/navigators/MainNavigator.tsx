@@ -18,6 +18,7 @@ import {BackHandler} from 'react-native';
 import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
 import FriendsNavigate from "./FriendsNavigate";
 import TestQrcannerScreen from "../screens/TestQrcannerScreen";
+import ViewedEventScreen from "../screens/profiles/ViewedEventScreen";
 
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
@@ -131,6 +132,7 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="PaymentSucessScreen" component={PaymentSucessScreen}/>
         <Stack.Screen name="QuestionScreen" component={QuestionScreen}/>
         <Stack.Screen name="InvoiceComfirmScreen" component={InvoiceComfirmScreen}/>
+        <Stack.Screen name="ViewedEventScreen" component={ViewedEventScreen}/>
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

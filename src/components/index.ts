@@ -19,6 +19,7 @@ import EmptyComponent from "./EmptyComponent"
 import DataLoaderComponent from "./DataLoaderComponent"
 import ListVideoComponent from "./ListVideoComponent"
 import InputSpinnerComponent from "./InputSpinnerComponent"
+import EventItemHorizontal from "./EventItemHorizontal"
 
 export {
     SpaceComponent,

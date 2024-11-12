@@ -139,7 +139,7 @@ const EventItem = (props: Props) => {
                 <TextComponent text={'Đã diễn ra'} size={12} font={fontFamilies.medium} color="white"/>
               </View>}
             </ImageBackground>
-            <TextComponent numberOfLine={2} text={item.title} title size={17} color={colors.white} />
+            <TextComponent numberOfLine={2} text={item.title} title size={15} color={colors.white} />
             <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
             <RowComponent styles={{ flexWrap: 'wrap' }}>
               {
