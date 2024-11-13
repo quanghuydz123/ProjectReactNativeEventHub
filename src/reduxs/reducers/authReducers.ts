@@ -26,6 +26,8 @@ export interface AuthState {
         category:CategoryModel,
     }],
     viewedEvents: { event: EventModelNew }[];
+    numberOfFollowers:number,
+    numberOfFollowing:number
 }
 
 const initialState: AuthState = {
@@ -58,7 +60,9 @@ const initialState: AuthState = {
             _id:''
         },
     }],
-    viewedEvents:[]
+    viewedEvents:[],
+    numberOfFollowers:0,
+    numberOfFollowing:0
 }
 
 const authSlice = createSlice({
@@ -95,7 +99,6 @@ const authSlice = createSlice({
         },
         addViewedEvent:(state,action)=>{
             const { viewedEvents } = action.payload;
-           
             state.authData.viewedEvents = viewedEvents
         },
     }

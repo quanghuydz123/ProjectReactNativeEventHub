@@ -182,8 +182,139 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     }
   }
   const renderNofitications = (value: NotificationModel) => {
-    switch (value.type) {
-      case 'inviteEvent':
+    // switch (value.type) {
+    //   case 'inviteEvent':
+    //     return (
+    //       <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+    //         <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+    //           <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
+    //           <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+    //             onPress={() => navigation.navigate('EventDetails', { id: value.eventId?._id })}>
+
+    //             <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+    //               {`${value.senderID?.fullname} `}
+    //               <Text style={[globalStyles.text]}>
+    //                 đã mời bạn tham gia sự kiện {value?.eventId?.title} hãy tham gia ngay !!!
+    //               </Text>
+    //             </Text>
+    //             <SpaceComponent height={2} />
+    //             <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+    //             {/* <RowComponent>
+    //                     <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+    //                     styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+    //                     <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+    //                   </RowComponent> */}
+    //           </TouchableOpacity>
+    //           <ButtonComponent
+
+    //             onPress={() => handleOpenModalize(value)}
+    //             styles={{ paddingVertical: 4 }}
+    //             icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+    //             iconFlex="right" />
+    //         </RowComponent>
+
+    //       </View>
+    //     )
+    //   case 'follow':
+    //     return (
+    //       <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+    //         <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+    //           <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" />
+    //           <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}>
+
+    //             <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+    //               {`${value.senderID?.fullname} `}
+    //               <Text style={[globalStyles.text]}>
+    //                 {value.content}
+    //               </Text>
+    //             </Text>
+    //             <SpaceComponent height={2} />
+    //             <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+    //             <SpaceComponent height={8} />
+    //             {
+    //               renderStatusNotification(value)
+    //             }
+    //           </TouchableOpacity>
+    //           <ButtonComponent
+
+    //             onPress={() => handleOpenModalize(value)}
+    //             styles={{ paddingVertical: 4 }}
+    //             icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+    //             iconFlex="right" />
+    //         </RowComponent>
+
+    //       </View>
+    //     )
+    //   case 'rejectFollow':
+    //     return (
+    //       <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+    //         <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+    //           <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
+    //           <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+    //           >
+
+    //             <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+    //               {`${value.senderID?.fullname} `}
+    //               <Text style={[globalStyles.text]}>
+    //                 {value.content}
+    //               </Text>
+    //             </Text>
+    //             <SpaceComponent height={2} />
+    //             <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+    //             {/* <RowComponent>
+    //             <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+    //             styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+    //             <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+    //           </RowComponent> */}
+    //           </TouchableOpacity>
+    //           <ButtonComponent
+
+    //             onPress={() => handleOpenModalize(value)}
+    //             styles={{ paddingVertical: 4 }}
+    //             icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+    //             iconFlex="right" />
+    //         </RowComponent>
+
+    //       </View>
+    //     )
+    //   case 'allowFollow':
+    //     return (
+    //       <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+    //         <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+    //           <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
+    //           <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+    //           >
+
+    //             <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+    //               {`${value.senderID?.fullname} `}
+    //               <Text style={[globalStyles.text]}>
+    //                 {value.content}
+    //               </Text>
+    //             </Text>
+    //             <SpaceComponent height={2} />
+    //             <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+    //             {/* <RowComponent>
+    //               <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+    //               styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+    //               <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+    //             </RowComponent> */}
+    //           </TouchableOpacity>
+    //           <ButtonComponent
+
+    //             onPress={() => handleOpenModalize(value)}
+    //             styles={{ paddingVertical: 4 }}
+    //             icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+    //             iconFlex="right" />
+    //         </RowComponent>
+
+    //       </View>
+    //     )
+    //   default:
+    //     return (
+    //       <></>
+    //     )
+    // }
+    if(value.type==='inviteEvent'){
         return (
           <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
             <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
@@ -215,105 +346,38 @@ const NotificationsScreen = ({ navigation, route }: any) => {
 
           </View>
         )
-      case 'follow':
-        return (
-          <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="follow" />
-              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}>
+    }else{
+      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+      <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+        <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
+        <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+        >
 
-                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID?.fullname} `}
-                  <Text style={[globalStyles.text]}>
-                    {value.content}
-                  </Text>
-                </Text>
-                <SpaceComponent height={2} />
-                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-                <SpaceComponent height={8} />
-                {
-                  renderStatusNotification(value)
-                }
-              </TouchableOpacity>
-              <ButtonComponent
+          <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+            {`${value.senderID?.fullname} `}
+            <Text style={[globalStyles.text]}>
+              {value.content}
+            </Text>
+          </Text>
+          <SpaceComponent height={2} />
+          <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+          {/* <RowComponent>
+            <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+            styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+            <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+          </RowComponent> */}
+        </TouchableOpacity>
+        <ButtonComponent
 
-                onPress={() => handleOpenModalize(value)}
-                styles={{ paddingVertical: 4 }}
-                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-                iconFlex="right" />
-            </RowComponent>
+          onPress={() => handleOpenModalize(value)}
+          styles={{ paddingVertical: 4 }}
+          icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+          iconFlex="right" />
+      </RowComponent>
 
-          </View>
-        )
-      case 'rejectFollow':
-        return (
-          <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="rejectFollow" />
-              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-              >
-
-                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID?.fullname} `}
-                  <Text style={[globalStyles.text]}>
-                    {value.content}
-                  </Text>
-                </Text>
-                <SpaceComponent height={2} />
-                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-                {/* <RowComponent>
-                <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
-                styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
-                <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
-              </RowComponent> */}
-              </TouchableOpacity>
-              <ButtonComponent
-
-                onPress={() => handleOpenModalize(value)}
-                styles={{ paddingVertical: 4 }}
-                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-                iconFlex="right" />
-            </RowComponent>
-
-          </View>
-        )
-      case 'allowFollow':
-        return (
-          <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
-              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-              >
-
-                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID?.fullname} `}
-                  <Text style={[globalStyles.text]}>
-                    {value.content}
-                  </Text>
-                </Text>
-                <SpaceComponent height={2} />
-                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-                {/* <RowComponent>
-                  <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
-                  styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
-                  <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
-                </RowComponent> */}
-              </TouchableOpacity>
-              <ButtonComponent
-
-                onPress={() => handleOpenModalize(value)}
-                styles={{ paddingVertical: 4 }}
-                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-                iconFlex="right" />
-            </RowComponent>
-
-          </View>
-        )
-      default:
-        return (
-          <></>
-        )
+    </View>
     }
+    
   }
   const onRefresh = useCallback(() => {
     setRefreshing(true);

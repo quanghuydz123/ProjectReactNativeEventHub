@@ -72,6 +72,9 @@ export const apis = {
     category:{
         addCategory:()=>`/add-category`,
         getAll:()=>`/get-all`,
+    },
+    organizer:{
+        getAll:({limit}:{limit?:string})=>`/get-all?limit=${limit}`
     }
 
 }

@@ -29,10 +29,10 @@ const HomeFriendsScreen = ({ navigation }: any) => {
     const user = useSelector(authSelector)
     const [yourFollowers, setYourFollowers] = useState<FollowModel[]>([])
     const auth = useSelector(authSelector)
-    useEffect(() => {
-        handleCallAPIGetNotifications(true)
-        handleCallApiGetFollowerById()
-    }, [])
+    // useEffect(() => {
+    //     handleCallAPIGetNotifications(true)
+    //     handleCallApiGetFollowerById()
+    // }, [auth])
     const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
         if (user.id) {
           const api = apis.follow.getById(user.id)
@@ -203,7 +203,9 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                         label={'Danh sách theo dõi'}
                         textColor={colors.black}
                         textSize={14}
-                        onPress={() => navigation.push('FriendsScreen', { screen: 'ListFriendsScreen',params: { followRoute:follow,yourFollowersRoute:yourFollowers } })}
+                        onPress={() => navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })}
+
+                        // onPress={() => navigation.push('FriendsScreen', { screen: 'ListFriendsScreen',params: { followRoute:follow,yourFollowersRoute:yourFollowers } })}
                         styles={{
                             paddingVertical: 8,
                             paddingHorizontal: 8,

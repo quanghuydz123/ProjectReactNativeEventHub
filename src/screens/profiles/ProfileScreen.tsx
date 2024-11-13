@@ -282,7 +282,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
               </View>
               <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
               <View style={[globalStyles.center, { flex: 1 }]}>
-                <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
+                <TextComponent text={follower[0]?.users.length !== undefined ? `${follower[0]?.users.length}` : '0'} size={20} />
                 <TextComponent text="Đang theo dõi" />
               </View>
             </RowComponent>
@@ -365,7 +365,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
          
           <SpaceComponent width={8} />
 
-          {renderCardHalf({title:'Sự kiện xem gần đây',icon: <BookMark />,onPress:()=>navigation.navigate('ViewedEventScreen')})}
+          {renderCardHalf({title:'Sự kiện xem gần đây',icon: <BookMark />,onPress:()=>navigation.navigate('ViewedEventScreen',{bgColor:''})})}
 
           
         </RowComponent>

@@ -37,7 +37,7 @@ const CategoriesList = (props:Props)=>{
         paddingVertical:4,
         borderRadius:10,
         borderWidth:1,
-        borderColor:colors.white,
+        borderColor:colors.gray,
       }
         ]}>
         <AvatarItem 

@@ -28,6 +28,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { convertMoney } from "../../utils/convertMoney"
 import { DateTime } from "../../utils/DateTime"
 import EventItemHorizontal from "../../components/EventItemHorizontal"
+import checkLogin from "../../utils/checkLogin"
 const AboutProfileScreen = ({ navigation, route }: any) => {
   const { uid, organizer }: { uid: string, organizer: OrganizerModel } = route.params
   const [uidOthor, setUidOther] = useState(uid)
@@ -114,7 +115,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const   handleCallApiGetFollowerById = async (isLoading?: boolean) => {
+  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
     if (auth.id) {
       const api = apis.follow.getById(auth.id)
       setIsLoading(isLoading ? isLoading : false)
@@ -139,7 +140,6 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
     setIsLoading(true)
     try {
       const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idUserOther: uidOthor }, 'put')
-      console.log("res", res)
       if (res && res.data && res.status === 200) {
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
@@ -202,7 +202,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
   return (
     <ContainerComponent back title="Hồ sơ người ta" bgColor={colors.backgroundBluishWhite} right={<Feather name="more-vertical" size={22} color={colors.white} />}>
       <SectionComponent isNoPaddingBottom>
-        <CardComponent isShadow styles={[globalStyles.center, { paddingBottom: 20 }]}>
+        <CardComponent isShadow styles={[globalStyles.center, { paddingBottom: 20}]}>
 
           <RowComponent>
             <AvatarItem size={90} photoUrl={organizer?.user?.photoUrl ?? profile?.photoUrl} borderWidth={1} colorBorderWidth={colors.gray4} />
@@ -222,7 +222,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
             </View>
             <View style={{ height: '100%', width: 1, backgroundColor: colors.gray2 }} />
             <View style={[globalStyles.center, { flex: 1 }]}>
-              <TextComponent text={followerUserOther[0]?.users.length !== undefined ? `${followerUserOther[0]?.users.filter((item) => item.status === true).length}` : '0'} size={20} />
+              <TextComponent text={followerUserOther[0]?.users.length !== undefined ? `${followerUserOther[0]?.users.length}` : '0'} size={20} />
               <TextComponent text="Đang theo dõi" />
             </View>
           </RowComponent>
@@ -230,8 +230,12 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
           <RowComponent justify="center">
             <ButtonComponent
 
-              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? follower[0]?.users.some(user => (user.status === false && user.idUser._id === uidOthor)) ? "Đang đợi chấp nhận" : "Đã theo dõi" : 'Theo dõi'}
-              onPress={() => handleFollowUser()}
+              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? "Đã theo dõi" : 'Theo dõi'}
+              onPress={() => {
+                if(checkLogin(auth,navigation)){
+                  handleFollowUser()
+                }
+              }}
               type="primary"
               color={colors.primary}
               textColor={colors.white}
@@ -252,6 +256,11 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
               styles={{ borderWidth: 1, borderColor: colors.primary, marginBottom: 0, minHeight: 0, paddingVertical: 12 }}
               width={appInfo.sizes.WIDTH * 0.4}
               icon={<AntDesign name="message1" size={18} color={colors.primary} />}
+              onPress={()=>{
+                if(checkLogin(auth,navigation)){
+                  console.log("lok")
+                }
+              }}
               iconFlex="left"
             />
           </RowComponent>

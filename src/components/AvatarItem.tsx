@@ -77,7 +77,7 @@ const AvatarItem = (props: Props) => {
                             backgroundColor:bgColor
                         }}
                     /> : <Image
-                        source={{ uri: 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745' }}
+                        source={{ uri: 'https://i.pinimg.com/236x/5e/e0/82/5ee082781b8c41406a2a50a0f32d6aa6.jpg' }}
                         style={{
                             width: size ?? 24,
                             height: size ?? 24,

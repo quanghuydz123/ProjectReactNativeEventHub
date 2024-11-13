@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
 import DrawerNavigate from "./DrawerNavigate";
-import { AboutProfile, AboutProfileScreen, AddNewEvent, ChooseTicketScreen, EditProfileScreen, EventDetails, ExploreEvent, ForgotPasswordScreen, InvoiceComfirmScreen, LoginScreen, NotFound, NotificationsScreen, PaymentScreen, PaymentSucessScreen, QrScannerScreen, QuestionScreen, SearchEventsScreen, SignUpScreen, VerificationScreen } from "../screens";
+import { AboutProfile, AboutProfileScreen, AddNewEvent, ChooseTicketScreen, EditProfileScreen, EventDetails, ExploreEvent, ForgotPasswordScreen, InvoiceComfirmScreen, LoginScreen, NotFound, NotificationsScreen, PaymentScreen, PaymentSucessScreen, QrScannerScreen, QuestionScreen, SearchAndListViewScreen, SearchEventsScreen, SignUpScreen, VerificationScreen } from "../screens";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,7 @@ import { GoogleSignin,  } from '@react-native-google-signin/google-signin';
 import FriendsNavigate from "./FriendsNavigate";
 import TestQrcannerScreen from "../screens/TestQrcannerScreen";
 import ViewedEventScreen from "../screens/profiles/ViewedEventScreen";
+import OrganizerNavigator from "./OrganizerNavigator";
 
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
@@ -133,6 +134,8 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="QuestionScreen" component={QuestionScreen}/>
         <Stack.Screen name="InvoiceComfirmScreen" component={InvoiceComfirmScreen}/>
         <Stack.Screen name="ViewedEventScreen" component={ViewedEventScreen}/>
+        <Stack.Screen name="SearchAndListViewScreen" component={SearchAndListViewScreen}/>
+        <Stack.Screen name="OrganizerNavigator" component={OrganizerNavigator}/>
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

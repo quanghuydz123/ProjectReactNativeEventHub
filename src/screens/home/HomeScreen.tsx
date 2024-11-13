@@ -11,7 +11,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { CategoriesList, CricleComponent, DataLoaderComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { ButtonComponent, CategoriesList, CricleComponent, DataLoaderComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import LoadingComponent from '../../components/LoadingComponent';
 import EventItem from '../../components/EventItem';
 import { EventModelNew } from '../../models/EventModelNew';
@@ -49,6 +49,10 @@ import { Platform, PermissionsAndroid } from 'react-native';
 import { Screen } from 'react-native-screens';
 import { useStatusBar } from '../../hooks/useStatusBar';
 import { constantSelector } from '../../reduxs/reducers/constantReducers';
+import EventItemHorizontal from '../../components/EventItemHorizontal';
+import { OrganizerModel } from '../../models/OrganizerModel';
+import organizerAPI from '../../apis/organizerAPI';
+import AvatarItem from '../../components/AvatarItem';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5)
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(MaterialCommunityIcons)
 const AnimatedFontAwesome = Animated.createAnimatedComponent(FontAwesome)
@@ -73,8 +77,10 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [notifications, setNotifications] = useState<NotificationModel[]>([])
   const [isViewdNotifications, setIsViewNotifications] = useState(true)
   const [numberOfUnseenNotifications, setNumberOfUnseenNotifications] = useState(0)
-  const [isShowMoney, setIsShowMoney] = useState(true)
-  const auth:AuthState = useSelector(authSelector)
+  const auth: AuthState = useSelector(authSelector)
+  const [organizers, setOrganizers] = useState<OrganizerModel[]>([])
+  const [followerByIdAuth, setFollowerByIdAuth] = useState<FollowModel[]>([])
+
   useStatusBar('light-content')
 
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -108,22 +114,47 @@ const HomeScreen = ({ navigation, route }: any) => {
       }
     })
   }, [])
-  useEffect(()=>{
+  useEffect(() => {
     handleCallApiGetAllEvent(true)
     handleCallApiGetAllFollower()
     handleGetAllCategory()
-  },[])
+    handleCallAPIGetOrganizers()
+  }, [])
   useEffect(() => {
     getLocationUser()
     handleCallAPIGetNotifications()
+    handleCallApiGetFollowerById()
     // checkfcmToken()
   }, [auth.accesstoken])
-  useEffect(() => {
-    handleCallApiGetEventsNearYou(true)
-  }, [auth.position])
+  // useEffect(() => {
+  //   handleCallApiGetEventsNearYou(true)
+  // }, [auth.position])
   useEffect(() => {
     setRefreshList(prev => !prev);
   }, [allFollower])
+
+  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
+    if (auth.id) {
+      const api = apis.follow.getById(auth.id)
+      // setIsLoading(isLoading ? isLoading : false)
+
+      try {
+        const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+        if (res && res.data && res.status === 200) {
+          setFollowerByIdAuth(res.data.followers)
+        }
+        // setIsLoading(false)
+
+      } catch (error: any) {
+        const errorMessage = JSON.parse(error.message)
+        console.log("FollowerScreen", errorMessage)
+        // setIsLoading(false)
+
+      }
+    }else{
+      setFollowerByIdAuth([])
+    }
+  }
   useEffect(() => {
     // const handleFollowers = () => {
     //   handleCallApiGetAllFollower();
@@ -141,8 +172,8 @@ const HomeScreen = ({ navigation, route }: any) => {
     //   handleCallApiGetEventsNearYou();
     //   console.log('user cập nhật');
     // };
-
-    const handleGetNotifications = (idUser?:string) => {
+ 
+    const handleGetNotifications = (idUser?: string) => {
       handleCallAPIGetNotifications(idUser)
       console.log('notification cập nhật123');
     };
@@ -154,7 +185,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     // });
     // socket.on('events', handleEvents);
     // socket.on('updateUser', handleUpdateUser);
-    socket.on('getNotifications', ({idUser})=>{
+    socket.on('getNotifications', ({ idUser }) => {
       handleGetNotifications(idUser)
     })
     return () => {
@@ -169,6 +200,18 @@ const HomeScreen = ({ navigation, route }: any) => {
   //         HandleNotification.checkNotifitionPersion()
   //     }
   // }
+  const handleCallAPIGetOrganizers = async () => {
+    try {
+      const api = apis.organizer.getAll({})
+      const res = await organizerAPI.HandleOrganizer(api)
+      if (res && res.data && res.status === 200) {
+        setOrganizers(res.data)
+      }
+
+    } catch (error) {
+
+    }
+  }
   const getFeatureViewAnimation = (animatedValue: any, outputX: number) => {
     const TRANSLATE_X_INPUT_RANGE = [0, 80];
     const translateY = {
@@ -249,18 +292,18 @@ const HomeScreen = ({ navigation, route }: any) => {
   //     extrapolate: 'clamp',
   //   }),
   // };
-  const viewMoneyAnimation = {
-    transform: [
-      {
-        translateY: animatedValue.interpolate({
-          inputRange: [0, LOWER_HEADER_HEIGHT],
-          outputRange: [0, -96],
-          extrapolate: 'clamp',
+  // const viewMoneyAnimation = {
+  //   transform: [
+  //     {
+  //       translateY: animatedValue.interpolate({
+  //         inputRange: [0, LOWER_HEADER_HEIGHT],
+  //         outputRange: [0, -96],
+  //         extrapolate: 'clamp',
 
-        }),
-      },
-    ],
-  };
+  //       }),
+  //     },
+  //   ],
+  // };
   const headerAnimation = {
     zIndex: animatedValue.interpolate({
       inputRange: [0, 10],
@@ -314,28 +357,28 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
   const getLocationUser = async () => {
-    if (auth.accesstoken) {
-      Geolocation.getCurrentPosition(position => {
-        if (position.coords) {
-          // reverseGeoCode(position.coords.latitude,position.coords.longitude)
-          // if (!auth.position) {
-            console.log("handleCallApiUpdatePostionUser123123")
+    Geolocation.getCurrentPosition(position => {
+      if (position.coords) {
+        handleCallApiGetEventsNearYou({ isLoading: true, position: position.coords })
+        // reverseGeoCode(position.coords.latitude,position.coords.longitude)
+        // if (!auth.position) {
+        if (auth.accesstoken) {
 
-            if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
-              console.log("handleCallApiUpdatePostionUser")
-              handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+          if (position?.coords?.latitude !== auth?.position?.lat && position?.coords?.longitude !== auth?.position?.lng) {
+            handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
             // }
           }
-          // else {
-          //   console.log("handleCallApiUpdatePostionUser")
-          //   handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
-          // }
-
         }
-      }, (error) => {
-        console.log('Lấy vị trí bị lỗi', error)
-      }, {});
-    }
+        // else {
+        //   console.log("handleCallApiUpdatePostionUser")
+        //   handleCallApiUpdatePostionUser(position?.coords?.latitude, position?.coords?.longitude)
+        // }
+
+      }
+    }, (error) => {
+      console.log('Lấy vị trí bị lỗi', error)
+    }, {});
+
   }
   const handleCallApiUpdatePostionUser = async (lat: number, lng: number) => {
     if (auth.accesstoken) {
@@ -360,9 +403,9 @@ const HomeScreen = ({ navigation, route }: any) => {
     setNumberOfUnseenNotifications(numberOfUnseenNotifications);
     setIsViewNotifications(!isCheck)
   }
-  const handleCallAPIGetNotifications = async (idUser?:string) => {
+  const handleCallAPIGetNotifications = async (idUser?: string) => {
     if (auth.accesstoken) {
-      const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id})
+      const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id })
       try {
         const res: any = await notificationAPI.HandleNotification(api)
         if (res && res.data && res.status === 200) {
@@ -385,7 +428,7 @@ const HomeScreen = ({ navigation, route }: any) => {
   }
 
   const handleCallApiGetAllEvent = async (isLoading?: boolean) => {
-    const api = apis.event.getAll({limit:'10'})
+    const api = apis.event.getAll({ limit: '10' })
     setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
@@ -401,12 +444,12 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
 
-  const handleCallApiGetEventsNearYou = async (isLoading?: boolean) => {
+  const handleCallApiGetEventsNearYou = async ({ isLoading, position }: { isLoading?: boolean, position: { latitude: number, longitude: number } }) => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
       setIsLoadingNearEvent(isLoading ? isLoading : false)
       // const api = `/get-events?lat=${auth.position.lat}&long=${auth.position.lng}&distance=${10}&limit=${10}&limitDate=${new Date().toISOString()}`
-      const api = apis.event.getAll({ lat: auth.position.lat.toString(), long: auth.position.lng.toString(), distance: '10', limitDate: `${new Date().toISOString()}`,limit:'10' })
+      const api = apis.event.getAll({ lat: position.latitude.toString(), long: position.longitude.toString(), distance: '10', limitDate: `${new Date().toISOString()}`, limit: '10' })
       try {
         const res: any = await eventAPI.HandleEvent(api, {}, 'get');
         if (res && res.data && res.status === 200) {
@@ -461,8 +504,8 @@ const HomeScreen = ({ navigation, route }: any) => {
       extrapolate: 'clamp',
     }),
   };
-  const checkLogin = ()=>{
-    if(!auth.accesstoken){
+  const checkLogin = () => {
+    if (!auth.accesstoken) {
       navigation.navigate('LoginScreen')
       return false
     }
@@ -498,8 +541,8 @@ const HomeScreen = ({ navigation, route }: any) => {
           </RowComponent>
           <SpaceComponent width={16} />
           <TouchableOpacity onPress={() => {
-            if(checkLogin()){
-              navigation.navigate('NotificationsScreen', { notificationRoute: notifications.slice(0,10) })
+            if (checkLogin()) {
+              navigation.navigate('NotificationsScreen', { notificationRoute: notifications.slice(0, 10) })
             }
           }}>
             <Notification size={22} color={colors.white} />
@@ -592,14 +635,14 @@ const HomeScreen = ({ navigation, route }: any) => {
               </CricleComponent> */}
 
             <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-              if(checkLogin()){
+              if (checkLogin()) {
                 navigation.navigate('FriendsScreen')
               }
             }} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
-                  if(checkLogin()){
+                  if (checkLogin()) {
                     navigation.navigate('FriendsScreen')
                   }
                 }}
@@ -615,14 +658,14 @@ const HomeScreen = ({ navigation, route }: any) => {
           <Animated.View style={[styles.feature, scanViewAnimation]} >
 
             <TouchableOpacity onPress={() => {
-              if(checkLogin()){
+              if (checkLogin()) {
                 console.log("ok")
               }
             }} style={{ alignItems: 'center' }}>
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
-                  if(checkLogin()){
+                  if (checkLogin()) {
                     console.log("ok")
                   }
                 }}
@@ -683,10 +726,10 @@ const HomeScreen = ({ navigation, route }: any) => {
                 horizontal
                 data={allEvent}
                 extraData={refreshList}
-                renderItem={({ item, index }) => <EventItem  item={item} key={item?._id} />}
+                renderItem={({ item, index }) => <EventItem item={item} key={item?._id} />}
               />
             }
-              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
+              messageEmpty={'Không có đơn vị tổ chức nào'}
             />
           }
           <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
@@ -706,29 +749,84 @@ const HomeScreen = ({ navigation, route }: any) => {
                 horizontal
                 data={allEventNear}
                 extraData={refreshList}
-                renderItem={({ item, index }) => <EventItem  item={item} key={item?._id} />}
+                renderItem={({ item, index }) => <EventItem item={item} key={item?._id} />}
               />
             }
               messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
             />
           }
+          <TabBarComponent title="Các đơn vị tổ sự kiện" onPress={() => navigation.navigate('OrganizerNavigator',{
+            // screen:'OrganizerUnfollowedScreen',
+            
+              organizersFollowing: organizers.filter((item)=>followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id)),
+              organizersUnFollowed: organizers.filter((item)=>!followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id))
+             
+          })} />
+          <SpaceComponent height={4} />
+          <DataLoaderComponent data={organizers} isLoading={false} height={appInfo.sizes.HEIGHT * 0.3} children={
+            <SectionComponent styles={{}}>
+              {/* <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={organizers}
+              extraData={refreshList}
+              renderItem={({ item, index }) => <>
+                  
+              </>
+              }
+              /> */}
+              {(organizers && organizers.length > 0) && organizers.slice(0, 3).map((item) => {
+                const isFollowing = followerByIdAuth[0]?.users.length > 0 && followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id)
+                return <>
+                  <RowComponent justify='space-between' key={item.user._id}>
+                    <RowComponent styles={{ alignItems: 'flex-start', width: appInfo.sizes.WIDTH * 0.72 }} onPress={() => {
+                      if (item?.user._id === auth.id) {
+                        { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
+                      }
+                      else {
+                        navigation.navigate("AboutProfileScreen", { uid: item?.user._id, organizer: item })
+                      }
+                    }}>
+                      <AvatarItem size={70} photoUrl={item.user.photoUrl} colorBorderWidth={colors.gray} />
+                      <SpaceComponent width={8} />
+                      <View style={{ flex: 1 }}>
+                        <TextComponent text={item.user.fullname} font={fontFamilies.medium} numberOfLine={1} color={colors.white} />
+                        <TextComponent text={`${item.user.numberOfFollowers} người đang theo dõi`} size={12} color={colors.gray8} />
+                        <TextComponent text={item.user.bio ?? ''} size={10} numberOfLine={2} color={colors.gray4} />
+                      </View>
+                    </RowComponent>
+                    <ButtonComponent 
+                    text={ isFollowing ? "Đã theo dõi" : 'Theo dõi'}
+                    type='primary' 
+                    textSize={10} 
+                    styles={{ paddingVertical: 6, 
+                    paddingHorizontal: 8 }} 
+                    color={isFollowing ? colors.gray8 : colors.primary}
+                    mrBottom={0} 
+                    textColor={isFollowing ? colors.black : colors.white}
+                    width={appInfo.sizes.WIDTH * 0.2} />
+                  </RowComponent>
+                  <SpaceComponent height={16} />
+                </>
+              })
+              }
+            </SectionComponent>
+          }
+            messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
+          />
 
-        {(auth.viewedEvents && auth.viewedEvents.length > 0) && <>
-        <TabBarComponent title="Sự kiện xem gần đây" onPress={() => console.log("ok")} />
-            <DataLoaderComponent data={auth.viewedEvents} isLoading={false} height={appInfo.sizes.HEIGHT * 0.3} children={
-              <FlatList
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                data={auth.viewedEvents}
-                extraData={refreshList}
-                renderItem={({ item, index }) => <EventItem  item={item.event} key={item?.event._id} />}
-              />
+          {(auth.viewedEvents && auth.viewedEvents.length > 0) && <>
+            <TabBarComponent title="Sự kiện xem gần đây" onPress={() => navigation.navigate('ViewedEventScreen', { bgColor: colors.background })} />
+            <DataLoaderComponent data={auth.viewedEvents?.slice(0, 3)} isLoading={false} height={appInfo.sizes.HEIGHT * 0.3} children={
+              <SectionComponent>
+                {auth.viewedEvents.slice(0, 3).map((item) => <EventItemHorizontal bgColor={colors.background} titleColor={colors.white} textCalendarColor={colors.white} item={item.event} key={item?.event._id} />)}
+              </SectionComponent>
             }
               messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
             />
-          
-        </>}
-          <View style={styles.scrollViewContent} />
+
+          </>}
+          {/* <View style={styles.scrollViewContent} /> */}
         </SectionComponent>
       </ScrollView>
     </View>

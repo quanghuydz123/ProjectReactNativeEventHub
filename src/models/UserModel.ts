@@ -22,6 +22,8 @@ export interface UserModel {
       event:EventModelNew,
       createdAt?:Date
     }]
+    numberOfFollowers:{type:number},
+    numberOfFollowing:{type:number}
     idRole:RoleModel
     createAt: string
     updateAt: string

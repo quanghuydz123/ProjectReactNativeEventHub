@@ -15,10 +15,13 @@ import { appInfo } from "../constrants/appInfo"
 import { useNavigation } from "@react-navigation/native"
 interface Props {
     item: EventModelNew,
-    bgColor?: string
+    bgColor?: string,
+    titleColor?:string,
+    textCalendarColor?:string,
+
 }
 const EventItemHorizontal = (props: Props) => {
-    const { item, bgColor } = props
+    const { item, bgColor,titleColor ,textCalendarColor} = props
     const navigation: any = useNavigation()
     return (
         <CardComponent styles={{ paddingVertical: 0, paddingHorizontal: 0, backgroundColor: bgColor ?? colors.white }} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
@@ -41,7 +44,7 @@ const EventItemHorizontal = (props: Props) => {
                 <SpaceComponent width={8} />
                 <View style={{ flex: 1 }}>
 
-                    <TextComponent numberOfLine={1} text={item?.title} title size={14} color={colors.background} />
+                    <TextComponent numberOfLine={1} text={item?.title} title size={14} color={titleColor ??colors.background} />
                     <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
                     <RowComponent styles={{ flexWrap: 'wrap' }}>
                         {
@@ -65,9 +68,9 @@ const EventItemHorizontal = (props: Props) => {
                       (item.usersInterested && item.usersInterested.length > 0) && <AvatarGroup users={item.usersInterested} />
                     } */}
                     <RowComponent>
-                        <Feather name="calendar" size={12} color={colors.background} />
+                        <Feather name="calendar" size={12} color={textCalendarColor ?? colors.background} />
                         <SpaceComponent width={4} />
-                        <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.showTimes[0]?.startDate ?? Date.now()).getDay())} - ${DateTime.GetDateNew1(item?.showTimes[0]?.startDate ?? new Date(), item?.showTimes[0]?.endDate || new Date())} `} color={colors.background} size={12} />
+                        <TextComponent text={`${DateTime.ConvertDayOfWeek(new Date(item?.showTimes[0]?.startDate ?? Date.now()).getDay())} - ${DateTime.GetDateNew1(item?.showTimes[0]?.startDate ?? new Date(), item?.showTimes[0]?.endDate || new Date())} `} color={textCalendarColor ?? colors.background} size={12} />
                     </RowComponent>
                     <RowComponent justify="space-between" styles={{}}>
                         <RowComponent>
