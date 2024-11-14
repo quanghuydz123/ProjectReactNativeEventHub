@@ -20,6 +20,7 @@ import FriendsNavigate from "./FriendsNavigate";
 import TestQrcannerScreen from "../screens/TestQrcannerScreen";
 import ViewedEventScreen from "../screens/profiles/ViewedEventScreen";
 import OrganizerNavigator from "./OrganizerNavigator";
+import TicketNavigator from "./TicketNavigator";
 
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
@@ -136,6 +137,7 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="ViewedEventScreen" component={ViewedEventScreen}/>
         <Stack.Screen name="SearchAndListViewScreen" component={SearchAndListViewScreen}/>
         <Stack.Screen name="OrganizerNavigator" component={OrganizerNavigator}/>
+        <Stack.Screen name="TicketNavigator" component={TicketNavigator}/>
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

@@ -13,6 +13,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { appInfo } from "../constrants/appInfo"
 import { useNavigation } from "@react-navigation/native"
+import { memo } from "react"
 interface Props {
     item: EventModelNew,
     bgColor?: string,
@@ -27,7 +28,7 @@ const EventItemHorizontal = (props: Props) => {
         <CardComponent styles={{ paddingVertical: 0, paddingHorizontal: 0, backgroundColor: bgColor ?? colors.white }} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
             <RowComponent>
                 <View>
-                    <Image source={{ uri: item?.photoUrl }} style={{ width: appInfo.sizes.WIDTH * 0.35, height: 90, borderRadius: 12, resizeMode: 'stretch' }} />
+                    <Image source={{ uri: item?.photoUrl }} style={{ width: appInfo.sizes.WIDTH * 0.35, height: appInfo.sizes.HEIGHT*0.12, borderRadius: 12, resizeMode: 'stretch' }} />
                     {item.statusEvent === 'Ended' && <View style={{
                         position: 'absolute',
                         right: 0,
@@ -94,4 +95,4 @@ const EventItemHorizontal = (props: Props) => {
     )
 }
 
-export default EventItemHorizontal
+export default memo(EventItemHorizontal)

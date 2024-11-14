@@ -20,6 +20,8 @@ import DataLoaderComponent from "./DataLoaderComponent"
 import ListVideoComponent from "./ListVideoComponent"
 import InputSpinnerComponent from "./InputSpinnerComponent"
 import EventItemHorizontal from "./EventItemHorizontal"
+import TicketComponent from "./TicketComponent"
+import ListEventRelatedComponent from "./ListEventRelatedComponent"
 
 export {
     SpaceComponent,
@@ -39,5 +41,7 @@ export {
     EmptyComponent,
     DataLoaderComponent,
     ListVideoComponent,
-    InputSpinnerComponent
+    InputSpinnerComponent,
+    TicketComponent,
+    ListEventRelatedComponent
 }

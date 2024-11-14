@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent, TicketComponent } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Animated, Dimensions, FlatList, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { View } from 'react-native-animatable';
@@ -24,47 +24,25 @@ import ListTicketComponent from './components/ListTicketComponent';
 import { ArrowDown2 } from 'iconsax-react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import WebView from 'react-native-webview';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 const { width } = Dimensions.get('window');
 const TAB_WIDTH = width / 4;
 const EventsScreen = ({ navigation, route }: any) => {
 
 
+  const cardRef = useRef(null); // Tạo tham chiếu cho card dưới
+  const [cardHeitght, setCardHeitght] = useState(appInfo.sizes.HEIGHT * 0.24); // State để lưu width của card dưới
 
 
-
-  const renderTypeTicket = () => {
-    const [activeTab, setActiveTab] = useState(0);
-    const slideAnimation = useRef(new Animated.Value(0)).current;
-
-    const tabs = [
-      { id: 0, title: 'Tất cả' },
-      { id: 1, title: 'Thành công' },
-      { id: 2, title: 'Đang xử lý' },
-      { id: 3, title: 'Đã hủy' },
-    ];
-
-    const handleTabPress = (index: number) => {
-      Animated.spring(slideAnimation, {
-        toValue: index * TAB_WIDTH,
-        useNativeDriver: true,
-        tension: 68,
-        friction: 10,
-      }).start();
-      setActiveTab(index);
-    };
-
-    return (
-      <>
-        
-      </>
-    );
-  }
+  
   return (
     <>
-      <ContainerComponent>
+      <ContainerComponent title={'abc'} bgColor='black'>
         <SectionComponent>
-          <TextComponent text={'abc'}/>
+            <TicketComponent />
+            <TicketComponent />
         </SectionComponent>
       </ContainerComponent>
     </>

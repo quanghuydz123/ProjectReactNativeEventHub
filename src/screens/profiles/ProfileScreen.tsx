@@ -29,6 +29,9 @@ import Ticket from '../../assets/svgs/ticket.svg'
 import BookMark from '../../assets/svgs/bookmark-svgrepo-com.svg'
 import Star from '../../assets/svgs/star.svg'
 import UserGroup from '../../assets/svgs/user-group-svgrepo-com.svg'
+import checkLogin from "../../utils/checkLogin";
+import { EventModelNew } from "../../models/EventModelNew";
+import eventAPI from "../../apis/eventAPI";
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
@@ -46,6 +49,26 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const [isLoadingFollow, setIsLoadingFollow] = useState(false)
   const dispatch = useDispatch()
+   const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
+    useEffect(()=>{
+        haneleGetAPIRelatedEvents()
+    },[])
+    const haneleGetAPIRelatedEvents = async () => {
+        const api = apis.event.getAll({limit:'4'})
+        // setIsLoading(isLoading ? isLoading : false)
+        try {
+          const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+          if (res && res.data && res.status === 200) {
+            setRelatedEvents(res.data as EventModelNew[])
+          }
+          // setIsLoading(false)
+    
+        } catch (error: any) {
+          // setIsLoading(false)
+          const errorMessage = JSON.parse(error.message)
+          console.log("HomeScreen", errorMessage)
+        }
+      }
   useEffect(() => {
     handleGetAllCategory()
   }, [])
@@ -351,10 +374,20 @@ const ProfileScreen = ({ navigation, route }: any) => {
       </SectionComponent>}
       {auth.accesstoken && <SectionComponent isNoPaddingBottom>
         <RowComponent>
-          {renderCardHalf({title:'Vé đã mua',icon:<Ticket />})}
+          {renderCardHalf({title:'Vé đã mua',icon:<Ticket />,onPress:()=>{
+            if(checkLogin(auth,navigation)){
+              navigation.navigate('TicketNavigator',{
+                relatedEvents:relatedEvents
+              })
+            }
+          }})}
           
           <SpaceComponent width={8} />
-          {renderCardHalf({title:'Danh sách theo dõi',icon: <UserGroup />})}
+          {renderCardHalf({title:'Danh sách theo dõi',icon: <UserGroup />, onPress:() => {
+            if(checkLogin(auth,navigation)){
+              navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })
+            }
+          }})}
 
           
         </RowComponent>

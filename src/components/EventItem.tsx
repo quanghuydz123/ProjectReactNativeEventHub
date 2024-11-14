@@ -35,7 +35,7 @@ const EventItem = (props: Props) => {
       {
         isShownVertical ? <>
           <View>
-            <Image source={{ uri: item.photoUrl }} style={{ width: appInfo.sizes.WIDTH*0.45, height: 110, borderRadius: 12, resizeMode: 'stretch' }} />
+            <Image source={{ uri: item.photoUrl }} style={{ width: appInfo.sizes.WIDTH*0.45, height: appInfo.sizes.HEIGHT*0.14, borderRadius: 12, resizeMode: 'stretch' }} />
             {/* <View style={{
               position: 'absolute',
               top: 6,

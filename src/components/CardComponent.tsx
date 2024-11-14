@@ -15,17 +15,19 @@ interface Props{
     colorTitle?:string,
     sizeTitle?:number,
     colorSpace?:string,
-    isNoPadding?:boolean
+    isNoPadding?:boolean,
+    ref?:any,
+    onLayout?:(event:any)=>void
 }
 const CardComponent = (props:Props)=>{
-    const {children,onPress,styles,isShadow,color,title,colorTitle,sizeTitle,colorSpace,isNoPadding} = props
+    const {children,onPress,styles,isShadow,color,title,colorTitle,sizeTitle,colorSpace,isNoPadding,ref,onLayout} = props
     const localStyle:StyleProp<ViewStyle>[] = [globalStyles.card
       ,isShadow ? globalStyles.shadow : undefined,
       {backgroundColor:color ?? colors.white,padding:isNoPadding ? 0 : 10},
       styles]
   const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
   return (
-    <TouchableOpacityComponent onPress={onPress} style={localStyle}>
+    <TouchableOpacityComponent onLayout={onLayout}  ref={ref} onPress={onPress} style={localStyle}>
       {title && <View style={{paddingHorizontal:isNoPadding ? 10 : 0,paddingTop:isNoPadding ? 10 : 0}}>
           <TextComponent text={title} font={fontFamilies.bold}  color={colorTitle} title size={sizeTitle ?? 18}/>
           <SpaceComponent height={10}/>

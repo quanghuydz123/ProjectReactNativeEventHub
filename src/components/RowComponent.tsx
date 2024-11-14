@@ -5,7 +5,7 @@ interface Props{
     justify?: "center" | "flex-start" | "flex-end" | "space-between" | "space-around" | "space-evenly" | undefined,
     styles?: StyleProp<ViewStyle>,
     children:ReactNode,
-    onPress?: ()=>void
+    onPress?: ()=>void,
 
 }
 //activeOpacity click button không bị mờ

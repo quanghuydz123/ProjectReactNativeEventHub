@@ -1,6 +1,6 @@
 import { Alert, Button, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React, { Ref, useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
+import { ButtonComponent, ContainerComponent, DataLoaderComponent, ListEventRelatedComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowDown, ArrowDown2, ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
@@ -607,52 +607,7 @@ const EventDetails = ({ navigation, route }: any) => {
             </View>
             {userSelected.includes(item?._id) ? <AntDesign color={colors.primary} size={18} name="checkcircle" /> : <AntDesign color={colors.gray} size={18} name="checkcircle" />}
           </RowComponent>} />
-        <View style={{ backgroundColor: colors.black }}>
-          <TextComponent
-            text={'Có thể bạn cũng thích'}
-            styles={{ paddingVertical: 10 }}
-            color={colors.white}
-            textAlign="center"
-            font={fontFamilies.bold}
-            size={17}
-          />
-          {(relatedEvents && relatedEvents.length > 0) ? (
-            relatedEvents.reduce((rows:any, event:EventModelNew, index) => {
-              // Mỗi nhóm chứa 2 phần tử
-              if (index % 2 === 0) {
-                rows.push([event]);
-              } else {
-                rows[rows.length - 1].push(event);
-              }
-              return rows;
-            }, []).map((row:EventModelNew[], rowIndex:number) => (
-              <View key={rowIndex} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                {row.map((event) => (
-                  <EventItem
-                    bgColor={colors.black}
-                    item={event}
-                    key={event._id}
-                    isShownVertical={true}
-                  />
-                ))}
-              </View>
-            ))
-          ) : (
-            <View style={{ paddingVertical: 50 }}>
-              <TextComponent text={'Không có sự kiện nào'} color={colors.white} textAlign="center" />
-            </View>
-          )}
-          <SpaceComponent height={10}/>
-          <ButtonComponent type="primary" 
-          text="Xem thêm sự kiện" 
-          width={'auto'} 
-          styles={{borderRadius:100,paddingVertical:8}}
-          textSize={13}
-          mrBottom={0}
-          onPress={() => navigation.push('SearchEventsScreen', {
-          })}
-          />
-        </View>
+        <ListEventRelatedComponent relatedEvents={relatedEvents} />
 
       </ContainerComponent>
       {
