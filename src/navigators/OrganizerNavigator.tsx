@@ -7,7 +7,7 @@ import { fontFamilies } from "../constrants/fontFamilies"
 
 
 const OrganizerNavigator = ({navigation,route}:any)=>{
-    const {organizersFollowing, organizersUnFollowed} = route.params
+    const {organizers} = route.params
     const Tab = createMaterialTopTabNavigator()
     return <>
         <ContainerComponent back title={'Các đơn vị tổ chức'} isHiddenSpaceTop bgColor={colors.background}>
@@ -22,15 +22,15 @@ const OrganizerNavigator = ({navigation,route}:any)=>{
                 },
                 tabBarLabel({focused}){
                     if(route.name === 'OrganizerUnfollowedScreen'){
-                        return <TextComponent text={'Tất cả'} styles={{width:100}} textAlign="center" color={focused ? colors.primary : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                        return <TextComponent text={'Tất cả'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
                     }else{
-                        return <TextComponent text={'Đã theo dõi'} styles={{width:100}} textAlign="center" color={focused ? colors.primary : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                        return <TextComponent text={'Đã theo dõi'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
                     }
                 }
              })}
             >
-                <Tab.Screen name="OrganizerUnfollowedScreen" component={OrganizerUnfollowedScreen} initialParams={{organizersUnFollowed:organizersUnFollowed}}/>
-                <Tab.Screen name="OrganizerFollowingScreen" component={OrganizerFollowingScreen} initialParams={{organizersFollowing:organizersFollowing}}/>
+                <Tab.Screen name="OrganizerUnfollowedScreen" component={OrganizerUnfollowedScreen} initialParams={{organizers:organizers}}/>
+                <Tab.Screen name="OrganizerFollowingScreen" component={OrganizerFollowingScreen} initialParams={{organizers:organizers}}/>
 
             </Tab.Navigator>
         </ContainerComponent>

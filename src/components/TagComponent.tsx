@@ -17,9 +17,11 @@ interface Props {
     textSize?:number
 }
 const TagComponent = (props:Props)=>{
-    const {onPress,label,icon,textColor,bgColor, styles,font,textStyles,textSize} = props
+  const {onPress,label,icon,textColor,bgColor, styles,font,textStyles,textSize} = props
+  const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
+
   return (
-    <TouchableOpacity onPress={onPress} style={[globalStyles.row,globalStyles.tab, {
+    <TouchableOpacityComponent onPress={onPress} style={[globalStyles.row,globalStyles.tab, {
       backgroundColor:bgColor ?? colors.white,
       minWidth:82,
       justifyContent:'center'
@@ -34,7 +36,7 @@ const TagComponent = (props:Props)=>{
         color={textColor ? textColor : bgColor ? colors.white : colors.gray}
         styles={[textStyles]}
         />
-    </TouchableOpacity>
+    </TouchableOpacityComponent>
   )
 }
 export default TagComponent;

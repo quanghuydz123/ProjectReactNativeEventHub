@@ -29,7 +29,13 @@ export interface AuthState {
     viewedEvents: { event: EventModelNew }[];
     numberOfFollowers:number,
     numberOfFollowing:number,
-    follow:FollowModel | null
+    follow:{
+        _id:string,
+        user:string,
+        users:{
+            idUser:string
+        }[]
+    }
 }
 
 const initialState: AuthState = {
@@ -65,7 +71,11 @@ const initialState: AuthState = {
     viewedEvents:[],
     numberOfFollowers:0,
     numberOfFollowing:0,
-    follow:null
+    follow:{
+        _id:'',
+        user:'',
+        users:[]
+    }
 }
 
 const authSlice = createSlice({
@@ -104,9 +114,16 @@ const authSlice = createSlice({
             const { viewedEvents } = action.payload;
             state.authData.viewedEvents = viewedEvents
         },
+        updateFollow:(state,action)=>{
+            const { users } = action.payload;
+            console.log("users",users)
+            // Nếu `state.authData.follow` là null hoặc undefined, tạo một đối tượng mới
+            state.authData.follow.users = users;
+
+        },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateEventsInterested,updateCategoriesInterested,addViewedEvent } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateCategoriesInterested,addViewedEvent } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

@@ -11,6 +11,7 @@ import AvatarItem from "../../components/AvatarItem"
 import { fontFamilies } from "../../constrants/fontFamilies"
 import { appInfo } from "../../constrants/appInfo"
 import { FollowModel } from "../../models/FollowModel"
+import checkLogin from "../../utils/checkLogin"
 
 const removeVietnameseTones = (str:string) => {
     return str
@@ -20,13 +21,22 @@ const removeVietnameseTones = (str:string) => {
         .replace(/Đ/g, 'D');
 };
 const OrganizerUnfollowedScreen = ({ navigation, route }: any) => {
-    const {organizersUnFollowed}:{organizersUnFollowed:OrganizerModel[]} = route.params
+    const auth: AuthState = useSelector(authSelector)
+
+    const {organizers}:{organizers:OrganizerModel[]} = route.params
     // const [organizers,setorganizers] = useState([])
     const [searchKey, setSearchKey] = useState('');
-    const auth: AuthState = useSelector(authSelector)
-    const filteredOrganizers = organizersUnFollowed.filter(item => {
+    const userIds = new Set(auth.follow.users.map(user => user?.idUser));
+
+    const filteredOrganizers = organizers.filter((item) => {
+        if (!item.user || !item.user.fullname) return false; // Kiểm tra null hoặc undefined
+
+        // Kiểm tra nếu item.user._id không nằm trong auth.follow.users
+        if (userIds.has(item.user._id)) return false;
+
         const normalizedSearchKey = removeVietnameseTones(searchKey).toLowerCase();
         const normalizedTitle = removeVietnameseTones(item.user.fullname).toLowerCase();
+
         return normalizedTitle.includes(normalizedSearchKey);
     });
     return (
@@ -75,7 +85,19 @@ const OrganizerUnfollowedScreen = ({ navigation, route }: any) => {
                                                     <TextComponent text={item.user.bio ?? ''} size={10} numberOfLine={2} color={colors.gray4} />
                                                 </View>
                                             </RowComponent>
-                                            <ButtonComponent text='Theo dõi' type='primary' textSize={12} styles={{ paddingVertical: 8, paddingHorizontal: 8 }} mrBottom={0} width={appInfo.sizes.WIDTH * 0.22} />
+                                            <ButtonComponent 
+                                                text='Theo dõi' 
+                                                type='primary' 
+                                                textSize={12} 
+                                                styles={{ paddingVertical: 8, paddingHorizontal: 8 }} 
+                                                mrBottom={0} 
+                                                width={appInfo.sizes.WIDTH * 0.22} 
+                                                onPress={()=>{
+                                                    if(checkLogin(auth,navigation)){
+                                                        console.log("ok")
+                                                    }
+                                                }}  
+                                            />
                                         </RowComponent>
                                         <SpaceComponent height={16} />
                                     </>

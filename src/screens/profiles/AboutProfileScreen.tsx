@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Animated, Image, FlatList } from "react-native"
 
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { LoadingModal } from "../../../modals"
 import followAPI from "../../apis/followAPI"
 import userAPI from "../../apis/userApi"
@@ -13,7 +13,7 @@ import { apis } from "../../constrants/apis"
 import { colors } from "../../constrants/color"
 import { FollowModel } from "../../models/FollowModel"
 import { UserModel } from "../../models/UserModel"
-import { authSelector } from "../../reduxs/reducers/authReducers"
+import { authSelector, AuthState, updateFollow } from "../../reduxs/reducers/authReducers"
 import { globalStyles } from "../../styles/globalStyles"
 import socket from "../../utils/socket"
 import { appInfo } from "../../constrants/appInfo"
@@ -29,23 +29,26 @@ import { convertMoney } from "../../utils/convertMoney"
 import { DateTime } from "../../utils/DateTime"
 import EventItemHorizontal from "../../components/EventItemHorizontal"
 import checkLogin from "../../utils/checkLogin"
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage"
 const AboutProfileScreen = ({ navigation, route }: any) => {
   const { uid, organizer }: { uid: string, organizer: OrganizerModel } = route.params
   const [uidOthor, setUidOther] = useState(uid)
   const [tabSelected, setTabSelected] = useState('about')
   const [isLoading, setIsLoading] = useState(false)
   const [profile, setProfile] = useState<UserModel>()
-  const [follower, setFollower] = useState<FollowModel[]>([])
   const [followerUserOther, setFollowerUserOther] = useState<FollowModel[]>([])
-  const auth = useSelector(authSelector)
+  const auth:AuthState = useSelector(authSelector)
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const [eventCreated, setEventCreated] = useState<EventModelNew[]>([])
   const [width, setWidth] = useState(0)
+  const [isCheckFollow,setIsCheckFollow] = useState(false)
+  const {getItem} = useAsyncStorage('auth')
+  const dispatch = useDispatch()
   useEffect(() => {
     Animated.spring(tabOffsetValue, {
       toValue: width * (tabSelected === 'about' ? 0 : 1),
-      useNativeDriver: true,
+      useNativeDriver: true,  
       speed: 100
     }).start();
   }, [tabSelected])
@@ -65,9 +68,12 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
     handleCallApiGetFollowerUserOtherById(true)
     getEventCreated()
   }, [])
-  useEffect(() => {
-    handleCallApiGetFollowerById(true)
-  }, [auth.id])
+  // useEffect(() => {
+  //   handleCallApiGetFollowerById(true)
+  // }, [auth.id])
+  useEffect(()=>{
+    setIsCheckFollow(((auth?.follow && auth?.follow.users.length > 0) && auth?.follow.users.some(user => user.idUser === uidOthor)) ? true : false )
+  },[uidOthor,auth.follow.users])
   // const renderTabContent = (key: String) => {
   //   let content = <></>
   //   switch (key) {
@@ -122,7 +128,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       try {
         const res: any = await followAPI.HandleFollwer(api, {}, 'get');
         if (res && res.data && res.status === 200) {
-          setFollower(res.data.followers)
+          // setFollower(res.data.followers)
         }
         setIsLoading(false)
 
@@ -134,14 +140,30 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
+  const handleUpdateAuthFollow = async ()=>{
+    const users = [...auth.follow?.users || []]
+    if(isCheckFollow){
+      const index = users.findIndex(item => item.idUser.toString() === uidOthor.toString())
+      users.splice(index, 1)
+    }else{    
+      users.push({idUser:uidOthor})
+    }
+    dispatch(updateFollow({users:users}))
+    await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, follow: {
+      ...auth.follow, // Giữ nguyên các thuộc tính khác của `follow`
+      users: [...users]  // Cập nhật `users`
+    }}))
+  } 
   const handleFollowUser = async () => {
     const api = apis.follow.updateFollowUserOther()
     setIsLoading(true)
     try {
       const res = await followAPI.HandleFollwer(api, { idUser: auth.id, idUserOther: uidOthor }, 'put')
-      if (res && res.data && res.status === 200) {
-        await handleCallApiGetFollowerById()
-        await handleCallApiGetFollowerUserOtherById()
+      if (res && res.status === 200) {
+        setIsCheckFollow(!isCheckFollow)
+        await handleUpdateAuthFollow()
+        // await handleCallApiGetFollowerUserOtherById()
+        // await handleCallApiGetFollowerById()
         // socket.emit('followUser', { idUser: auth?.id })
         // socket.emit('getNotifications', { idUser: auth?.id })
       }
@@ -229,21 +251,22 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
           <RowComponent justify="center">
             <ButtonComponent
 
-              text={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ? "Đã theo dõi" : 'Theo dõi'}
+              text={isCheckFollow ? "Đã theo dõi" : 'Theo dõi'}
               onPress={() => {
                 if(checkLogin(auth,navigation)){
                   handleFollowUser()
                 }
               }}
               type="primary"
-              color={colors.primary}
-              textColor={colors.white}
+              color={isCheckFollow ? colors.gray8 : colors.primary}
+              textColor={isCheckFollow ? colors.gray : colors.white}
               textSize={14}
+              
               width={appInfo.sizes.WIDTH * 0.4}
-              styles={{ borderWidth: 1, borderColor: colors.primary, marginBottom: 0, minHeight: 0, paddingVertical: 12 }}
-              icon={(follower[0]?.users.length > 0 && follower[0]?.users.some(user => user.idUser?._id === uidOthor)) ?
-                <AntDesign name="deleteuser" size={18} color={colors.white} /> :
-                <AntDesign name="adduser" size={18} color={colors.white} />}
+              styles={{ borderWidth: 1, borderColor: isCheckFollow ? colors.gray8 : colors.primary, marginBottom: 0, minHeight: 0, paddingVertical: 12 }}
+              icon={isCheckFollow ?
+                <AntDesign name="deleteuser" size={18} color={isCheckFollow ? colors.gray : colors.white} /> :
+                <AntDesign name="adduser" size={18} color={isCheckFollow ? colors.gray : colors.white} />}
               iconFlex="left"
             />
             <SpaceComponent width={10} />

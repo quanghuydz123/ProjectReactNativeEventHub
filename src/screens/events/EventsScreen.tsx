@@ -56,61 +56,17 @@ const EventsScreen = ({ navigation, route }: any) => {
 
     return (
       <>
-        {/* <View style={styles.container}>
-        <Text style={styles.header}>Vé của tôi</Text>
-        <View style={styles.tabContainer}>
-          <Animated.View
-            style={[
-              styles.slider,
-              {
-                transform: [{ translateX: slideAnimation }],
-              },
-            ]}
-          />
-          {tabs.map((tab, index) => (
-            <TouchableOpacity
-              key={tab.id}
-              style={styles.tab}
-              onPress={() => handleTabPress(index)}
-              activeOpacity={0.7}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === index && styles.activeTabText,
-                ]}
-              >
-                {tab.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View>
-          <Text>123123</Text>
-        </View>
-      </View> */}
-        <ContainerComponent back title="Sự kiện" bgColor={colors.background}>
-          <SectionComponent>
-            <RowComponent justify='center'>
-              <RowComponent styles={{ alignItems: 'flex-start' ,width:appInfo.sizes.WIDTH*0.7}}>
-                <AvatarItem size={70} />
-                <SpaceComponent width={8} />
-                <View style={{ flex: 1 }}>
-                  <TextComponent text={'CÔNG TY TNHH MTV DỊCH VỤ QUẢNG CÁO VÀ TRIỂN LÃM MINH VI - VEAS'} font={fontFamilies.medium} numberOfLine={1} color={colors.white} />
-                  <TextComponent text={'6 người đang theo dõi'} size={12} color={colors.gray8} />
-                  <TextComponent text={'CÔNG TY TNHH MTV DỊCH VỤ QUẢNG CÁO VÀ TRIỂN LÃM MINH VI - VEAS'} size={10} numberOfLine={2} color={colors.gray4} />
-                </View>
-              </RowComponent>
-              <ButtonComponent text='Đã theo dõi' type='primary' textSize={10} styles={{paddingVertical:8,paddingHorizontal:8}} mrBottom={0}  width={'auto'}/>
-            </RowComponent>
-          </SectionComponent>
-        </ContainerComponent>
+        
       </>
     );
   }
   return (
     <>
-      {renderTypeTicket()}
+      <ContainerComponent>
+        <SectionComponent>
+          <TextComponent text={'abc'}/>
+        </SectionComponent>
+      </ContainerComponent>
     </>
   )
 }

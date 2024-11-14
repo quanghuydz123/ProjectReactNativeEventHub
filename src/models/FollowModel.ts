@@ -8,7 +8,5 @@ export interface FollowModel {
     user:UserModel,
     users:{
         idUser:UserModel,
-        status:boolean,
-        idNotification:string
     }[]
 }

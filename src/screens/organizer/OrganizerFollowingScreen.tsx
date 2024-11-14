@@ -10,6 +10,7 @@ import { ToastMessaging } from "../../utils/showToast"
 import AvatarItem from "../../components/AvatarItem"
 import { fontFamilies } from "../../constrants/fontFamilies"
 import { appInfo } from "../../constrants/appInfo"
+import checkLogin from "../../utils/checkLogin"
 
 const removeVietnameseTones = (str:string) => {
     return str
@@ -19,14 +20,27 @@ const removeVietnameseTones = (str:string) => {
         .replace(/Đ/g, 'D');
 };
 const OrganizerFollowingScreen = ({ navigation, route }: any) => {
-    const { organizersFollowing }:{organizersFollowing:OrganizerModel[]} = route.params
+    const { organizers }:{organizers:OrganizerModel[]} = route.params
     const [searchKey, setSearchKey] = useState('');
     const auth: AuthState = useSelector(authSelector)
-    const filteredOrganizers = organizersFollowing.filter(item => {
+    const userIds = new Set(auth.follow.users.map(user => user?.idUser));
+
+    const filteredOrganizers = organizers.filter((item) => {
+        if (!item.user || !item.user.fullname) return false; // Kiểm tra null hoặc undefined
+
+        // Kiểm tra nếu item.user._id không nằm trong auth.follow.users
+        if (!userIds.has(item.user._id)) return false;
+
         const normalizedSearchKey = removeVietnameseTones(searchKey).toLowerCase();
         const normalizedTitle = removeVietnameseTones(item.user.fullname).toLowerCase();
+
         return normalizedTitle.includes(normalizedSearchKey);
     });
+    // const filteredOrganizers = organizers.filter((item)=>auth.follow.users.some(user => user?.idUser === item.user._id)).filter(item => {
+    //     const normalizedSearchKey = removeVietnameseTones(searchKey).toLowerCase();
+    //     const normalizedTitle = removeVietnameseTones(item.user.fullname).toLowerCase();
+    //     return normalizedTitle.includes(normalizedSearchKey);
+    // });
     return (
         <>
             <View style={{ backgroundColor: colors.background, flex: 1, paddingTop: 16 }}>
@@ -81,7 +95,13 @@ const OrganizerFollowingScreen = ({ navigation, route }: any) => {
                                                 textColor={colors.black}
                                                 styles={{ paddingVertical: 8, paddingHorizontal: 8 }}
                                                 mrBottom={0}
-                                                width={appInfo.sizes.WIDTH * 0.22} />
+                                                width={appInfo.sizes.WIDTH * 0.22} 
+                                                onPress={()=>{
+                                                    if(checkLogin(auth,navigation)){
+                                                        console.log("ok")
+                                                    }
+                                                }}
+                                                />
                                         </RowComponent>
                                         <SpaceComponent height={16} />
                                     </>

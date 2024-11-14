@@ -765,9 +765,9 @@ const HomeScreen = ({ navigation, route }: any) => {
           }
           <TabBarComponent title="Các đơn vị tổ sự kiện" onPress={() => navigation.navigate('OrganizerNavigator',{
             // screen:'OrganizerUnfollowedScreen',
-            
-              organizersFollowing: organizers.filter((item)=>followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id)),
-              organizersUnFollowed: organizers.filter((item)=>!followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id))
+              organizers:organizers,
+              // organizersFollowing: organizers.filter((item)=>auth.follow.users.some(user => user?.idUser === item.user._id)),
+              // organizersUnFollowed: organizers.filter((item)=>!auth.follow.users.some(user => user?.idUser === item.user._id))
              
           })} />
           <SpaceComponent height={4} />
@@ -784,7 +784,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               }
               /> */}
               {(organizers && organizers.length > 0) && organizers.slice(0, 3).map((item) => {
-                const isFollowing = followerByIdAuth[0]?.users.length > 0 && followerByIdAuth[0]?.users.some(user => user.idUser?._id === item.user._id)
+                const isFollowing = auth.follow.users.length > 0 && auth.follow.users.some(user => user.idUser === item.user._id)
                 return <>
                   <RowComponent justify='space-between' key={item.user._id}>
                     <RowComponent styles={{ alignItems: 'flex-start', width: appInfo.sizes.WIDTH * 0.72 }} onPress={() => {

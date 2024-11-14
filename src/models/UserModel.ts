@@ -21,7 +21,7 @@ export interface UserModel {
     viewedEvents:[{
       event:EventModelNew,
       createdAt?:Date
-    }]
+    }] | []
     numberOfFollowers:{type:number},
     numberOfFollowing:{type:number}
     idRole:RoleModel
