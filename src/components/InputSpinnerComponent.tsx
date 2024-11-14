@@ -48,13 +48,14 @@ const InputSpinnerComponent = (props:Props) => {
     return (
         <RowComponent>
             <TouchableOpacity style={{
-                backgroundColor: colors.white, width: 40,
+                backgroundColor: colors.white, 
+                width: 40,
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 4,
                 borderWidth: 1,
                 borderColor: disableDec ? colors.gray4 : colors.primary,
-                height: 40
+                height: 40,
             }}
                 activeOpacity={1}
                 onPress={()=>handleDecValue()}

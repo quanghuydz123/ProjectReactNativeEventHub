@@ -88,7 +88,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
 
-
   // const maxHeight = animatedValue.interpolate({
   //   inputRange: [0, LOWER_HEADER_HEIGHT],
   //   outputRange: [96,0],
@@ -97,20 +96,27 @@ const HomeScreen = ({ navigation, route }: any) => {
   useEffect(() => {
     HandleNotification.checkNotifitionPersion(dispatch)
     messaging().onMessage(async (mess: FirebaseMessagingTypes.RemoteMessage) => {
+      console.log("messasdsad",mess)
+      handleCallAPIGetNotifications()
       ToastMessaging.Success({
         message: `${mess.notification?.body}`, title: `${mess.notification?.title}`,
         onPress: () => {
           if (mess.data) {
-            navigation.navigate('EventDetails', { id: mess?.data.id })
+            if(mess.data.type==='InviteUserToEvent'){
+              navigation.navigate('EventDetails', { id: mess?.data.id })
+            }
           }
-        }
+        },
+        visibilityTime:3000
       })
     })
 
     messaging().getInitialNotification().then((mess: any) => {  //Xử khi người dùng tắt app và ấn thông 
       console.log("messmess", mess)
-      if (mess?.data?.id) {
-        handleLinking(`eventhub://app/detail/${mess.data.id}`)
+      if(mess?.data?.type==='InviteUserToEvent'){
+        if (mess?.data?.id) {
+          handleLinking(`com.appeventhubmoinhat123://app/detail/${mess.data.id}`)
+        }
       }
     })
   }, [])
@@ -542,6 +548,8 @@ const HomeScreen = ({ navigation, route }: any) => {
           <SpaceComponent width={16} />
           <TouchableOpacity onPress={() => {
             if (checkLogin()) {
+              setNumberOfUnseenNotifications(0)
+              setIsViewNotifications(true)
               navigation.navigate('NotificationsScreen', { notificationRoute: notifications.slice(0, 10) })
             }
           }}>
@@ -729,7 +737,7 @@ const HomeScreen = ({ navigation, route }: any) => {
                 renderItem={({ item, index }) => <EventItem item={item} key={item?._id} />}
               />
             }
-              messageEmpty={'Không có đơn vị tổ chức nào'}
+              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
             />
           }
           <TabBarComponent title="Danh mục" onPress={() => console.log("ok")} isNotShowIconRight titleRight='' />
@@ -812,7 +820,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               }
             </SectionComponent>
           }
-            messageEmpty={'Không có sự kiên nào gần chỗ bạn'}
+            messageEmpty={'Đang tải...'}
           />
 
           {(auth.viewedEvents && auth.viewedEvents.length > 0) && <>

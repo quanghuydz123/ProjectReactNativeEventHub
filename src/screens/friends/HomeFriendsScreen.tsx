@@ -108,7 +108,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             setIsLoadingModal(false)
             if (res && res.status === 200) {
                 handleRemoveNotification(notification)
-                socket.emit('getNotifications',{idUser: auth?.id})
+                // socket.emit('getNotifications',{idUser: auth?.id})
             }
         } catch (error: any) {
             const errorMessage = JSON.parse(error.message)
@@ -128,8 +128,8 @@ const HomeFriendsScreen = ({ navigation }: any) => {
             setIsLoadingModal(false)
             if (res && res.status === 200) {
                 handleRemoveNotification(notification)
-                socket.emit('getNotifications',{idUser: auth?.id})
-                socket.emit('followUser',{idUser:auth?.id})
+                // socket.emit('getNotifications',{idUser: auth?.id})
+                // socket.emit('followUser',{idUser:auth?.id})
             }
         } catch (error: any) {
             const errorMessage = JSON.parse(error.message)
@@ -209,7 +209,7 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                         styles={{
                             paddingVertical: 8,
                             paddingHorizontal: 8,
-                            maxWidth: appInfo.sizes.WIDTH * 0.4
+                            width:'auto'
                         }}
                     />
                 </RowComponent>

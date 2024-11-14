@@ -11,11 +11,22 @@ import AvatarItem from "../../components/AvatarItem"
 import { fontFamilies } from "../../constrants/fontFamilies"
 import { appInfo } from "../../constrants/appInfo"
 
-
+const removeVietnameseTones = (str:string) => {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D');
+};
 const OrganizerFollowingScreen = ({ navigation, route }: any) => {
-    const { organizersFollowing } = route.params
+    const { organizersFollowing }:{organizersFollowing:OrganizerModel[]} = route.params
     const [searchKey, setSearchKey] = useState('');
     const auth: AuthState = useSelector(authSelector)
+    const filteredOrganizers = organizersFollowing.filter(item => {
+        const normalizedSearchKey = removeVietnameseTones(searchKey).toLowerCase();
+        const normalizedTitle = removeVietnameseTones(item.user.fullname).toLowerCase();
+        return normalizedTitle.includes(normalizedSearchKey);
+    });
     return (
         <>
             <View style={{ backgroundColor: colors.background, flex: 1, paddingTop: 16 }}>
@@ -33,7 +44,7 @@ const OrganizerFollowingScreen = ({ navigation, route }: any) => {
                 <SectionComponent styles={{ flex: 1 }}>
                     <DataLoaderComponent
                         isFlex
-                        data={organizersFollowing as OrganizerModel[]}
+                        data={filteredOrganizers}
                         isLoading={false}
                         messageEmpty="Không có tổ chức nào phù hợp"
                         messTextColor={colors.white}
@@ -41,7 +52,7 @@ const OrganizerFollowingScreen = ({ navigation, route }: any) => {
                         children={
                             <FlatList
                                 showsVerticalScrollIndicator={false}
-                                data={organizersFollowing as OrganizerModel[]}
+                                data={filteredOrganizers}
                                 keyExtractor={(item) => item._id} // đảm bảo mỗi item có một key duy nhất
                                 renderItem={({ item }) => (
                                     <>

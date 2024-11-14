@@ -101,7 +101,7 @@ const ListVideoComponent = () => {
                                 color={colors.white}
                                 textColor={colors.background}
                                 type='primary'
-                                width={appInfo.sizes.WIDTH * 0.26}
+                                width={'auto'}
                                 textSize={12}
                                 styles={{ minHeight: 0, paddingVertical: 8 }}
                                 alignItems='flex-start'

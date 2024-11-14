@@ -71,7 +71,7 @@ const App = () => {
               const currentRoute = state.routes[state.index];
               setNameScreenPresent(currentRoute.name)
             }}
-            
+            linking={linking}
             
           > 
             <PaperProvider>

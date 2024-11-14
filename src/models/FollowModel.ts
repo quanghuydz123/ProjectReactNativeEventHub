@@ -6,8 +6,6 @@ import { CategoryModel } from "./CategoryModel";
 export interface FollowModel {
     _id: string,
     user:UserModel,
-    events:EventModelNew[],
-    categories:CategoryModel[],
     users:{
         idUser:UserModel,
         status:boolean,

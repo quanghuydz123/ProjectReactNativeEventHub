@@ -110,6 +110,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     styles={{
                         paddingVertical: 2,
                         minWidth: 20,
+                        
                     }}
                 />
             } else if (typeTicket.status === 'Ended') {

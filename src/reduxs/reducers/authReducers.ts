@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RoleModel } from "../../models/RoleModel";
 import { CategoryModel } from "../../models/CategoryModel";
 import { EventModelNew } from "../../models/EventModelNew";
+import { FollowModel } from "../../models/FollowModel";
 
 export interface AuthState {
     id: string,
@@ -27,7 +28,8 @@ export interface AuthState {
     }],
     viewedEvents: { event: EventModelNew }[];
     numberOfFollowers:number,
-    numberOfFollowing:number
+    numberOfFollowing:number,
+    follow:FollowModel | null
 }
 
 const initialState: AuthState = {
@@ -62,7 +64,8 @@ const initialState: AuthState = {
     }],
     viewedEvents:[],
     numberOfFollowers:0,
-    numberOfFollowing:0
+    numberOfFollowing:0,
+    follow:null
 }
 
 const authSlice = createSlice({

@@ -37,7 +37,6 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
   const [profile, setProfile] = useState<UserModel>()
   const [follower, setFollower] = useState<FollowModel[]>([])
   const [followerUserOther, setFollowerUserOther] = useState<FollowModel[]>([])
-  const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
   const auth = useSelector(authSelector)
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
@@ -56,7 +55,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
     content: ''
   }, {
     key: 'events',
-    title: `Sự kiện đã tổ chức (${eventCreated?.length ?? 0})`,
+    title: `Sự kiện tổ chức (${eventCreated?.length ?? 0})`,
     content: ''
   }
   ]
@@ -143,8 +142,8 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       if (res && res.data && res.status === 200) {
         await handleCallApiGetFollowerById()
         await handleCallApiGetFollowerUserOtherById()
-        socket.emit('followUser', { idUser: auth?.id })
-        socket.emit('getNotifications', { idUser: auth?.id })
+        // socket.emit('followUser', { idUser: auth?.id })
+        // socket.emit('getNotifications', { idUser: auth?.id })
       }
       setIsLoading(false)
     } catch (error: any) {

@@ -102,9 +102,9 @@ const EventDetails = ({ navigation, route }: any) => {
       const res = await eventAPI.HandleEvent(apis.event.getById(id))
       if (res && res.data && res.status === 200) {
         setEvent(res.data as EventModelNew)
-        setIsLoading(false)
 
       }
+      setIsLoading(false)
 
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -232,7 +232,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res = await notificationAPI.HandleNotification(api, { SenderID: auth.id, RecipientIds: userSelected, eventId: event?._id }, 'post')
         if (res && res.status === 200 && res.data) {
-          socket.emit('getNotifications', { idUser: auth.id })
+          // socket.emit('getNotifications', { idUser: auth.id })
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)
@@ -268,7 +268,6 @@ const EventDetails = ({ navigation, route }: any) => {
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
-  console.log("setIsLoadingChoseShowTime", isLoadingChoseShowTime)
   const renderButton = () => {
     let text = 'Mua vé ngay'
     let disable = false

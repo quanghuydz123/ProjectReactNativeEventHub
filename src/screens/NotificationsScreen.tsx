@@ -95,7 +95,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await notificationAPI.HandleNotification(api, { uid: user.id }, 'put')
       if (res && res.status === 200) {
-        socket.emit('getNotifications',{idUser: auth?.id})
+        // socket.emit('getNotifications',{idUser: auth?.id})
 
       }
     } catch (error: any) {
@@ -114,7 +114,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
       setIsLoadingModal(false)
       if (res && res.status === 200) {
-        socket.emit('getNotifications',{idUser: auth?.id})
+        // socket.emit('getNotifications',{idUser: auth?.id})
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -133,8 +133,8 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
       setIsLoadingModal(false)
       if (res && res.status === 200) {
-        socket.emit('getNotifications',{idUser: auth?.id})
-        socket.emit('followUser',{idUser:auth?.id})
+        // socket.emit('getNotifications',{idUser: auth?.id})
+        // socket.emit('followUser',{idUser:auth?.id})
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
