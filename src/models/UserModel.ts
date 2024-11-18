@@ -13,7 +13,22 @@ export interface UserModel {
     position?:{
       lat:number,
       lng:number
-    }
+    },
+    address:{
+      province:{
+          name:{type:string},
+          code:{type:number},
+      },
+      districts:{
+          name:{type:string},
+          code:{type:number},
+      },
+      ward:{
+          name:{type:string},
+          code:{type:number},
+      },
+      houseNumberAndStreet:{type:string}
+    },
     eventsInterested?:{
       event:string,
       createdAt:Date

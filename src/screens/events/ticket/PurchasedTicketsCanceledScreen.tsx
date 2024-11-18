@@ -7,16 +7,15 @@ import { EventModelNew } from "../../../models/EventModelNew";
 import { appInfo } from "../../../constrants/appInfo";
 
 
-const PurchasedTicketsEndScreen = ({ navigation, route }: any)=>{
+const PurchasedTicketsCanceledScreen = ({ navigation, route }: any)=>{
     const [searchKey, setSearchKey] = useState('');
     const {relatedEvents }:{relatedEvents:EventModelNew[]} = route.params
-
     return (
         <View style={{backgroundColor:colors.black,flex:1,paddingTop:12}}>
            
             <ScrollView style={{ flex: 1 }}>
                 {Array.from({ length: 2 }).map((item, index) => {
-                    return <TicketComponent key={index} />
+                    return <TicketComponent status="Canceled" key={index} />
                 })}
                 <SpaceComponent height={10}/>
                 <SpaceComponent height={1} color={colors.gray} width={appInfo.sizes.WIDTH} styles={{}} />
@@ -28,4 +27,4 @@ const PurchasedTicketsEndScreen = ({ navigation, route }: any)=>{
     )
 }
 
-export default PurchasedTicketsEndScreen
+export default PurchasedTicketsCanceledScreen

@@ -124,7 +124,7 @@ const ListTicketComponent = (props:Props) => {
         <RowComponent>
           <SimpleLineIcons name={isActive ? "arrow-down" : "arrow-right"} size={12} color={colors.white} />
           <SpaceComponent width={12} />
-          <View>
+          <View style={{}}>
             <TextComponent text={`${DateTime.GetTime(section?.startDate)} - ${DateTime.GetTime(section?.endDate)}`} color={colors.white} size={13} font={fontFamilies.medium} />
             <TextComponent text={DateTime.GetDateNew1(section?.startDate,section?.endDate)} color={colors.white} size={13} font={fontFamilies.medium} />
           </View>

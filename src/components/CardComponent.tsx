@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { memo, ReactNode } from "react"
+import React, { forwardRef, memo, ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import { colors } from "../constrants/color"
 import TextComponent from "./TextComponent"
@@ -16,11 +16,11 @@ interface Props{
     sizeTitle?:number,
     colorSpace?:string,
     isNoPadding?:boolean,
-    ref?:any,
     onLayout?:(event:any)=>void
 }
-const CardComponent = (props:Props)=>{
-    const {children,onPress,styles,isShadow,color,title,colorTitle,sizeTitle,colorSpace,isNoPadding,ref,onLayout} = props
+//phải có forwardRef<any, Props> khi sủ dụng ref chú không truyền trên props
+const CardComponent =  forwardRef<any, Props>((props:Props,ref:any)=>{
+    const {children,onPress,styles,isShadow,color,title,colorTitle,sizeTitle,colorSpace,isNoPadding,onLayout} = props
     const localStyle:StyleProp<ViewStyle>[] = [globalStyles.card
       ,isShadow ? globalStyles.shadow : undefined,
       {backgroundColor:color ?? colors.white,padding:isNoPadding ? 0 : 10},
@@ -37,5 +37,5 @@ const CardComponent = (props:Props)=>{
       {children}
     </TouchableOpacityComponent >
   )
-}
+})
 export default memo(CardComponent);

@@ -28,7 +28,6 @@ const LoginScreen = ({ navigation,route }: any) => {
 
   const [isLoading,setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  console.log(emailRoute)
   useEffect(() => {
     if(emailRoute && passwordRoute && status === 200){ //xử lý người dùng đăng ký tài khoản thành công
       setEmail(emailRoute)
@@ -54,6 +53,7 @@ const LoginScreen = ({ navigation,route }: any) => {
         setIsLoading(true)
         try {
           const res:any = await authenticationAPI.HandleAuthentication(apis.auth.login(), { email, password }, 'post');
+
           // if (isRemember) {
           //   await AsyncStorage.setItem('isRemember', 'true')
           //   await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'account'}))

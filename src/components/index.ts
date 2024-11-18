@@ -22,6 +22,7 @@ import InputSpinnerComponent from "./InputSpinnerComponent"
 import EventItemHorizontal from "./EventItemHorizontal"
 import TicketComponent from "./TicketComponent"
 import ListEventRelatedComponent from "./ListEventRelatedComponent"
+import SelectDropdownComponent from "./SelectDropdownComponent"
 
 export {
     SpaceComponent,
@@ -43,5 +44,6 @@ export {
     ListVideoComponent,
     InputSpinnerComponent,
     TicketComponent,
-    ListEventRelatedComponent
+    ListEventRelatedComponent,
+    SelectDropdownComponent
 }

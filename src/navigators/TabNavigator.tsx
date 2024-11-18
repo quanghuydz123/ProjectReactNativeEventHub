@@ -54,7 +54,7 @@ const TabNavigator = ({navigation}:any) => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          height: Platform.OS === 'ios' ? 80 : appInfo.sizes.HEIGHT*0.074,
+          height: Platform.OS === 'ios' ? 80 : 62,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: '#38373c',
@@ -139,7 +139,7 @@ const TabNavigator = ({navigation}:any) => {
       position:'absolute',
       width:width,
       backgroundColor:colors.primary,
-      bottom:appInfo.sizes.HEIGHT*0.074 - 2,
+      bottom:60,
       left:0,
       borderRadius:100,
       marginHorizontal:12,

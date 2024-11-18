@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent, TicketComponent } from '../../components';
+import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, ListVideoComponent, RowComponent, SectionComponent, SelectDropdownComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent, TicketComponent } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Animated, Dimensions, FlatList, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { View } from 'react-native-animatable';
@@ -27,6 +27,8 @@ import WebView from 'react-native-webview';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import SelectDropdown from 'react-native-select-dropdown'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const { width } = Dimensions.get('window');
 const TAB_WIDTH = width / 4;
 const EventsScreen = ({ navigation, route }: any) => {
@@ -36,13 +38,12 @@ const EventsScreen = ({ navigation, route }: any) => {
   const [cardHeitght, setCardHeitght] = useState(appInfo.sizes.HEIGHT * 0.24); // State để lưu width của card dưới
 
 
-  
   return (
     <>
-      <ContainerComponent title={'abc'} bgColor='black'>
+      <ContainerComponent title={'abc'} bgColor={colors.white}>
         <SectionComponent>
-            <TicketComponent />
-            <TicketComponent />
+          {/* <SelectDropdownComponent  /> */}
+          <TextComponent text={'abc'}/>
         </SectionComponent>
       </ContainerComponent>
     </>
@@ -52,42 +53,45 @@ const EventsScreen = ({ navigation, route }: any) => {
 
 export default EventsScreen;
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#22C55E',
-    paddingTop: 20,
-  },
-  header: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  tabContainer: {
+  dropdownButtonStyle: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#E9ECEF',
+    borderRadius: 12,
     flexDirection: 'row',
-    position: 'relative',
-    height: 40,
-  },
-  tab: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 12,
   },
-  tabText: {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 14,
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 18,
     fontWeight: '500',
+    color: '#151E26',
   },
-  activeTabText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
   },
-  slider: {
-    position: 'absolute',
-    bottom: 0,
-    width: TAB_WIDTH,
-    height: 3,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 3,
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+    marginTop:-appInfo.sizes.WIDTH*0.08,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    color: '#151E26',
   },
 });

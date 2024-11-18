@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { EventModelNew } from "../models/EventModelNew"
 import { apis } from "../constrants/apis"
 import eventAPI from "../apis/eventAPI"
+import { PurchasedTicketsCanceledScreen } from "../screens"
 
 
 const TicketNavigator = ({navigation,route}:any)=>{
@@ -41,7 +42,7 @@ const TicketNavigator = ({navigation,route}:any)=>{
                 
                 tabBarStyle:{
                     backgroundColor:colors.black,
-                    marginHorizontal:appInfo.sizes.WIDTH*0.24,
+                    marginHorizontal:appInfo.sizes.WIDTH*0.14,
                     
                 },
                 tabBarIndicatorStyle:{
@@ -50,15 +51,19 @@ const TicketNavigator = ({navigation,route}:any)=>{
                 },
                 tabBarLabel({focused}){
                     if(route.name === 'PurchasedTicketNotStartedScreen'){
-                        return <TextComponent text={'Sắp diễn ra'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
-                    }else{
-                        return <TextComponent text={'Đã kết thúc'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                        return <TextComponent text={'Sắp diễn ra'} styles={{width:120}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                    }else if(route.name === 'PurchasedTicketsEndScreen'){
+                        return <TextComponent text={'Đã kết thúc'} styles={{width:120}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                    }else if(route.name === 'PurchasedTicketsCanceledScreen'){
+                        return <TextComponent text={'Đã bị hủy'} styles={{width:120}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+
                     }
                 }
              })}
             >
                 <Tab.Screen name="PurchasedTicketNotStartedScreen" component={PurchasedTicketNotStartedScreen} initialParams={{relatedEvents:relatedEvents}}/>
                 <Tab.Screen name="PurchasedTicketsEndScreen" component={PurchasedTicketsEndScreen} initialParams={{relatedEvents:relatedEvents}}/>
+                <Tab.Screen name="PurchasedTicketsCanceledScreen" component={PurchasedTicketsCanceledScreen} initialParams={{relatedEvents:relatedEvents}}/>
 
             </Tab.Navigator>
         </ContainerComponent>

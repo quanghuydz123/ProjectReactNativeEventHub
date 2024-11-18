@@ -784,7 +784,7 @@ const HomeScreen = ({ navigation, route }: any) => {
               }
               /> */}
               {(organizers && organizers.length > 0) && organizers.slice(0, 3).map((item) => {
-                const isFollowing = auth.follow.users.length > 0 && auth.follow.users.some(user => user.idUser === item.user._id)
+                const isFollowing = auth?.follow?.users.length > 0 && auth?.follow?.users.some(user => user.idUser === item.user._id)
                 return <>
                   <RowComponent justify='space-between' key={item.user._id}>
                     <RowComponent styles={{ alignItems: 'flex-start', width: appInfo.sizes.WIDTH * 0.72 }} onPress={() => {

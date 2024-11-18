@@ -4,6 +4,7 @@ import OrganizerFollowingScreen from "../screens/organizer/OrganizerFollowingScr
 import { ContainerComponent, SpaceComponent, TextComponent } from "../components"
 import { colors } from "../constrants/color"
 import { fontFamilies } from "../constrants/fontFamilies"
+import { appInfo } from "../constrants/appInfo"
 
 
 const OrganizerNavigator = ({navigation,route}:any)=>{
@@ -16,15 +17,16 @@ const OrganizerNavigator = ({navigation,route}:any)=>{
                 
                 tabBarStyle:{
                     backgroundColor:colors.background,
+
                 },
                 tabBarIndicatorStyle:{
                     backgroundColor:colors.primary,
                 },
                 tabBarLabel({focused}){
                     if(route.name === 'OrganizerUnfollowedScreen'){
-                        return <TextComponent text={'Tất cả'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                        return <TextComponent text={'Tất cả'} styles={{width:120}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
                     }else{
-                        return <TextComponent text={'Đã theo dõi'} styles={{width:100}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
+                        return <TextComponent text={'Đã theo dõi'} styles={{width:120}} textAlign="center" color={focused ? colors.white : colors.gray4} font={ focused ? fontFamilies.semiBold : fontFamilies.medium}/>
                     }
                 }
              })}

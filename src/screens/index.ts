@@ -32,6 +32,8 @@ import InvoiceComfirmScreen from "./events/payment/InvoiceComfirmScreen"
 import SearchAndListViewScreen from "./SearchAndListViewScreen"
 import OrganizerFollowingScreen from "./organizer/OrganizerFollowingScreen"
 import OrganizerUnfollowedScreen from "./organizer/OrganizerUnfollowedScreen"
+import PurchasedTicketsDetailsScreen from "./events/ticket/PurchasedTicketsDetailsScreen"
+import PurchasedTicketsCanceledScreen from "./events/ticket/PurchasedTicketsCanceledScreen"
 
 export {
     HomeScreen,
@@ -65,5 +67,7 @@ export {
     PaymentSucessScreen,
     QuestionScreen,
     InvoiceComfirmScreen,
-    SearchAndListViewScreen
+    SearchAndListViewScreen,
+    PurchasedTicketsDetailsScreen,
+    PurchasedTicketsCanceledScreen
 }
