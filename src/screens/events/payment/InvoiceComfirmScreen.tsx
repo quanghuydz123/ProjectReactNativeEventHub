@@ -20,9 +20,9 @@ import { RadioButton } from "react-native-paper"
 import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group"
 import { size } from "lodash"
 import axios from "axios"
-import { authSelector } from "../../../reduxs/reducers/authReducers"
+import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers"
 import { LoadingModal } from "../../../../modals"
-
+import AntDesign from 'react-native-vector-icons/AntDesign'
 const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
@@ -30,7 +30,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const [methodPayment, setMethodPayment] = useState('first');
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [isLoading,setIsLoading] = useState(false)
-    const auth = useSelector(authSelector)
+    const auth:AuthState = useSelector(authSelector)
     useEffect(() => {
         if (paymentUrl) {
             navigation.navigate('PaymentScreen', { url: paymentUrl })
@@ -180,14 +180,49 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                         </SectionComponent>
                     </View>
                 </LinearGradient>
-                <SpaceComponent height={8} />
+                <SpaceComponent height={12}/>
+                <SectionComponent >
+                    <CardComponent>
+                        <RowComponent styles={{alignItems:'flex-start',paddingRight:12}}>
+                        <AntDesign size={10} name="warning" style={{marginTop:4}}/>
+                        <SpaceComponent width={6}/>
+                        <Text>
+                            Lưu ý kiểm tra thông tin nhận vé. Nếu có thay đổi, vui lòng
+                            <Text style={{color:colors.blue}} onPress={() => navigation.navigate('EditProfileScreen')}> cập nhập tại đây</Text>
+                        </Text>
+                        </RowComponent>
+                    </CardComponent>
+                </SectionComponent>
                 <SectionComponent>
                     <CardComponent color={colors.background1}>
                         <RowComponent justify="space-between">
                             <TextComponent text={'Thông tin nhận vé'} color={colors.primary} font={fontFamilies.medium} size={16} />
-                            <TextComponent text={'Sửa'} color={colors.primary} font={fontFamilies.medium} size={16} />
+                            <ButtonComponent text="Sửa" textSize={16} textColor={colors.primary} 
+                                onPress={() => navigation.navigate('EditProfileScreen')}
+                            />
                         </RowComponent>
+                        <SpaceComponent height={16}/>
+                        <View>
+                            <RowComponent>
+                                <TextComponent text={auth?.fullname ?? ''} font={fontFamilies.medium} color={colors.white}/>
+                                <SpaceComponent width={8}/>
+                                <TextComponent text={auth?.phoneNumber ?? ''} color={colors.white}/>
+                            </RowComponent>
+                            <SpaceComponent height={8}/>
+                            <TextComponent text={auth?.email ?? ''} font={fontFamilies.medium} color={colors.white}/>
+                            <SpaceComponent height={8}/>
+                            <TextComponent 
+                                size={14} 
+                                text={[
+                                    auth?.address?.houseNumberAndStreet,
+                                    auth?.address?.ward?.name,
+                                    auth?.address?.districts?.name,
+                                    auth?.address?.province?.name
+                                ].filter(Boolean).join(', ')} 
+                                color={colors.white} 
+                            />
 
+                        </View>
 
                     </CardComponent>
                 </SectionComponent>

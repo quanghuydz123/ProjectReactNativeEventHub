@@ -38,9 +38,9 @@ export interface UserModel {
       createdAt?:Date
     }] | []
     numberOfFollowers:{type:number},
-    numberOfFollowing:{type:number}
-    idRole:RoleModel
-    createAt: string
-    updateAt: string
+    numberOfFollowing:{type:number},
+    idRole:RoleModel,
+    createAt: string,
+    updateAt: string,
     __v: number
   }

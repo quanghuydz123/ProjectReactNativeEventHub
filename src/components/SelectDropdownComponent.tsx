@@ -56,7 +56,7 @@ const SelectDropdownComponent = (props:Props) => {
         valueField="code"
         placeholder={!isFocus ? titleButton : titlePlaceholder}
         searchPlaceholder="Search..."
-        value={valueSelected.code.toString()}
+        value={valueSelected?.code?.toString() ?? '0'}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {

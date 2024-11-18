@@ -5,7 +5,7 @@ import { ButtonComponent, ContainerComponent, InputComponent, SectionComponent, 
 import userAPI from "../../apis/userApi"
 import { LoadingModal } from "../../../modals"
 import { useDispatch, useSelector } from "react-redux"
-import { addAuth, authSelector } from "../../reduxs/reducers/authReducers"
+import { addAuth, authSelector, AuthState } from "../../reduxs/reducers/authReducers"
 import socket from "../../utils/socket"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { ImageOrVideo } from "react-native-image-crop-picker"
@@ -27,50 +27,74 @@ interface Ward {
     name: string;
 }
 const EditProfileScreen = ({ navigation, route }: any) => {
-    const { profile }: { profile: UserModel } = route.params
-    const [profileData, setProfileData] = useState<UserModel>(profile)
+    const auth:AuthState = useSelector(authSelector)
+    const [profileData, setProfileData] = useState<{
+        fullname:string,
+        phoneNumber:string,
+        bio:string,
+        _id:string,
+        photoUrl:string,
+        address:{
+            province:{
+                name:string,
+                code:number,
+            },
+            districts:{
+                name:string,
+                code:number,
+            },
+            ward:{
+                name:string,
+                code:number,
+            },
+            houseNumberAndStreet:string
+          },
+    }>({
+        fullname:auth.fullname,
+        phoneNumber:auth.phoneNumber,
+        bio:auth.bio,
+        _id:auth.id,
+        photoUrl:auth.photoUrl,
+        address:auth.address
+
+    })
     const [isLoading, setIsLoading] = useState(false)
-    const auth = useSelector(authSelector)
     const dispatch = useDispatch()
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
-    const [selectedProvince, setSelectedProvince] = useState<Province>({
-        name:'',
-        code:0
-    });
-    const [selectedDistrict, setSelectedDistrict] = useState<District>({
-        name:'',
-        code:0
-    });
-    const [selectedWard, setSelectedWard] = useState({
-        name:'',
-        code:0
-    });
+    // const [selectedProvince, setSelectedProvince] = useState<Province>({
+    //     name:'',
+    //     code:0
+    // });
+    // const [selectedDistrict, setSelectedDistrict] = useState<District>({
+    //     name:'',
+    //     code:0
+    // });
+    // const [selectedWard, setSelectedWard] = useState({
+    //     name:'',
+    //     code:0
+    // });
     const [wards, setWards] = useState<Ward[]>([]);
-    const [fileSelected, setFileSelected] = useState<ImageOrVideo>()
-
-
     useEffect(() => {
         fetchProvinces();
     }, []);
 
     useEffect(() => {
-        if (selectedProvince.code !== 0) {
-
+        if (profileData.address.province.code !== 0 && profileData.address.province.code !== undefined) {
             fetchDistricts();
         } else {
             setDistricts([]);
             setWards([]);
         }
-    }, [selectedProvince]);
+    }, [profileData.address.province]);
     useEffect(() => {
-        if (selectedDistrict.code !== 0) {
+        if (profileData.address.districts.code !== 0 && profileData.address.districts.code !== undefined) {
 
             fetchWards();
         } else {
             setWards([]);
         }
-    }, [selectedDistrict]);
+    }, [profileData.address.districts]);
     const fetchProvinces = async () => {
         try {
             const response = await axios.get('https://provinces.open-api.vn/api/?depth=1');
@@ -81,7 +105,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
     };
     const fetchDistricts = async () => {
         try {
-            const response = await axios.get(`https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`);
+            const response = await axios.get(`https://provinces.open-api.vn/api/p/${profileData.address.province.code}?depth=2`);
             setDistricts(response.data.districts || []);
         } catch (error) {
             console.error('Error fetching districts:', error);
@@ -89,7 +113,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
     };
     const fetchWards = async () => {
         try {
-            const response = await axios.get(`https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`);
+            const response = await axios.get(`https://provinces.open-api.vn/api/d/${profileData.address.districts.code}?depth=2`);
             setWards(response.data.wards || []);
         } catch (error) {
             console.error('Error fetching wards:', error);
@@ -113,8 +137,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                 const jsonResStorage = JSON.parse(resStorage || '')
                 await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
                 dispatch(addAuth({ ...auth, ...res.data.user }))
-                socket.emit('updateUser', { isUser: auth?.id })
-                ToastMessaging.Success({})
+                ToastMessaging.Success({visibilityTime:2000})
                 setIsLoading(false)
             }
         } catch (error: any) {
@@ -136,7 +159,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
     //     setFileSelected(undefined)
     //     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
     // }
-    console.log(selectedProvince)
+    console.log(profileData.address)
     return (
         <ContainerComponent isScroll back title="Cập nhập thông tin">
             <SectionComponent>
@@ -154,16 +177,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                     type="number-pad"
                     allowClear
                 />
-                <InputComponent
-                    value={profileData?.bio || ''}
-                    onChange={(val) => handleOnchageValue('bio', val)}
-                    title="Giới thiệu bản thân"
-                    numberOfLines={5}
-                    multiline
-                    allowClear
-                    styles={{marginBottom:12}}
-
-                />
+                
                 <TextComponent text={'Địa chỉ nhận hàng (vui lòng cập nhập khi mua vé cứng)'}/>
                 <SpaceComponent height={8}/>
                 <View>
@@ -172,8 +186,17 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                     data={provinces} 
                     titleButton="Chọn Tỉnh/Thành" 
                     titlePlaceholder="Chọn Tỉnh/Thành" 
-                    valueSelected={selectedProvince}
-                    onSelect={(val)=>setSelectedProvince({name:val.name,code:parseInt(val.code)})}
+                    valueSelected={profileData.address.province}
+                    onSelect={(val) => setProfileData({
+                        ...profileData, // Giữ nguyên các thuộc tính khác trong profileData
+                        address: {
+                            ...profileData.address, // Giữ nguyên các thuộc tính khác trong address
+                            province: {
+                                name: val.name,
+                                code: parseInt(val.code)
+                            }
+                        }
+                    })}
                     />
                 </View>
                 <SpaceComponent height={12}/>
@@ -184,8 +207,17 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                     data={districts} 
                     titleButton="Chọn Quận/Huyện" 
                     titlePlaceholder="Chọn Quận/Huyện"
-                    valueSelected={selectedDistrict}
-                    onSelect={(val)=>setSelectedDistrict({name:val.name,code:parseInt(val.code)})}
+                    valueSelected={profileData.address.districts}
+                    onSelect={(val) => setProfileData({
+                        ...profileData, // Giữ nguyên các thuộc tính khác trong profileData
+                        address: {
+                            ...profileData.address, // Giữ nguyên các thuộc tính khác trong address
+                            districts: {
+                                name: val.name,
+                                code: parseInt(val.code)
+                            }
+                        }
+                    })}
                     />
                 </View>
                 <SpaceComponent height={12}/>
@@ -196,18 +228,42 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                     data={wards} 
                     titleButton="Chọn Phường/Xã" 
                     titlePlaceholder="Chọn Tỉnh/Thành"
-                    valueSelected={selectedWard}
-                    onSelect={(val)=>setSelectedWard({name:val.name,code:parseInt(val.code)})}
+                    valueSelected={profileData.address.ward}
+                    onSelect={(val) => setProfileData({
+                        ...profileData, // Giữ nguyên các thuộc tính khác trong profileData
+                        address: {
+                            ...profileData.address, // Giữ nguyên các thuộc tính khác trong address
+                            ward: {
+                                name: val.name,
+                                code: parseInt(val.code)
+                            }
+                        }
+                    })}
                     />
                 </View>
                 <SpaceComponent height={12}/>
                 <InputComponent
-                    value={''}
-                    onChange={(val) => console.log(val)}
+                    value={profileData.address.houseNumberAndStreet}
+                    onChange={(val) => setProfileData({
+                        ...profileData, // Giữ nguyên các thuộc tính khác trong profileData
+                        address: {
+                            ...profileData.address, // Giữ nguyên các thuộc tính khác trong address
+                            houseNumberAndStreet:val
+                        }
+                    })}
                     title="Số nhà/Tên đường"
                     allowClear
                 />
-                
+                <InputComponent
+                    value={profileData?.bio || ''}
+                    onChange={(val) => handleOnchageValue('bio', val)}
+                    title="Giới thiệu bản thân"
+                    numberOfLines={5}
+                    multiline
+                    allowClear
+                    styles={{marginBottom:12}}
+
+                />
                 <ButtonComponent text="Cập nhập" onPress={() => handleUpdateProfile()} type="primary" />
                 <View style={{height:500}}/>
             </SectionComponent>

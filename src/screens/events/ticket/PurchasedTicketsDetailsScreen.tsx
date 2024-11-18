@@ -13,7 +13,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const PurchasedTicketsDetailsScreen = () => {
     const [index, setIndex] = useState(0)
     const cardRef = useRef(null); // Tạo tham chiếu cho card dưới
-    const [cardHeitght, setCardHeitght] = useState(appInfo.sizes.HEIGHT * 0.47); // State để lưu width của card dưới
+    const [cardHeitght, setCardHeitght] = useState(appInfo.sizes.HEIGHT * 0.5); // State để lưu width của card dưới
     const renderItem = () => {
         return <CardComponent color={colors.background3} styles={{ marginVertical: 0 }}
             ref={cardRef} // Gắn ref cho card dưới

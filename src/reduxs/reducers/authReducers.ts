@@ -10,7 +10,7 @@ export interface AuthState {
     accesstoken: string,
     fullname: string,
     photoUrl: string,
-    numberPhone:string,
+    phoneNumber:string,
     bio:string,
     fcmTokens:string[],
     loginMethod:'google' | 'account' | ''
@@ -18,7 +18,23 @@ export interface AuthState {
     position: {
         lat: number,
         lng: number
+    },
+    address:{
+        province:{
+            name:string,
+            code:number,
+        },
+        districts:{
+            name:string,
+            code:number,
+        },
+        ward:{
+            name:string,
+            code:number,
+        },
+        houseNumberAndStreet:string
     }
+    ,
     eventsInterested:[{
         event:string,
         createdAt:Date | string
@@ -43,7 +59,7 @@ const initialState: AuthState = {
     email: '',
     accesstoken: '',
     fullname: '',
-    numberPhone:'',
+    phoneNumber:'',
     bio:'',
     photoUrl: '',
     loginMethod:'',
@@ -57,6 +73,13 @@ const initialState: AuthState = {
         lat: 0,
         lng: 0
     },
+    address:{
+        province:{name:'',code:0},
+        districts:{name:'',code:0},
+        ward:{name:'',code:0},
+        houseNumberAndStreet:''
+    },
+    
     eventsInterested:[{
         event:'',
         createdAt:new Date().toISOString() as string

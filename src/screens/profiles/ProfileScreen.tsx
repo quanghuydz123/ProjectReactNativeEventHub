@@ -35,7 +35,14 @@ import eventAPI from "../../apis/eventAPI";
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
-  const [profile, setProfile] = useState<UserModel>()
+  const [profile, setProfile] = useState<{
+    fullname:string,
+    phoneNumber:string,
+    bio:string,
+    _id:string,
+    photoUrl:string,
+    email:string,
+  }>()
   const [isLoading, setIsLoading] = useState(false)
   const [profileId, setProfileId] = useState('')
   const [fileSelected, setFileSelected] = useState<ImageOrVideo>()
@@ -53,6 +60,16 @@ const ProfileScreen = ({ navigation, route }: any) => {
     useEffect(()=>{
         haneleGetAPIRelatedEvents()
     },[])
+    useEffect(()=>{
+      setProfile({
+        fullname:auth.fullname,
+        phoneNumber:auth.phoneNumber,
+        bio:auth.bio,
+        _id:auth.id,
+        photoUrl:auth.photoUrl,
+        email:auth.email
+      })
+    },[auth])
     const haneleGetAPIRelatedEvents = async () => {
         const api = apis.event.getAll({limit:'4'})
         // setIsLoading(isLoading ? isLoading : false)
@@ -187,9 +204,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         console.log("HomeScreen", errorMessage)
         setIsLoading(false)
       }
-    } else {
-      setProfile(undefined)
-    }
+    } 
   }
   const handleChangeImageAvatar = async () => {
     setIsOpenModalizeChooseImage(true)
@@ -210,7 +225,13 @@ const ProfileScreen = ({ navigation, route }: any) => {
     setIsUpdateProfile(true)
   }
 
-  const handleCallApiUpdateImageProfile = async (profile: UserModel, url?: string) => {
+  const handleCallApiUpdateImageProfile = async (profile: {
+    fullname:string,
+    phoneNumber:string,
+    bio:string,
+    _id:string,
+    photoUrl:string,
+}, url?: string) => {
     const api = apis.user.updateProfile()
     try {
       const res: any = await userAPI.HandleUser(api, { _id: profile?._id, photoUrl: url ? url : profile.photoUrl }, 'put')
@@ -219,7 +240,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         const jsonResStorage = JSON.parse(resStorage || '')
         await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
         dispatch(addAuth({ ...auth, ...res.data.user }))
-        socket.emit('updateUser', { isUser: auth?.id })
+        // socket.emit('updateUser', { isUser: auth?.id })
         setIsLoading(false)
         setIsUpdateProfile(false)
         ToastMessaging.Success({ message: "Cập nhập ảnh đại điện thành công" })

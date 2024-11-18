@@ -19,7 +19,6 @@ import AvatarItem from "./AvatarItem";
 import { GoogleSignin, } from '@react-native-google-signin/google-signin';
 
 const DrawerCustom = ({ navigation }: any) => {
-  const user = useSelector(authSelector)
   const [isRemember, setIsReMember] = useState<boolean>(false)
   const [password, setPasswored] = useState('')
   const { getItem: getRememberItem } = useAsyncStorage('isRemember');
@@ -106,9 +105,9 @@ const DrawerCustom = ({ navigation }: any) => {
         }
         }>
         {
-          <AvatarItem size={52} photoUrl={user.photoUrl} borderWidth={0} styles={{ marginBottom: 8 }} />
+          <AvatarItem size={52} photoUrl={auth.photoUrl} borderWidth={0} styles={{ marginBottom: 8 }} />
         }
-        <TextComponent text={user?.fullname} title size={18} />
+        <TextComponent text={auth?.fullname} title size={18} />
       </TouchableOpacity >}
       <FlatList
         showsVerticalScrollIndicator={false}
