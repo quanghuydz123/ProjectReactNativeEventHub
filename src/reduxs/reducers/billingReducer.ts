@@ -14,8 +14,8 @@ export interface billingState {
     ticketChose?:[{
         ticket:TypeTicketModel,
         amount:number
-    }]
-
+    }],
+    ticketsReserve?:string[]
 }
 
 const initialState: billingState = {
@@ -39,7 +39,8 @@ const initialState: billingState = {
     idEvent:'',
     addRessEvent:'',
     locationEvent:'',
-    titleEvent:''
+    titleEvent:'',
+    ticketsReserve:[]
 }
 
 const billingSlice = createSlice({
@@ -53,10 +54,11 @@ const billingSlice = createSlice({
         state.billingData = action.payload
     },
     addtotalPriceAndTicket: (state, action) => {
-        const {totalTicketChose,totalPrice,ticketChose} = action.payload
+        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve} = action.payload
         state.billingData.totalPrice = totalPrice,
         state.billingData.totalTicket = totalTicketChose
         state.billingData.ticketChose = ticketChose
+        state.billingData.ticketsReserve = ticketsReserve
     },
     removeShowTimeChose: (state, action) => {
         state.billingData = initialState;

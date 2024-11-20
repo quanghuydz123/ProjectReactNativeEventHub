@@ -44,7 +44,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
     email:string,
   }>()
   const [isLoading, setIsLoading] = useState(false)
-  const [profileId, setProfileId] = useState('')
   const [fileSelected, setFileSelected] = useState<ImageOrVideo>()
   const [isOpenModalizeChooseImage, setIsOpenModalizeChooseImage] = useState(false)
   const [isUpdateImageProfile, setIsUpdateProfile] = useState(false)
@@ -90,7 +89,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     handleGetAllCategory()
   }, [])
   useEffect(() => {
-    handleCallApiGetProfile({ isLoading: true })
+    // handleCallApiGetProfile({ isLoading: true })
     handleCallApiGetFollowerById({ isLoading: true })
   }, [auth.accesstoken])
   useEffect(() => {
@@ -132,7 +131,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   }, [isUpdateImageProfile])
   useEffect(() => {
     const handleUpdateProfile = (idUser?: string) => {
-      handleCallApiGetProfile({ idUser: idUser })
+      // handleCallApiGetProfile({ idUser: idUser })
     }
     const handleFollowByid = (idUser?: string) => {
       handleCallApiGetFollowerById({ idUser: idUser });
@@ -189,23 +188,23 @@ const ProfileScreen = ({ navigation, route }: any) => {
       setNumberOfFollowers(0)
     }
   }
-  const handleCallApiGetProfile = async ({ isLoading, idUser }: { isLoading?: boolean, idUser?: string }) => {
-    if (auth.accesstoken) {
-      setIsLoading(isLoading ? isLoading : false)
-      const api = `/get-user-byId?uid=${idUser ?? auth.id}`
-      try {
-        const res = await userAPI.HandleUser(api)
-        if (res && res.data && res.status === 200) {
-          setProfile(res.data.user)
-        }
-        setIsLoading(false)
-      } catch (error: any) {
-        const errorMessage = JSON.parse(error.message)
-        console.log("HomeScreen", errorMessage)
-        setIsLoading(false)
-      }
-    } 
-  }
+  // const handleCallApiGetProfile = async ({ isLoading, idUser }: { isLoading?: boolean, idUser?: string }) => {
+  //   if (auth.accesstoken) {
+  //     setIsLoading(isLoading ? isLoading : false)
+  //     const api = `/get-user-byId?uid=${idUser ?? auth.id}`
+  //     try {
+  //       const res = await userAPI.HandleUser(api)
+  //       if (res && res.data && res.status === 200) {
+  //         setProfile(res.data.user)
+  //       }
+  //       setIsLoading(false)
+  //     } catch (error: any) {
+  //       const errorMessage = JSON.parse(error.message)
+  //       console.log("HomeScreen", errorMessage)
+  //       setIsLoading(false)
+  //     }
+  //   } 
+  // }
   const handleChangeImageAvatar = async () => {
     setIsOpenModalizeChooseImage(true)
 

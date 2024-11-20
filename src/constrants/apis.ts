@@ -75,6 +75,14 @@ export const apis = {
     },
     organizer:{
         getAll:({limit}:{limit?:string})=>`/get-all?limit=${limit}`
+    },
+    invoice:{
+        createInvoice:()=>`/create-paymentInvoiceTicket`,
+        cancelInvoice:()=>`/cancel-invoice`
+
+    },
+    ticket:{
+        reserveTicket:()=>`/reserve-ticket`
     }
 
 }

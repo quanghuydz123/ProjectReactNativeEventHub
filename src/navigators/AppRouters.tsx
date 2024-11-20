@@ -14,7 +14,6 @@ const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{
     const dispatch = useDispatch()
     const [isOnline,setIsOnline] = useState(true)
     const auth = useSelector(authSelector)
-
     useEffect(()=>{
       checkLogin()
       const timeout = setTimeout(()=>{

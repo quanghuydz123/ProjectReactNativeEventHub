@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native"
+import { BackHandler, TouchableOpacity, View } from "react-native"
 import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../../components"
 import { colors } from "../../../constrants/color"
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -16,11 +16,22 @@ import { TypeTicketModel } from "../../../models/TypeTicketModel"
 import { Portal } from "react-native-portalize"
 import { Modalize } from "react-native-modalize"
 import { useEffect, useRef, useState } from "react"
+import { AlertComponent } from "../../../components/Alert"
+import { constantSelector, constantState } from "../../../reduxs/reducers/constantReducers"
+import { apis } from "../../../constrants/apis"
+import invoiceAPI from "../../../apis/invoiceAPI"
+import { LoadingModal } from "../../../../modals"
 const QuestionScreen = ({ navigation, route }: any) => {
 
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
+    // const [count, setCount] = useState(0)
+    const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout | null>(null)
+    const constant: constantState = useSelector(constantSelector)
+    // const [nameScreen,setNameScreen] = useState(constant.nameScreen)
+    const billing: billingState = useSelector(billingSelector)
+    const [isLoading,setIsLoading] = useState(false)
     useEffect(() => {
         if (openModalize) {
             modalieRef.current?.open()
@@ -28,7 +39,54 @@ const QuestionScreen = ({ navigation, route }: any) => {
             modalieRef.current?.close()
         }
     }, [openModalize])
-    const renderTypeTicket = (item:{ticket:TypeTicketModel,amount:number}) => {
+    const constantRef = useRef(constant);
+
+    // Update the ref whenever the constant changes
+    useEffect(() => {
+        constantRef.current = constant;
+    }, [constant]);
+    const handleCancelInvoice = async () => {
+        try {
+            setIsLoading(true)
+            const api = apis.invoice.cancelInvoice()
+            const res = await invoiceAPI.HandleInvoice(api, { ticketsReserve: billing.ticketsReserve }, 'delete')
+            if (res && res.status === 200) {
+                navigation.goBack()
+            }
+            setIsLoading(false)
+        } catch (error: any) {
+            setIsLoading(false)
+            // navigation.goBack()
+            const errorMessage = JSON.parse(error.message)
+            console.log("QuestionScreen", errorMessage)
+        }
+    }
+    const handleBackButtonClick = () => {
+        if (constantRef.current.nameScreen === 'QuestionScreen') {
+            {
+                AlertComponent({
+                    title: 'Hủy đơn hàng',
+                    message: 'Bạn sẽ mất vị trí mình đã lựa chọn. Đơn hàng đang trong qua trình thanh toán cũng bị ảnh hưởng',
+                    onCancel: () => console.log("oke"),
+                    onConfirm: () => {
+                        handleCancelInvoice()
+                    }
+                })
+            }
+        } else {
+            navigation.goBack()
+        }
+
+        return true;
+    }
+    useEffect(() => {
+        BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
+        return () => {
+            BackHandler.removeEventListener("hardwareBackPress", handleBackButtonClick);
+        };
+    }, []);
+
+    const renderTypeTicket = (item: { ticket: TypeTicketModel, amount: number }) => {
         return (
             <>
                 <RowComponent justify='space-between' key={item.ticket._id}>
@@ -38,16 +96,17 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     </View>
                     <View>
                         <TextComponent text={item.amount} textAlign='right' />
-                        <TextComponent text={convertMoney(item.ticket.price*item.amount)} />
+                        <TextComponent text={convertMoney(item.ticket.price * item.amount)} />
                     </View>
                 </RowComponent>
                 <SpaceComponent height={6} />
             </>
         )
     }
+
     return (
         <>
-            <ContainerComponent back title={'Bảng câu hỏi'} bgColor={colors.black} isScroll isHiddenSpaceTop>
+            <ContainerComponent back title={'Bảng câu hỏi'} bgColor={colors.black} isScroll isHiddenSpaceTop onPressBack={() => handleBackButtonClick()}  >
                 <RowComponent justify='space-between' styles={{ paddingHorizontal: 30, backgroundColor: colors.background1, height: appInfo.sizes.HEIGHT * 0.08 }} >
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <CricleComponent children={<><Fontisto name='check' size={8} color={colors.black} /></>} size={16} color={colors.white} styles={{ borderWidth: 0.5, borderColor: colors.gray }} />
@@ -143,7 +202,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     <CardComponent>
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={()=>navigation.goBack()}/>
+                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
                         </RowComponent>
                         <SpaceComponent height={10} />
                         <RowComponent justify='space-between' >
@@ -151,8 +210,8 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
                         </RowComponent>
                         <SpaceComponent height={10} />
-                        {showTimeChose.ticketChose?.map((item)=>{
-                           return renderTypeTicket(item)
+                        {showTimeChose.ticketChose?.map((item) => {
+                            return renderTypeTicket(item)
                         })}
                         <SpaceComponent height={8} />
                         <RowComponent justify='space-between' >
@@ -167,7 +226,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
             </ContainerComponent>
             <SectionComponent bgColor={colors.black} styles={{ paddingVertical: 8 }}>
                 <RowComponent justify='space-between'>
-                    <TouchableOpacity style={{flex:1}} onPress={()=>setOpenModalize(true)}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => setOpenModalize(true)}>
                         <TextComponent text={'Tổng tiền'} size={18} font={fontFamilies.medium} color={colors.white} />
                         <SpaceComponent height={4} />
                         <RowComponent>
@@ -176,9 +235,10 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             <FontAwesome name="chevron-up" color={colors.primary} size={14} />
                         </RowComponent>
                     </TouchableOpacity>
-                    <ButtonComponent text='Tiếp tục' onPress={()=>navigation.navigate('InvoiceComfirmScreen')} type='primary' mrBottom={0} width={'auto'} styles={{ paddingVertical: 8 }} />
+                    <ButtonComponent text='Tiếp tục' onPress={() => navigation.navigate('InvoiceComfirmScreen')} type='primary' mrBottom={0} width={'auto'} styles={{ paddingVertical: 8 }} />
                 </RowComponent>
             </SectionComponent>
+            <LoadingModal  visible={isLoading}/>
             <Portal>
                 <Modalize
                     adjustToContentHeight
@@ -193,31 +253,31 @@ const QuestionScreen = ({ navigation, route }: any) => {
 
                     </>}
                 >
-                     <SectionComponent>
-                    <CardComponent>
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={()=>navigation.goBack()}/>
-                        </RowComponent>
-                        <SpaceComponent height={10} />
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Loại vé'} size={16} font={fontFamilies.medium} />
-                            <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
-                        </RowComponent>
-                        <SpaceComponent height={10} />
-                        {showTimeChose.ticketChose?.map((item)=>{
-                           return renderTypeTicket(item)
-                        })}
-                        <SpaceComponent height={8} />
-                        <RowComponent justify='space-between' >
-                            <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
-                            <TextComponent text={convertMoney(showTimeChose.totalPrice || 0)} size={18} color={colors.primary} font={fontFamilies.semiBold} />
-                        </RowComponent>
-                        <View style={{ paddingTop: 26 }}>
-                            <TextComponent text={'Vui lòng trả tất cả câu hỏi để tiếp tục'}  textAlign='center' size={12} font={fontFamilies.medium} />
-                        </View>
-                    </CardComponent>
-                </SectionComponent>
+                    <SectionComponent>
+                        <CardComponent>
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
+                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
+                            </RowComponent>
+                            <SpaceComponent height={10} />
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Loại vé'} size={16} font={fontFamilies.medium} />
+                                <TextComponent text={'Số lượng'} size={16} font={fontFamilies.medium} />
+                            </RowComponent>
+                            <SpaceComponent height={10} />
+                            {showTimeChose.ticketChose?.map((item) => {
+                                return renderTypeTicket(item)
+                            })}
+                            <SpaceComponent height={8} />
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
+                                <TextComponent text={convertMoney(showTimeChose.totalPrice || 0)} size={18} color={colors.primary} font={fontFamilies.semiBold} />
+                            </RowComponent>
+                            <View style={{ paddingTop: 26 }}>
+                                <TextComponent text={'Vui lòng trả tất cả câu hỏi để tiếp tục'} textAlign='center' size={12} font={fontFamilies.medium} />
+                            </View>
+                        </CardComponent>
+                    </SectionComponent>
                 </Modalize>
             </Portal>
         </>

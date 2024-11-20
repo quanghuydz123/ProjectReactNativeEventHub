@@ -61,7 +61,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
     const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch()
     const [provinces, setProvinces] = useState<Province[]>([]);
-    const [districts, setDistricts] = useState<District[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]); 
     // const [selectedProvince, setSelectedProvince] = useState<Province>({
     //     name:'',
     //     code:0

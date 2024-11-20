@@ -24,6 +24,8 @@ import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { addtotalPriceAndTicket, billingSelector, billingState } from "../../../reduxs/reducers/billingReducer";
+import { apis } from "../../../constrants/apis";
+import ticketAPI from "../../../apis/ticketAPI";
 const ChooseTicketScreen = ({ navigation, route }: any) => {
     // const { showTimes, idEvent, titleEvent, addRessEvent, locationEvent }: { showTimes: ShowTimeModel, idEvent: string, titleEvent: string, addRessEvent: string, locationEvent: string } = route.params
     const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const [disableButton, setDisableButton] = useState(true)
     const [totalTicketChose, setTotalTicketChose] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
-    const eventChose:billingState = useSelector(billingSelector)
+    const eventChose: billingState = useSelector(billingSelector)
     const dispatch = useDispatch()
     // useStatusBar('light-content')
     // useEffect(() => {
@@ -110,7 +112,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     styles={{
                         paddingVertical: 2,
                         minWidth: 20,
-                        
+
                     }}
                 />
             } else if (typeTicket.status === 'Ended') {
@@ -152,6 +154,8 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                 return updatedTickets;
             });
         }, [amountChose, typeTicket]);
+        // console.log(ticketChose.map((item)=>({ticket:item.ticket._id,amount:item.amount})))
+       
         return (
             <>
                 <RowComponent key={typeTicket.name} justify="space-between" styles={{
@@ -218,6 +222,31 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             </>
         )
     }
+    const handleReserveTicket = async () => {
+        try {
+            setLoading(true)
+            const api = apis.ticket.reserveTicket()
+            const res = await ticketAPI.HandleTicket(api,{ticketChose:ticketChose.map((item)=>({ticket:item.ticket._id,amount:item.amount})),
+            showTime:eventChose.showTimes._id,event:eventChose.idEvent,idUser:auth.id},'post')
+            if(res && res.status===200 && res.data){
+                dispatch(addtotalPriceAndTicket({ 
+                    totalPrice: totalPrice, 
+                    totalTicketChose: totalTicketChose, 
+                    ticketChose: ticketChose,
+                    ticketsReserve:res.data,
+                    idUser:auth.id
+                }))
+                setLoading(false)
+
+                navigation.navigate('QuestionScreen')
+            }
+        } catch (error: any) {
+            setLoading(false)
+
+            const errorMessage = JSON.parse(error.message)
+            console.log("ChooseTicketScreen", errorMessage)
+        }
+    }
     const renderButtonContinue = () => {
         return (
             <SectionComponent styles={{
@@ -242,15 +271,13 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                         text={disableButton ? "Vui lòng chọn vé" : `Tiếp tục - ${convertMoney(totalPrice)}`}
                         textSize={16}
                         textFont={fontFamilies.semiBold}
-                        onPress={()=>{
-                            dispatch(addtotalPriceAndTicket({totalPrice:totalPrice,totalTicketChose:totalTicketChose,ticketChose:ticketChose}))
-                            navigation.navigate('QuestionScreen')
-                        }}
+                        onPress={() => handleReserveTicket()}
                     />
                 </View>
             </SectionComponent>
         )
     }
+    
     return (
         <>
             <ContainerComponent isScroll back bgColor={colors.black} colorTitle={colors.white} title={'Chọn loại vé'}>

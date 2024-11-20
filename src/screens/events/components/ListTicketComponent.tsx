@@ -15,8 +15,10 @@ import { DateTime } from "../../../utils/DateTime";
 import { appInfo } from "../../../constrants/appInfo";
 import RenderHTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addShowTimeChose } from "../../../reduxs/reducers/billingReducer";
+import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers";
+import checkLogin from "../../../utils/checkLogin";
 interface Props{
   showTimes:ShowTimeModel[],
   idEvent:string,
@@ -39,15 +41,20 @@ const ListTicketComponent = (props:Props) => {
   const [state, setState] = useState([])
   const [stateChild, setStateChild] = useState([])
   const navigation:any = useNavigation()  
+  const auth:AuthState = useSelector(authSelector)
   const handleNavigationChoseTicketScreen = (section:ShowTimeModel)=>{
-    dispatch(addShowTimeChose({
-      showTimes:section,
-      idEvent:idEvent,
-      titleEvent:titleEvent,
-      addRessEvent:addRessEvent,
-      locationEvent:locationEvent
-    }))
-    navigation.navigate('ChooseTicketScreen')
+    if(auth.accesstoken){
+      dispatch(addShowTimeChose({
+        showTimes:section,
+        idEvent:idEvent,
+        titleEvent:titleEvent,
+        addRessEvent:addRessEvent,
+        locationEvent:locationEvent
+      }))
+      navigation.navigate('ChooseTicketScreen')
+    }else{
+      navigation.navigate('LoginScreen')
+    }
   }
   const renderHeader = (section: ShowTimeModel, index: number, isActive: boolean, sections: any) => {
     const renderContentRight = (section:ShowTimeModel)=>{
@@ -58,7 +65,9 @@ const ListTicketComponent = (props:Props) => {
       width={'auto'} 
       isCheckLogin={true}
       textSize={14} 
-      onPress={()=>handleNavigationChoseTicketScreen(section)}
+      onPress={()=>{
+        handleNavigationChoseTicketScreen(section)
+      }}
       styles={{ paddingVertical: 6 }} />
       if(section.status==='Ended'){
         content=<ButtonComponent 

@@ -11,12 +11,13 @@ export const AlertComponent = (props:Props) =>
 {
     const {title,message,onCancel,onConfirm} = props
     Alert.alert(title, message, [
+        { text: onConfirm ? "Ok" : undefined, onPress:onConfirm },
+
         {
             text: onCancel ? "Cancel" : undefined,
             onPress: onCancel,
             style: 'cancel',
             
         },
-        { text: onConfirm ? "Ok" : undefined, onPress:onConfirm },
     ]);
 }

@@ -84,13 +84,13 @@ const EventDetails = ({ navigation, route }: any) => {
         ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
         : `Bạn đã quan tâm`
       : `${userCount} Người đã quan tâm`)
-    if(event){
+    if (event) {
       haneleGetAPIRelatedEvents()
       handleIncViewEvent()
     }
 
-  }, [event]) 
-  
+  }, [event])
+
   useEffect(() => {
     setIsInterested(
       auth?.eventsInterested?.some(eventIntersted => eventIntersted.event === event?._id)
@@ -113,28 +113,28 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
-  const handleIncViewEvent = async ()=>{
+  const handleIncViewEvent = async () => {
     try {
       const api = apis.event.incViewEvent()
-      const res = await eventAPI.HandleEvent(api,{idUser:auth.id ?? '',idEvent:event?._id},'put')
-      if(res && res.data && res.status===200){
+      const res = await eventAPI.HandleEvent(api, { idUser: auth.id ?? '', idEvent: event?._id }, 'put')
+      if (res && res.data && res.status === 200) {
         const data = res.data as EventModelNew
         const viewedEvents = [...auth.viewedEvents]
-        const index = viewedEvents.findIndex((item)=>item.event._id === data?._id)
-        if(index !== -1){
-            viewedEvents.splice(index,1)
+        const index = viewedEvents.findIndex((item) => item.event._id === data?._id)
+        if (index !== -1) {
+          viewedEvents.splice(index, 1)
         }
-        viewedEvents.unshift({event:data})
-        dispatch(addViewedEvent({viewedEvents:viewedEvents}))
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, viewedEvents: viewedEvents}))
+        viewedEvents.unshift({ event: data })
+        dispatch(addViewedEvent({ viewedEvents: viewedEvents }))
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, viewedEvents: viewedEvents }))
       }
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("EventDetails", errorMessage)
     }
   }
   const haneleGetAPIRelatedEvents = async () => {
-    const api = apis.event.getAll({categoriesFilter:[event?.category._id || ''],limit:'8'})
+    const api = apis.event.getAll({ categoriesFilter: [event?.category._id || ''], limit: '8' })
     // setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
@@ -273,12 +273,14 @@ const EventDetails = ({ navigation, route }: any) => {
     let disable = false
     let width = '70%'
     let onPress = () => {
-      setIsLoadingChoseShowTime(true)
-      dispatch(addShowTimeChose({
-        showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, locationEvent: event?.Location
-      }))
-      setIsLoadingChoseShowTime(false)
-      navigation.navigate('ChooseTicketScreen')
+      if (checkLogin()) {
+        setIsLoadingChoseShowTime(true)
+        dispatch(addShowTimeChose({
+          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, locationEvent: event?.Location
+        }))
+        setIsLoadingChoseShowTime(false)
+        navigation.navigate('ChooseTicketScreen')
+      }
     }
     if (event?.statusEvent === 'NotYetOnSale') {
       text = 'Sự kiện chưa mở bán'
@@ -328,8 +330,8 @@ const EventDetails = ({ navigation, route }: any) => {
       }
     );
   };
-  const checkLogin = ()=>{
-    if(!auth.accesstoken){
+  const checkLogin = () => {
+    if (!auth.accesstoken) {
       navigation.navigate('LoginScreen')
       return false
     }
@@ -416,7 +418,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 textSize={14}
                 isCheckLogin={true}
                 mrBottom={0}
-                onPress={() => {handleInterestEvent()}}
+                onPress={() => { handleInterestEvent() }}
               />
               {/* <LottieView source={require('../../../src/assets/icon/star.json')} style={{width:20,height:20,marginTop:10}} speed={1} autoPlay loop={true}  renderMode="HARDWARE" /> */}
 
@@ -434,7 +436,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 mrBottom={0}
                 isCheckLogin
                 textSize={14}
-                onPress={() => setIsOpenModalizeInityUser(true) }
+                onPress={() => setIsOpenModalizeInityUser(true)}
               />
 
             </RowComponent>

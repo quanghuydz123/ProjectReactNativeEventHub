@@ -10,6 +10,9 @@ import { useSelector } from "react-redux";
 import { constantSelector, constantState } from "../../reduxs/reducers/constantReducers";
 import { appInfo } from "../../constrants/appInfo";
 import { authSelector, AuthState } from "../../reduxs/reducers/authReducers";
+import { apis } from "../../constrants/apis";
+import invoiceAPI from "../../apis/invoiceAPI";
+import { billingSelector, billingState } from "../../reduxs/reducers/billingReducer";
 
 const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
     const {url}:{url:string} = route.params
@@ -22,6 +25,7 @@ const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
     const constant:constantState = useSelector(constantSelector)
     const [uid,setUid] = useState('')
     const auth:AuthState = useSelector(authSelector)
+    const billing:billingState = useSelector(billingSelector)
     const resetTimeOut = () => {
       if (timeOutId) {
         clearTimeout(timeOutId);
@@ -40,13 +44,23 @@ const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
         if (timeOutId) clearTimeout(timeOutId);
       };
     }, [])
-  
+    const handleCancelInvoice = async () => {
+      try {
+          const api = apis.invoice.cancelInvoice()
+          const res = await invoiceAPI.HandleInvoice(api, { ticketsReserve: billing.ticketsReserve }, 'delete')
+          if (res && res.status === 200) {
+            navigation.pop(3)
+          }
+      } catch (error: any) {
+          const errorMessage = JSON.parse(error.message)
+          console.log("QuestionScreen", errorMessage)
+      }
+  }
     const handleBackButtonClick = () => {
       const state = navigation.getState();
       const routes = state.routes;
-      console.log("routes",routes)
       if (count >= 1) {
-        navigation.pop(3)
+        handleCancelInvoice()
       } else {
         // ToastMessaging.Warning({ message: 'Nhấn lần nữa để thoát', visibilityTime: 3000 })
         onToggleSnackBar()
@@ -62,23 +76,51 @@ const PaymentScreen = ({navigation,route}:{navigation:any,route:any})=>{
         BackHandler.removeEventListener("hardwareBackPress", handleBackButtonClick);
       };
     }, [count]);
+    const handleCallAPICreateInvoice = async ()=>{
+      try {
+        const api = apis.invoice.createInvoice()
+        const res = await invoiceAPI.HandleInvoice(api,{
+          idUser:auth.id,
+          fullname:auth.fullname,
+          email:auth.email,
+          phoneNumber:auth.phoneNumber,
+          totalPrice:billing.totalPrice,
+          ticketsReserve:billing.ticketsReserve,
+          address:auth.address,
+          fullAddress:[
+            auth?.address?.houseNumberAndStreet,
+            auth?.address?.ward?.name,
+            auth?.address?.districts?.name,
+            auth?.address?.province?.name].filter(Boolean).join(', '),
+          
+        },'post')
+        if(res && res.status === 200 && res.data){
+          navigation.pop(3)
+          navigation.replace('PaymentSucessScreen')
+        }else{
+          handleCancelInvoice()
+        }
+      } catch (error:any) {
+        const errorMessage = JSON.parse(error.message)
+        console.log("QuestionScreen", errorMessage)
+      }
+    }
     useEffect(()=>{
       if(paymentStatus && uid){
         switch(paymentStatus){
           case '00':
             if(uid === auth.id){
-              navigation.pop(3)
-              navigation.replace('PaymentSucessScreen')
+              handleCallAPICreateInvoice()
             }
             break
           case '24':
             if(uid === auth.id){
-              navigation.pop(3)
+              handleCancelInvoice()
             }
             break;
           default:
             if(uid === auth.id){
-              navigation.goBack()
+              handleCancelInvoice()
             }
             break;
   
