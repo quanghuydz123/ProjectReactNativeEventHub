@@ -15,23 +15,25 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ButtonComponent from "./ButtonComponent";
 import { ArrowDown2 } from "iconsax-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { InvoiceDetailsModel } from "../models/InvoiceDetailsModel";
+import { DateTime } from "../utils/DateTime";
 
 interface Props{
-  status?:'Success' | 'Canceled'
+  invoice:InvoiceDetailsModel
 }
 const TicketComponent = (props:Props) => {
-  const {status} = props
+  const {invoice} = props
   const cardRef = useRef(null); // Tạo tham chiếu cho card dưới
   const [cardHeitght, setCardHeitght] = useState(appInfo.sizes.HEIGHT * 0.24); // State để lưu width của card dưới
   const navigation:any = useNavigation()
   return (
     <>
-      <RowComponent onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen')}>
-        <CardComponent color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.2, minHeight: cardHeitght, justifyContent: 'center', alignItems: 'center' }}>
-          <TextComponent text={'22'} font={fontFamilies.semiBold} size={22} color={colors.white} />
-          <TextComponent text={'Tháng 11'} font={fontFamilies.semiBold} color={colors.white} />
-          <TextComponent text={'2024'} font={fontFamilies.semiBold} color={colors.white} />
-          <TextComponent text={'x1'} size={18} font={fontFamilies.semiBold} color={colors.primary} />
+      <RowComponent onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen',{invoice:invoice})}>
+        <CardComponent color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.21, minHeight: cardHeitght, justifyContent: 'center', alignItems: 'center' }}>
+          <TextComponent text={new Date(invoice.showTimeDetails.startDate).getDate()} font={fontFamilies.semiBold} size={22} color={colors.white} />
+          <TextComponent text={`Tháng ${new Date(invoice.showTimeDetails.startDate).getMonth()+1}`} font={fontFamilies.semiBold} color={colors.white} />
+          <TextComponent text={new Date(invoice.showTimeDetails.startDate).getFullYear()} font={fontFamilies.semiBold} color={colors.white} />
+          <TextComponent text={`x${invoice.invoiceDetails.totalTicket}`} size={18} font={fontFamilies.semiBold} color={colors.primary} />
 
           <CricleComponent children={<></>} color={colors.black} size={24} styles={{ position: 'absolute', top: -10, right: -14 }} />
           <CricleComponent children={<></>} color={colors.black} size={24} styles={{ position: 'absolute', bottom: -10, right: -14 }} />
@@ -44,17 +46,17 @@ const TicketComponent = (props:Props) => {
             const { height } = event.nativeEvent.layout;
             setCardHeitght(height); // Lấy width và gắn vào state
           }}
-          color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.77, minHeight: cardHeitght }}>
-          <TextComponent text={'Khóa tu cuối tuần TÌM VỀ CHÍNH MÌNH '} color={colors.white} font={fontFamilies.semiBold} size={14} />
+          color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.76, minHeight: cardHeitght }}>
+          <TextComponent text={invoice.eventDetails.title} color={colors.white} font={fontFamilies.semiBold} size={14} />
           <SpaceComponent height={6} />
           <RowComponent>
             <TagComponent
-              label={status==='Canceled' ? 'Đã bị hủy' : 'Thành công'}
+              label={'Thành công'}
               styles={{ paddingVertical: 2 }}
               textSize={11}
               font={fontFamilies.medium}
-              textColor={status==='Canceled' ? colors.white : colors.black}
-              bgColor={status==='Canceled' ? colors.danger :colors.primary}
+              textColor={colors.black}
+              bgColor={colors.primary}
 
             />
             <SpaceComponent width={4} />
@@ -71,13 +73,13 @@ const TicketComponent = (props:Props) => {
           <RowComponent styles={{ alignItems: "center" }}>
             <FontAwesome name='barcode' size={15} color={colors.white} />
             <SpaceComponent width={4} />
-            <TextComponent text={'Mã đơn hàng: 900243146'} size={12} font={fontFamilies.medium} color={colors.white} />
+            <TextComponent text={`Mã đơn hàng: ${invoice.invoiceDetails.invoiceCode}`} size={12} font={fontFamilies.medium} color={colors.white} />
           </RowComponent>
           <SpaceComponent height={4} />
           <RowComponent styles={{ alignItems: 'flex-start' }}>
             <AntDesign name='clockcircle' size={15} color={colors.white} style={{ marginTop: 3 }} />
             <SpaceComponent width={4} />
-            <TextComponent text={'08:30, 22 tháng 11, 2024 - 15:00, 24 tháng 11, 2024'} size={12} font={fontFamilies.medium} color={colors.white} />
+            <TextComponent text={`${DateTime.GetTime(invoice.showTimeDetails.startDate)} - ${DateTime.GetTime(invoice.showTimeDetails.endDate)}, ${DateTime.GetDateNew1(invoice.showTimeDetails.startDate,invoice.showTimeDetails.endDate)}`} size={12} font={fontFamilies.medium} color={colors.white} />
           </RowComponent>
 
           <SpaceComponent height={4} />
@@ -85,8 +87,8 @@ const TicketComponent = (props:Props) => {
             <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{ marginTop: 3 }} />
             <SpaceComponent width={8} />
             <View style={{ flex: 1 }}>
-              <TextComponent text={'SECC, 799 Nguyễn Văn Linh, Q.7'} numberOfLine={2} color={colors.white} font={fontFamilies.medium} size={12.5} />
-              <TextComponent numberOfLine={2} font={fontFamilies.regular} text={'799 Nguyễn Văn Linh, Tan Phu Ward, 7 District, Ho Chi Minh City'} size={12} color={colors.white} />
+              <TextComponent text={invoice.eventDetails.Location} numberOfLine={2} color={colors.white} font={fontFamilies.medium} size={12.5} />
+              <TextComponent numberOfLine={2} font={fontFamilies.regular} text={invoice.eventDetails.Address} size={12} color={colors.white} />
               <ButtonComponent
                 text="Xem trên bảng đồ"
                 type="link"

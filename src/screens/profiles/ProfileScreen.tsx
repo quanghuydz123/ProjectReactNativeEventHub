@@ -32,6 +32,8 @@ import UserGroup from '../../assets/svgs/user-group-svgrepo-com.svg'
 import checkLogin from "../../utils/checkLogin";
 import { EventModelNew } from "../../models/EventModelNew";
 import eventAPI from "../../apis/eventAPI";
+import ticketAPI from "../../apis/ticketAPI";
+import { InvoiceDetailsModel } from "../../models/InvoiceDetailsModel";
 
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
@@ -54,6 +56,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [searchCategory, setSearchCategory] = useState('')
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const [isLoadingFollow, setIsLoadingFollow] = useState(false)
+  // const [invoicePaid,setinvoicePaid] = useState<InvoiceDetailsModel[]>([])
   const dispatch = useDispatch()
    const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
     useEffect(()=>{
@@ -91,6 +94,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   useEffect(() => {
     // handleCallApiGetProfile({ isLoading: true })
     handleCallApiGetFollowerById({ isLoading: true })
+    // handleCallAPIGetTicketsByIdUser()
   }, [auth.accesstoken])
   useEffect(() => {
     if (auth.categoriesInterested) {
@@ -129,25 +133,37 @@ const ProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }, [isUpdateImageProfile])
-  useEffect(() => {
-    const handleUpdateProfile = (idUser?: string) => {
-      // handleCallApiGetProfile({ idUser: idUser })
-    }
-    const handleFollowByid = (idUser?: string) => {
-      handleCallApiGetFollowerById({ idUser: idUser });
-      console.log('followers cập nhật');
-    };
-    socket.on('updateUser', ({ idUser }) => {
-      handleUpdateProfile(idUser)
-    })
-    socket.on('followUser', ({ idUser }) => {
-      handleFollowByid(idUser)
-    })
-    return () => {
-      socket.off('updateUser', handleUpdateProfile)
-      socket.off('followUser', handleFollowByid)
-    };
-  }, [])
+  // useEffect(() => {
+  //   const handleUpdateProfile = (idUser?: string) => {
+  //     // handleCallApiGetProfile({ idUser: idUser })
+  //   }
+  //   const handleFollowByid = (idUser?: string) => {
+  //     handleCallApiGetFollowerById({ idUser: idUser });
+  //     console.log('followers cập nhật');
+  //   };
+  //   socket.on('updateUser', ({ idUser }) => {
+  //     handleUpdateProfile(idUser)
+  //   })
+  //   socket.on('followUser', ({ idUser }) => {
+  //     handleFollowByid(idUser)
+  //   })
+  //   return () => {
+  //     socket.off('updateUser', handleUpdateProfile)
+  //     socket.off('followUser', handleFollowByid)
+  //   };
+  // }, [])
+  // const handleCallAPIGetTicketsByIdUser = async ()=>{
+  //   const api = apis.ticket.getByIdUser(auth.id)
+  //   try {
+  //     const res = await ticketAPI.HandleTicket(api)
+  //     if(res && res.status === 200 && res.data){
+  //       setinvoicePaid(res.data)
+  //     }
+  //   } catch (error: any) {
+  //     const errorMessage = JSON.parse(error.message)
+  //     console.log("Profile",errorMessage.message)
+  //   }
+  // }
   const handleGetAllCategory = async () => {
     const api = apis.category.getAll()
     try {
@@ -397,7 +413,8 @@ const ProfileScreen = ({ navigation, route }: any) => {
           {renderCardHalf({title:'Vé đã mua',icon:<Ticket />,onPress:()=>{
             if(checkLogin(auth,navigation)){
               navigation.navigate('TicketNavigator',{
-                relatedEvents:relatedEvents
+                relatedEvents:relatedEvents,
+                // invoicePaid:invoicePaid
               })
             }
           }})}

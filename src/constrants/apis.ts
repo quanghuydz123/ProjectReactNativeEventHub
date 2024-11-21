@@ -82,7 +82,13 @@ export const apis = {
 
     },
     ticket:{
-        reserveTicket:()=>`/reserve-ticket`
+        reserveTicket:()=>`/reserve-ticket`,
+        getByIdUser:({uid,typeFilter}:{uid?:string,typeFilter?:'UpComing'|'Ended'|'Canceled'})=>{
+            const params = new URLSearchParams();
+            if (uid !== undefined) params.append('idUser', uid);
+            if (typeFilter !== undefined) params.append('typeFilter', typeFilter);
+            return `/get-byIdUser?${params.toString()}`
+        }
     }
 
 }

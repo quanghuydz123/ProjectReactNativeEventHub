@@ -72,7 +72,7 @@ const ListTicketComponent = (props:Props) => {
       if(section.status==='Ended'){
         content=<ButtonComponent 
         text={'Suất diễn đã kết thúc'} 
-        type="primary" 
+        type="primary"
         mrBottom={0} 
         width={'auto'} 
         textSize={14}

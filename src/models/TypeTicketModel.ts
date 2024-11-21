@@ -7,5 +7,5 @@ export interface TypeTicketModel {
     price:number,
     startSaleTime:Date,
     endSaleTime:Date,
-    status:'NotStarted' | 'OnSale' | "Ended" | "SoldOut"
+    status:'NotStarted' | 'OnSale' | "Ended" | "SoldOut" | "Canceled"
 }

@@ -5,5 +5,5 @@ export interface ShowTimeModel {
     startDate:Date,
     endDate:Date,
     typeTickets:[TypeTicketModel],
-    status:'NotStarted' | 'Ongoing' | 'Ended' | 'SoldOut' | 'OnSale'| 'SaleStopped' | 'NotYetOnSale'
+    status:'NotStarted' | 'Ongoing' | 'Ended' | 'SoldOut' | 'OnSale'| 'SaleStopped' | 'NotYetOnSale' | 'Canceled'
 }

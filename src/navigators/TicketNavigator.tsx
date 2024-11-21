@@ -10,11 +10,17 @@ import { EventModelNew } from "../models/EventModelNew"
 import { apis } from "../constrants/apis"
 import eventAPI from "../apis/eventAPI"
 import { PurchasedTicketsCanceledScreen } from "../screens"
+import { InvoiceDetailsModel } from "../models/InvoiceDetailsModel"
 
 
 const TicketNavigator = ({navigation,route}:any)=>{
-    const {relatedEvents} = route.params
+    const {relatedEvents }:{relatedEvents:EventModelNew[]} = route.params
     const Tab = createMaterialTopTabNavigator()
+    const screens = [
+        { name: 'PurchasedTicketNotStartedScreen', label: 'Sắp diễn ra' },
+        { name: 'PurchasedTicketsEndScreen', label: 'Đã kết thúc' },
+        { name: 'PurchasedTicketsCanceledScreen', label: 'Đã bị hủy' },
+    ];
     // const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
     // useEffect(()=>{
     //     haneleGetAPIRelatedEvents()

@@ -42,8 +42,16 @@ const EventsScreen = ({ navigation, route }: any) => {
     <>
       <ContainerComponent title={'abc'} bgColor={colors.white}>
         <SectionComponent>
-          {/* <SelectDropdownComponent  /> */}
-          <TextComponent text={'abc'}/>
+          <RowComponent justify='center'>
+            <FontAwesome5 name='check-circle' size={50} color={colors.primary}/>
+            <SpaceComponent width={12}/>
+            <TextComponent text={'Đặt vé thành công'} size={22} font={fontFamilies.bold} color={colors.primary}/>
+          </RowComponent>
+        </SectionComponent>
+        <SectionComponent>
+          <CardComponent>
+            <TextComponent text={'abc'}/>
+          </CardComponent>
         </SectionComponent>
       </ContainerComponent>
     </>

@@ -14,6 +14,10 @@ export class DateTime {
         const date = new Date(num)
         return `Ngày ${numberToString(date.getDate())} - ${numberToString(date.getMonth() + 1)} - ${date.getFullYear()}`
     }
+    static GetDate2 = (num: Date) => {
+        const date = new Date(num)
+        return `${numberToString(date.getDate())}/${numberToString(date.getMonth() + 1)}/${date.getFullYear()}`
+    }
     static GetDateNew = (dateStart: Date, DateEnd: Date) => {
         const date1 = new Date(dateStart)
         const date2 = new Date(DateEnd)
