@@ -82,7 +82,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [followerByIdAuth, setFollowerByIdAuth] = useState<FollowModel[]>([])
 
   useStatusBar('light-content')
-
   const animatedValue = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);

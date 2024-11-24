@@ -3,7 +3,17 @@ import { RoleModel } from "../../models/RoleModel";
 import { CategoryModel } from "../../models/CategoryModel";
 import { EventModelNew } from "../../models/EventModelNew";
 import { FollowModel } from "../../models/FollowModel";
-
+export interface Invoice {
+    _id: string
+    invoiceCode: string
+    totalTicket: number
+    totalPrice: number
+    user: string
+    status: string
+    createdAt: Date
+    titleEvent: string
+}
+  
 export interface AuthState {
     id: string,
     email: string,
@@ -51,7 +61,9 @@ export interface AuthState {
         users:{
             idUser:string
         }[]
-    }
+    },
+    invoices:Invoice[][]
+
 }
 
 const initialState: AuthState = {
@@ -98,7 +110,8 @@ const initialState: AuthState = {
         _id:'',
         user:'',
         users:[]
-    }
+    },
+    invoices:[]
 }
 
 const authSlice = createSlice({
@@ -139,14 +152,21 @@ const authSlice = createSlice({
         },
         updateFollow:(state,action)=>{
             const { users } = action.payload;
-            console.log("users",users)
             // Nếu `state.authData.follow` là null hoặc undefined, tạo một đối tượng mới
             state.authData.follow.users = users;
+
+        },
+        updateInvoices:(state,action)=>{
+            const { invoices } = action.payload;
+            state.authData = {  
+                ...state.authData,
+                invoices: [...invoices],         
+            };
 
         },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateCategoriesInterested,addViewedEvent } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

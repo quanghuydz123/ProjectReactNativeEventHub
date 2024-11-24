@@ -36,7 +36,7 @@ import RenderHTML, { HTMLElementModel } from "react-native-render-html";
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather'
 import Share from 'react-native-share';
-import { addShowTimeChose, billingSelector } from "../../reduxs/reducers/billingReducer";
+import { addEventRelated, addShowTimeChose, billingSelector } from "../../reduxs/reducers/billingReducer";
 import ListEventComponent from "../../components/ListEventComponent";
 import EventItem from "../../components/EventItem";
 
@@ -75,6 +75,7 @@ const EventDetails = ({ navigation, route }: any) => {
   //   const authItem: any = await getItemAuth()
   //   console.log("authItem",JSON.parse(authItem)?.eventsInterested)  
   // }
+ 
   useEffect(() => {
     const userCount = event?.usersInterested?.length || 0;
     const isUserInterested = event?.usersInterested?.some(item => item.user._id === auth.id);
@@ -276,7 +277,8 @@ const EventDetails = ({ navigation, route }: any) => {
       if (checkLogin()) {
         setIsLoadingChoseShowTime(true)
         dispatch(addShowTimeChose({
-          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, locationEvent: event?.Location
+          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, 
+          locationEvent: event?.Location,relatedEvents:relatedEvents
         }))
         setIsLoadingChoseShowTime(false)
         navigation.navigate('ChooseTicketScreen')
@@ -477,8 +479,11 @@ const EventDetails = ({ navigation, route }: any) => {
                   img: {
                     objectFit: 'fill',
                   },
+                  ul:{
+                    
+                  },
                   li: {
-                    color: colors.black
+                    color: colors.black,
                   },
                   p: {
                     margin: 0,
@@ -537,6 +542,7 @@ const EventDetails = ({ navigation, route }: any) => {
               titleEvent={event?.title ?? ''}
               addRessEvent={event?.Address ?? ''}
               locationEvent={event?.Location ?? ''}
+              relatedEvents={relatedEvents}
             />}
           </CardComponent>
         </SectionComponent>

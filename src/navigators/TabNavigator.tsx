@@ -1,4 +1,4 @@
-import { Animated, BackHandler, Platform, Text, View } from "react-native"
+import { Animated, BackHandler, Keyboard, Platform, Text, View } from "react-native"
 import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import ExploreNavigator from "./ExploreNavigator";
@@ -47,7 +47,23 @@ const TabNavigator = ({navigation}:any) => {
     }).start();
   },[constant.indexTabSelected])
   
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
 
+    // Cleanup listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   return <>
     <Tab.Navigator
 
@@ -134,7 +150,7 @@ const TabNavigator = ({navigation}:any) => {
       }}/>
 
     </Tab.Navigator>
-    <Animated.View style={{
+  {   !isKeyboardVisible && <Animated.View style={{
       height:2,
       position:'absolute',
       width:width,
@@ -148,7 +164,7 @@ const TabNavigator = ({navigation}:any) => {
       ]
     }}>
 
-    </Animated.View>
+    </Animated.View>}
   </>
 }
 export default TabNavigator;

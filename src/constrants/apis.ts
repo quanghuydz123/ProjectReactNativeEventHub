@@ -78,7 +78,13 @@ export const apis = {
     },
     invoice:{
         createInvoice:()=>`/create-paymentInvoiceTicket`,
-        cancelInvoice:()=>`/cancel-invoice`
+        cancelInvoice:()=>`/cancel-invoice`,
+        getByIdUser:({idUser,searchValue}:{idUser:string,searchValue:string})=>{
+            const params = new URLSearchParams();
+            if (idUser !== undefined) params.append('idUser', idUser);
+            if (searchValue !== undefined) params.append('searchValue', searchValue);
+            return `/get-byIdUser?${params.toString()}`
+        }
 
     },
     ticket:{
@@ -88,7 +94,8 @@ export const apis = {
             if (uid !== undefined) params.append('idUser', uid);
             if (typeFilter !== undefined) params.append('typeFilter', typeFilter);
             return `/get-byIdUser?${params.toString()}`
-        }
+        },
+        getByIdInvoice:({idInvoice}:{idInvoice:string})=>`/get-byIdInvoice?idInvoice=${idInvoice}`
     }
 
 }

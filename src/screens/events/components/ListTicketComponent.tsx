@@ -19,24 +19,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { addShowTimeChose } from "../../../reduxs/reducers/billingReducer";
 import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers";
 import checkLogin from "../../../utils/checkLogin";
+import { EventModelNew } from "../../../models/EventModelNew";
 interface Props{
   showTimes:ShowTimeModel[],
   idEvent:string,
   titleEvent:string,
   addRessEvent:string,
-  locationEvent:String
+  locationEvent:String,
+  relatedEvents:EventModelNew[]
+  
 }
 const ListTicketComponent = (props:Props) => {
-  const {showTimes,idEvent,titleEvent,addRessEvent,locationEvent} = props
-  const ShowTimes = [
-    {
-      typeTicket: ['First','First'],
+  const {showTimes,idEvent,titleEvent,addRessEvent,locationEvent,relatedEvents} = props
+  // const ShowTimes = [
+  //   {
+  //     typeTicket: ['First','First'],
 
-    },
-    {
-      typeTicket: ['Second','Second','Second'],
-    },
-  ];
+  //   },
+  //   {
+  //     typeTicket: ['Second','Second','Second'],
+  //   },
+  // ];
   const dispatch = useDispatch()
   const [state, setState] = useState([])
   const [stateChild, setStateChild] = useState([])
@@ -49,7 +52,8 @@ const ListTicketComponent = (props:Props) => {
         idEvent:idEvent,
         titleEvent:titleEvent,
         addRessEvent:addRessEvent,
-        locationEvent:locationEvent
+        locationEvent:locationEvent,
+        relatedEvents:relatedEvents
       }))
       navigation.navigate('ChooseTicketScreen')
     }else{
@@ -234,8 +238,8 @@ const ListTicketComponent = (props:Props) => {
         {section.description && <SimpleLineIcons name={isActive ? "arrow-down" : "arrow-right"} size={10} color={colors.white} />}
         {section.description && <SpaceComponent width={8} />}
         <RowComponent justify="space-between" styles={{width:'100%'}}>
-          <TextComponent text={section?.name} size={12} color={colors.white} font={fontFamilies.semiBold} />
-          <View style={{}}>
+          <TextComponent text={section?.name} size={12} color={colors.white}  font={fontFamilies.semiBold} />
+          <View >
             <TextComponent text={convertMoney(section.price)} textAlign="right" styles={{marginRight:section.description ? 18 : 0}} color={renderColorMoney()} font={fontFamilies.semiBold} />
             <SpaceComponent height={2}/>
            {renderContentStatusTypeTicket(section)}

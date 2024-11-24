@@ -194,7 +194,7 @@ const ModalFilterEvent = (props: Props) => {
                         <RowComponent>
                             <View style={{ flex: 1, paddingHorizontal: 4 }}>
                                 <RnRangeSlider
-                                    min={0} max={5000000} step={10000}
+                                    min={0} max={11000000} step={10000}
                                
                                     style={{ height: 5, backgroundColor: colors.gray2, borderRadius: 10, marginHorizontal: 12, justifyContent: 'center' }}
                                     renderThumb={(name) => (

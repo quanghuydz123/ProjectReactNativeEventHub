@@ -65,7 +65,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     high: number
   }>({
       low:0,
-      high:5000000
+      high:10000000
   })
   const [dateTime,setDateTime] = useState<{
     startAt:string,

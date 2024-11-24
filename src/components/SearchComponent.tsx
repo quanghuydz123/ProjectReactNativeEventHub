@@ -35,9 +35,8 @@ const SearchComponent = (props: Props) => {
           marginBottom: 0,
           borderRadius:100,
           backgroundColor:bgColor ?? colors.backgroundSearchInput,
-          minHeight:46,
           borderColor:colors.white,
-          
+          minHeight:40
         }]}
         textColor={textColor}
         affix={<SearchNormal size={20} color={colors.gray} />}

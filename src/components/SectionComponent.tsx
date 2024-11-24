@@ -1,4 +1,4 @@
-import { Button, StyleProp, Text, View, ViewStyle } from "react-native"
+import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
 import React, { ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import SpaceComponent from "./SpaceComponent"
@@ -13,15 +13,19 @@ interface Props {
   colorSpace?: string,
   isNoPaddingBottom?: boolean,
   bgColor?:string,
-  sectionRef?:any
+  sectionRef?:any,
+  onPress?:()=>void
 
 }
 const SectionComponent = (props: Props) => {
 
-  const { children, styles, isSpace, mgSpaceTop, colorSpace, mgSpaceBottom, isNoPaddingBottom,bgColor ,sectionRef} = props
+  const { children, styles, isSpace, mgSpaceTop,onPress, colorSpace, mgSpaceBottom, isNoPaddingBottom,bgColor ,sectionRef} = props
+  const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
+
   return (
-    <View 
+    <TouchableOpacityComponent 
     ref={sectionRef}
+    onPress={onPress}
     style={[{
       paddingHorizontal: 12,
       paddingBottom:isNoPaddingBottom ? 0 : 12,
@@ -29,7 +33,7 @@ const SectionComponent = (props: Props) => {
     }, styles]}>
       {children}
       {isSpace && <SpaceComponent height={1} styles={{ marginTop: mgSpaceTop ?? 0, marginBottom: mgSpaceBottom ?? 0 }} color={colorSpace ?? colors.gray7} />}
-    </View>
+    </TouchableOpacityComponent>
   )
 }
 export default SectionComponent;

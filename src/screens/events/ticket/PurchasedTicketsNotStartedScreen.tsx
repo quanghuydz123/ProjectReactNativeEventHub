@@ -56,7 +56,7 @@ const PurchasedTicketNotStartedScreen = ({ navigation, route }: any) => {
                    isLoading={isLoading}
                    children={
                     invoicePaid.map((invoice)=>{
-                        return <TicketComponent invoice={invoice} key={invoice.invoiceDetails._id} />
+                        return <TicketComponent invoice={invoice} key={invoice.invoiceDetails?._id} />
                     })
                    }
                    />

@@ -28,12 +28,12 @@ const TicketComponent = (props:Props) => {
   const navigation:any = useNavigation()
   return (
     <>
-      <RowComponent onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen',{invoice:invoice})}>
-        <CardComponent color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.21, minHeight: cardHeitght, justifyContent: 'center', alignItems: 'center' }}>
+      <RowComponent onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen',{idInvoice:invoice?.invoiceDetails?._id})}>
+        <CardComponent color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.23, minHeight: cardHeitght, justifyContent: 'center', alignItems: 'center' }}>
           <TextComponent text={new Date(invoice.showTimeDetails.startDate).getDate()} font={fontFamilies.semiBold} size={22} color={colors.white} />
           <TextComponent text={`Tháng ${new Date(invoice.showTimeDetails.startDate).getMonth()+1}`} font={fontFamilies.semiBold} color={colors.white} />
           <TextComponent text={new Date(invoice.showTimeDetails.startDate).getFullYear()} font={fontFamilies.semiBold} color={colors.white} />
-          <TextComponent text={`x${invoice.invoiceDetails.totalTicket}`} size={18} font={fontFamilies.semiBold} color={colors.primary} />
+          <TextComponent text={`x${invoice?.invoiceDetails?.totalTicket}`} size={18} font={fontFamilies.semiBold} color={colors.primary} />
 
           <CricleComponent children={<></>} color={colors.black} size={24} styles={{ position: 'absolute', top: -10, right: -14 }} />
           <CricleComponent children={<></>} color={colors.black} size={24} styles={{ position: 'absolute', bottom: -10, right: -14 }} />
@@ -46,7 +46,7 @@ const TicketComponent = (props:Props) => {
             const { height } = event.nativeEvent.layout;
             setCardHeitght(height); // Lấy width và gắn vào state
           }}
-          color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.76, minHeight: cardHeitght }}>
+          color={colors.background3} styles={{ width: appInfo.sizes.WIDTH * 0.74, minHeight: cardHeitght }}>
           <TextComponent text={invoice.eventDetails.title} color={colors.white} font={fontFamilies.semiBold} size={14} />
           <SpaceComponent height={6} />
           <RowComponent>
@@ -73,7 +73,7 @@ const TicketComponent = (props:Props) => {
           <RowComponent styles={{ alignItems: "center" }}>
             <FontAwesome name='barcode' size={15} color={colors.white} />
             <SpaceComponent width={4} />
-            <TextComponent text={`Mã đơn hàng: ${invoice.invoiceDetails.invoiceCode}`} size={12} font={fontFamilies.medium} color={colors.white} />
+            <TextComponent text={`Mã đơn hàng: ${invoice?.invoiceDetails?.invoiceCode ?? 0}`} size={12} font={fontFamilies.medium} color={colors.white} />
           </RowComponent>
           <SpaceComponent height={4} />
           <RowComponent styles={{ alignItems: 'flex-start' }}>

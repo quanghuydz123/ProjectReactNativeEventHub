@@ -121,4 +121,8 @@ export class DateTime {
             return `${strDate[2]} tháng ${strDate[1]}${strDate[0] !== strToday[0] ? ', ' + strDate[0] : ', '} lúc ${`${date.split('T')[1].split(':')[0]}:${date.split('T')[1].split(':')[1]}`}`
         }
     }
+    static GetMonthAndYear = (num: Date) => {
+        const date = new Date(num)
+        return `Tháng ${numberToString(date.getMonth() + 1)}/${date.getFullYear()}`
+    }
 }

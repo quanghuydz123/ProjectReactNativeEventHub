@@ -222,6 +222,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             </>
         )
     }
+
     const handleReserveTicket = async () => {
         try {
             setLoading(true)
@@ -234,7 +235,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     totalTicketChose: totalTicketChose, 
                     ticketChose: ticketChose,
                     ticketsReserve:res.data,
-                    idUser:auth.id
+                    idUser:auth.id,
                 }))
                 setLoading(false)
 

@@ -1,8 +1,8 @@
 import { StyleProp, Text, View, ViewStyle } from "react-native"
 import React from "react"
 interface Props { // phải định nghĩa ra trước
-    width?: number,
-    height?: number,
+    width?: any,
+    height?: any,
     color?:string,
     styles?: StyleProp<ViewStyle>,
 

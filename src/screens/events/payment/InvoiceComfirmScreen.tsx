@@ -32,6 +32,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const [isLoading,setIsLoading] = useState(false)
     const auth:AuthState = useSelector(authSelector)
     useEffect(() => {
+        console.log("paymentUrl",paymentUrl)
         if (paymentUrl) {
             navigation.navigate('PaymentScreen', { url: paymentUrl })
         }

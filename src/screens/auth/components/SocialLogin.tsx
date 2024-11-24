@@ -36,6 +36,7 @@ const SocialLogin = (props:Props)=>{
       const user = userInfo.user
       setIsLoading(true)
       const res:any = await authenticationAPI.HandleAuthentication(api,user,'post')
+      console.log("res",res)
       if(res && res.data && res.status===200){
         await AsyncStorage.setItem('auth', JSON.stringify({...res.data,loginMethod:'google'}))
         dispatch(addAuth({...res.data,loginMethod:'google'}))
@@ -44,7 +45,6 @@ const SocialLogin = (props:Props)=>{
       }
       setIsLoading(false)
 
-      console.log("resGoogle",userInfo)
     } catch (error) {
       console.log("erer,",error)
       setIsLoading(false)

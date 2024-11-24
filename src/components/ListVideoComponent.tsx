@@ -66,13 +66,13 @@ const ListVideoComponent = () => {
     const renderVideo = (index: number, isPaused: boolean,isSound:boolean) => {
         let background
         if (index === 0) {
-            background = require('../assets/video/video1.mp4');
+            background = require('../assets/video/video6.mp4');
         } else if (index === 1) {
-            background = require('../assets/video/video3.mp4');
+            background = require('../assets/video/video5.mp4');
         } else if (index === 2) {
-            background = require('../assets/video/video2.mp4');
+            background = require('../assets/video/video1.mp4');
         } else if (index === 3) {
-            background = require('../assets/video/video4.mp4');
+            background = require('../assets/video/video3.mp4');
 
         }
 

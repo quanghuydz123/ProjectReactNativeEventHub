@@ -15,7 +15,7 @@ const ListEventRelatedComponent = (props: Props) => {
     const { relatedEvents } = props
     const navigation:any = useNavigation()
     return (
-        <View style={{ backgroundColor: colors.black }}>
+        <View style={{ backgroundColor: colors.black,flex:1,paddingBottom:12 }}>
             <TextComponent
                 text={'Có thể bạn cũng thích'}
                 styles={{ paddingVertical: 10 }}

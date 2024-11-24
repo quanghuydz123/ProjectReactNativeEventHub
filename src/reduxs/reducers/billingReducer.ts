@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RoleModel } from "../../models/RoleModel";
 import { ShowTimeModel } from "../../models/ShowTimeModel";
 import { TypeTicketModel } from "../../models/TypeTicketModel";
+import { EventModelNew } from "../../models/EventModelNew";
 
 export interface billingState {
     showTimes: ShowTimeModel, 
@@ -15,7 +16,8 @@ export interface billingState {
         ticket:TypeTicketModel,
         amount:number
     }],
-    ticketsReserve?:string[]
+    ticketsReserve?:string[],
+    relatedEvents?:EventModelNew[]
 }
 
 const initialState: billingState = {
@@ -40,7 +42,8 @@ const initialState: billingState = {
     addRessEvent:'',
     locationEvent:'',
     titleEvent:'',
-    ticketsReserve:[]
+    ticketsReserve:[],
+    relatedEvents:[]
 }
 
 const billingSlice = createSlice({
@@ -54,11 +57,15 @@ const billingSlice = createSlice({
         state.billingData = action.payload
     },
     addtotalPriceAndTicket: (state, action) => {
-        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve} = action.payload
+        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve,relatedEvents} = action.payload
         state.billingData.totalPrice = totalPrice,
         state.billingData.totalTicket = totalTicketChose
         state.billingData.ticketChose = ticketChose
         state.billingData.ticketsReserve = ticketsReserve
+    },
+    addEventRelated: (state, action) => {
+        const {relatedEvents} = action.payload
+        state.billingData.relatedEvents = relatedEvents
     },
     removeShowTimeChose: (state, action) => {
         state.billingData = initialState;
@@ -67,5 +74,5 @@ const billingSlice = createSlice({
 });
 
 export const billingReducer = billingSlice.reducer;
-export const {addShowTimeChose,addtotalPriceAndTicket} = billingSlice.actions;
+export const {addShowTimeChose,addtotalPriceAndTicket,addEventRelated} = billingSlice.actions;
 export const billingSelector = (state: any) => state.billingReducer.billingData;

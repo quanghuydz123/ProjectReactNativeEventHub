@@ -414,7 +414,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
             if(checkLogin(auth,navigation)){
               navigation.navigate('TicketNavigator',{
                 relatedEvents:relatedEvents,
-                // invoicePaid:invoicePaid
               })
             }
           }})}

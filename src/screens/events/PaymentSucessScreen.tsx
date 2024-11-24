@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonComponent, ContainerComponent, CricleComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
+import { ButtonComponent, ContainerComponent, CricleComponent, ListEventRelatedComponent, ListVideoComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TextComponent } from '../../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
 import { View } from 'react-native-animatable';
@@ -24,15 +24,66 @@ import ListTicketComponent from './components/ListTicketComponent';
 import { ArrowDown2 } from 'iconsax-react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import WebView from 'react-native-webview';
-const EventsScreen = ({ navigation, route }: any) => {
+import { convertMoney } from '../../utils/convertMoney';
+import LottieView from 'lottie-react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { useSelector } from 'react-redux';
+import { billingSelector, billingState } from '../../reduxs/reducers/billingReducer';
+import { DateTime } from '../../utils/DateTime';
+const PaymentSucessScreen = ({ navigation, route }: any) => {
+  const { invoiceCode,createdAt }: { invoiceCode: string,createdAt:Date } = route.params
+
+  const billing: billingState = useSelector(billingSelector)
   return (
-   <ContainerComponent>
+    <>
+      <ContainerComponent title={'Kết quả giao dịch'} bgColor={'#f6f5fb'} isScroll>
         <SectionComponent>
-            <TextComponent text={'Giao dịch thành công'}/>
+          <RowComponent justify='center' >
+            <LottieView source={require('../../../src/assets/icon/cat.json')} style={{ width: 150, height: 150 }} autoPlay loop />
+          </RowComponent>
+          <RowComponent justify='center'>
+            <FontAwesome5 name='check-circle' size={50} color={colors.primary} />
+            <SpaceComponent width={12} />
+            <TextComponent text={'Đặt vé thành công'} size={22} font={fontFamilies.bold} color={colors.primary} />
+          </RowComponent>
         </SectionComponent>
-   </ContainerComponent>
+        <SectionComponent>
+          <CardComponent >
+            <RowComponent justify='space-between' styles={{ paddingVertical: 12 }}>
+              <TextComponent text={'Sự kiện'} flex={1} font={fontFamilies.medium} />
+              <TextComponent flex={2} text={billing?.titleEvent ?? ''} font={fontFamilies.medium} />
+            </RowComponent>
+
+            <SpaceComponent width={'100%'} height={1} color='#e5e5e5' />
+            <RowComponent justify='space-between' styles={{ paddingVertical: 14 }}>
+              <TextComponent text={'Thời gian thanh toán'} font={fontFamilies.medium} />
+              <TextComponent text={`${DateTime.GetTime(createdAt ?? new Date())} - ${DateTime.GetDate2(createdAt ?? new Date())}`} font={fontFamilies.medium} />
+            </RowComponent>
+            <SpaceComponent width={'100%'} height={1} color='#e5e5e5' />
+            <RowComponent justify='space-between' styles={{ paddingVertical: 14 }}>
+              <TextComponent text={'Mã đơn hàng'} font={fontFamilies.medium} />
+              <TextComponent text={invoiceCode ?? ''} font={fontFamilies.medium} />
+            </RowComponent>
+            <SpaceComponent width={'100%'} height={1} color='#e5e5e5' />
+            <RowComponent justify='space-between' styles={{ paddingVertical: 14 }}>
+              <TextComponent text={'Tổng tiền'} font={fontFamilies.medium} />
+              <TextComponent text={convertMoney(billing?.totalPrice ?? 0)} font={fontFamilies.medium} color={colors.primary} />
+            </RowComponent>
+            <SpaceComponent width={'100%'} height={1} color='#e5e5e5' />
+            <RowComponent justify='space-between' styles={{ paddingVertical: 14 }}>
+              <ButtonComponent mrBottom={0} width={appInfo.sizes.WIDTH * 0.42} color={colors.white} textColor={colors.primary} styles={{ borderWidth: 1, borderColor: colors.primary, paddingVertical: 10 }} text='Trang chủ' type='primary' onPress={()=>navigation.goBack()} />
+              <ButtonComponent mrBottom={0} width={appInfo.sizes.WIDTH * 0.42} styles={{ paddingVertical: 10 }} text='Vé của tôi' type='primary' onPress={()=>navigation.navigate('TicketNavigator',{
+                relatedEvents:billing.relatedEvents,
+              })} />
+            </RowComponent>
+          </CardComponent>
+        </SectionComponent>
+        <ListEventRelatedComponent relatedEvents={billing?.relatedEvents ?? []} />
+
+      </ContainerComponent>
+    </>
   )
 }
 
 
-export default EventsScreen;
+export default PaymentSucessScreen;
