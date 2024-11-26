@@ -34,7 +34,7 @@ const TextComponent = (props: Props) => {
       color: color ?? colors.colorText,
       flex: flex ?? 0,
       fontSize: size ?? (title ? 24 : fontSizeDefault),
-      fontFamily: font ?? (title ? fontFamilies.medium : fontFamilies.regular),
+      fontFamily: font ?? (title ? fontFamilies.medium : ''),
       lineHeight,
       textAlign: textAlign ?? 'left',
       paddingVertical:paddingVertical ?? paddingVertical

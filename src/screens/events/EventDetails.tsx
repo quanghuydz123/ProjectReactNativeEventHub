@@ -1,6 +1,6 @@
-import { Alert, Button, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import React, { Ref, useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, DataLoaderComponent, ListEventRelatedComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
+import { Alert, BackHandler, Button, Image, ImageBackground, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import React, { Ref, useCallback, useEffect, useRef, useState } from "react"
+import { ButtonComponent, ContainerComponent, CricleComponent, DataLoaderComponent, ListEventRelatedComponent, RowComponent, SectionComponent, SpaceComponent, TabBarComponent, TagComponent, TextComponent } from "../../components";
 import { appInfo } from "../../constrants/appInfo";
 import { ArrowDown, ArrowDown2, ArrowLeft, ArrowLeft2, ArrowRight, Calendar, Data, Location } from "iconsax-react-native";
 import { colors } from "../../constrants/color";
@@ -39,6 +39,11 @@ import Share from 'react-native-share';
 import { addEventRelated, addShowTimeChose, billingSelector } from "../../reduxs/reducers/billingReducer";
 import ListEventComponent from "../../components/ListEventComponent";
 import EventItem from "../../components/EventItem";
+import CommentComponent from "./components/CommentComponent";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { useFocusEffect } from "@react-navigation/native";
+import { CommentModel } from "../../models/CommentModel";
+import commentAPI from "../../apis/commentAPI";
 
 const EventDetails = ({ navigation, route }: any) => {
 
@@ -47,8 +52,6 @@ const EventDetails = ({ navigation, route }: any) => {
   const [heightButton, setHeightButton] = useState(0);
   const auth: AuthState = useSelector(authSelector)
   const [isLoading, setIsLoading] = useState(true)
-  // const [isLLoadingNotShow, setIsLLoadingNotShow] = useState(false)
-  // const [followerEvent, setFollowerEvent] = useState<FollowModel[]>(followers)
   const [searchUser, setSearchUser] = useState('')
   const [userSelected, setUserSelected] = useState<string[]>([])
   const [allUser, setAllUser] = useState<UserModel[]>([])
@@ -56,12 +59,33 @@ const EventDetails = ({ navigation, route }: any) => {
   const [event, setEvent] = useState<EventModelNew>()
   const dispatch = useDispatch()
   const [isInterested, setIsInterested] = useState(false)
-  const { getItem: getItemAuth } = useAsyncStorage('auth')
-  const [interestText, setInterestText] = useState('')
+  // const { getItem: getItemAuth } = useAsyncStorage('auth')
+  // const [interestText, setInterestText] = useState('')
   const [isShowDes, setIsShowDes] = useState(false)
   const [isLoadingChoseShowTime, setIsLoadingChoseShowTime] = useState(false)
   const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  // const [textComment, setTextComment] = useState('')
+  const [isShowing, setIsShowing] = useState<boolean>(false);
+  const [index, setIndex] = useState(-1)
+
+  const [comments,setComments] = useState<CommentModel[]>([])
+
   useStatusBar('light-content')
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (isShowing) {
+          bottomSheetRef.current?.close();
+          BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+          return true;
+        }
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [bottomSheetRef, isShowing])
+  );
   useEffect(() => {
     UserHandleCallAPI.getAll(setAllUser)
     if (!event) {
@@ -75,18 +99,19 @@ const EventDetails = ({ navigation, route }: any) => {
   //   const authItem: any = await getItemAuth()
   //   console.log("authItem",JSON.parse(authItem)?.eventsInterested)  
   // }
- 
-  useEffect(() => {
-    const userCount = event?.usersInterested?.length || 0;
-    const isUserInterested = event?.usersInterested?.some(item => item.user._id === auth.id);
 
-    setInterestText(isUserInterested
-      ? userCount - 1 > 0
-        ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
-        : `Bạn đã quan tâm`
-      : `${userCount} Người đã quan tâm`)
+  useEffect(() => {
+    // const userCount = event?.usersInterested?.length || 0;
+    // const isUserInterested = event?.usersInterested?.some(item => item.user._id === auth.id);
+
+    // setInterestText(isUserInterested
+    //   ? userCount - 1 > 0
+    //     ? `Bạn và ${userCount - 1} Người khác đã quan tâm`
+    //     : `Bạn đã quan tâm`
+    //   : `${userCount} Người đã quan tâm`)
     if (event) {
       haneleGetAPIRelatedEvents()
+      handleCallAPIGetComments()
       handleIncViewEvent()
     }
 
@@ -103,15 +128,26 @@ const EventDetails = ({ navigation, route }: any) => {
       const res = await eventAPI.HandleEvent(apis.event.getById(id))
       if (res && res.data && res.status === 200) {
         setEvent(res.data as EventModelNew)
-
       }
       setIsLoading(false)
 
     } catch (error: any) {
+      setIsLoading(false)
       const errorMessage = JSON.parse(error.message)
       console.log(errorMessage)
-      setIsLoading(false)
 
+    }
+  }
+  const handleCallAPIGetComments = async ()=>{
+    const api = apis.comment.getByIdEvent({idEvent:event?._id || '',idUser:auth.id ?? ''})
+    try { 
+      const res = await commentAPI.HandleComment(api)
+      if(res && res.data && res.status === 200){
+        setComments(res.data)
+      }
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log(errorMessage)
     }
   }
   const handleIncViewEvent = async () => {
@@ -136,31 +172,28 @@ const EventDetails = ({ navigation, route }: any) => {
   }
   const haneleGetAPIRelatedEvents = async () => {
     const api = apis.event.getAll({ categoriesFilter: [event?.category._id || ''], limit: '8' })
-    // setIsLoading(isLoading ? isLoading : false)
     try {
       const res: any = await eventAPI.HandleEvent(api, {}, 'get');
       if (res && res.data && res.status === 200) {
         setRelatedEvents(res.data as EventModelNew[])
       }
-      // setIsLoading(false)
 
     } catch (error: any) {
-      // setIsLoading(false)
       const errorMessage = JSON.parse(error.message)
       console.log("HomeScreen", errorMessage)
     }
   }
-  const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
-    const y = isAtEnd ? layoutMeasurement.height + contentOffset.y + heightButton : layoutMeasurement.height + contentOffset.y
-    const isScrollEnd = y >= contentSize.height - paddingToBottom;
-    setIsAtEnd(isScrollEnd);
-  };
-  const onLayout = (event: any) => {//Lấy ra height
-    const { height, width } = event.nativeEvent.layout;
-    setHeightButton(height)
-  };
+  // const handleScroll = (event: any) => {//khi scroll tới cuối cùng thì bằng true
+  //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  //   const paddingToBottom = 0; // Khoảng cách từ cuối mà bạn muốn nhận biết
+  //   const y = isAtEnd ? layoutMeasurement.height + contentOffset.y + heightButton : layoutMeasurement.height + contentOffset.y
+  //   const isScrollEnd = y >= contentSize.height - paddingToBottom;
+  //   setIsAtEnd(isScrollEnd);
+  // };
+  // const onLayout = (event: any) => {//Lấy ra height
+  //   const { height, width } = event.nativeEvent.layout;
+  //   setHeightButton(height)
+  // };
   // const handleFlowerEvent = async () => {
   //   const api = apis.follow.updateFollowEvent()
   //   if (event?._id) {
@@ -242,9 +275,9 @@ const EventDetails = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCreateBillPaymentEvent = async () => {
-    navigation.navigate('PaymentScreen', { event: event })
-  }
+  // const handleCreateBillPaymentEvent = async () => {
+  //   navigation.navigate('PaymentScreen', { event: event })
+  // }
 
   const openMap = () => {
     const encodedAddress = encodeURIComponent(event?.Address || ''); // Mã hóa địa chỉ
@@ -277,8 +310,8 @@ const EventDetails = ({ navigation, route }: any) => {
       if (checkLogin()) {
         setIsLoadingChoseShowTime(true)
         dispatch(addShowTimeChose({
-          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address, 
-          locationEvent: event?.Location,relatedEvents:relatedEvents
+          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address,
+          locationEvent: event?.Location, relatedEvents: relatedEvents
         }))
         setIsLoadingChoseShowTime(false)
         navigation.navigate('ChooseTicketScreen')
@@ -339,6 +372,13 @@ const EventDetails = ({ navigation, route }: any) => {
     }
     return true
   }
+  const openComment = () => {
+    if (isShowing) {
+      bottomSheetRef.current?.close();
+    } else {
+      bottomSheetRef?.current?.expand()
+    }
+  }
   return (
 
     <>
@@ -366,13 +406,13 @@ const EventDetails = ({ navigation, route }: any) => {
                   borderTopRightRadius: 12
                 }} />
                 <SectionComponent styles={{ paddingTop: 12 }}>
-                  <TextComponent text={event?.title || ''} numberOfLine={2} title size={18} color={colors.white} font={fontFamilies.medium} />
+                  <TextComponent text={event?.title || ''} numberOfLine={2} title size={16} color={colors.white} font={fontFamilies.medium} />
                   <SpaceComponent height={8} />
                   <RowComponent styles={{ alignItems: 'flex-start' }}>
-                    <FontAwesome6 name="calendar" size={16} color={colors.white} />
+                    <FontAwesome6 name="calendar" size={14} color={colors.white} />
                     <SpaceComponent width={8} />
                     <View>
-                      <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(), event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12.5} />
+                      <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(), event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12} />
                       {(event?.showTimes && event?.showTimes.length > 1) && <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: colors.white, padding: 2 }}>
                         <TextComponent text={`+${event?.showTimes.length - 1} thời gian khác`} color={colors.white} font={fontFamilies.medium} size={8} />
                       </View>}
@@ -383,18 +423,18 @@ const EventDetails = ({ navigation, route }: any) => {
 
                   {!(event?.showTimes && event?.showTimes.length > 1) && <SpaceComponent height={8} />}
                   <RowComponent styles={{ alignItems: 'flex-start' }}>
-                    <FontAwesome6 size={16} color={colors.white} name="location-dot" style={{}} />
+                    <FontAwesome6 size={14} color={colors.white} name="location-dot" style={{}} />
                     <SpaceComponent width={8} />
                     <View style={{ flex: 1 }}>
-                      <TextComponent text={event?.Location || ''} numberOfLine={2} color={colors.primary} font={fontFamilies.medium} size={12.5} />
-                      <TextComponent numberOfLine={2} text={event?.Address || ''} size={12} color={colors.gray4} />
+                      <TextComponent text={event?.Location || ''} numberOfLine={2} color={colors.primary} font={fontFamilies.medium} size={12} />
+                      <TextComponent numberOfLine={2} text={event?.Address || ''} size={11.5} color={colors.gray4} />
                       <ButtonComponent
                         text="Xem trên bảng đồ"
                         type="link"
                         textFont={fontFamilies.medium}
                         icon={<ArrowDown2 size={14} color={colors.primary} />}
                         iconFlex="right"
-                        textSize={11}
+                        textSize={10}
                         textColor={colors.primary}
                         onPress={() => openMap()}
                       />
@@ -405,7 +445,8 @@ const EventDetails = ({ navigation, route }: any) => {
             </SectionComponent>
           </ImageBackground>
         </View>
-        <SectionComponent styles={{ paddingTop: 14 }}>
+        <SpaceComponent height={14} />
+        {/* <SectionComponent styles={{ paddingTop: 14 }}>
           <CardComponent isShadow>
             <RowComponent justify="center" styles={{ paddingVertical: 10 }}>
               <ButtonComponent
@@ -422,7 +463,6 @@ const EventDetails = ({ navigation, route }: any) => {
                 mrBottom={0}
                 onPress={() => { handleInterestEvent() }}
               />
-              {/* <LottieView source={require('../../../src/assets/icon/star.json')} style={{width:20,height:20,marginTop:10}} speed={1} autoPlay loop={true}  renderMode="HARDWARE" /> */}
 
               <SpaceComponent width={8} />
               <ButtonComponent
@@ -442,7 +482,6 @@ const EventDetails = ({ navigation, route }: any) => {
               />
 
             </RowComponent>
-            {/* {<AvatarGroup  users={event?.usersInterested} textColor={colors.background} size={40}  />} */}
             {event && event?.usersInterested && event?.usersInterested.length > 0 && <>
               <SpaceComponent height={12} />
               <RowComponent styles={{ alignItems: 'flex-start' }}>
@@ -460,7 +499,7 @@ const EventDetails = ({ navigation, route }: any) => {
               </RowComponent>
             </>}
           </CardComponent>
-        </SectionComponent>
+        </SectionComponent> */}
         <SectionComponent>
           <CardComponent isShadow title='Giới thiệu' styles={{ paddingBottom: 26 }}>
             <View style={{ maxHeight: isShowDes ? 5000 : 480, overflow: 'hidden' }}>
@@ -479,8 +518,8 @@ const EventDetails = ({ navigation, route }: any) => {
                   img: {
                     objectFit: 'fill',
                   },
-                  ul:{
-                    
+                  ul: {
+
                   },
                   li: {
                     color: colors.black,
@@ -574,6 +613,7 @@ const EventDetails = ({ navigation, route }: any) => {
           onClose={() => setIsOpenModalizeInityUser(false)}
           onSearch={(val: string) => setSearchUser(val)}
           valueSearch={searchUser}
+
           visible={isOpenModalizeInvityUser}
           footerComponent={<View style={{
             paddingBottom: 10,
@@ -618,6 +658,36 @@ const EventDetails = ({ navigation, route }: any) => {
         <ListEventRelatedComponent relatedEvents={relatedEvents} />
 
       </ContainerComponent>
+        {!isLoading && <CommentComponent
+          // textComment={textComment}
+          idEvent={event?._id ?? ''}
+          comments={comments}
+          // setTextComment={(val) => setTextComment(val)}
+          setIndex={(val) => setIndex(val)}
+          setIsShowing={(val) => setIsShowing(val)}
+          isShowing={isShowing}
+          ref={bottomSheetRef} />}
+
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.3, right: 8 }} onPress={() => { handleInterestEvent() }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <AntDesign name={isInterested ? "like1" : "like2"} size={28} color={colors.primary} />
+          <TextComponent text={event?.usersInterested?.length ?? 0} size={14} font={fontFamilies.medium} color={colors.primary} />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.215, right: 8 }} onPress={() => openComment()}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <AntDesign name={"message1"} style={{
+            // transform: [{ rotate: '360deg' }]
+          }} size={28} color={colors.primary} />
+          <TextComponent text={event?.totalComments ?? 0} size={14} font={fontFamilies.medium} color={colors.primary} />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.15, right: 8 }} onPress={() => setIsOpenModalizeInityUser(true)}>
+        <Ionicons name="person-add" size={28} color={colors.primary} />
+      </TouchableOpacity>
+
       {
         <SectionComponent isNoPaddingBottom styles={{ backgroundColor: colors.black, height: 70, justifyContent: 'center' }}>
           <RowComponent justify="space-between">

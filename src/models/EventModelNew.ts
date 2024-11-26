@@ -18,6 +18,7 @@ export interface EventModelNew {
       user:UserModel,
       createdAt:Date
     }],
+    totalComments:number,
     showTimes:[ShowTimeModel]
     statusEvent: 'PendingApproval' | "NotStarted" | 'Ongoing' | 'Ended' | 'Cancelled' | 'OnSale' | 'SoldOut' | 'SaleStopped' | 'NotYetOnSale'
     startAt: string

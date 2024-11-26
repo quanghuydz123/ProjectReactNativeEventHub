@@ -1,4 +1,4 @@
-import { Button, FlatList, Image, Platform, StatusBar, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { Button, FlatList, Image, Platform, ScrollView, StatusBar, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
 import React, { ReactElement, ReactNode, lazy, useEffect, useRef, useState } from "react"
 
 import { ArrowDown2, ArrowLeft, ArrowLeft2, SearchNormal } from "iconsax-react-native";
@@ -17,6 +17,8 @@ import AvatarGroup from "../src/components/AvatarGroup";
 import SearchComponent from "../src/components/SearchComponent";
 import { CategoryModel } from "../src/models/CategoryModel";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { apis } from "../src/constrants/apis";
+import { appInfo } from "../src/constrants/appInfo";
 
 interface Props {
     // values: SelectModel[],
@@ -131,12 +133,17 @@ const SelectModalize = (props: Props) => {
         //     </Portal>
         <Portal>
                 <Modalize
+                    
                     onClosed={()=>{onClose()}}
-                    adjustToContentHeight={adjustToContentHeight}
+                    // adjustToContentHeight={adjustToContentHeight}
+                    adjustToContentHeight={false}
+                    // modalHeight={appInfo.sizes.HEIGHT*0.8}
+                    
                     modalStyle={[{
                         paddingVertical: 10,
                         paddingHorizontal:12,
                     }]}
+                    // scrollViewProps={{ keyboardShouldPersistTaps: "handled", }}
                     HeaderComponent={
                         <View style={{paddingTop:10}}>
                             <TextComponent text={title ?? 'Danh sách'}  title size={16}/>
@@ -146,23 +153,23 @@ const SelectModalize = (props: Props) => {
                        }
                         </View>
                     }
-                    flatListProps={{
-                        data:data,
-                        keyExtractor: item => item.id,
-                        showsVerticalScrollIndicator: false,
-                        renderItem:({item,index})=>renderItem(item),
-                        contentContainerStyle:styles,
-                        ListEmptyComponent:<View style={{paddingVertical:20}}>
-                            <TextComponent text={'Không có dữ liệu'}/>
-                        </View>
-                        
-                    }}
+                    // flatListProps={{
+                    //     data:data,
+                    //     keyExtractor: item => item.id,
+                    //     renderItem:({item,index})=>renderItem(item),
+                    //     contentContainerStyle:styles,
+                    //     ListEmptyComponent:<View style={{paddingVertical:20}}>
+                    //         <TextComponent text={'Không có dữ liệu'}/>
+                    //     </View>
+                    // }}
                     
                     
                     FooterComponent={
                         footerComponent
                     }
-                    handlePosition="inside" ref={modalieRef} onClose={() => onClose()} />
+                    handlePosition="inside" ref={modalieRef} onClose={() => onClose()}>
+                     {data.map((item)=>renderItem(item))}
+                    </Modalize>
                     
             </Portal>
     )

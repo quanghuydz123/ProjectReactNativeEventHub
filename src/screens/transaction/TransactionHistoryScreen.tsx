@@ -17,21 +17,26 @@ import { DateTime } from "../../utils/DateTime";
 import { apis } from "../../constrants/apis";
 import invoiceAPI from "../../apis/invoiceAPI";
 import { appInfo } from "../../constrants/appInfo";
+import { LoadingModal } from "../../../modals";
 const TransactionHistoryScreen = ({ navigation, route }: any) => {
   const [search, setSearch] = useState('')
   const auth: AuthState = useSelector(authSelector)
   const [invoices,setInvoices] = useState<Invoice[][]>(auth?.invoices)
+  const [isLoading,setIsLoading] = useState(false)
   useEffect(()=>{
     setInvoices(auth?.invoices)
   },[auth])
   const handleCallAPISearchInvoice = async ()=>{
     const api = apis.invoice.getByIdUser({idUser:auth.id,searchValue:search})
+    setIsLoading(true)
     try {
       const res = await invoiceAPI.HandleInvoice(api)
       if(res && res.data && res.status === 200){
         setInvoices(res.data)
       }
+      setIsLoading(false)
     } catch (error:any) {
+      setIsLoading(false)
       const errorMessage = JSON.parse(error.message)
       console.log("TransactionHistoryScreen", errorMessage.message)
     }
@@ -56,7 +61,7 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
             <TextComponent text={`${DateTime.GetTime(invoice.createdAt)} - ${DateTime.GetDate2(invoice.createdAt)}`} size={12} />
             <RowComponent justify="space-between">
               <TextComponent text={`Số lượng vé: ${invoice.totalTicket}`} size={12} />
-              <TextComponent text={`-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} size={15} />
+              <TextComponent text={`-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} color={colors.primary} size={15} />
             </RowComponent>
           </View>
         </RowComponent>
@@ -119,7 +124,7 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
         }
 
 
-
+        <LoadingModal visible={isLoading}/>
     </ContainerComponent>
 
   )

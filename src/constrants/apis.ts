@@ -96,6 +96,11 @@ export const apis = {
             return `/get-byIdUser?${params.toString()}`
         },
         getByIdInvoice:({idInvoice}:{idInvoice:string})=>`/get-byIdInvoice?idInvoice=${idInvoice}`
-    }
+    },
+    comment:{
+        commentEvent:()=>`/comment-event`,
+        replyCommentEvent:()=>`/replyComment-event`,
+        getByIdEvent:({idEvent,idUser}:{idEvent:string,idUser:string})=>`/get-byIdEvent?idEvent=${idEvent}&idUser=${idUser}`
+    }   
 
 }

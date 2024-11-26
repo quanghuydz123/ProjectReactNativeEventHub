@@ -1,5 +1,5 @@
 import { Button, KeyboardType, StyleProp, StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from "react-native"
-import React, { memo, ReactNode, useState } from "react"
+import React, { forwardRef, memo, ReactNode, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { EyeSlash } from "iconsax-react-native"
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -29,15 +29,17 @@ interface Props {
   bgColor?:string,
   borderColor?:string,
   colorTitle?:string,
-  require?:boolean
+  require?:boolean,
+  onBlur?:()=>void,
+  onFocus?:()=>void
 }
 //secureTextEntry chuyển thành ****
 //ReactNode Có thẻ đóng thẻ mở ví dụ <Text />
 //keyboardType gợi tý thay đổi bản phím
 //autoCapitalize bỏ tự động viết 
 //onEndEditing khi ngừng nhập
-const InputComponent = (props: Props) => {
-  const { value, onChange, affix, placeholder,colorTitle, suffix,require,borderColor,bgColor,allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines,textColor } = props
+const InputComponent = forwardRef<any, Props>((props:Props,ref:any) => {
+  const { value, onChange, affix, placeholder,onBlur,onFocus,colorTitle, suffix,require,borderColor,bgColor,allowClear, isPassword,title, styles, type, onEnd, disabled, multiline, numberOfLines,textColor } = props
   const [isShowPassword, setIsShowPassword] = useState(isPassword && isPassword)
 
   return (
@@ -60,7 +62,7 @@ const InputComponent = (props: Props) => {
         alignItems: multiline ? 'flex-start' : 'center',backgroundColor: bgColor ?? colors.white, borderColor: borderColor ??  colors.gray3,
       }, styles]}>
         {affix && affix}
-        <TextInput style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto',color:textColor ?? colors.colorText}]}
+        <TextInput ref={ref} style={[globalStyles.input, globalStyles.text, { paddingHorizontal: affix || suffix ? 14 : 0 ,textAlignVertical:multiline ? 'top' : 'auto',color:textColor ?? colors.colorText}]}
           placeholder={placeholder ?? ''}
           multiline={multiline}
           onChangeText={val => onChange(val)}
@@ -72,7 +74,8 @@ const InputComponent = (props: Props) => {
           onEndEditing={onEnd}
           editable={disabled}
           numberOfLines={numberOfLines}
-
+          onBlur={onBlur}
+          onFocus={onFocus}
           
         />
         {suffix && suffix}
@@ -84,6 +87,6 @@ const InputComponent = (props: Props) => {
       </View>
     </View>
   )
-}
+})
 export default memo(InputComponent);
 
