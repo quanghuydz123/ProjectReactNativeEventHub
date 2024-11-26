@@ -82,7 +82,7 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
   }, [count]);
   const handleUpdateInvoice = async ({ idInvoice, createdAt, invoiceCode }: { idInvoice: string, createdAt: Date, invoiceCode: string }) => {
     try {
-      const invoices:Invoice[][] = JSON.parse(JSON.stringify(auth.invoices));
+      const invoices:Invoice[][] = auth?.invoices ?? [];
       const invoiceNew: Invoice = {
         _id: idInvoice,
         invoiceCode: invoiceCode,
