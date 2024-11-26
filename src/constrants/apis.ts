@@ -100,7 +100,8 @@ export const apis = {
     comment:{
         commentEvent:()=>`/comment-event`,
         replyCommentEvent:()=>`/replyComment-event`,
-        getByIdEvent:({idEvent,idUser}:{idEvent:string,idUser:string})=>`/get-byIdEvent?idEvent=${idEvent}&idUser=${idUser}`
+        getByIdEvent:({idEvent,idUser,idAuthor}:{idEvent:string,idUser:string,idAuthor:string})=>`/get-byIdEvent?idEvent=${idEvent}&idUser=${idUser}&idAuthor=${idAuthor}`,
+        deleteComment:()=>`/delete-comment`
     }   
 
 }

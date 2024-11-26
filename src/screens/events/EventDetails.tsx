@@ -69,7 +69,7 @@ const EventDetails = ({ navigation, route }: any) => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [index, setIndex] = useState(-1)
 
-  const [comments,setComments] = useState<CommentModel[]>([])
+  // const [comments,setComments] = useState<CommentModel[]>([])
 
   useStatusBar('light-content')
   useFocusEffect(
@@ -111,7 +111,7 @@ const EventDetails = ({ navigation, route }: any) => {
     //   : `${userCount} Người đã quan tâm`)
     if (event) {
       haneleGetAPIRelatedEvents()
-      handleCallAPIGetComments()
+      // handleCallAPIGetComments()
       handleIncViewEvent()
     }
 
@@ -138,18 +138,7 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
-  const handleCallAPIGetComments = async ()=>{
-    const api = apis.comment.getByIdEvent({idEvent:event?._id || '',idUser:auth.id ?? ''})
-    try { 
-      const res = await commentAPI.HandleComment(api)
-      if(res && res.data && res.status === 200){
-        setComments(res.data)
-      }
-    } catch (error:any) {
-      const errorMessage = JSON.parse(error.message)
-      console.log(errorMessage)
-    }
-  }
+ 
   const handleIncViewEvent = async () => {
     try {
       const api = apis.event.incViewEvent()
@@ -660,15 +649,18 @@ const EventDetails = ({ navigation, route }: any) => {
       </ContainerComponent>
         {!isLoading && <CommentComponent
           // textComment={textComment}
+          authorId={event?.authorId.user._id ?? ''}
           idEvent={event?._id ?? ''}
-          comments={comments}
+          // comments={comments}
           // setTextComment={(val) => setTextComment(val)}
           setIndex={(val) => setIndex(val)}
           setIsShowing={(val) => setIsShowing(val)}
           isShowing={isShowing}
           ref={bottomSheetRef} />}
 
-      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.3, right: 8 }} onPress={() => { handleInterestEvent() }}>
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.3, right: 8 }} onPress={() => { if(checkLogin()){
+        handleInterestEvent()
+      } }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <AntDesign name={isInterested ? "like1" : "like2"} size={28} color={colors.primary} />
           <TextComponent text={event?.usersInterested?.length ?? 0} size={14} font={fontFamilies.medium} color={colors.primary} />
@@ -684,7 +676,11 @@ const EventDetails = ({ navigation, route }: any) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.15, right: 8 }} onPress={() => setIsOpenModalizeInityUser(true)}>
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.15, right: 8 }} onPress={() => {
+        if(checkLogin()){
+          setIsOpenModalizeInityUser(true)  
+        }
+      }}>
         <Ionicons name="person-add" size={28} color={colors.primary} />
       </TouchableOpacity>
 
