@@ -80,7 +80,7 @@ export const apis = {
     invoice:{
         createInvoice:()=>`/create-paymentInvoiceTicket`,
         cancelInvoice:()=>`/cancel-invoice`,
-        getByIdUser:({idUser,searchValue}:{idUser:string,searchValue:string})=>{
+        getByIdUser:({idUser,searchValue}:{idUser?:string,searchValue?:string})=>{
             const params = new URLSearchParams();
             if (idUser !== undefined) params.append('idUser', idUser);
             if (searchValue !== undefined) params.append('searchValue', searchValue);
