@@ -210,9 +210,9 @@ const ModalFilterEvent = (props: Props) => {
                                             <View style={{
                                                 position: 'absolute',
                                                 right: 0,
-                                                left: -20,
+                                                left: -30,
                                                 bottom: 16,
-                                                width: 50,
+                                                width: 60,
                                                 alignItems: 'center'
                                             }}>
                                                 <TextComponent size={12} color={colors.gray} text={name === 'low' ? selectedPriceRenge.low : selectedPriceRenge.high} />

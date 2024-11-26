@@ -126,7 +126,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
             //   data={follower[0]?.users}
             //   renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
             // />
-            follower[0]?.users.slice(0,4).map((item, index) => {
+            follower[0]?.users.map((item, index) => {
               return renderListFriend(item.idUser)
             })
           }
@@ -163,7 +163,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
   renderItem={({ item, index }) => renderListFriend(item.user, true)}
 /> */}
           <DataLoaderComponent data={yourFollowers} isLoading={isLoading} children={
-            yourFollowers.slice(0,4).map((item, index) => {
+            yourFollowers.map((item, index) => {
               return renderListFriend(item.user)
             })
           }

@@ -429,7 +429,11 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </RowComponent>
           
         <RowComponent>
-         {renderCardHalf({title:'Sự kiện đã quan tâm',icon: <Star />})}
+         {renderCardHalf({title:'Sự kiện đã quan tâm',icon: <Star />,onPress:() => {
+            if(checkLogin(auth,navigation)){
+              navigation.navigate('InterestedEventScreen',{bgColor:''})
+            }
+          }})}
 
          
           <SpaceComponent width={8} />

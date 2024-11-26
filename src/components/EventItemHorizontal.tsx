@@ -82,12 +82,10 @@ const EventItemHorizontal = (props: Props) => {
                             <RowComponent>
                                 <FontAwesome name="eye" color={colors.primary} size={16} />
                                 <SpaceComponent width={2} />
-                                <TextComponent text={'78654'} size={12} color={colors.primary} />
+                                <TextComponent text={item?.viewCount ?? 0} size={12} color={colors.primary} />
                             </RowComponent>
                             <SpaceComponent width={4} />
                         </RowComponent>
-
-
                     </RowComponent>
                 </View>
             </RowComponent>

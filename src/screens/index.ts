@@ -34,6 +34,7 @@ import OrganizerFollowingScreen from "./organizer/OrganizerFollowingScreen"
 import OrganizerUnfollowedScreen from "./organizer/OrganizerUnfollowedScreen"
 import PurchasedTicketsDetailsScreen from "./events/ticket/PurchasedTicketsDetailsScreen"
 import PurchasedTicketsCanceledScreen from "./events/ticket/PurchasedTicketsCanceledScreen"
+import InterestedEventScreen from "./profiles/InterestedEventScreen"
 
 export {
     HomeScreen,
@@ -69,5 +70,6 @@ export {
     InvoiceComfirmScreen,
     SearchAndListViewScreen,
     PurchasedTicketsDetailsScreen,
-    PurchasedTicketsCanceledScreen
+    PurchasedTicketsCanceledScreen,
+    InterestedEventScreen
 }

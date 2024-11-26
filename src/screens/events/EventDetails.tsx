@@ -68,9 +68,8 @@ const EventDetails = ({ navigation, route }: any) => {
   // const [textComment, setTextComment] = useState('')
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [index, setIndex] = useState(-1)
-
+  const [interestedCount,setInterestedCount] = useState(0)
   // const [comments,setComments] = useState<CommentModel[]>([])
-
   useStatusBar('light-content')
   useFocusEffect(
     useCallback(() => {
@@ -110,6 +109,7 @@ const EventDetails = ({ navigation, route }: any) => {
     //     : `Bạn đã quan tâm`
     //   : `${userCount} Người đã quan tâm`)
     if (event) {
+      setInterestedCount(event?.usersInterested?.length ?? 0)
       haneleGetAPIRelatedEvents()
       // handleCallAPIGetComments()
       handleIncViewEvent()
@@ -203,12 +203,17 @@ const EventDetails = ({ navigation, route }: any) => {
   //   }
   // }
   const handleInterestEvent = async () => {
+    setIsInterested(!isInterested)
+    if(isInterested){
+      setInterestedCount(prev => prev - 1)
+    }else{
+      setInterestedCount(prev => prev + 1)
+    }
     const api = '/interest-event'
     if (event?._id) {
       try {
         const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.status === 200) {
-          setIsInterested(!isInterested)
           await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested: res.data.user.eventsInterested }))
           dispatch(updateEventsInterested({ eventsInterested: res.data.user.eventsInterested }))
         }
@@ -663,7 +668,7 @@ const EventDetails = ({ navigation, route }: any) => {
       } }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <AntDesign name={isInterested ? "like1" : "like2"} size={28} color={colors.primary} />
-          <TextComponent text={event?.usersInterested?.length ?? 0} size={14} font={fontFamilies.medium} color={colors.primary} />
+          <TextComponent text={interestedCount} size={14} font={fontFamilies.medium} color={colors.primary} />
         </View>
       </TouchableOpacity>
 

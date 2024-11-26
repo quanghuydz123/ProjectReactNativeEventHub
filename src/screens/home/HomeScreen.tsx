@@ -604,10 +604,18 @@ const HomeScreen = ({ navigation, route }: any) => {
 
         <View style={[styles.lowerHeader]}>
           <Animated.View style={[styles.feature, depositViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => checkLogin()} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() =>{
+              if(checkLogin()){
+                navigation.navigate('InterestedEventScreen',{bgColor:colors.background})
+              }
+            }} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => checkLogin()}
+                onPress={() => {
+                  if(checkLogin()){
+                    navigation.navigate('InterestedEventScreen',{bgColor:colors.background})
+                  }
+                }}
               >
                 <AnimatedMaterialIcons name='bookmark-added' size={20} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>
@@ -618,10 +626,20 @@ const HomeScreen = ({ navigation, route }: any) => {
           </Animated.View>
 
           <Animated.View style={[styles.feature, withdrawViewAnimation]}>
-            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => checkLogin()} >
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+              if(checkLogin()){
+                navigation.navigate('TicketNavigator',{
+                  relatedEvents:allEvent.slice(0,4),
+                })
+              }
+            }} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
-                onPress={() => checkLogin()}
+                onPress={() => {if(checkLogin()){
+                  navigation.navigate('TicketNavigator',{
+                    relatedEvents:allEvent.slice(0,4),
+                  })
+                }}}
               >
                 <AnimatedFontAwesome name='ticket' size={18} color={colors.primary} style={[featureIconCustomAnimation]} />
               </CricleComponent>

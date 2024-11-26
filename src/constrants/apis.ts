@@ -14,6 +14,7 @@ export const apis = {
         updatePositionUser:()=>`/update-position-user`,
         updateFcmToken:()=>`/update-fcmtoken`,
         updateProfile:()=>`/update-profile`,
+        getEventInterestedByIdUser:({idUser}:{idUser:string})=>`/get-event-interested-byIdUser?idUser=${idUser}`
 
     },
     notification:{

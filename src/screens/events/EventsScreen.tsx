@@ -77,15 +77,14 @@ const EventsScreen = ({ navigation, route }: any) => {
         <ButtonComponent text='Open' type='primary' onPress={() => handleOpenBottomSheet()} />
         <ButtonComponent text='Close' type='primary' onPress={() => bottomSheetRef?.current?.close()} />
 
-       <View style={{flex:0}}>
+       {/* <View style={{}}>
         <CommentComponent 
           textComment={textComment} 
           setTextComment={(val)=>setTextComment(val)}  
           setIndex={(val)=>setIndex(val)} 
           setIsShowing={(val)=>setIsShowing(val)} 
-          isShowing={isShowing}
           ref={bottomSheetRef}/>
-       </View>
+       </View> */}
 
       </ContainerComponent>
     </>
