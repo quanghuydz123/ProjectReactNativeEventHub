@@ -222,7 +222,6 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             </>
         )
     }
-
     const handleReserveTicket = async () => {
         try {
             setLoading(true)
@@ -236,6 +235,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     ticketChose: ticketChose,
                     ticketsReserve:res.data,
                     idUser:auth.id,
+                    orderTime:15 * 60 
                 }))
                 setLoading(false)
 

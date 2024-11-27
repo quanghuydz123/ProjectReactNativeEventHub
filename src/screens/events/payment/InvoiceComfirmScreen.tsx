@@ -23,6 +23,7 @@ import axios from "axios"
 import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers"
 import { LoadingModal } from "../../../../modals"
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import TimeDownComponent from "./TimeDownComponent"
 const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
@@ -170,11 +171,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <TextComponent text={'Hoàn tất đặt vé trong'} size={13} font={fontFamilies.medium} textAlign='center' color={colors.white} />
                                         <SpaceComponent height={6} />
-                                        <RowComponent>
-                                            <CricleComponent children={<TextComponent text={'15'} size={18} font={fontFamilies.medium} color={colors.white} />} borderRadius={10} />
-                                            <TextComponent text={':'} size={20} color={colors.white} styles={{ marginHorizontal: 6 }} />
-                                            <CricleComponent children={<TextComponent text={'00'} size={18} font={fontFamilies.medium} color={colors.white} />} borderRadius={10} />
-                                        </RowComponent>
+                                        <TimeDownComponent/>
                                     </View>
                                 </View>
                             </View>

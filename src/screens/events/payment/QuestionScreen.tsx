@@ -15,12 +15,13 @@ import { convertMoney } from "../../../utils/convertMoney"
 import { TypeTicketModel } from "../../../models/TypeTicketModel"
 import { Portal } from "react-native-portalize"
 import { Modalize } from "react-native-modalize"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { AlertComponent } from "../../../components/Alert"
 import { constantSelector, constantState } from "../../../reduxs/reducers/constantReducers"
 import { apis } from "../../../constrants/apis"
 import invoiceAPI from "../../../apis/invoiceAPI"
 import { LoadingModal } from "../../../../modals"
+import TimeDownComponent from "./TimeDownComponent"
 const QuestionScreen = ({ navigation, route }: any) => {
 
     const showTimeChose: billingState = useSelector(billingSelector)
@@ -85,8 +86,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
             BackHandler.removeEventListener("hardwareBackPress", handleBackButtonClick);
         };
     }, []);
-
-    const renderTypeTicket = (item: { ticket: TypeTicketModel, amount: number }) => {
+    const renderTypeTicket = useCallback((item: { ticket: TypeTicketModel, amount: number }) => {
         return (
             <>
                 <RowComponent justify='space-between' key={item.ticket._id}>
@@ -102,7 +102,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                 <SpaceComponent height={6} />
             </>
         )
-    }
+    },[])
 
     return (
         <>
@@ -171,11 +171,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <TextComponent text={'Hoàn tất đặt vé trong'} size={13} font={fontFamilies.medium} textAlign='center' color={colors.white} />
                                         <SpaceComponent height={6} />
-                                        <RowComponent>
-                                            <CricleComponent children={<TextComponent text={'15'} size={18} font={fontFamilies.medium} color={colors.white} />} borderRadius={10} />
-                                            <TextComponent text={':'} size={20} color={colors.white} styles={{ marginHorizontal: 6 }} />
-                                            <CricleComponent children={<TextComponent text={'00'} size={18} font={fontFamilies.medium} color={colors.white} />} borderRadius={10} />
-                                        </RowComponent>
+                                        <TimeDownComponent />
                                     </View>
                                 </View>
                             </View>

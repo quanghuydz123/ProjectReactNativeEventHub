@@ -74,7 +74,7 @@ const EventDetails = ({ navigation, route }: any) => {
   const [interestedCount,setInterestedCount] = useState(0)
   const [descriptionEvent,setDesciptionEvent] = useState('')
   const [showTimes,setShowTimes] = useState<ShowTimeModel[]>([])
-
+  const [isLoadingShowTime,setIsLoadingShowTime] = useState(true)
   // const [comments,setComments] = useState<CommentModel[]>([])
   useStatusBar('light-content')
   useFocusEffect(
@@ -153,8 +153,9 @@ const EventDetails = ({ navigation, route }: any) => {
       if(res && res.data && res.status === 200){
         setDesciptionEvent(res.data)
       }
-    } catch (error) {
-      
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("EventDetails", errorMessage)
     }
   }
   const handleCallAPIGetShowTimesEvent = async ()=>{
@@ -164,8 +165,10 @@ const EventDetails = ({ navigation, route }: any) => {
       if(res && res.data && res.status === 200){
         setShowTimes(res.data)
       }
-    } catch (error) {
-      
+      setIsLoadingShowTime(false)
+    } catch (error:any) {
+      const errorMessage = JSON.parse(error.message)
+      console.log("EventDetails", errorMessage)
     }
   }
   const handleIncViewEvent = async () => {
@@ -326,8 +329,8 @@ const EventDetails = ({ navigation, route }: any) => {
       .catch(err => console.log(err))
   }
   const renderButton = () => {
-    let text = 'Mua vé ngay'
-    let disable = false
+    let text = isLoadingShowTime ? 'Đang xử lý' :'Mua vé ngay'
+    let disable = isLoadingShowTime
     let width = '70%'
     let onPress = () => {
       if (checkLogin()) {

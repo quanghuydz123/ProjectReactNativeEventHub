@@ -9,7 +9,7 @@ import ProfileNavigator from "./ProfileNavigator";
 import { colors } from "../constrants/color";
 import { AddSquare, Home, Home2, Home3 } from "iconsax-react-native";
 import { CricleComponent, TextComponent } from "../components";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { globalStyles } from "../styles/globalStyles";
@@ -22,11 +22,12 @@ import { appInfo } from "../constrants/appInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { constantSelector, constantState, updateIndexTabSelected } from "../reduxs/reducers/constantReducers";
 import { fontFamilies } from "../constrants/fontFamilies";
+import MapNavigator from "./MapNavigator";
 const TabNavigator = ({navigation}:any) => {
   const Tab = createBottomTabNavigator();
   const nameTab: { [key in keyof ParamListBase]: string } = {
     Explore: 'Trang chủ',
-    Events: 'Sự kiện',
+    Map: 'Bảng đồ',
     Profile: 'Tôi',
     Transaction: 'Lịch sử GD'
   };
@@ -86,8 +87,8 @@ const TabNavigator = ({navigation}:any) => {
             case "Explore":
               icon = <Ionicons name={focused ? "home-sharp" : "home-outline"} size={size} color={color} />
               break
-            case "Events":
-              icon = <MaterialIcons name="event" size={size} color={color} />
+            case "Map":
+              icon = <FontAwesome6 name="map-location-dot" size={size} color={color} />
               break
             case "QrScan":
               icon = <CricleComponent size={50}
@@ -126,7 +127,7 @@ const TabNavigator = ({navigation}:any) => {
           dispatch(updateIndexTabSelected({indexTabSelected:0}))
         }
       }}/>
-      <Tab.Screen name="Events" component={EventsNavigator} listeners={{
+      <Tab.Screen name="Map" component={MapNavigator} listeners={{
         tabPress: e => {
           dispatch(updateIndexTabSelected({indexTabSelected:1}))
         }

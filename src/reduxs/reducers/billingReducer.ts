@@ -17,7 +17,9 @@ export interface billingState {
         amount:number
     }],
     ticketsReserve?:string[],
-    relatedEvents?:EventModelNew[]
+    relatedEvents?:EventModelNew[],
+    orderTime:number
+
 }
 
 const initialState: billingState = {
@@ -43,7 +45,9 @@ const initialState: billingState = {
     locationEvent:'',
     titleEvent:'',
     ticketsReserve:[],
-    relatedEvents:[]
+    relatedEvents:[],
+    orderTime:0
+    
 }
 
 const billingSlice = createSlice({
@@ -57,11 +61,12 @@ const billingSlice = createSlice({
         state.billingData = action.payload
     },
     addtotalPriceAndTicket: (state, action) => {
-        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve,relatedEvents} = action.payload
+        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve,minutes,seconds,orderTime} = action.payload
         state.billingData.totalPrice = totalPrice,
         state.billingData.totalTicket = totalTicketChose
         state.billingData.ticketChose = ticketChose
         state.billingData.ticketsReserve = ticketsReserve
+        state.billingData.orderTime = orderTime
     },
     addEventRelated: (state, action) => {
         const {relatedEvents} = action.payload
@@ -70,9 +75,13 @@ const billingSlice = createSlice({
     removeShowTimeChose: (state, action) => {
         state.billingData = initialState;
     },
+    updateTimeOrder: (state, action) => {
+        const {orderTime} = action.payload
+        state.billingData.orderTime = orderTime 
+    },
     }
 });
 
 export const billingReducer = billingSlice.reducer;
-export const {addShowTimeChose,addtotalPriceAndTicket,addEventRelated} = billingSlice.actions;
+export const {addShowTimeChose,addtotalPriceAndTicket,addEventRelated,updateTimeOrder} = billingSlice.actions;
 export const billingSelector = (state: any) => state.billingReducer.billingData;

@@ -73,18 +73,10 @@ const EventsScreen = ({ navigation, route }: any) => {
   }, []);
   return (
     <>
-      <ContainerComponent title={'asdads'} >
-        <ButtonComponent text='Open' type='primary' onPress={() => handleOpenBottomSheet()} />
-        <ButtonComponent text='Close' type='primary' onPress={() => bottomSheetRef?.current?.close()} />
-
-       {/* <View style={{}}>
-        <CommentComponent 
-          textComment={textComment} 
-          setTextComment={(val)=>setTextComment(val)}  
-          setIndex={(val)=>setIndex(val)} 
-          setIsShowing={(val)=>setIsShowing(val)} 
-          ref={bottomSheetRef}/>
-       </View> */}
+      <ContainerComponent title={'Bảng đồ'} >
+        <SectionComponent>
+          <TextComponent text={'Map View'}/>
+        </SectionComponent>
 
       </ContainerComponent>
     </>

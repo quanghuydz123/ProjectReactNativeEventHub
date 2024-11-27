@@ -121,7 +121,7 @@ const LoginScreen = ({ navigation,route }: any) => {
         errorMessage && 
         (
           <>
-            <TextComponent text={errorMessage} styles={{textAlign:'center'}} color={colors.danger}/>
+            <TextComponent text={errorMessage} styles={{textAlign:'center',paddingHorizontal:12}} color={colors.danger}/>
           </>
         )
       }
