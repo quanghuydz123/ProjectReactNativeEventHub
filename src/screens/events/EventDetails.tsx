@@ -44,6 +44,9 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "@react-navigation/native";
 import { CommentModel } from "../../models/CommentModel";
 import commentAPI from "../../apis/commentAPI";
+import { ActivityIndicator } from "react-native";
+import { ShowTimeModel } from "../../models/ShowTimeModel";
+import LoadingUI from "../../components/LoadingUI";
 
 const EventDetails = ({ navigation, route }: any) => {
 
@@ -69,6 +72,9 @@ const EventDetails = ({ navigation, route }: any) => {
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [index, setIndex] = useState(-1)
   const [interestedCount,setInterestedCount] = useState(0)
+  const [descriptionEvent,setDesciptionEvent] = useState('')
+  const [showTimes,setShowTimes] = useState<ShowTimeModel[]>([])
+
   // const [comments,setComments] = useState<CommentModel[]>([])
   useStatusBar('light-content')
   useFocusEffect(
@@ -112,6 +118,8 @@ const EventDetails = ({ navigation, route }: any) => {
       setInterestedCount(event?.usersInterested?.length ?? 0)
       haneleGetAPIRelatedEvents()
       // handleCallAPIGetComments()
+      handleCallAPIGetDescriptionEvent()
+      handleCallAPIGetShowTimesEvent()
       handleIncViewEvent()
     }
 
@@ -138,7 +146,28 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
- 
+  const handleCallAPIGetDescriptionEvent = async ()=>{
+    try {
+      const api = apis.event.getDescriptionEvent({idEvent:event?._id ?? ''}) 
+      const res:any = await eventAPI.HandleEvent(api)
+      if(res && res.data && res.status === 200){
+        setDesciptionEvent(res.data)
+      }
+    } catch (error) {
+      
+    }
+  }
+  const handleCallAPIGetShowTimesEvent = async ()=>{
+    try {
+      const api = apis.event.getShowTimesEvent({idEvent:event?._id ?? ''}) 
+      const res:any = await eventAPI.HandleEvent(api)
+      if(res && res.data && res.status === 200){
+        setShowTimes(res.data)
+      }
+    } catch (error) {
+      
+    }
+  }
   const handleIncViewEvent = async () => {
     try {
       const api = apis.event.incViewEvent()
@@ -304,7 +333,7 @@ const EventDetails = ({ navigation, route }: any) => {
       if (checkLogin()) {
         setIsLoadingChoseShowTime(true)
         dispatch(addShowTimeChose({
-          showTimes: event?.showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address,
+          showTimes: showTimes[0], idEvent: event?._id, titleEvent: event?.title, addRessEvent: event?.Address,
           locationEvent: event?.Location, relatedEvents: relatedEvents
         }))
         setIsLoadingChoseShowTime(false)
@@ -331,7 +360,7 @@ const EventDetails = ({ navigation, route }: any) => {
       text = 'Sự kiện đang diễn ra'
       width = '80%'
       disable = true
-    } else if (event?.showTimes && event?.showTimes?.length > 1) {
+    } else if (showTimes && showTimes?.length > 1) {
       text = 'Chọn lịch diễn'
       onPress = () => scrollToComponent()
     }
@@ -406,16 +435,16 @@ const EventDetails = ({ navigation, route }: any) => {
                     <FontAwesome6 name="calendar" size={14} color={colors.white} />
                     <SpaceComponent width={8} />
                     <View>
-                      <TextComponent text={`${DateTime.GetTime(event?.showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(event?.showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(event?.showTimes[0]?.startDate || new Date(), event?.showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12} />
-                      {(event?.showTimes && event?.showTimes.length > 1) && <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: colors.white, padding: 2 }}>
-                        <TextComponent text={`+${event?.showTimes.length - 1} thời gian khác`} color={colors.white} font={fontFamilies.medium} size={8} />
+                      <TextComponent text={`${DateTime.GetTime(showTimes[0]?.startDate || new Date())} - ${DateTime.GetTime(showTimes[0]?.endDate || new Date())}, ${DateTime.GetDateNew1(showTimes[0]?.startDate || new Date(), showTimes[0]?.endDate || new Date())}`} font={fontFamilies.medium} color={colors.primary} size={12} />
+                      {(showTimes && showTimes.length > 1) && <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: colors.white, padding: 2 }}>
+                        <TextComponent text={`+${showTimes.length - 1} thời gian khác`} color={colors.white} font={fontFamilies.medium} size={8} />
                       </View>}
                     </View>
                   </RowComponent>
 
 
 
-                  {!(event?.showTimes && event?.showTimes.length > 1) && <SpaceComponent height={8} />}
+                  {!(showTimes && showTimes.length > 1) && <SpaceComponent height={8} />}
                   <RowComponent styles={{ alignItems: 'flex-start' }}>
                     <FontAwesome6 size={14} color={colors.white} name="location-dot" style={{}} />
                     <SpaceComponent width={8} />
@@ -498,10 +527,10 @@ const EventDetails = ({ navigation, route }: any) => {
           <CardComponent isShadow title='Giới thiệu' styles={{ paddingBottom: 26 }}>
             <View style={{ maxHeight: isShowDes ? 5000 : 480, overflow: 'hidden' }}>
               {/* <TextComponent text={event?.description ?? ''} /> */}
-              {event?.description && !isLoading && <RenderHTML
+              {descriptionEvent ? <RenderHTML
                 contentWidth={appInfo.sizes.WIDTH - 20}
 
-                source={{ html: event.description }}
+                source={{ html:descriptionEvent}}
                 // tagsStyles={{
                 //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
                 //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
@@ -539,7 +568,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 }}
                 computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
 
-              />}
+              /> : <LoadingUI  />}
             </View>
             <View style={{ position: 'absolute', bottom: 0, width: '100%', left: 10 }}>
               <LinearGradient
@@ -571,12 +600,12 @@ const EventDetails = ({ navigation, route }: any) => {
         </SectionComponent>
         <SectionComponent sectionRef={targetRef}>
           <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
-            {(event?.showTimes && event?.showTimes.length > 0) && <ListTicketComponent showTimes={event.showTimes} idEvent={event?._id}
+            {(showTimes && showTimes.length > 0) ?  <ListTicketComponent showTimes={showTimes} idEvent={event?._id ?? ''}
               titleEvent={event?.title ?? ''}
               addRessEvent={event?.Address ?? ''}
               locationEvent={event?.Location ?? ''}
               relatedEvents={relatedEvents}
-            />}
+            /> : <LoadingUI bgColor={colors.background}/>}
           </CardComponent>
         </SectionComponent>
         <SectionComponent >
@@ -699,7 +728,7 @@ const EventDetails = ({ navigation, route }: any) => {
               color: colors.white,
               fontSize: 19,
               fontFamily: fontFamilies.medium
-            }}>{convertMoney(event?.showTimes[0]?.typeTickets[event?.showTimes[0].typeTickets?.length - 1].price ?? 0)}
+            }}>{convertMoney(showTimes[0]?.typeTickets[showTimes[0].typeTickets?.length - 1].price ?? 0)}
               </Text>
             </Text>
             {renderButton()}

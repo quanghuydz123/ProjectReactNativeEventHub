@@ -661,14 +661,14 @@ const HomeScreen = ({ navigation, route }: any) => {
 
             <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
               if (checkLogin()) {
-                navigation.navigate('FriendsScreen')
+                navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })
               }
             }} >
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
                   if (checkLogin()) {
-                    navigation.navigate('FriendsScreen')
+                    navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })
                   }
                 }}
               >

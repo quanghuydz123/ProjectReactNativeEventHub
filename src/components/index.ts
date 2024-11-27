@@ -23,6 +23,7 @@ import EventItemHorizontal from "./EventItemHorizontal"
 import TicketComponent from "./TicketComponent"
 import ListEventRelatedComponent from "./ListEventRelatedComponent"
 import SelectDropdownComponent from "./SelectDropdownComponent"
+import LoadingUI from "./LoadingUI"
 
 export {
     SpaceComponent,

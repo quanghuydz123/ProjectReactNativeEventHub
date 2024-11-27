@@ -68,7 +68,7 @@ const ListTicketComponent = (props:Props) => {
       mrBottom={0} 
       width={'auto'} 
       isCheckLogin={true}
-      textSize={14} 
+      textSize={12} 
       onPress={()=>{
         handleNavigationChoseTicketScreen(section)
       }}
@@ -79,7 +79,7 @@ const ListTicketComponent = (props:Props) => {
         type="primary"
         mrBottom={0} 
         width={'auto'} 
-        textSize={14}
+        textSize={12}
         color={colors.background}
         textColor={colors.gray4}
         disable
@@ -91,7 +91,7 @@ const ListTicketComponent = (props:Props) => {
         mrBottom={0} 
         width={'auto'} 
         disable
-        textSize={14}
+        textSize={12}
         color={colors.background}
         textColor={colors.gray4}
         styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
@@ -101,7 +101,7 @@ const ListTicketComponent = (props:Props) => {
         type="primary" 
         mrBottom={0} 
         width={'auto'} 
-        textSize={14}
+        textSize={12}
         disable
         color={colors.background}
         textColor={colors.gray4}
@@ -112,7 +112,7 @@ const ListTicketComponent = (props:Props) => {
         type="primary" 
         mrBottom={0} 
         width={'auto'} 
-        textSize={14}
+        textSize={12}
         disable
         color={colors.background}
         textColor={colors.gray4}
@@ -123,7 +123,7 @@ const ListTicketComponent = (props:Props) => {
         type="primary" 
         mrBottom={0} 
         width={'auto'} 
-        textSize={14}
+        textSize={12}
         disable
         color={colors.background}
         textColor={colors.gray4}

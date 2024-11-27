@@ -125,7 +125,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                 <SpaceComponent height={4} />
                 <RowComponent >
 
-                    <TextComponent text={convertMoney(ticket?.typeTicketDetails?.price)} font={fontFamilies.medium} textAlign="left" size={12} color={colors.white} />
+                    <TextComponent text={convertMoney(ticket?.price)} font={fontFamilies.medium} textAlign="left" size={12} color={colors.white} />
                 </RowComponent>
             </View>
 
@@ -133,7 +133,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                 <TextComponent text={length} textAlign="center" flex={1} size={12} color={colors.white} />
             </View>
             <View style={{ padding: 8, flex: 2 }}>
-                <TextComponent text={convertMoney(ticket?.typeTicketDetails?.price * length)} textAlign="right" size={12} color={colors.white} />
+                <TextComponent text={convertMoney(ticket?.price * length)} textAlign="right" size={12} color={colors.white} />
             </View>
         </RowComponent>
     }

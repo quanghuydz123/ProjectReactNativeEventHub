@@ -67,7 +67,9 @@ export const apis = {
             addEvent:()=>`/get-all`,
             updateFollowEvent:()=>`/update-followers`,
             updateEvent:()=>`/update-event`,
-            incViewEvent:()=>`/incView-event`
+            incViewEvent:()=>`/incView-event`,
+            getDescriptionEvent:({idEvent}:{idEvent:string})=>`/get-description-byIdEvent?idEvent=${idEvent}`,
+            getShowTimesEvent:({idEvent}:{idEvent:string})=>`/get-showTimes-byIdEvent?idEvent=${idEvent}`
             
     },
     category:{

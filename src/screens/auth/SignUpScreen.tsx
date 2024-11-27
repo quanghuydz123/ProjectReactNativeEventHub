@@ -56,55 +56,55 @@ const SignUpScreen = ({ navigation }: any) => {
     data[`${key}`] = value
     setValues(data)
   }
-  const formValidator = (key:string) =>{
-    let message = ''
-    const data = {...errorMessage}
-    switch (key){
-      case 'email':{
-        if(!values.email){
-            message = 'Hãy nhập email!!!'
-        }else if(!Validate.email(values.email)){
-            message = 'Email không đúng định dạng!!!'
-        }else{
-          message=''
-        }
-        break;
-      }
-      case 'password':{
-        if(!values.password){
-          message = 'Hãy nhập mật khẩu!!!'
-        }else if(values.password !== values.comfirmPassword){
-          message = 'Mật khẩu nhập lai không giống nhau!!!'
-        }else if(values.password === values.comfirmPassword){
-          data['comfirmPassword'] = ''
-        }else{
-          message = ''
-        }
-        break
-      }
-      case 'comfirmPassword':{
-        if(!values.comfirmPassword){
-          message = 'Hãy nhập lại mật khẩu!!!'
-        }else if(values.comfirmPassword !== values.password){
-          message = 'Mật khẩu nhập lai không giống nhau!!!'
-        }else if(values.comfirmPassword ===  values.password){
-          data['password'] = ''
-        }else{
-          message = '' 
-        }
-        break;
-      }
-    }
-    data[`${key}`] = message
-    setErrorMessage(data)
-  }
+  // const formValidator = (key:string) =>{
+  //   let message = ''
+  //   const data = {...errorMessage}
+  //   switch (key){
+  //     case 'email':{
+  //       if(!values.email){
+  //           message = 'Hãy nhập email!!!'
+  //       }else if(!Validate.email(values.email)){
+  //           message = 'Email không đúng định dạng!!!'
+  //       }else{
+  //         message=''
+  //       }
+  //       break;
+  //     }
+  //     case 'password':{
+  //       if(!values.password){
+  //         message = 'Hãy nhập mật khẩu!!!'
+  //       }else if(values.password !== values.comfirmPassword){
+  //         message = 'Mật khẩu nhập lai không giống nhau!!!'
+  //       }else if(values.password === values.comfirmPassword){
+  //         data['comfirmPassword'] = ''
+  //       }else{
+  //         message = ''
+  //       }
+  //       break
+  //     }
+  //     case 'comfirmPassword':{
+  //       if(!values.comfirmPassword){
+  //         message = 'Hãy nhập lại mật khẩu!!!'
+  //       }else if(values.comfirmPassword !== values.password){
+  //         message = 'Mật khẩu nhập lai không giống nhau!!!'
+  //       }else if(values.comfirmPassword ===  values.password){
+  //         data['password'] = ''
+  //       }else{
+  //         message = '' 
+  //       }
+  //       break;
+  //     }
+  //   }
+  //   data[`${key}`] = message
+  //   setErrorMessage(data)
+  // }
 
 
   const handleRegister = async () => {
     const api = apis.auth.verification()
     setIsLoading(true)
     try {
-      const res = await authenticationAPI.HandleAuthentication(api,{email:values.email},'post')
+      const res = await authenticationAPI.HandleAuthentication(api,{email:values.email,password:values.password,comfirmPassword:values.comfirmPassword},'post')
       navigation.navigate('VerificationScreen',{
         code:res?.data?.code, // truyền qua route
         email:values.email,
@@ -162,14 +162,14 @@ const SignUpScreen = ({ navigation }: any) => {
         <InputComponent value={values.email} onChange={(val) => handleOnchangeValue('email', val)}
           placeholder={'abc@gmail.com'}
           affix={<Sms size={22} color={colors.gray} />}
-          onEnd={()=> formValidator('email')}
+          // onEnd={()=> formValidator('email')}
         />
 
         <InputComponent value={values.password} onChange={(val) => handleOnchangeValue('password', val)}
           placeholder={'Mật khẩu'}
           isPassword
           affix={<Lock size={22} color={colors.gray} />}
-          onEnd={()=> formValidator('password')}
+          // onEnd={()=> formValidator('password')}
 
         />
 
@@ -177,7 +177,7 @@ const SignUpScreen = ({ navigation }: any) => {
           placeholder={'Nhập lại mật khẩu'}
           isPassword
           affix={<Lock size={22} color={colors.gray} />}
-          onEnd={()=> formValidator('comfirmPassword')}
+          // onEnd={()=> formValidator('comfirmPassword')}
 
         />
       </SectionComponent>
@@ -200,7 +200,7 @@ const SignUpScreen = ({ navigation }: any) => {
         )
       }
       <SectionComponent>
-        <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'} disable={isDisable}/>
+        <ButtonComponent onPress={handleRegister} text={'Đăng ký'} type={'primary'}/>
       </SectionComponent>
       <SocialLogin setIsLoading={(val)=>setIsLoading(val)}/>
       <SectionComponent>
