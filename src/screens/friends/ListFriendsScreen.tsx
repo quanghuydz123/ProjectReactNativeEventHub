@@ -132,7 +132,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
           }
             messageEmpty={'Bạn chưa theo dõi ai'}
           />
-          {(follower[0]?.users && follower[0]?.users.length >= 4) && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>}
+          {/* {(follower[0]?.users && follower[0]?.users.length >= 4) && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>} */}
 
         </SectionComponent>
         <SectionComponent>
@@ -169,7 +169,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
           }
             messageEmpty={'Chưa có ai theo dõi bạn'}
           />
-          {(yourFollowers && yourFollowers.length) >= 4 && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>}
+          {/* {(yourFollowers && yourFollowers.length) >= 4 && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>} */}
         </SectionComponent>
       </ScrollView>
     </ContainerComponent>

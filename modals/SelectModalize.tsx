@@ -136,7 +136,7 @@ const SelectModalize = (props: Props) => {
                     
                     onClosed={()=>{onClose()}}
                     // adjustToContentHeight={adjustToContentHeight}
-                    adjustToContentHeight={false}
+                    adjustToContentHeight={adjustToContentHeight ?? false}
                     // modalHeight={appInfo.sizes.HEIGHT*0.8}
                     
                     modalStyle={[{

@@ -150,6 +150,10 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
           auth?.address?.ward?.name,
           auth?.address?.districts?.name,
           auth?.address?.province?.name].filter(Boolean).join(', '),
+          titleEvent:billing.titleEvent,
+          showTimeStart:billing.showTimes.startDate,
+          addressEvent:billing.addRessEvent,
+          location:billing.locationEvent
 
       }, 'post')
       if (res && res.status === 200 && res.data) {

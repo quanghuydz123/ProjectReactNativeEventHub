@@ -28,7 +28,8 @@ interface routeParams {
   title:string,
   limit:string,
   categories:CategoryModel[],
-  categoriesSelected:string[]
+  categoriesSelected:string[],
+  sortType?:'view'
 }
 interface FilterEvent {
   distance?:string,
@@ -38,6 +39,7 @@ interface FilterEvent {
     lat?:string,
     lng?:string
   },
+  sortType?:'view'
 }
 const initFilterEvent:FilterEvent = {
   limit:'',
@@ -49,7 +51,7 @@ const initFilterEvent:FilterEvent = {
   },
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { categories, lat, long, distance,title,limit,categoriesSelected }: routeParams = route.params || {}
+  const { categories, lat, long, distance,title,limit,categoriesSelected,sortType }: routeParams = route.params || {}
   // const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(true)
   const [result,setResult] = useState<EventModelNew[]>()
@@ -130,13 +132,13 @@ const auth = useSelector(authSelector)
       setFirst(true)
     }
   },[filterEvent])
-
   const handleSetFilterEvent = async ()=>{
     const filterCopy:FilterEvent = {...filterEvent}
     filterCopy['position']['lat'] = lat
     filterCopy['position']['lng'] = long
     filterCopy['distance'] = distance
     filterCopy['categoriesFilter'] = categoriesSelected
+    filterCopy['sortType'] = sortType
     setFilterEvent(filterCopy)
   }
   const handleOnchangePosition = (key:string,value:any) =>{
@@ -207,7 +209,7 @@ const auth = useSelector(authSelector)
   const getEvents = async () => {
     const api = apis.event.getAll({lat:filterEvent.position.lat,searchValue:searchKey,
       long:filterEvent.position.lng,distance:'10',categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType
       })
     setIsLoading(true)
     try {
@@ -226,7 +228,7 @@ const auth = useSelector(authSelector)
     const api = apis.event.getAll({lat:filterEvent.position.lat,
       long:filterEvent.position.lng,distance:'10',
       searchValue:searchKey,categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low)
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType
     })
     setIsLoading(true)
     try {

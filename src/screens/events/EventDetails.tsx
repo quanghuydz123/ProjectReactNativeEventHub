@@ -363,6 +363,10 @@ const EventDetails = ({ navigation, route }: any) => {
       text = 'Sự kiện đang diễn ra'
       width = '80%'
       disable = true
+    }else if (event?.statusEvent === 'Cancelled') {
+      text = 'Đã bị hủy'
+      width = '80%'
+      disable = true
     } else if (showTimes && showTimes?.length > 1) {
       text = 'Chọn lịch diễn'
       onPress = () => scrollToComponent()

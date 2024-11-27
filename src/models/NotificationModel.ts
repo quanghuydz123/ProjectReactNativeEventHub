@@ -6,13 +6,14 @@ export interface NotificationModel {
     _id: string
     content?: string
     createdAt: string
-    eventId?: EventModelNew
+    eventId?: EventModelNew,
+    invoiceId?: string
     isRead: boolean
     isViewed: boolean
     recipientId: UserModel
     senderID: UserModel
     updatedAt: string,
-    type:'inviteEvent' | 'message' |'like' |'follow' |'rejectFollow'| 'allowFollow' | 'other',
+    type:'inviteEvent' | 'paymentTicket' |'like' |'follow' |'rejectFollow'| 'allowFollow' | 'other',
     status:'answered' | 'unanswered' | 'cancelled' |'rejected' | 'other'
   }
   

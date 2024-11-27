@@ -17,7 +17,7 @@ interface Props {
     bdRadius?: number,
     onPress?: () => void,
     isShowIconAbsolute?: boolean,
-    typeIcon?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other',
+    typeIcon?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other',
     textName?:string,
     bgColor?:string,
     sizeName?:number,
@@ -27,12 +27,17 @@ const AvatarItem = (props: Props) => {
     const { photoUrl, size, colorBorderWidth, index,textColor, styles, borderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
     const ml = size ? -(size / 2)+4 : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
-    const renderIconAbsolute = (type?: 'inviteEvent' | 'message' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
+    const renderIconAbsolute = (type?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
         let content = <></>
         switch (type) {
             case 'inviteEvent':
                 content = <CricleComponent styles={{ position: 'absolute', bottom: -7, right: 0, borderWidth: 0.5, borderColor: colors.gray5 }} size={26} color={colors.orange}>
                     <Entypo name="calendar" size={14} color={colors.white} />
+                </CricleComponent>
+                break
+            case 'paymentTicket':
+                content = <CricleComponent styles={{ position: 'absolute', bottom: -7, right: 0, borderWidth: 0.5, borderColor: colors.gray5 }} size={26} color={colors.warning}>
+                    <MaterialIcons name="attach-money" size={20} color={colors.white} />
                 </CricleComponent>
                 break
             case 'follow':

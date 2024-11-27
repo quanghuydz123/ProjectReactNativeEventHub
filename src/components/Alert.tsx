@@ -7,17 +7,19 @@ interface Props {
     onConfirm?:()=>void
 }
 
-export const AlertComponent = (props:Props) =>
-{
-    const {title,message,onCancel,onConfirm} = props
-    Alert.alert(title, message, [
-        { text: onConfirm ? "Ok" : undefined, onPress:onConfirm },
+export const AlertComponent = (props: Props) => {
+    const { title, message, onCancel, onConfirm } = props;
 
-        {
-            text: onCancel ? "Cancel" : undefined,
+    const buttons = [];
+    if (onConfirm) {
+        buttons.push({ text: "Ok", onPress: onConfirm });
+    }
+    if (onCancel) {
+        buttons.push({
+            text: "Cancel",
             onPress: onCancel,
-            style: 'cancel',
-            
-        },
-    ]);
-}
+        });
+    }
+
+    Alert.alert(title, message, buttons);
+};

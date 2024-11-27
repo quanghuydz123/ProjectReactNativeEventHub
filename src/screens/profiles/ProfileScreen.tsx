@@ -443,12 +443,13 @@ const ProfileScreen = ({ navigation, route }: any) => {
           
         </RowComponent>
       </SectionComponent>}
-      <SectionComponent>
+      {/* <SectionComponent>
         <CardComponent isShadow styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
           <TextComponent text={'Hỗ trợ'} size={18} font={fontFamilies.medium} />
         </CardComponent>
-      </SectionComponent>
-      <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />
+      </SectionComponent> */}
+      <SpaceComponent height={16}/>
+      {auth.accesstoken && <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />}
       <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" />
       {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />

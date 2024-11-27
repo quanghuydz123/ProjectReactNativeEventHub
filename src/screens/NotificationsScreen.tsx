@@ -150,37 +150,37 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     setSotificationSelected(notificatoin)
     setToggle(!toggle)
   }
-  const renderStatusNotification = (notification: NotificationModel) => {
-    switch (notification.status) {
-      case 'unanswered':
-        return (
-          <RowComponent>
+  // const renderStatusNotification = (notification: NotificationModel) => {
+  //   switch (notification.status) {
+  //     case 'unanswered':
+  //       return (
+  //         <RowComponent>
 
-            <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32 }}
-              onPress={() => handleComfirmNofitication(notification)}
-            />
-            <SpaceComponent width={20} />
+  //           <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32 }}
+  //             onPress={() => handleComfirmNofitication(notification)}
+  //           />
+  //           <SpaceComponent width={20} />
 
-            <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
-              styles={{ minHeight: 20, width: appInfo.sizes.WIDTH * 0.32, borderRadius: 5, paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
-          </RowComponent>
-        )
-      case 'answered':
-        return (
-          <TextComponent text={'Đã đồng ý'} title size={14} />
-        )
-      case 'cancelled':
-        return (
-          <TextComponent text={'Đã bị hủy bởi người gửi'} title size={14} />
-        )
-      case 'rejected':
-        return (
-          <TextComponent text={'Đã từ chối'} title size={14} />
-        )
-      default:
-        return <></>
-    }
-  }
+  //           <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
+  //             styles={{ minHeight: 20, width: appInfo.sizes.WIDTH * 0.32, borderRadius: 5, paddingVertical: 10, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
+  //         </RowComponent>
+  //       )
+  //     case 'answered':
+  //       return (
+  //         <TextComponent text={'Đã đồng ý'} title size={14} />
+  //       )
+  //     case 'cancelled':
+  //       return (
+  //         <TextComponent text={'Đã bị hủy bởi người gửi'} title size={14} />
+  //       )
+  //     case 'rejected':
+  //       return (
+  //         <TextComponent text={'Đã từ chối'} title size={14} />
+  //       )
+  //     default:
+  //       return <></>
+  //   }
+  // }
   const renderNofitications = (value: NotificationModel) => {
     // switch (value.type) {
     //   case 'inviteEvent':
@@ -346,6 +346,33 @@ const NotificationsScreen = ({ navigation, route }: any) => {
 
           </View>
         )
+    }else if(value.type==='paymentTicket'){
+      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+      <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen',{idInvoice:value?.invoiceId})}>
+        <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={'https://img.freepik.com/premium-vector/success-payment-icon-flat-style-approved-money-vector-illustration-isolated-background-successful-pay-sign-business-concept_157943-1354.jpg'} isShowIconAbsolute typeIcon="paymentTicket" />
+        <View style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+        >
+          <Text style={[globalStyles.text]}>
+              {value.content}
+          </Text>
+          {/* <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+            {`${value.senderID?.fullname} `}
+            <Text style={[globalStyles.text]}>
+              {value.content}
+            </Text>
+          </Text> */}
+          <SpaceComponent height={2} />
+          <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+        </View>
+        <ButtonComponent
+
+          onPress={() => handleOpenModalize(value)}
+          styles={{ paddingVertical: 4 }}
+          icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+          iconFlex="right" />
+      </RowComponent>
+
+    </View>
     }else{
       return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
       <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >

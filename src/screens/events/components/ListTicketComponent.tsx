@@ -106,6 +106,17 @@ const ListTicketComponent = (props:Props) => {
         color={colors.background}
         textColor={colors.gray4}
         styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
+      }else if(section.status==='Canceled'){
+        content=<ButtonComponent 
+        text={'Suất diễn đã bị hủy'} 
+        type="primary" 
+        mrBottom={0} 
+        width={'auto'} 
+        textSize={12}
+        disable
+        color={colors.background}
+        textColor={colors.gray4}
+        styles={{ paddingVertical: 6,borderWidth:1,borderColor:colors.gray4}} />
       } else if(section.status==='NotYetOnSale'){
         content=<ButtonComponent 
         text={'Suất diễn chưa mở bán'} 
@@ -201,6 +212,8 @@ const ListTicketComponent = (props:Props) => {
         text="Đã ngừng bán vé onnile"
       }else if(section.status==='SoldOut'){
         text='Hết vé'
+      }else if(section.status==='Canceled'){
+        text='Đã bị hủy'
       }else if(section.status==='NotStarted'){
         text=`Mở bán từ ${DateTime.GetTime(section.startSaleTime)} ${DateTime.GetDate1(section.startSaleTime)}`
       }
@@ -224,7 +237,7 @@ const ListTicketComponent = (props:Props) => {
   const renderHeaderChild = (section: TypeTicketModel, index: number, isActive: boolean, sections: any) => {
     const renderColorMoney = ()=>{
       let color = colors.primary
-      if(section.status==='Ended' || section.status==='SoldOut' || section.status==='NotStarted'){
+      if(section.status==='Ended' || section.status==='SoldOut' || section.status==='NotStarted' || section.status==='Canceled'){
         color=colors.gray4
       }
       return color

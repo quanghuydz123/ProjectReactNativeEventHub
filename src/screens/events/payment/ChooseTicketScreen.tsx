@@ -26,6 +26,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import { addtotalPriceAndTicket, billingSelector, billingState } from "../../../reduxs/reducers/billingReducer";
 import { apis } from "../../../constrants/apis";
 import ticketAPI from "../../../apis/ticketAPI";
+import { AlertComponent } from "../../../components/Alert";
 const ChooseTicketScreen = ({ navigation, route }: any) => {
     // const { showTimes, idEvent, titleEvent, addRessEvent, locationEvent }: { showTimes: ShowTimeModel, idEvent: string, titleEvent: string, addRessEvent: string, locationEvent: string } = route.params
     const [loading, setLoading] = useState(false);
@@ -38,29 +39,18 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const [totalTicketChose, setTotalTicketChose] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
     const eventChose: billingState = useSelector(billingSelector)
+    const [errorMessage,setErrorMessage] = useState('')
+    const [isChoose,setisChoose] = useState(false)
     const dispatch = useDispatch()
-    // useStatusBar('light-content')
-    // useEffect(() => {
-    //     if (paymentUrl) {
-    //         navigation.navigate('PaymentScreen', { url: paymentUrl })
-    //     }
-    // }, [paymentUrl])
-    // const createPaymentUrl = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await axios.post('http://localhost:8888/order/create_payment_url', {
-    //             uid: auth.id,
-    //             amount: 20000, // Số tiền cần thanh toán
-    //             language: 'vn',
-    //             bankCode: ''
-    //         });
-    //         setPaymentUrl(response?.data?.url)
-    //     } catch (error: any) {
-    //         console.error('Lỗi khi tạo URL thanh toán:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+    useEffect(()=>{
+        if(errorMessage){
+            AlertComponent({
+                title: 'Thông báo',
+                message: errorMessage,
+                onConfirm: () =>console.log("ok")
+            })
+        }
+    },[errorMessage,isChoose])
     useEffect(() => {
         if (ticketChose.length >= 1) {
             setDisableButton(false)
@@ -245,6 +235,10 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
             setLoading(false)
 
             const errorMessage = JSON.parse(error.message)
+            if(errorMessage.message){
+                setisChoose(!isChoose)
+                setErrorMessage(errorMessage.message)
+            }
             console.log("ChooseTicketScreen", errorMessage)
         }
     }

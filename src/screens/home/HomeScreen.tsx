@@ -66,9 +66,13 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [address, setAddress] = useState<AddressModel>()
   const { getItem } = useAsyncStorage('isRemember')
   const [allEvent, setAllEvent] = useState<EventModelNew[]>([])
+  const [allEventSortByView, setAllEventSortByView] = useState<EventModelNew[]>([])
+  const [allEventInterested, setAllEventInterested] = useState<EventModelNew[]>([])
   const [allEventNear, setAllEventNear] = useState<EventModelNew[]>([])
   const [allFollower, setAllFollower] = useState<FollowModel[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingSortByView, setIsLoadingSortByView] = useState(true)
+
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
   const [isLoadingNearEvent, setIsLoadingNearEvent] = useState(true)
   const { getItem: getItemAuth } = useAsyncStorage('auth')
@@ -121,10 +125,16 @@ const HomeScreen = ({ navigation, route }: any) => {
   }, [])
   useEffect(() => {
     handleCallApiGetAllEvent(true)
+    handleCallApiGetAllEventSortByView(true)
     handleCallApiGetAllFollower()
     handleGetAllCategory()
     handleCallAPIGetOrganizers()
   }, [])
+  useEffect(()=>{
+    if(auth.categoriesInterested && auth.categoriesInterested.length > 0 && auth.accesstoken){
+      handleCallApiGetAllEventInterested()
+    }
+  },[auth.categoriesInterested])
   useEffect(() => {
     getLocationUser()
     handleCallAPIGetNotifications()
@@ -449,6 +459,40 @@ const HomeScreen = ({ navigation, route }: any) => {
     }
   }
 
+  const handleCallApiGetAllEventSortByView = async (isLoading?: boolean) => {
+    const api = apis.event.getAll({ limit: '10', sortType:'view'})
+    setIsLoadingSortByView(isLoading ? isLoading : false)
+    try {
+      const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setAllEventSortByView(res.data as EventModelNew[])
+      }
+      setIsLoadingSortByView(false)
+
+    } catch (error: any) {
+      setIsLoadingSortByView(false)
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+    }
+  }
+
+  const handleCallApiGetAllEventInterested = async (isLoading?: boolean) => {
+    const api = apis.event.getAll({ limit: '10', categoriesFilter:auth.categoriesInterested.map((item)=>item.category._id)})
+    setIsLoadingSortByView(isLoading ? isLoading : false)
+    try {
+      const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setAllEventInterested(res.data as EventModelNew[])
+      }
+      setIsLoadingSortByView(false)
+
+    } catch (error: any) {
+      setIsLoadingSortByView(false)
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+    }
+  }
+
   const handleCallApiGetEventsNearYou = async ({ isLoading, position }: { isLoading?: boolean, position: { latitude: number, longitude: number } }) => {
     // console.log("auth.position",auth.position)
     if (auth.position) {
@@ -714,7 +758,7 @@ const HomeScreen = ({ navigation, route }: any) => {
         </Animated.View> */}
       </Animated.View >
 
-
+          
       <ScrollView
         showsVerticalScrollIndicator={false}
         ref={scrollViewRef}
@@ -738,13 +782,6 @@ const HomeScreen = ({ navigation, route }: any) => {
           <SpaceComponent height={30} />
           <TabBarComponent title="Các sự kiện sắp xảy ra" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra', categories: categories, follows: allFollower })} />
           {
-            // <FlatList
-            //   showsHorizontalScrollIndicator={false}
-            //   horizontal
-            //   data={allEvent}
-            //   extraData={refreshList}
-            //   renderItem={({ item, index }) => <EventItem followers={allFollower} item={item} key={item?._id} />}
-            // />
             <DataLoaderComponent data={allEvent} isLoading={isLoading} height={appInfo.sizes.HEIGHT * 0.3} children={
               <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -763,6 +800,38 @@ const HomeScreen = ({ navigation, route }: any) => {
           }
             messageEmpty={'Không có thể loại nào cả'}
           />
+           <SpaceComponent height={30} />
+          <TabBarComponent title="Các sự kiện xem nhiều nhất" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra',sortType:'view', categories: categories, follows: allFollower })} />
+          {
+            <DataLoaderComponent data={allEventSortByView} isLoading={isLoadingSortByView} height={appInfo.sizes.HEIGHT * 0.3} children={
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={allEventSortByView}
+                extraData={refreshList}
+                renderItem={({ item, index }) => <EventItem item={item} key={item?._id} />}
+              />
+            }
+              messageEmpty={'Không có sự kiên nào sắp xảy ra'}
+            />
+          }
+         {auth.categoriesInterested && auth.categoriesInterested.length > 0 && auth.accesstoken &&  <>
+            <SpaceComponent height={30} />
+            <TabBarComponent title="Có thể bạn cũng thích" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra',categoriesSelected:auth.categoriesInterested.map((item=>item.category._id)), categories: categories, follows: allFollower })} />
+            {
+              <DataLoaderComponent data={allEventInterested} isLoading={isLoadingSortByView} height={appInfo.sizes.HEIGHT * 0.3} children={
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  data={allEventInterested}
+                  extraData={refreshList}
+                  renderItem={({ item, index }) => <EventItem item={item} key={item?._id} />}
+                />
+              }
+                messageEmpty={'Không có sự kiên nào sắp xảy ra'}
+              />
+            }
+          </>}
           <SpaceComponent height={16} />
           <TabBarComponent title="Gần chỗ bạn" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện gần chỗ bạn', categories: categories, lat: auth.position.lat, long: auth.position.lng, distance: '10', follows: allFollower })} />
           {

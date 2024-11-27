@@ -69,7 +69,7 @@ const DropdownPickerSelect = (props:Props) => {
             data={values}
             footerComponent={
                <View style={{
-                    paddingBottom:30
+                    paddingBottom:30,
                 }}>
                     <ButtonComponent disable={selectedItems.length <= 0} text="Thêm" type="primary" onPress={()=>{onSelect(selectedItems),setIsOpenModalize(false)}}/>
                 </View>
