@@ -62,7 +62,8 @@ export interface AuthState {
             idUser:string
         }[]
     },
-    invoices:Invoice[][]
+    invoices:Invoice[][],
+    isHasPassword:boolean
 
 }
 
@@ -111,7 +112,8 @@ const initialState: AuthState = {
         user:'',
         users:[]
     },
-    invoices:[]
+    invoices:[],
+    isHasPassword:true
 }
 
 const authSlice = createSlice({
@@ -164,9 +166,12 @@ const authSlice = createSlice({
             };
 
         },
+        updateIsHasPassword:(state,action)=>{
+            state.authData.isHasPassword = true
+        },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

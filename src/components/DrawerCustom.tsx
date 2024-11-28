@@ -63,17 +63,6 @@ const DrawerCustom = ({ navigation }: any) => {
     }
     await AsyncStorage.removeItem('auth')
     dispatch(removeAuth())
-    // await AsyncStorage.removeItem('isRemember')
-    // await AsyncStorage.removeItem('password')
-    // if (isRemember === true) {
-    //   await AsyncStorage.setItem('auth', JSON.stringify({ email: auth.email, password: password }))
-    //   dispatch(removeAuth())
-    // } else {
-    //   await AsyncStorage.setItem('auth', JSON.stringify({ email: '', password: '' }))
-    //   await AsyncStorage.removeItem('isRemember')
-    //   await AsyncStorage.removeItem('password')
-    //   dispatch(removeAuth())
-    // }
   }
   const handleClickItemMenu = (key: string) => {
     switch (key) {

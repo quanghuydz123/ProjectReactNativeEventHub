@@ -39,6 +39,7 @@ export const apis = {
         verification:()=>`/verification`,
         forgotPassword:()=>`/forgotPassword`,
         verificationForgotPassword:()=>`/verificationForgotPassword`,
+        updatePassword:()=>`/updatePassword`
 
     },
     event:{
