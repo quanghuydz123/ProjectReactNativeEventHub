@@ -76,7 +76,7 @@ const OrganizerFollowingScreen = ({ navigation, route }: any) => {
                                                     { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
                                                 }
                                                 else {
-                                                    navigation.navigate("AboutProfileScreen", { uid: item?.user._id, organizer: item })
+                                                    navigation.navigate("AboutProfileScreen", { uid: item?.user._id, user: item.user })
                                                 }
                                             }}>
                                                 <AvatarItem size={76} photoUrl={item.user.photoUrl} colorBorderWidth={colors.gray} />

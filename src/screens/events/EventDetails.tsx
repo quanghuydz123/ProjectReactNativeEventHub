@@ -626,7 +626,7 @@ const EventDetails = ({ navigation, route }: any) => {
                   { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
                 }
                 else {
-                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId?.user._id, organizer: event?.authorId })
+                  navigation.navigate("AboutProfileScreen", { uid: event?.authorId?.user._id, user: event?.authorId.user })
                 }
               }}
             />
