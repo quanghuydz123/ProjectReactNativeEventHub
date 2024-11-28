@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetFlatList, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useState, useRef, useCallback, forwardRef, useMemo, useEffect } from "react";
-import { TextInput, BackHandler, View, FlatList, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { TextInput, BackHandler, View, FlatList, StyleSheet, TouchableOpacity, Text, Modal } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SectionComponent, RowComponent, SpaceComponent, TextComponent, InputComponent, ButtonComponent } from "../../../components";
 import AvatarItem from "../../../components/AvatarItem";
@@ -44,7 +44,8 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
     const navigation:any = useNavigation()
     const [isLoadingDeleteComment,setIsLoadingDeleteComment] = useState(false)
     const [comments,setComments] = useState<CommentModel[]>([])
-
+    const [modalUpdateCommentVisible, setModalUpdateCommentVisible] = useState(false);
+    const [valueContent,setValueContent] = useState('')
     const handleSheetChanges = useCallback((index: number) => {
         setIndex(index)
         setIsShowing(index < 1 ? false : true);
@@ -80,6 +81,11 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
         },
         content: ''
     })
+    useEffect(()=>{
+        if(longPressComment.content){
+            setValueContent(longPressComment.content)
+        }
+    },[longPressComment])
     const textInputRef = useRef<TextInput>(null);
     useEffect(()=>{
         if(idEvent){
@@ -410,6 +416,36 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
                     />
                 </View>
             </BottomSheet>
+                <Modal
+                visible={modalUpdateCommentVisible}
+                transparent={true}
+                animationType="none"
+                onRequestClose={() => {
+                    setModalUpdateCommentVisible(!modalUpdateCommentVisible);
+                }}
+                >
+                    <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
+                        <SectionComponent styles={{width:appInfo.sizes.WIDTH*0.8}}>
+                            <CardComponent styles={{borderWidth:1,borderBlockColor:colors.background,paddingHorizontal:20}}>
+                                <TextComponent text={'Chỉnh sửa'} font={fontFamilies.medium} size={18}/>
+                                <SpaceComponent height={4}/>
+                                <InputComponent 
+                                numberOfLines={5}
+                                multiline
+                                value={valueContent} 
+                                onChange={(val)=>setValueContent(val)}
+                                onEnd={()=>setModalUpdateCommentVisible(false)}
+                                />
+                                <RowComponent justify="flex-end">
+                                    <ButtonComponent type="primary" text="Hủy" onPress={()=>setModalUpdateCommentVisible(false)} styles={{width:'auto'}} mrBottom={0} color={colors.gray8} textColor={colors.colorText}/>
+                                    <SpaceComponent width={12}/>
+                                    <ButtonComponent type="primary" styles={{width:'auto'}} text="Cập nhập"  mrBottom={0}/>
+                                </RowComponent>
+                            </CardComponent>
+                        </SectionComponent>
+                    </View>
+
+                </Modal>
             <Portal>
                 <Modalize
                     adjustToContentHeight
@@ -445,7 +481,10 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
                             <TextComponent text={'Xóa'} size={20} />
                         </RowComponent>
                         <SpaceComponent height={20} />
-                        <RowComponent>
+                        <RowComponent onPress={()=>{
+                            setOpenModalize(false)
+                            setModalUpdateCommentVisible(true)
+                        }}>
                             <FontAwesome name="pencil" size={30} />
                             <SpaceComponent width={8} />
                             <TextComponent text={'Chỉnh sửa'} size={20} />
