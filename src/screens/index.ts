@@ -32,8 +32,8 @@ import AboutProfile from "./profiles/Component/AboutProfile";
 import EditProfileScreen from "./profiles/EditProfileScreen";
 import InterestedEventScreen from "./profiles/InterestedEventScreen";
 import ProfileScreen from "./profiles/ProfileScreen";
-import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen";
 import UpdatePasswordScreen from "./profiles/UpdatePasswordScreen";
+import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen";
 
 
 export {
