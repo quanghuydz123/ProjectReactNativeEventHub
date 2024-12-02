@@ -55,15 +55,27 @@ const PurchasedTicketNotStartedScreen = ({ navigation, route }: any) => {
                    height={appInfo.sizes.HEIGHT*0.6}
                    isLoading={isLoading}
                    children={
-                    invoicePaid.map((invoice)=>{
+                    invoicePaid.slice(0,3).map((invoice)=>{
                         return <TicketComponent invoice={invoice} key={invoice.invoiceDetails?._id} />
                     })
                    }
                    />
                 }
-                {/* <View >
-                    <ButtonComponent  text="Xem tất cả" type="primary" mrBottom={0} color={colors.primary} width={'auto'} textSize={13} styles={{borderRadius:100,paddingVertical:8}} textColor={colors.white} />
-                </View> */}
+                {invoicePaid && invoicePaid.length > 3 && <View >
+                    <ButtonComponent  
+                        text="Xem tất cả" 
+                        type="primary" 
+                        mrBottom={0} 
+                        color={colors.primary} 
+                        width={appInfo.sizes.WIDTH*0.5} 
+                        textSize={13} 
+                        styles={{borderRadius:100,paddingVertical:8}} 
+                        textColor={colors.white} 
+                        onPress={()=>navigation.navigate('SearchAndListViewScreen',
+                        {items:invoicePaid,type:'ticketPurchased',title:'Danh sách vé đã mua',bgColor:colors.black,pdH:1,titleChild:`Tổng cộng: ${invoicePaid.length}`})}
+
+                        />
+                </View>}
                 <SpaceComponent height={10}/>
                 <SpaceComponent height={1} color={colors.gray} width={appInfo.sizes.WIDTH} styles={{}} />
 

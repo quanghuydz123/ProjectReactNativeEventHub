@@ -62,12 +62,13 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
   const [addressFilter,setAddressFilter] = useState('')
   const [searchKey,setSearchKey] = useState('')
+  const [isEnabledSortByView, setIsEnabledSortByView] = useState(sortType === 'view' ? true : false);
   const [priceRenge, setPriceRenge] = useState<{
     low: number,
     high: number
   }>({
       low:0,
-      high:10000000
+      high:5000000
   })
   const [dateTime,setDateTime] = useState<{
     startAt:string,
@@ -132,6 +133,13 @@ const auth = useSelector(authSelector)
       setFirst(true)
     }
   },[filterEvent])
+  useEffect(()=>{
+    if(isEnabledSortByView){
+      handleOnChangeValudeFilter('sortType','view')
+    }else{
+      handleOnChangeValudeFilter('sortType','')
+    }
+  },[isEnabledSortByView])
   const handleSetFilterEvent = async ()=>{
     const filterCopy:FilterEvent = {...filterEvent}
     filterCopy['position']['lat'] = lat
@@ -288,6 +296,7 @@ const auth = useSelector(authSelector)
         
       }
       <ModalFilterEvent selectedCategories={idsSelectedCategories} 
+      
       onSelectCategories={(val)=>setIdsSelectedCategories(val)} 
       categories={allCategory} visible={isOpenModelizeFilter} 
       onClose={()=>handleResetFilterEvent()}
@@ -298,6 +307,8 @@ const auth = useSelector(authSelector)
       onSelectAddress={(val)=>setAddressFilter(val)}
       onSelectPriceRange={(val)=>setPriceRenge({low:val.low,high:val.high})}
       selectedPriceRenge={priceRenge}
+      isEnabledSortByView={isEnabledSortByView}
+      onEnableSortByView={(val)=>setIsEnabledSortByView(val)}
       />
     </ContainerComponent>
   )

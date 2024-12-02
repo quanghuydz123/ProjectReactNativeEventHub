@@ -1,4 +1,4 @@
-import { Button, FlatList, Text, TouchableOpacity, View } from "react-native"
+import { Button, FlatList, Switch, Text, TouchableOpacity, View } from "react-native"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
@@ -14,6 +14,7 @@ import { Address } from "../src/models/LocationModel";
 import RnRangeSlider from "rn-range-slider";
 import Slider from "@react-native-community/slider";
 import { appInfo } from "../src/constrants/appInfo";
+import { convertMoney } from "../src/utils/convertMoney";
 interface Props {
     visible: boolean,
     onClose: () => void,
@@ -38,10 +39,12 @@ interface Props {
     onSelectPriceRange: (val: {
         low: number,
         high: number
-    }) => void
+    }) => void,
+    isEnabledSortByView:boolean,
+    onEnableSortByView:(val:boolean)=>void
 }
 const ModalFilterEvent = (props: Props) => {
-    const { visible, onClose, categories, selectedCategories, selectedAddress, onSelectAddress
+    const { visible, onClose, categories,isEnabledSortByView,onEnableSortByView, selectedCategories, selectedAddress, onSelectAddress
         , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime, selectedPriceRenge, onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
@@ -126,33 +129,40 @@ const ModalFilterEvent = (props: Props) => {
     const handleValueChange = useCallback((low: number, high: number) => {
         onSelectPriceRange({ low, high });
     }, []);
-    console.log("asda,",selectedPriceRenge)
+    // const [isEnabled, setIsEnabled] = useState(false);
+    // const toggleSwitch = () => {
+    //     setIsEnabled(previousState => !previousState);
+    // }
     return (
         <Portal>
             <Modalize
                 adjustToContentHeight
                 ref={modalieRef}
+                
                 key={'ModalFilterEvent'}
                 onClose={() => onClose()}
                 modalStyle={{
                     paddingHorizontal: 12,
-                    paddingTop: 20
+                    paddingTop: 20,
                 }}
+                
                 FooterComponent={
                     <RowComponent justify="center">
                         <ButtonComponent onPress={onClose} text="Hủy lưu" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
                         <ButtonComponent onPress={onComfirm} text="Đồng ý" type="primary" styles={{ width: '85%' }} />
                     </RowComponent>
                 }
-                HeaderComponent={
-                    <View>
-                        <TextComponent text={'Lọc sự kiện'} title size={16} />
-                    </View>
-                }
+                // HeaderComponent={
+                //     <View>
+                //         <TextComponent text={'Lọc sự kiện'} title size={16} />
+                //     </View>
+                // }
 
             >
 
                 <View style={{ paddingTop: 10 }}>
+                    <TextComponent text={'Lọc theo thể loại'} title size={14}/>
+                    <SpaceComponent height={4}/>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
                             categories && categories.map((item, index) => <View style={{ paddingVertical: 4, paddingHorizontal: 4 }} key={`categoriesModalFilter${index}`}>
@@ -164,7 +174,23 @@ const ModalFilterEvent = (props: Props) => {
                             </View>)
                         }
                     </View>
-
+                    <SpaceComponent height={12}/>
+                    <View style={{flex:1}}>
+                        <TextComponent text={'Sắp theo theo'} title size={14}/>
+                        <RowComponent styles={{}}>
+                            <TextComponent text={'Lượt xem'}/>
+                            <SpaceComponent width={12}/>
+                            <Switch
+                                trackColor={{false: '#767577', true: colors.primary}}
+                                thumbColor={isEnabledSortByView ? colors.backgroundBluishWhite : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
+                                onValueChange={()=>onEnableSortByView(!isEnabledSortByView)}
+                                
+                                value={isEnabledSortByView}
+                            />
+                        </RowComponent>
+                    </View>
                     <View>
                         <SpaceComponent height={12} />
                         <TextComponent text={'Thời gian diễn ra'} title size={14} />
@@ -188,13 +214,13 @@ const ModalFilterEvent = (props: Props) => {
                     </View>
                     <SectionComponent styles={{ paddingHorizontal: 0 }}>
                         <RowComponent justify="space-between">
-                            <TextComponent text={'Giá (VNĐ)'} title size={14} />
+                            <TextComponent text={'Lọc theo giá'} title size={14} />
                         </RowComponent>
-                        <SpaceComponent height={20} />
+                        <SpaceComponent height={24} />
                         <RowComponent>
                             <View style={{ flex: 1, paddingHorizontal: 4 }}>
                                 <RnRangeSlider
-                                    min={0} max={11000000} step={10000}
+                                    min={0} max={5000000} step={10000}
                                
                                     style={{ height: 5, backgroundColor: colors.gray2, borderRadius: 10, marginHorizontal: 12, justifyContent: 'center' }}
                                     renderThumb={(name) => (
@@ -210,12 +236,12 @@ const ModalFilterEvent = (props: Props) => {
                                             <View style={{
                                                 position: 'absolute',
                                                 right: 0,
-                                                left: -30,
+                                                left: name === 'low' ? -26 : -50,
                                                 bottom: 16,
-                                                width: 60,
+                                                width: 70,
                                                 alignItems: 'center'
                                             }}>
-                                                <TextComponent size={12} color={colors.gray} text={name === 'low' ? selectedPriceRenge.low : selectedPriceRenge.high} />
+                                                <TextComponent size={12} color={colors.gray} text={name === 'low' ? convertMoney(selectedPriceRenge.low) : convertMoney( selectedPriceRenge.high)} />
                                             </View>
                                         </View>
                                     )}

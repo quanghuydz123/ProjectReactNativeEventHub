@@ -50,7 +50,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
   const renderListFriend = (user: UserModel) => {
     return (
       <RowComponent key={user.createAt} styles={{ paddingBottom: 10 }} >
-        <RowComponent onPress={() => navigation.navigate("AboutProfileScreen", { uid: user._id })}>
+        <RowComponent onPress={() => navigation.navigate("AboutProfileScreen", { uid: user._id,user:user })}>
           <AvatarItem size={sizeGlobal.avatarItem - 4} photoUrl={user?.photoUrl} />
           <SpaceComponent width={6} />
           <View style={{ flex: 1 }}>
@@ -118,7 +118,7 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
   data={follower[0]?.users}
   renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
 /> */}
-          <DataLoaderComponent data={follower[0]?.users} isLoading={isLoading} height={appInfo.sizes.HEIGHT*0.4} children={
+          <DataLoaderComponent data={follower[0]?.users.slice(0,4)} isLoading={isLoading} height={appInfo.sizes.HEIGHT*0.4} children={
             // <FlatList
             //   key={'flatlist1'}
             //   contentContainerStyle={{ paddingBottom: 16 }}
@@ -126,13 +126,20 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
             //   data={follower[0]?.users}
             //   renderItem={({ item, index }) => renderListFriend(item.idUser, item.status)}
             // />
-            follower[0]?.users.map((item, index) => {
+            follower[0]?.users.slice(0,4).map((item, index) => {
               return renderListFriend(item.idUser)
             })
           }
             messageEmpty={'Bạn chưa theo dõi ai'}
           />
-          {/* {(follower[0]?.users && follower[0]?.users.length >= 4) && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>} */}
+          {(follower[0]?.users && follower[0]?.users.length > 5) && 
+          <ButtonComponent 
+          text="Xem thêm" 
+          type="primary" 
+          color={colors.gray8} 
+          textColor={colors.black}
+          onPress={()=>navigation.navigate('SearchAndListViewScreen',{items:follower[0].users.map((item)=>item.idUser),type:'following',title:'Danh sách đang theo dõi',titleChild:`${follower[0].users.length} người dùng`})}
+          />}
 
         </SectionComponent>
         <SectionComponent>
@@ -162,14 +169,19 @@ const ListFriendsScreen = ({ navigation, route }: any) => {
   data={yourFollowers}
   renderItem={({ item, index }) => renderListFriend(item.user, true)}
 /> */}
-          <DataLoaderComponent data={yourFollowers} isLoading={isLoading} children={
-            yourFollowers.map((item, index) => {
+          <DataLoaderComponent data={yourFollowers.slice(0,4)} isLoading={isLoading} children={
+            yourFollowers.slice(0,4).map((item, index) => {
               return renderListFriend(item.user)
             })
           }
             messageEmpty={'Chưa có ai theo dõi bạn'}
           />
-          {/* {(yourFollowers && yourFollowers.length) >= 4 && <ButtonComponent text="Xem thêm" type="primary" color={colors.gray8} textColor={colors.black}/>} */}
+          {(yourFollowers && yourFollowers.length) > 5 && <ButtonComponent 
+          text="Xem thêm" 
+          type="primary" 
+          onPress={()=>navigation.navigate('SearchAndListViewScreen',{items:yourFollowers.map((item)=>item.user),type:'following',title:'Danh sách đang được theo dõi',titleChild:`${yourFollowers.length} người dùng`})}
+          color={colors.gray8} 
+          textColor={colors.black}/>}
         </SectionComponent>
       </ScrollView>
     </ContainerComponent>

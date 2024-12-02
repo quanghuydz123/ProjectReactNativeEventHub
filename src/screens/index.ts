@@ -33,6 +33,7 @@ import EditProfileScreen from "./profiles/EditProfileScreen";
 import InterestedEventScreen from "./profiles/InterestedEventScreen";
 import ProfileScreen from "./profiles/ProfileScreen";
 import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen";
+import UpdatePasswordScreen from "./profiles/UpdatePasswordScreen";
 
 
 export {
@@ -70,5 +71,6 @@ export {
     SearchAndListViewScreen,
     PurchasedTicketsDetailsScreen,
     PurchasedTicketsCanceledScreen,
-    InterestedEventScreen
+    InterestedEventScreen,
+    UpdatePasswordScreen
 }

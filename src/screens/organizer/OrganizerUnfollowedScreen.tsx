@@ -69,12 +69,12 @@ const OrganizerUnfollowedScreen = ({ navigation, route }: any) => {
                                 renderItem={({ item }) => (
                                     <>
                                         <RowComponent justify='space-between' key={item.user._id}>
-                                            <RowComponent styles={{ alignItems: 'flex-start', width: appInfo.sizes.WIDTH * 0.7 }} onPress={() => {
+                                            <RowComponent styles={{ alignItems: 'flex-start'}} onPress={() => {
                                                 if (item?.user._id === auth.id) {
                                                     { ToastMessaging.Warning({ message: 'Đó là bạn mà', visibilityTime: 2000 }) }
                                                 }
                                                 else {
-                                                    navigation.navigate("AboutProfileScreen", { uid: item?.user._id, organizer: item })
+                                                    navigation.navigate("AboutProfileScreen", { uid: item?.user._id, user: item.user })
                                                 }
                                             }}>
                                                 <AvatarItem size={76} photoUrl={item.user.photoUrl} colorBorderWidth={colors.gray} />
@@ -85,7 +85,7 @@ const OrganizerUnfollowedScreen = ({ navigation, route }: any) => {
                                                     <TextComponent text={item.user.bio ?? ''} size={10} numberOfLine={2} color={colors.gray4} />
                                                 </View>
                                             </RowComponent>
-                                            <ButtonComponent 
+                                            {/* <ButtonComponent 
                                                 text='Theo dõi' 
                                                 type='primary' 
                                                 textSize={12} 
@@ -97,7 +97,7 @@ const OrganizerUnfollowedScreen = ({ navigation, route }: any) => {
                                                         console.log("ok")
                                                     }
                                                 }}  
-                                            />
+                                            /> */}
                                         </RowComponent>
                                         <SpaceComponent height={16} />
                                     </>

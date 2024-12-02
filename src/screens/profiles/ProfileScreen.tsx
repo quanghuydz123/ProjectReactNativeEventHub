@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
-import { addAuth, authSelector, AuthState, updateCategoriesInterested } from "../../reduxs/reducers/authReducers";
+import { addAuth, authSelector, AuthState, removeAuth, updateCategoriesInterested } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize, SelectedImageModal } from "../../../modals";
 import AvatarItem from "../../components/AvatarItem";
@@ -34,7 +34,10 @@ import { EventModelNew } from "../../models/EventModelNew";
 import eventAPI from "../../apis/eventAPI";
 import ticketAPI from "../../apis/ticketAPI";
 import { InvoiceDetailsModel } from "../../models/InvoiceDetailsModel";
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { HandleNotification } from "../../utils/handleNotification";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
   const [profile, setProfile] = useState<{
@@ -310,6 +313,24 @@ const ProfileScreen = ({ navigation, route }: any) => {
   //   },0)  
   //   return ``
   // },[follower])
+  const handleLogout = async () => {
+    if (auth.loginMethod === 'google') {
+      GoogleSignin.signOut()//đăng xuất google
+    }
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
+    if (fcmtoken) {
+      if (auth.fcmTokens && auth.fcmTokens.length > 0) {
+        const items = [...auth.fcmTokens]
+        const index = items.findIndex(item => item === fcmtoken)
+        if (index !== -1) {
+          items.splice(index, 1)
+        }
+        await HandleNotification.Update(auth.id, items)
+      }
+    }
+    await AsyncStorage.removeItem('auth')
+    dispatch(removeAuth())
+  }
   const renderCardHalf = ({title,icon,onPress}:{title:string,icon:ReactNode,onPress?:()=>void})=>{
     return  <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.09, width: appInfo.sizes.WIDTH * 0.46, paddingVertical:12 }} isShadow onPress={onPress}>
     <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
@@ -319,6 +340,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
   </CardComponent>
   }
+  console.log(auth.isHasPassword)
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
@@ -362,6 +384,16 @@ const ProfileScreen = ({ navigation, route }: any) => {
               {/* <TextComponent text="Thông tin về tôi" title size={18} />
           <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
             </View>
+            {(auth.loginMethod === 'google' && auth.isHasPassword === false) && <CardComponent>
+                <RowComponent styles={{alignItems:'flex-start',paddingRight:12}}>
+                <AntDesign size={10} name="warning" style={{marginTop:4}}/>
+                <SpaceComponent width={6}/>
+                <Text>
+                    Tài khoản của bạn chưa có mật khẩu để đăng nhập, vui lòng
+                    <Text style={{color:colors.blue}} onPress={() => navigation.navigate('UpdatePasswordScreen',{type:'updatePassword'})}> cập nhập tại đây</Text>
+                </Text>
+                </RowComponent>
+            </CardComponent>}
           </> :
             <SectionComponent>
               <SpaceComponent height={16} />
@@ -442,6 +474,21 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
           
         </RowComponent>
+        <RowComponent>
+         {renderCardHalf({title:'Đổi mật khẩu',icon: <MaterialCommunityIcons name="security" size={22} color={colors.blue} />,onPress:() => {
+            if(checkLogin(auth,navigation)){
+              navigation.navigate('UpdatePasswordScreen',{type:'changePassword'})
+            }
+          }})}
+
+         
+          <SpaceComponent width={8} />
+
+          {renderCardHalf({title:'Đăng xuất',icon: <Feather name="log-out" size={22} color={colors.orange} />,
+          onPress:()=>handleLogout()})}
+
+          
+        </RowComponent>
       </SectionComponent>}
       {/* <SectionComponent>
         <CardComponent isShadow styles={{ height: appInfo.sizes.HEIGHT * 0.5 }}>
@@ -449,7 +496,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
         </CardComponent>
       </SectionComponent> */}
       <SpaceComponent height={16}/>
-      {auth.accesstoken && <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />}
+      {/* {auth.accesstoken && <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />} */}
       <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" />
       {/* <LoadingModal visible={isLoading} /> */}
       <SelectedImageModal onSelected={(val) => handleChoiceImage(val)} visible={isOpenModalizeChooseImage} onSetVisible={val => setIsOpenModalizeChooseImage(val)} />

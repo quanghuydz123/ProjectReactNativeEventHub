@@ -31,7 +31,7 @@ import EventItemHorizontal from "../../components/EventItemHorizontal"
 import checkLogin from "../../utils/checkLogin"
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage"
 const AboutProfileScreen = ({ navigation, route }: any) => {
-  const { uid, organizer }: { uid: string, organizer: OrganizerModel } = route.params
+  const { uid, user }: { uid: string, user: UserModel } = route.params
   const [uidOthor, setUidOther] = useState(uid)
   const [tabSelected, setTabSelected] = useState('about')
   const [isLoading, setIsLoading] = useState(false)
@@ -226,10 +226,10 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
         <CardComponent isShadow styles={[globalStyles.center, { paddingBottom: 20}]}>
 
           <RowComponent>
-            <AvatarItem size={90} photoUrl={organizer?.user?.photoUrl ?? profile?.photoUrl} borderWidth={1} colorBorderWidth={colors.gray4} />
+            <AvatarItem size={90} photoUrl={user?.photoUrl ?? profile?.photoUrl} borderWidth={1} colorBorderWidth={colors.gray4} />
           </RowComponent>
           <SpaceComponent height={8} />
-          <TextComponent text={organizer?.user?.fullname ?? (profile?.fullname || profile?.email || '')} title size={24} />
+          <TextComponent text={user?.fullname ?? (profile?.fullname || profile?.email || '')} title size={24} />
           {/* {profile?.phoneNumber && <>
             <TextComponent text={profile.phoneNumber} size={14} color={colors.gray} />
             <SpaceComponent height={8} />
@@ -331,7 +331,7 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
           <SpaceComponent height={6} />
           <View style={{flex:1 }}>
             {tabSelected === 'about' ?
-              <TextComponent text={organizer?.user?.bio ?? (profile?.bio || "Chưa có gì cả")} /> :
+              <TextComponent text={user?.bio ?? (profile?.bio || "Chưa có gì cả")} /> :
               <>{renderEventCreated(eventCreated)}</>
             }
           </View>
