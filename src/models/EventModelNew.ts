@@ -8,12 +8,27 @@ export interface EventModelNew {
     description?: any
     Address: string
     photoUrl: string
-    addressDetals: AddressDetals
+    // addressDetals: AddressDetals
     Location: string
     position: Position
     price: number
     category:Category,
-    authorId: OrganizerModel
+    authorId: OrganizerModel,
+    addressDetails:{
+      province:{
+          name:string,
+          code:number,
+      },
+      districts:{
+          name:string,
+          code:number,
+      },
+      ward:{
+          name:string,
+          code:number,
+      },
+      houseNumberAndStreet:string
+    },
     usersInterested?:[{
       user:UserModel,
       createdAt:Date

@@ -30,7 +30,7 @@ export const apis = {
         },
         updateisViewdNotifications:()=>`/update-isViewed-notifitions`,
         deleteNotifications:()=>`/delete-notifications`,
-        updateStatusNotifications:()=>`/update-status-notifitions`,
+        // updateStatusNotifications:()=>`/update-status-notifitions`,
 
     },
     auth:{

@@ -140,12 +140,18 @@ const auth = useSelector(authSelector)
       handleOnChangeValudeFilter('sortType','')
     }
   },[isEnabledSortByView])
+  useEffect(()=>{
+    const filterCopy:FilterEvent = {...filterEvent}
+    filterCopy['categoriesFilter'] = categoriesSelected
+    setFilterEvent(filterCopy)
+  },[categoriesSelected])
+  
   const handleSetFilterEvent = async ()=>{
     const filterCopy:FilterEvent = {...filterEvent}
     filterCopy['position']['lat'] = lat
     filterCopy['position']['lng'] = long
     filterCopy['distance'] = distance
-    filterCopy['categoriesFilter'] = categoriesSelected
+    // filterCopy['categoriesFilter'] = categoriesSelected
     filterCopy['sortType'] = sortType
     setFilterEvent(filterCopy)
   }
@@ -295,8 +301,8 @@ const auth = useSelector(authSelector)
             }/>
         
       }
-      <ModalFilterEvent selectedCategories={idsSelectedCategories} 
-      
+      <ModalFilterEvent 
+      selectedCategories={idsSelectedCategories} 
       onSelectCategories={(val)=>setIdsSelectedCategories(val)} 
       categories={allCategory} visible={isOpenModelizeFilter} 
       onClose={()=>handleResetFilterEvent()}

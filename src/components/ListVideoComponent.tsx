@@ -34,6 +34,8 @@ const ListVideoComponent = () => {
         console.log('Lỗi phát video:', error);
     }
     const navigation:any = useNavigation()
+    const [idEvent,setIdEvent] = useState('')
+    
     const [index, setIndex] = useState(0)
     useEffect(()=>{
         if(constant.nameScreen === 'Main' && constant.indexTabSelected===0){
@@ -42,6 +44,20 @@ const ListVideoComponent = () => {
             setIsPauseVideo(false)
         }
     },[constant.nameScreen,constant.indexTabSelected])
+    useEffect(()=>{
+        if (index === 0) {
+            setIdEvent('6748d6a966a63fba7c7c7919')
+        } else if (index === 1) {
+            setIdEvent('673f9228fe5ed71437cb4f6d')
+
+        } else if (index === 2) {
+            setIdEvent('673f97c7fe5ed71437cb50cb')
+
+        } else if (index === 3) {
+            setIdEvent('67225e52aa7197d74d0ccf10')
+
+        }
+    },[index])
     const toggleSound = () => {
         setIsSound(!isSound);
         // setIsPauseVideo(!isPauseVideo)
@@ -70,9 +86,9 @@ const ListVideoComponent = () => {
         } else if (index === 1) {
             background = require('../assets/video/video5.mp4');
         } else if (index === 2) {
-            background = require('../assets/video/video1.mp4');
+            background = require('../assets/video/video7.mp4');
         } else if (index === 3) {
-            background = require('../assets/video/video3.mp4');
+            background = require('../assets/video/video1.mp4');
 
         }
 
@@ -105,7 +121,7 @@ const ListVideoComponent = () => {
                                 textSize={12}
                                 styles={{ minHeight: 0, paddingVertical: 8 }}
                                 alignItems='flex-start'
-                                onPress={()=>navigation.navigate('EventDetails', {  id: '67225e52aa7197d74d0ccf10'})}
+                                onPress={()=>navigation.navigate('EventDetails', {  id: idEvent})}
                             />
                             <CardComponent onPress={toggleSound} isShadow styles={[globalStyles.noSpaceCard, { height: 24, width: 28, borderRadius: 4 }]} color={`rgba(255,255,255,0.6)`}>
                                 <Entypo name={isSound ? "sound-mute" : "sound"} size={14} color={colors.black} />

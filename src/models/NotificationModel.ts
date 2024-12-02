@@ -13,7 +13,7 @@ export interface NotificationModel {
     recipientId: UserModel
     senderID: UserModel
     updatedAt: string,
-    type:'inviteEvent' | 'paymentTicket' |'like' |'follow' |'rejectFollow'| 'allowFollow' | 'other',
+    type:'inviteEvent' | 'paymentTicket' |'like' |'follow' |'rejectFollow'| 'allowFollow' | 'other' | 'newEvent',
     status:'answered' | 'unanswered' | 'cancelled' |'rejected' | 'other'
   }
   

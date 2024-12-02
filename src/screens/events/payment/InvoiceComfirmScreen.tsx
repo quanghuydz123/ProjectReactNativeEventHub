@@ -24,6 +24,9 @@ import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers"
 import { LoadingModal } from "../../../../modals"
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import TimeDownComponent from "./TimeDownComponent"
+import { AlertComponent } from "../../../components/Alert"
+import { apis } from "../../../constrants/apis"
+import invoiceAPI from "../../../apis/invoiceAPI"
 const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
@@ -103,6 +106,32 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                 <SpaceComponent height={6} />
             </>
         )
+    }
+    const alertCencelInvoice = ()=>{
+        AlertComponent({
+            title: 'Hủy đơn hàng',
+            message: 'Bạn sẽ mất vị trí mình đã lựa chọn. Đơn hàng đang trong qua trình thanh toán cũng bị ảnh hưởng',
+            onCancel: () => console.log("oke"),
+            onConfirm: () => {
+                handleCancelInvoice()
+            }
+        })
+    }
+    const handleCancelInvoice = async () => {
+        try {
+            setIsLoading(true)
+            const api = apis.invoice.cancelInvoice()
+            const res = await invoiceAPI.HandleInvoice(api, { ticketsReserve: showTimeChose.ticketsReserve }, 'delete')
+            if (res && res.status === 200) {
+                navigation.pop(2)
+            }
+            setIsLoading(false)
+        } catch (error: any) {
+            setIsLoading(false)
+            // navigation.goBack()
+            const errorMessage = JSON.parse(error.message)
+            console.log("QuestionScreen", errorMessage)
+        }
     }
     return (
         <>
@@ -243,7 +272,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                     <CardComponent>
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.pop(2)} />
+                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => alertCencelInvoice()} />
                         </RowComponent>
                         <SpaceComponent height={10} />
                         <RowComponent justify='space-between' >
@@ -297,7 +326,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                         <CardComponent>
                             <RowComponent justify='space-between' >
                                 <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
+                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => alertCencelInvoice()} />
                             </RowComponent>
                             <SpaceComponent height={10} />
                             <RowComponent justify='space-between' >

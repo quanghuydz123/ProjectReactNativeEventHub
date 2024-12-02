@@ -107,45 +107,45 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleRejectNotification = async (notification: NotificationModel) => {
-    const api = apis.notification.updateStatusNotifications()
-    setIsLoadingModal(true)
-    try {
-      const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
-      setIsLoadingModal(false)
-      if (res && res.status === 200) {
-        // socket.emit('getNotifications',{idUser: auth?.id})
-      }
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
-      } else {
-        console.log('Lỗi rồi')
-      }
-      setIsLoadingModal(false)
-    }
-  }
-  const handleComfirmNofitication = async (notification: NotificationModel) => {
-    const api = apis.notification.updateStatusNotifications()
-    setIsLoadingModal(true)
-    try {
-      const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
-      setIsLoadingModal(false)
-      if (res && res.status === 200) {
-        // socket.emit('getNotifications',{idUser: auth?.id})
-        // socket.emit('followUser',{idUser:auth?.id})
-      }
-    } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
-      if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
-      } else {
-        console.log('Lỗi rồi')
-      }
-      setIsLoadingModal(false)
-    }
-  }
+  // const handleRejectNotification = async (notification: NotificationModel) => {
+  //   const api = apis.notification.updateStatusNotifications()
+  //   setIsLoadingModal(true)
+  //   try {
+  //     const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
+  //     setIsLoadingModal(false)
+  //     if (res && res.status === 200) {
+  //       // socket.emit('getNotifications',{idUser: auth?.id})
+  //     }
+  //   } catch (error: any) {
+  //     const errorMessage = JSON.parse(error.message)
+  //     if (errorMessage.statusCode === 403) {
+  //       console.log(errorMessage.message)
+  //     } else {
+  //       console.log('Lỗi rồi')
+  //     }
+  //     setIsLoadingModal(false)
+  //   }
+  // }
+  // const handleComfirmNofitication = async (notification: NotificationModel) => {
+  //   const api = apis.notification.updateStatusNotifications()
+  //   setIsLoadingModal(true)
+  //   try {
+  //     const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
+  //     setIsLoadingModal(false)
+  //     if (res && res.status === 200) {
+  //       // socket.emit('getNotifications',{idUser: auth?.id})
+  //       // socket.emit('followUser',{idUser:auth?.id})
+  //     }
+  //   } catch (error: any) {
+  //     const errorMessage = JSON.parse(error.message)
+  //     if (errorMessage.statusCode === 403) {
+  //       console.log(errorMessage.message)
+  //     } else {
+  //       console.log('Lỗi rồi')
+  //     }
+  //     setIsLoadingModal(false)
+  //   }
+  // }
   const handleOpenModalize = (notificatoin: NotificationModel) => {
     setSotificationSelected(notificatoin)
     setToggle(!toggle)
@@ -373,6 +373,36 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       </RowComponent>
 
     </View>
+    }else if(value.type==='newEvent'){
+      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
+            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
+              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
+              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
+                onPress={() => navigation.navigate('EventDetails', { id: value.eventId?._id })}>
+
+                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+                  {`${value.senderID?.fullname} `}
+                  <Text style={[globalStyles.text]}>
+                    {value.content}
+                  </Text>
+                </Text>
+                <SpaceComponent height={2} />
+                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+                {/* <RowComponent>
+                        <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
+                        styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
+                        <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
+                      </RowComponent> */}
+              </TouchableOpacity>
+              <ButtonComponent
+
+                onPress={() => handleOpenModalize(value)}
+                styles={{ paddingVertical: 4 }}
+                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
+                iconFlex="right" />
+            </RowComponent>
+
+          </View>
     }else{
       return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
       <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
@@ -413,6 +443,7 @@ const NotificationsScreen = ({ navigation, route }: any) => {
       setRefreshing(false);
     }, 2000);
   }, []);
+  
   return (
     <ContainerComponent back title="Thông báo">
       {

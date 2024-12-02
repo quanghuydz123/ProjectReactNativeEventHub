@@ -92,7 +92,7 @@ const EventItem = (props: Props) => {
               <RowComponent justify="space-between" styles={{}}>
                 <RowComponent>
                   
-                  <TextComponent text={item.addressDetals.county ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
+                  <TextComponent text={item?.addressDetails?.province?.name ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
                  
                   <SpaceComponent width={4} />
                   <RowComponent>
@@ -185,7 +185,7 @@ const EventItem = (props: Props) => {
             <RowComponent>
               {/* <Location size={18} color={colors.gray2} variant="Bold" />
               <SpaceComponent width={4} /> */}
-              <TextComponent text={item.addressDetals.county ?? ''}
+              <TextComponent text={item?.addressDetails?.province?.name ?? ''}
                 numberOfLine={1} size={12}
                 font={fontFamilies.medium}
                 color={colors.text2} flex={1}
