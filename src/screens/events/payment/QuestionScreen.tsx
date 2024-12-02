@@ -62,17 +62,20 @@ const QuestionScreen = ({ navigation, route }: any) => {
             console.log("QuestionScreen", errorMessage)
         }
     }
+    const alertCencelInvoice = ()=>{
+        AlertComponent({
+            title: 'Hủy đơn hàng',
+            message: 'Bạn sẽ mất vị trí mình đã lựa chọn. Đơn hàng đang trong qua trình thanh toán cũng bị ảnh hưởng',
+            onCancel: () => console.log("oke"),
+            onConfirm: () => {
+                handleCancelInvoice()
+            }
+        })
+    }
     const handleBackButtonClick = () => {
         if (constantRef.current.nameScreen === 'QuestionScreen') {
             {
-                AlertComponent({
-                    title: 'Hủy đơn hàng',
-                    message: 'Bạn sẽ mất vị trí mình đã lựa chọn. Đơn hàng đang trong qua trình thanh toán cũng bị ảnh hưởng',
-                    onCancel: () => console.log("oke"),
-                    onConfirm: () => {
-                        handleCancelInvoice()
-                    }
-                })
+                alertCencelInvoice()
             }
         } else {
             navigation.goBack()
@@ -198,7 +201,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     <CardComponent>
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
+                            <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => alertCencelInvoice()} />
                         </RowComponent>
                         <SpaceComponent height={10} />
                         <RowComponent justify='space-between' >
@@ -253,7 +256,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                         <CardComponent>
                             <RowComponent justify='space-between' >
                                 <TextComponent text={'Thông tin đặt vé'} size={18} font={fontFamilies.bold} />
-                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => navigation.goBack()} />
+                                <ButtonComponent text='Chọn lại vé' textSize={14} onPress={() => alertCencelInvoice()} />
                             </RowComponent>
                             <SpaceComponent height={10} />
                             <RowComponent justify='space-between' >

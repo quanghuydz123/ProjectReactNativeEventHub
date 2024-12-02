@@ -105,7 +105,7 @@ const HomeScreen = ({ navigation, route }: any) => {
         message: `${mess.notification?.body}`, title: `${mess.notification?.title}`,
         onPress: () => {
           if (mess.data) {
-            if(mess.data.type==='InviteUserToEvent'){
+            if(mess.data.type==='InviteUserToEvent' || mess?.data?.type==='NewEvent'){
               navigation.navigate('EventDetails', { id: mess?.data.id })
             }
           }
@@ -116,7 +116,7 @@ const HomeScreen = ({ navigation, route }: any) => {
 
     messaging().getInitialNotification().then((mess: any) => {  //Xử khi người dùng tắt app và ấn thông 
       console.log("messmess", mess)
-      if(mess?.data?.type==='InviteUserToEvent'){
+      if(mess?.data?.type==='InviteUserToEvent' || mess?.data?.type==='NewEvent'){
         if (mess?.data?.id) {
           handleLinking(`com.appeventhubmoinhat123://app/detail/${mess.data.id}`)
         }
@@ -817,7 +817,7 @@ const HomeScreen = ({ navigation, route }: any) => {
           }
          {auth.categoriesInterested && auth.categoriesInterested.length > 0 && auth.accesstoken &&  <>
             <SpaceComponent height={30} />
-            <TabBarComponent title="Có thể bạn cũng thích" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra',categoriesSelected:auth.categoriesInterested.map((item=>item.category._id)), categories: categories, follows: allFollower })} />
+            <TabBarComponent title="Có thể bạn cũng thích" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Có thể bạn cũng thích',categoriesSelected:auth.categoriesInterested.map((item=>item.category._id)), categories: categories, follows: allFollower })} />
             {
               <DataLoaderComponent data={allEventInterested} isLoading={isLoadingSortByView} height={appInfo.sizes.HEIGHT * 0.3} children={
                 <FlatList

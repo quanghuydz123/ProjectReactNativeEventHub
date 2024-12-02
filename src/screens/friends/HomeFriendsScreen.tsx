@@ -80,12 +80,12 @@ const HomeFriendsScreen = ({ navigation }: any) => {
                     <RowComponent>
 
                         <ButtonComponent text="Chấp nhập" type="primary" width={'auto'} styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32 }}
-                            onPress={() => handleComfirmNofitication(notification)}
+                            onPress={() => console.log("ok")}
                         />
                         <SpaceComponent width={20} />
 
                         <ButtonComponent text="Từ chối" type="primary" color={colors.backgroundSearchInput} width={'auto'} textColor={colors.colorText}
-                            styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32, borderColor: colors.white }} onPress={() => handleRejectNotification(notification)} />
+                            styles={{ minHeight: 20, borderRadius: 5, paddingVertical: 10, width: appInfo.sizes.WIDTH * 0.32, borderColor: colors.white }} onPress={() => console.log("ok")} />
                     </RowComponent>
                 )
             default:
@@ -100,47 +100,47 @@ const HomeFriendsScreen = ({ navigation }: any) => {
         }
         setNotifications(notificationsCopy)
     }
-    const handleRejectNotification = async (notification: NotificationModel) => {
-        const api = apis.notification.updateStatusNotifications()
-        setIsLoadingModal(true)
-        try {
-            const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
-            setIsLoadingModal(false)
-            if (res && res.status === 200) {
-                handleRemoveNotification(notification)
-                // socket.emit('getNotifications',{idUser: auth?.id})
-            }
-        } catch (error: any) {
-            const errorMessage = JSON.parse(error.message)
-            if (errorMessage.statusCode === 403) {
-                console.log(errorMessage.message)
-            } else {
-                console.log('Lỗi rồi')
-            }
-            setIsLoadingModal(false)
-        }
-    }
-    const handleComfirmNofitication = async (notification: NotificationModel) => {
-        const api = apis.notification.updateStatusNotifications()
-        setIsLoadingModal(true)
-        try {
-            const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
-            setIsLoadingModal(false)
-            if (res && res.status === 200) {
-                handleRemoveNotification(notification)
-                // socket.emit('getNotifications',{idUser: auth?.id})
-                // socket.emit('followUser',{idUser:auth?.id})
-            }
-        } catch (error: any) {
-            const errorMessage = JSON.parse(error.message)
-            if (errorMessage.statusCode === 403) {
-                console.log(errorMessage.message)
-            } else {
-                console.log('Lỗi rồi')
-            }
-            setIsLoadingModal(false)
-        }
-    }
+    // const handleRejectNotification = async (notification: NotificationModel) => {
+    //     const api = apis.notification.updateStatusNotifications()
+    //     setIsLoadingModal(true)
+    //     try {
+    //         const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'rejected' }, 'put')
+    //         setIsLoadingModal(false)
+    //         if (res && res.status === 200) {
+    //             handleRemoveNotification(notification)
+    //             // socket.emit('getNotifications',{idUser: auth?.id})
+    //         }
+    //     } catch (error: any) {
+    //         const errorMessage = JSON.parse(error.message)
+    //         if (errorMessage.statusCode === 403) {
+    //             console.log(errorMessage.message)
+    //         } else {
+    //             console.log('Lỗi rồi')
+    //         }
+    //         setIsLoadingModal(false)
+    //     }
+    // }
+    // const handleComfirmNofitication = async (notification: NotificationModel) => {
+    //     const api = apis.notification.updateStatusNotifications()
+    //     setIsLoadingModal(true)
+    //     try {
+    //         const res: any = await notificationAPI.HandleNotification(api, { idUserFollow: notification.senderID._id, idUserFollowed: notification.recipientId._id, type: 'answered' }, 'put')
+    //         setIsLoadingModal(false)
+    //         if (res && res.status === 200) {
+    //             handleRemoveNotification(notification)
+    //             // socket.emit('getNotifications',{idUser: auth?.id})
+    //             // socket.emit('followUser',{idUser:auth?.id})
+    //         }
+    //     } catch (error: any) {
+    //         const errorMessage = JSON.parse(error.message)
+    //         if (errorMessage.statusCode === 403) {
+    //             console.log(errorMessage.message)
+    //         } else {
+    //             console.log('Lỗi rồi')
+    //         }
+    //         setIsLoadingModal(false)
+    //     }
+    // }
     const renderNofitications = (value: NotificationModel) => {
         return (
             <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: colors.white }}>

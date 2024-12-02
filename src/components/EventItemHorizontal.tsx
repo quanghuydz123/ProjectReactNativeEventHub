@@ -76,7 +76,7 @@ const EventItemHorizontal = (props: Props) => {
                     <RowComponent justify="space-between" styles={{}}>
                         <RowComponent>
 
-                            <TextComponent text={item.addressDetals.county ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
+                            <TextComponent text={item?.addressDetails?.province?.name ?? ''} font={fontFamilies.medium} numberOfLine={1} color={colors.text2} flex={1} size={12} />
 
                             <SpaceComponent width={4} />
                             <RowComponent>

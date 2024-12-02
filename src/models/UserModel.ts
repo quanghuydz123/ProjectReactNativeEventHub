@@ -16,18 +16,18 @@ export interface UserModel {
     },
     address:{
       province:{
-          name:{type:string},
-          code:{type:number},
+          name:string,
+          code:number,
       },
       districts:{
-          name:{type:string},
-          code:{type:number},
+          name:string,
+          code:number,
       },
       ward:{
-          name:{type:string},
-          code:{type:number},
+          name:string,
+          code:number,
       },
-      houseNumberAndStreet:{type:string}
+      houseNumberAndStreet:string
     },
     eventsInterested?:{
       event:string,
