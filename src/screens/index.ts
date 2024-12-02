@@ -1,5 +1,4 @@
 import AddNewEvent from "./AddNewEvent";
-import NewScreen from "./NewScreen";
 import NotFound from "./NotFound";
 import NotificationsScreen from "./NotificationsScreen";
 import QrScannerScreen from "./QrScannerScreen";
@@ -27,12 +26,14 @@ import ListFriendsScreen from "./friends/ListFriendsScreen";
 import SearchFriendScreen from "./friends/SearchFriendScreen";
 import HomeScreen from "./home/HomeScreen";
 import MapScreen from "./maps/MapScreen";
+import NewScreen from "./newScreen";
 import AboutProfileScreen from "./profiles/AboutProfileScreen";
 import AboutProfile from "./profiles/Component/AboutProfile";
 import EditProfileScreen from "./profiles/EditProfileScreen";
 import InterestedEventScreen from "./profiles/InterestedEventScreen";
 import ProfileScreen from "./profiles/ProfileScreen";
 import TransactionHistoryScreen from "./transaction/TransactionHistoryScreen";
+
 
 export {
     HomeScreen,
