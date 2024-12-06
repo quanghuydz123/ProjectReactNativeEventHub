@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native"
-import { ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../../components"
+import { ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../../components"
 import CardComponent from "../../../components/CardComponent"
 import { appInfo } from "../../../constrants/appInfo"
 import { colors } from "../../../constrants/color"
@@ -86,7 +86,19 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                 <RowComponent>
                     <View style={{ flex: 1, flexDirection: 'column', paddingRight: 12, height: '100%' }}>
                         <View>
-                            <TextComponent text={'Loại vé'} size={13} color={colors.white} />
+                            <RowComponent>
+                                <TextComponent text={'Loại vé'} size={13} color={colors.white} />
+                                <SpaceComponent width={12}/>
+                                <TagComponent
+                                    label={ticket.isCheckIn ? 'Đã Check-in' : 'Chưa Check-in'}
+                                    styles={{ paddingVertical: 2, borderWidth: 1, borderColor: ticket.isCheckIn ? colors.primary :colors.warning }}
+                                    textSize={11}
+                                    font={fontFamilies.medium}
+                                    textColor={colors.white}
+                                    bgColor={ticket.isCheckIn ? colors.primary : colors.warning}
+                                />
+                            </RowComponent>
+                            <SpaceComponent height={4}/>
                             <TextComponent text={`${ticket.typeTicketDetails.name} - ${convertMoney(ticket.typeTicketDetails.price)}`} color={colors.primary} size={15} font={fontFamilies.medium} />
                         </View>
                         <SpaceComponent height={12} />
