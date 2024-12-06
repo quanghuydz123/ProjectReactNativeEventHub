@@ -612,7 +612,9 @@ const EventDetails = ({ navigation, route }: any) => {
               addRessEvent={event?.Address ?? ''}
               locationEvent={event?.Location ?? ''}
               relatedEvents={relatedEvents}
-            /> : <LoadingUI bgColor={colors.background}/>}
+            /> : isLoadingShowTime ? <LoadingUI bgColor={colors.background}/> : <View style={{height:100,justifyContent:'center',alignItems:'center'}}>
+              <TextComponent text={'Không có suất diễn nào'} color={colors.white}/>
+              </View>}
           </CardComponent>
         </SectionComponent>
         <SectionComponent >
@@ -735,7 +737,7 @@ const EventDetails = ({ navigation, route }: any) => {
               color: colors.white,
               fontSize: 19,
               fontFamily: fontFamilies.medium
-            }}>{convertMoney(showTimes[0]?.typeTickets[showTimes[0].typeTickets?.length - 1].price ?? 0)}
+            }}>{convertMoney(showTimes[0]?.typeTickets[showTimes[0].typeTickets?.length - 1]?.price ?? 0)}
               </Text>
             </Text>
             {renderButton()}

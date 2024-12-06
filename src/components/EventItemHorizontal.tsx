@@ -46,7 +46,7 @@ const EventItemHorizontal = (props: Props) => {
                 <View style={{ flex: 1 }}>
 
                     <TextComponent numberOfLine={1} text={item?.title} title size={14} color={titleColor ??colors.background} />
-                    <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1].price ?? 0)}`} title size={13} color={`${colors.primary}`} />
+                    <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1]?.price ?? 0)}`} title size={13} color={`${colors.primary}`} />
                     <RowComponent styles={{ flexWrap: 'wrap' }}>
                         {
 
