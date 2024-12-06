@@ -549,7 +549,7 @@ const EventDetails = ({ navigation, route }: any) => {
                     objectFit: 'fill',
                   },
                   ul: {
-
+                    
                   },
                   li: {
                     color: colors.black,
