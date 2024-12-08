@@ -37,7 +37,7 @@ EventHub là ứng dụng di động để quảng bá sự kiện dành cho nh�
 2. Cài đặt các dependencies với câu lệnh: npm install.
 3. Tạo file `.env` trong thư mục `backend` với nội dung:
     ```properties
-DATABASE_USERNAME=test
+	DATABASE_USERNAME=test
 	DATABASE_PASSOWRD=852347
 	SECRET_KEY=yourSecretKey
 	USERNAME_EMAIL=(your-email@gmail.com) dùng là email chính gửi gmail cho các chức năng gửi gmail
@@ -57,7 +57,7 @@ DATABASE_USERNAME=test
 2. Cài đặt các dependencies với câu lệnh: npm install.
 3. Tạo file `.env` trong thư mục `backend` với nội dung:
     ```properties
-API_KEY_REVGEOCODE=your_api (Đăng ký lấy api key trên https://www.here.com)
+	API_KEY_REVGEOCODE=your_api (Đăng ký lấy api key trên https://www.here.com)
 	API_KEY_AUTOCOMPLE=your_api (Đăng ký lấy api key trên https://www.here.com)
     ```
     - `<Địa chỉ máy chủ>` mặc định là `localhost`.
@@ -69,7 +69,7 @@ API_KEY_REVGEOCODE=your_api (Đăng ký lấy api key trên https://www.here.com
 2. Cài đặt các dependencies với câu lệnh: npm install.
 3. Tạo file `.env` trong thư mục `backend` với nội dung:
     ```properties
-API_KEY_REVGEOCODE=your_api (Đăng ký lấy api key trên https://www.here.com)
+	API_KEY_REVGEOCODE=your_api (Đăng ký lấy api key trên https://www.here.com)
 	API_KEY_AUTOCOMPLE=your_api (Đăng ký lấy api key trên https://www.here.com)
     ```
     - `<Địa chỉ máy chủ>` mặc định là `localhost`.
