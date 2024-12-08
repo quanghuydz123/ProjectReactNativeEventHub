@@ -99,13 +99,13 @@ const HomeScreen = ({ navigation, route }: any) => {
   useEffect(() => {
     HandleNotification.checkNotifitionPersion(dispatch)
     messaging().onMessage(async (mess: FirebaseMessagingTypes.RemoteMessage) => {
-      console.log("messasdsad",mess)
-      handleCallAPIGetNotifications()
+      // console.log("mess homeScreen",mess)
+      handleCallAPIGetNotifications(mess?.data?.idUser.toString() ?? '')
       ToastMessaging.Success({
         message: `${mess.notification?.body}`, title: `${mess.notification?.title}`,
         onPress: () => {
           if (mess.data) {
-            if(mess.data.type==='InviteUserToEvent' || mess?.data?.type==='NewEvent'){
+            if(mess.data?.type==='InviteUserToEvent' || mess.data?.type==='NewEvent'){
               navigation.navigate('EventDetails', { id: mess?.data.id })
             }
           }
@@ -122,7 +122,8 @@ const HomeScreen = ({ navigation, route }: any) => {
         }
       }
     })
-  }, [])
+    
+  }, [auth.id])
   useEffect(() => {
     handleCallApiGetAllEvent(true)
     handleCallApiGetAllEventSortByView(true)
@@ -190,7 +191,6 @@ const HomeScreen = ({ navigation, route }: any) => {
  
     const handleGetNotifications = (idUser?: string) => {
       handleCallAPIGetNotifications(idUser)
-      console.log('notification cập nhật123');
     };
 
     // socket.on('followers', (idUser) => {

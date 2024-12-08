@@ -11,7 +11,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { billingSelector, billingState } from "../../../reduxs/reducers/billingReducer"
 import { useSelector } from "react-redux"
 import { DateTime } from "../../../utils/DateTime"
-import { convertMoney } from "../../../utils/convertMoney"
+import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney"
 import { TypeTicketModel } from "../../../models/TypeTicketModel"
 import { Portal } from "react-native-portalize"
 import { Modalize } from "react-native-modalize"
@@ -20,7 +20,7 @@ import { RadioButton } from "react-native-paper"
 import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group"
 import { size } from "lodash"
 import axios from "axios"
-import { authSelector, AuthState } from "../../../reduxs/reducers/authReducers"
+import { authSelector, AuthState, Invoice } from "../../../reduxs/reducers/authReducers"
 import { LoadingModal } from "../../../../modals"
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import TimeDownComponent from "./TimeDownComponent"
@@ -34,29 +34,73 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const [methodPayment, setMethodPayment] = useState('first');
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [isLoading,setIsLoading] = useState(false)
+    const [invoices,setInvoices] = useState<Invoice[][]>([])
     const auth:AuthState = useSelector(authSelector)
+    // useEffect(()=>{
+    //     handleCallAPISearchInvoice()
+    // },[])
     useEffect(() => {
-        console.log("paymentUrl",paymentUrl)
         if (paymentUrl) {
             navigation.navigate('PaymentScreen', { url: paymentUrl })
         }
     }, [paymentUrl])
+   
     const createPaymentUrl = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post('http://localhost:8888/order/create_payment_url', {
-                uid: auth.id,
-                amount: showTimeChose.totalPrice ?? 0, // Số tiền cần thanh toán
-                language: 'vn',
-                bankCode: ''
-            });
-            setPaymentUrl(response?.data?.url)
+            if(showTimeChose.totalPrice  > 5000){
+                const response = await axios.post('http://localhost:8888/order/create_payment_url', {
+                    uid: auth.id,
+                    amount: showTimeChose.totalPrice, // Số tiền cần thanh toán
+                    language: 'vn',
+                    bankCode: ''
+                });
+                setPaymentUrl(response?.data?.url)
+                setIsLoading(false)
+            }else{
+                handleCallAPICreateInvoice()
+            }
         } catch (error: any) {
+            setIsLoading(false)
             console.error('Lỗi khi tạo URL thanh toán:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
+    const handleCallAPICreateInvoice = async () => {
+        try {
+          setIsLoading(true)
+          const api = apis.invoice.createInvoice()
+          const res = await invoiceAPI.HandleInvoice(api, {
+            idUser: auth.id,
+            fullname: auth.fullname,
+            email: auth.email,
+            phoneNumber: auth.phoneNumber,
+            totalPrice: showTimeChose.totalPrice,
+            ticketsReserve: showTimeChose.ticketsReserve,
+            address: auth.address,
+            fullAddress: [
+              auth?.address?.houseNumberAndStreet,
+              auth?.address?.ward?.name,
+              auth?.address?.districts?.name,
+              auth?.address?.province?.name].filter(Boolean).join(', '),
+              titleEvent:showTimeChose.titleEvent,
+              showTimeStart:showTimeChose.showTimes.startDate,
+              addressEvent:showTimeChose.addRessEvent,
+              location:showTimeChose.locationEvent
+    
+          }, 'post')
+          if (res && res.status === 200 && res.data) {
+            navigation.pop(3)
+            navigation.replace('PaymentSucessScreen', { invoiceCode: res.data.invoiceCode, createdAt: res.data.createdAt })
+          } else {
+            handleCancelInvoice()
+          }
+          setIsLoading(false)
+        } catch (error: any) {  
+          setIsLoading(false)
+          const errorMessage = JSON.parse(error.message)
+          console.log("PaymentScreen", errorMessage)
+        }
+      }
     useEffect(() => {
         if (openModalize) {
             modalieRef.current?.open()
@@ -96,11 +140,11 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                 justify='space-between' key={item.ticket._id}>
                     <View>
                         <TextComponent text={item.ticket.name} size={16} font={fontFamilies.medium} />
-                        <TextComponent text={convertMoney(item.ticket.price)} />
+                        <TextComponent text={convertMoney(renderPriceTypeTicket(item.ticket))} />
                     </View>
                     <View>
                         <TextComponent text={item.amount} textAlign='right' />
-                        <TextComponent text={convertMoney(item.ticket.price * item.amount)} />
+                        <TextComponent text={convertMoney(renderPriceTypeTicket(item.ticket) * item.amount)} />
                     </View>
                 </RowComponent>
                 <SpaceComponent height={6} />

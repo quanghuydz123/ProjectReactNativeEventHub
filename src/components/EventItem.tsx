@@ -18,7 +18,7 @@ import { useSelector } from "react-redux"
 import { authSelector, AuthState } from "../reduxs/reducers/authReducers"
 import { FollowModel } from "../models/FollowModel"
 import { DateTime } from "../utils/DateTime"
-import { convertMoney } from "../utils/convertMoney"
+import { convertMoney, renderPrice } from "../utils/convertMoney"
 import TagComponent from "./TagComponent"
 import Feather from "react-native-vector-icons/Feather"
 interface Props {
@@ -30,6 +30,7 @@ const EventItem = (props: Props) => {
   const { item,  isShownVertical,bgColor } = props
   const navigation: any = useNavigation()
   const auth:AuthState = useSelector(authSelector)
+ 
   return (
     <CardComponent color={bgColor ?? colors.background}  styles={{ width: isShownVertical ? appInfo.sizes.WIDTH * 0.5 : appInfo.sizes.WIDTH * 0.65,paddingRight:isShownVertical ? 10 : 1 }} onPress={() => { navigation.push('EventDetails', {  id: item._id }) }}>
       {
@@ -62,7 +63,7 @@ const EventItem = (props: Props) => {
             <View style={{ height: '100%', flex: 1 }}>
              
               <TextComponent numberOfLine={2} text={item.title} title size={14} color={colors.white} />
-              <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1]?.price ?? 0)}`} title size={13} color={`${colors.primary}`} />
+              <TextComponent text={renderPrice(item.showTimes[0])} title size={13} color={`${colors.primary}`} />
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 {
                   
@@ -140,7 +141,7 @@ const EventItem = (props: Props) => {
               </View>}
             </ImageBackground>
             <TextComponent numberOfLine={2} text={item.title} title size={15} color={colors.white} />
-            <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1]?.price ?? 0)}`} title size={13} color={`${colors.primary}`} />
+            <TextComponent text={renderPrice(item.showTimes[0])} title size={13} color={`${colors.primary}`} />
             <RowComponent styles={{ flexWrap: 'wrap' }}>
               {
                 // item.categories.map((category, index) => (

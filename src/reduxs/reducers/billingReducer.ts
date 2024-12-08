@@ -10,7 +10,7 @@ export interface billingState {
     titleEvent: string, 
     addRessEvent: string, 
     locationEvent: string,
-    totalPrice?:number,
+    totalPrice:number,
     totalTicket?:number,
     ticketChose?:[{
         ticket:TypeTicketModel,
@@ -46,7 +46,8 @@ const initialState: billingState = {
     titleEvent:'',
     ticketsReserve:[],
     relatedEvents:[],
-    orderTime:0
+    orderTime:0,
+    totalPrice:0
     
 }
 

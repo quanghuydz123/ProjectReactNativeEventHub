@@ -2,7 +2,7 @@ import { Button, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../../components";
 import { EventModelNew } from "../../../models/EventModelNew";
-import { convertMoney } from "../../../utils/convertMoney";
+import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney";
 import axios from "axios";
 import { LoadingModal } from "../../../../modals";
 import { useDispatch, useSelector } from "react-redux";
@@ -136,7 +136,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                 }
 
                 const totalTickets = updatedTickets.reduce((sum, item) => sum + item.amount, 0);
-                const totalAmount = updatedTickets.reduce((sum, item) => sum + item.amount * item.ticket.price, 0);
+                const totalAmount = updatedTickets.reduce((sum, item) => sum + item.amount * renderPriceTypeTicket(item.ticket), 0);
 
                 setTotalTicketChose(totalTickets);
                 setTotalPrice(totalAmount);
@@ -160,7 +160,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                             size={15}
                         />
 
-                        <TextComponent text={convertMoney(typeTicket.price)} size={14} font={fontFamilies.regular} color={colors.white} />
+                        <TextComponent text={convertMoney(typeTicket.type === 'Paid' ? typeTicket.price : 0)} size={14} font={fontFamilies.regular} color={colors.white} />
                     </View>
                     {renderInputSpinner()}
                 </RowComponent>

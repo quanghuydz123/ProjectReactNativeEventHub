@@ -11,7 +11,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { billingSelector, billingState } from "../../../reduxs/reducers/billingReducer"
 import { useSelector } from "react-redux"
 import { DateTime } from "../../../utils/DateTime"
-import { convertMoney } from "../../../utils/convertMoney"
+import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney"
 import { TypeTicketModel } from "../../../models/TypeTicketModel"
 import { Portal } from "react-native-portalize"
 import { Modalize } from "react-native-modalize"
@@ -95,11 +95,11 @@ const QuestionScreen = ({ navigation, route }: any) => {
                 <RowComponent justify='space-between' key={item.ticket._id}>
                     <View>
                         <TextComponent text={item.ticket.name} size={16} font={fontFamilies.medium} />
-                        <TextComponent text={convertMoney(item.ticket.price)} />
+                        <TextComponent text={convertMoney(renderPriceTypeTicket(item.ticket))} />
                     </View>
                     <View>
                         <TextComponent text={item.amount} textAlign='right' />
-                        <TextComponent text={convertMoney(item.ticket.price * item.amount)} />
+                        <TextComponent text={convertMoney(renderPriceTypeTicket(item.ticket) * item.amount)} />
                     </View>
                 </RowComponent>
                 <SpaceComponent height={6} />

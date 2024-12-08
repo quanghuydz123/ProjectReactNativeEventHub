@@ -26,7 +26,6 @@ import ListFriendsScreen from "./friends/ListFriendsScreen";
 import SearchFriendScreen from "./friends/SearchFriendScreen";
 import HomeScreen from "./home/HomeScreen";
 import MapScreen from "./maps/MapScreen";
-import NewScreen from "./newScreen";
 import AboutProfileScreen from "./profiles/AboutProfileScreen";
 import AboutProfile from "./profiles/Component/AboutProfile";
 import EditProfileScreen from "./profiles/EditProfileScreen";
@@ -56,7 +55,6 @@ export {
     NotFound,
     ExploreEvent,
     PaymentScreen,
-    NewScreen,
     NotificationsScreen,
     TransactionHistoryScreen,
     HomeFriendsScreen,

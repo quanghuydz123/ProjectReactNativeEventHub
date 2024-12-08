@@ -6,7 +6,7 @@ import { colors } from "../constrants/color"
 import TextComponent from "./TextComponent"
 import { fontFamilies } from "../constrants/fontFamilies"
 import SpaceComponent from "./SpaceComponent"
-import { convertMoney } from "../utils/convertMoney"
+import { convertMoney, renderPrice } from "../utils/convertMoney"
 import TagComponent from "./TagComponent"
 import { DateTime } from "../utils/DateTime"
 import Feather from 'react-native-vector-icons/Feather'
@@ -24,6 +24,7 @@ interface Props {
 const EventItemHorizontal = (props: Props) => {
     const { item, bgColor,titleColor ,textCalendarColor} = props
     const navigation: any = useNavigation()
+    
     return (
         <CardComponent styles={{ paddingVertical: 0, paddingHorizontal: 0, backgroundColor: bgColor ?? colors.white }} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
             <RowComponent>
@@ -46,7 +47,7 @@ const EventItemHorizontal = (props: Props) => {
                 <View style={{ flex: 1 }}>
 
                     <TextComponent numberOfLine={1} text={item?.title} title size={14} color={titleColor ??colors.background} />
-                    <TextComponent text={`Từ  ${convertMoney(item?.showTimes[0]?.typeTickets[item?.showTimes[0].typeTickets?.length - 1]?.price ?? 0)}`} title size={13} color={`${colors.primary}`} />
+                    <TextComponent text={renderPrice(item.showTimes[0])} title size={13} color={`${colors.primary}`} />
                     <RowComponent styles={{ flexWrap: 'wrap' }}>
                         {
 

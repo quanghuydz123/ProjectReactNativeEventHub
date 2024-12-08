@@ -30,10 +30,10 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
   const billing: billingState = useSelector(billingSelector)
   const [isLoading,setIsLoading] = useState(false)
   const dispatch = useDispatch()
-  const [invoices,setInvoices] = useState<Invoice[][]>([])
-  useEffect(()=>{
-    handleCallAPISearchInvoice()
-  },[])
+  // const [invoices,setInvoices] = useState<Invoice[][]>([])
+  // useEffect(()=>{
+  //   handleCallAPISearchInvoice()
+  // },[])
   const resetTimeOut = () => {
     if (timeOutId) {
       clearTimeout(timeOutId);
@@ -84,21 +84,21 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
       BackHandler.removeEventListener("hardwareBackPress", handleBackButtonClick);
     };
   }, [count]);
-  const handleCallAPISearchInvoice = async ()=>{
-    const api = apis.invoice.getByIdUser({idUser:auth.id})
-    setIsLoading(true)
-    try {
-      const res = await invoiceAPI.HandleInvoice(api)
-      if(res && res.data && res.status === 200){
-        setInvoices(res.data)
-      }
-      setIsLoading(false)
-    } catch (error:any) {
-      setIsLoading(false)
-      const errorMessage = JSON.parse(error.message)
-      console.log("TransactionHistoryScreen", errorMessage.message)
-    }
-  }
+  // const handleCallAPISearchInvoice = async ()=>{
+  //   const api = apis.invoice.getByIdUser({idUser:auth.id})
+  //   setIsLoading(true)
+  //   try {
+  //     const res = await invoiceAPI.HandleInvoice(api)
+  //     if(res && res.data && res.status === 200){
+  //       setInvoices(res.data)
+  //     }
+  //     setIsLoading(false)
+  //   } catch (error:any) {
+  //     setIsLoading(false)
+  //     const errorMessage = JSON.parse(error.message)
+  //     console.log("TransactionHistoryScreen", errorMessage.message)
+  //   }
+  // }
   const handleUpdateInvoice = async ({ idInvoice, createdAt, invoiceCode }: { idInvoice: string, createdAt: Date, invoiceCode: string }) => {
     try {
       // const invoices:Invoice[][] = auth?.invoices ?? [];
@@ -112,19 +112,19 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
         createdAt: createdAt,
         titleEvent: billing.titleEvent
       }
-      if (invoices.length > 0 && invoices[0].length > 0) {
-        const lastInvoiceMonth = new Date(invoices[0][0].createdAt).getMonth();
-        const newInvoiceMonth = new Date(invoiceNew.createdAt).getMonth();
-        if (lastInvoiceMonth === newInvoiceMonth) {
-          invoices[0].unshift(invoiceNew);
-        } else {
-          invoices.unshift([invoiceNew]);
-        }
-      } else {
-        invoices.unshift([invoiceNew]);
-      }
-      dispatch(updateInvoices({ invoices: invoices }))
-      await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, invoices: invoices }))
+      // if (invoices.length > 0 && invoices[0].length > 0) {
+      //   const lastInvoiceMonth = new Date(invoices[0][0].createdAt).getMonth();
+      //   const newInvoiceMonth = new Date(invoiceNew.createdAt).getMonth();
+      //   if (lastInvoiceMonth === newInvoiceMonth) {
+      //     invoices[0].unshift(invoiceNew);
+      //   } else {
+      //     invoices.unshift([invoiceNew]);
+      //   }
+      // } else {
+      //   invoices.unshift([invoiceNew]);
+      // }
+      // dispatch(updateInvoices({ invoices: invoices }))
+      // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, invoices: invoices }))
       navigation.pop(3)
       navigation.replace('PaymentSucessScreen', { invoiceCode: invoiceCode, createdAt: createdAt })
     } catch (error) {

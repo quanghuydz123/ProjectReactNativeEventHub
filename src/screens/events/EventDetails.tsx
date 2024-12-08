@@ -12,7 +12,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import { fontFamilies } from "../../constrants/fontFamilies";
 import { EventModelNew } from "../../models/EventModelNew";
 import { DateTime } from "../../utils/DateTime";
-import { convertMoney } from "../../utils/convertMoney";
+import { convertMoney, renderPrice } from "../../utils/convertMoney";
 import { useDispatch, useSelector } from "react-redux";
 import { addViewedEvent, authSelector, AuthState, updateEventsInterested } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
@@ -71,10 +71,10 @@ const EventDetails = ({ navigation, route }: any) => {
   // const [textComment, setTextComment] = useState('')
   const [isShowing, setIsShowing] = useState<boolean>(false);
   const [index, setIndex] = useState(-1)
-  const [interestedCount,setInterestedCount] = useState(0)
-  const [descriptionEvent,setDesciptionEvent] = useState('')
-  const [showTimes,setShowTimes] = useState<ShowTimeModel[]>([])
-  const [isLoadingShowTime,setIsLoadingShowTime] = useState(true)
+  const [interestedCount, setInterestedCount] = useState(0)
+  const [descriptionEvent, setDesciptionEvent] = useState('')
+  const [showTimes, setShowTimes] = useState<ShowTimeModel[]>([])
+  const [isLoadingShowTime, setIsLoadingShowTime] = useState(true)
   // const [comments,setComments] = useState<CommentModel[]>([])
   useStatusBar('light-content')
   useFocusEffect(
@@ -146,27 +146,27 @@ const EventDetails = ({ navigation, route }: any) => {
 
     }
   }
-  const handleCallAPIGetDescriptionEvent = async ()=>{
+  const handleCallAPIGetDescriptionEvent = async () => {
     try {
-      const api = apis.event.getDescriptionEvent({idEvent:event?._id ?? ''}) 
-      const res:any = await eventAPI.HandleEvent(api)
-      if(res && res.data && res.status === 200){
+      const api = apis.event.getDescriptionEvent({ idEvent: event?._id ?? '' })
+      const res: any = await eventAPI.HandleEvent(api)
+      if (res && res.data && res.status === 200) {
         setDesciptionEvent(res.data)
       }
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("EventDetails", errorMessage)
     }
   }
-  const handleCallAPIGetShowTimesEvent = async ()=>{
+  const handleCallAPIGetShowTimesEvent = async () => {
     try {
-      const api = apis.event.getShowTimesEvent({idEvent:event?._id ?? ''}) 
-      const res:any = await eventAPI.HandleEvent(api)
-      if(res && res.data && res.status === 200){
+      const api = apis.event.getShowTimesEvent({ idEvent: event?._id ?? '' })
+      const res: any = await eventAPI.HandleEvent(api)
+      if (res && res.data && res.status === 200) {
         setShowTimes(res.data)
       }
       setIsLoadingShowTime(false)
-    } catch (error:any) {
+    } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("EventDetails", errorMessage)
     }
@@ -236,9 +236,9 @@ const EventDetails = ({ navigation, route }: any) => {
   // }
   const handleInterestEvent = async () => {
     setIsInterested(!isInterested)
-    if(isInterested){
+    if (isInterested) {
       setInterestedCount(prev => prev - 1)
-    }else{
+    } else {
       setInterestedCount(prev => prev + 1)
     }
     const api = '/interest-event'
@@ -329,7 +329,7 @@ const EventDetails = ({ navigation, route }: any) => {
       .catch(err => console.log(err))
   }
   const renderButton = () => {
-    let text = isLoadingShowTime ? 'Đang xử lý' :'Mua vé ngay'
+    let text = isLoadingShowTime ? 'Đang xử lý' : 'Mua vé ngay'
     let disable = isLoadingShowTime
     let width = '70%'
     let onPress = () => {
@@ -363,7 +363,7 @@ const EventDetails = ({ navigation, route }: any) => {
       text = 'Sự kiện đang diễn ra'
       width = '80%'
       disable = true
-    }else if (event?.statusEvent === 'Cancelled') {
+    } else if (event?.statusEvent === 'Cancelled') {
       text = 'Đã bị hủy'
       width = '80%'
       disable = true
@@ -537,7 +537,7 @@ const EventDetails = ({ navigation, route }: any) => {
               {descriptionEvent ? <RenderHTML
                 contentWidth={appInfo.sizes.WIDTH - 20}
 
-                source={{ html:descriptionEvent}}
+                source={{ html: descriptionEvent }}
                 // tagsStyles={{
                 //   h2: { textAlign: 'center', fontWeight: 'bold', fontSize: 24 },
                 //   p: { textAlign: 'center', fontSize: 16, lineHeight: 24 },
@@ -549,7 +549,7 @@ const EventDetails = ({ navigation, route }: any) => {
                     objectFit: 'fill',
                   },
                   ul: {
-                    
+
                   },
                   li: {
                     color: colors.black,
@@ -575,7 +575,7 @@ const EventDetails = ({ navigation, route }: any) => {
                 }}
                 computeEmbeddedMaxWidth={() => appInfo.sizes.WIDTH - 90}
 
-              /> : <LoadingUI  />}
+              /> : <LoadingUI />}
             </View>
             <View style={{ position: 'absolute', bottom: 0, width: '100%', left: 10 }}>
               <LinearGradient
@@ -607,14 +607,14 @@ const EventDetails = ({ navigation, route }: any) => {
         </SectionComponent>
         <SectionComponent sectionRef={targetRef}>
           <CardComponent isNoPadding isShadow title='Thông tin vé' sizeTitle={14} colorSpace={colors.background} colorTitle={colors.white} color={colors.background}>
-            {(showTimes && showTimes.length > 0) ?  <ListTicketComponent showTimes={showTimes} idEvent={event?._id ?? ''}
+            {(showTimes && showTimes.length > 0) ? <ListTicketComponent showTimes={showTimes} idEvent={event?._id ?? ''}
               titleEvent={event?.title ?? ''}
               addRessEvent={event?.Address ?? ''}
               locationEvent={event?.Location ?? ''}
               relatedEvents={relatedEvents}
-            /> : isLoadingShowTime ? <LoadingUI bgColor={colors.background}/> : <View style={{height:100,justifyContent:'center',alignItems:'center'}}>
-              <TextComponent text={'Không có suất diễn nào'} color={colors.white}/>
-              </View>}
+            /> : isLoadingShowTime ? <LoadingUI bgColor={colors.background} /> : <View style={{ height: 100, justifyContent: 'center', alignItems: 'center' }}>
+              <TextComponent text={'Không có suất diễn nào'} color={colors.white} />
+            </View>}
           </CardComponent>
         </SectionComponent>
         <SectionComponent >
@@ -690,20 +690,22 @@ const EventDetails = ({ navigation, route }: any) => {
         <ListEventRelatedComponent relatedEvents={relatedEvents} />
 
       </ContainerComponent>
-        {!isLoading && <CommentComponent
-          // textComment={textComment}
-          authorId={event?.authorId.user._id ?? ''}
-          idEvent={event?._id ?? ''}
-          // comments={comments}
-          // setTextComment={(val) => setTextComment(val)}
-          setIndex={(val) => setIndex(val)}
-          setIsShowing={(val) => setIsShowing(val)}
-          isShowing={isShowing}
-          ref={bottomSheetRef} />}
+      {!isLoading && <CommentComponent
+        // textComment={textComment}
+        authorId={event?.authorId.user._id ?? ''}
+        idEvent={event?._id ?? ''}
+        // comments={comments}
+        // setTextComment={(val) => setTextComment(val)}
+        setIndex={(val) => setIndex(val)}
+        setIsShowing={(val) => setIsShowing(val)}
+        isShowing={isShowing}
+        ref={bottomSheetRef} />}
 
-      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.3, right: 8 }} onPress={() => { if(checkLogin()){
-        handleInterestEvent()
-      } }}>
+      <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.3, right: 8 }} onPress={() => {
+        if (checkLogin()) {
+          handleInterestEvent()
+        }
+      }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <AntDesign name={isInterested ? "like1" : "like2"} size={28} color={colors.primary} />
           <TextComponent text={interestedCount} size={14} font={fontFamilies.medium} color={colors.primary} />
@@ -720,8 +722,8 @@ const EventDetails = ({ navigation, route }: any) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={{ position: 'absolute', bottom: appInfo.sizes.HEIGHT * 0.15, right: 8 }} onPress={() => {
-        if(checkLogin()){
-          setIsOpenModalizeInityUser(true)  
+        if (checkLogin()) {
+          setIsOpenModalizeInityUser(true)
         }
       }}>
         <Ionicons name="person-add" size={28} color={colors.primary} />
@@ -732,13 +734,9 @@ const EventDetails = ({ navigation, route }: any) => {
           <RowComponent justify="space-between">
             <Text style={{
               color: colors.white,
-              fontSize: 15
-            }}>Từ <Text style={{
-              color: colors.white,
               fontSize: 19,
               fontFamily: fontFamilies.medium
-            }}>{convertMoney(showTimes[0]?.typeTickets[showTimes[0].typeTickets?.length - 1]?.price ?? 0)}
-              </Text>
+            }}>{renderPrice(showTimes[0])}
             </Text>
             {renderButton()}
           </RowComponent>

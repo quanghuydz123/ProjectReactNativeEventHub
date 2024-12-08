@@ -10,7 +10,7 @@ import { globalStyles } from "../../../styles/globalStyles";
 import { BorderlessButton } from "react-native-gesture-handler";
 import { ShowTimeModel } from "../../../models/ShowTimeModel";
 import { TypeTicketModel } from "../../../models/TypeTicketModel";
-import { convertMoney } from "../../../utils/convertMoney";
+import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney";
 import { DateTime } from "../../../utils/DateTime";
 import { appInfo } from "../../../constrants/appInfo";
 import RenderHTML from "react-native-render-html";
@@ -253,7 +253,7 @@ const ListTicketComponent = (props:Props) => {
         <RowComponent justify="space-between" styles={{width:'100%'}}>
           <TextComponent text={section?.name} size={12} color={colors.white}  font={fontFamilies.semiBold} />
           <View >
-            <TextComponent text={convertMoney(section.price)} textAlign="right" styles={{marginRight:section.description ? 18 : 0}} color={renderColorMoney()} font={fontFamilies.semiBold} />
+            <TextComponent text={convertMoney(renderPriceTypeTicket(section))} textAlign="right" styles={{marginRight:section.description ? 18 : 0}} color={renderColorMoney()} font={fontFamilies.semiBold} />
             <SpaceComponent height={2}/>
            {renderContentStatusTypeTicket(section)}
           </View>
