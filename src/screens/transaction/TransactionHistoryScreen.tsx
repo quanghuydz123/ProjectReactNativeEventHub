@@ -74,7 +74,7 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
             <TextComponent text={`${DateTime.GetTime(invoice.createdAt)} - ${DateTime.GetDate2(invoice.createdAt)}`} size={12} />
             <RowComponent justify="space-between">
               <TextComponent text={`Số lượng vé: ${invoice.totalTicket}`} size={12} />
-              <TextComponent text={`-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} color={colors.primary} size={15} />
+              <TextComponent text={invoice?.totalPrice === 0 ? 'Miễn phí' :`-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} color={colors.primary} size={15} />
             </RowComponent>
           </View>
         </RowComponent>

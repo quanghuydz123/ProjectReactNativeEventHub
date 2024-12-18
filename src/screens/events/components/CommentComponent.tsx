@@ -459,7 +459,7 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
                 // FooterComponent={renderButtonContinue()}
                 >
                     {longPressComment.userComment._id === auth.id ? <>
-                        <RowComponent onPress={()=>{
+                        {!longPressComment.idCommentReply && <><RowComponent onPress={()=>{
                         setSelectedCommentReply({
                             idComment: longPressComment.idCommentReply ?  longPressComment.idCommentReply :  longPressComment.idComment,
                             user: longPressComment.userComment
@@ -470,11 +470,12 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
                         }, 100);
                         setOpenModalize(false)
                     }}>
-                            <AntDesign name="message1" size={30} />
-                            <SpaceComponent width={8} />
-                            <TextComponent text={'Phản hồi'} size={20} />
+                        <AntDesign name="message1" size={30} />
+                        <SpaceComponent width={8} />
+                        <TextComponent text={'Phản hồi'} size={20} />
                         </RowComponent>
-                        <SpaceComponent height={20} />
+                        <SpaceComponent height={20} /></>
+                        }
                         <RowComponent onPress={()=>handleCallAPIDeleteComment()}>
                             <AntDesign name="delete" size={30} />
                             <SpaceComponent width={8} />

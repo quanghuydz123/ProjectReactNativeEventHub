@@ -41,10 +41,11 @@ interface Props {
         high: number
     }) => void,
     isEnabledSortByView:boolean,
-    onEnableSortByView:(val:boolean)=>void
+    onEnableSortByView:(val:boolean)=>void,
+    onResetFilter:()=>void
 }
 const ModalFilterEvent = (props: Props) => {
-    const { visible, onClose, categories,isEnabledSortByView,onEnableSortByView, selectedCategories, selectedAddress, onSelectAddress
+    const { visible, onClose, categories,isEnabledSortByView,onResetFilter,onEnableSortByView, selectedCategories, selectedAddress, onSelectAddress
         , onSelectCategories, onComfirm, onSelectDateTime, selectedDateTime, selectedPriceRenge, onSelectPriceRange } = props
     const [allCategory, setAllCategory] = useState<CategoryModel[]>()
     const modalieRef = useRef<Modalize>()
@@ -148,7 +149,7 @@ const ModalFilterEvent = (props: Props) => {
                 
                 FooterComponent={
                     <RowComponent justify="center">
-                        <ButtonComponent onPress={onClose} text="Hủy lưu" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
+                        <ButtonComponent onPress={onResetFilter} text="Hủy lưu" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
                         <ButtonComponent onPress={onComfirm} text="Đồng ý" type="primary" styles={{ width: '85%' }} />
                     </RowComponent>
                 }

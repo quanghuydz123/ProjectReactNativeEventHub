@@ -76,7 +76,6 @@ const MainNavigator = ({navigation}:any) => {
     }
   }
   const handleLogout = async () => {
-    //phải kiểm tra có mạng không 
     if(auth.loginMethod === 'google'){
       GoogleSignin.signOut()//đăng xuất google
     }

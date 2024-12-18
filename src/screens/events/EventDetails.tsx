@@ -419,7 +419,7 @@ const EventDetails = ({ navigation, route }: any) => {
         </TouchableOpacity> : <></>}
       >
 
-        <View style={[{ flex: 1, height: appInfo.sizes.HEIGHT * 0.52 }, styles.shadow]}>
+        <View style={[{ flex: 1, height: 'auto' }, styles.shadow]}>
 
           <ImageBackground
             source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }}
@@ -431,7 +431,7 @@ const EventDetails = ({ navigation, route }: any) => {
             <SectionComponent styles={{ paddingTop: 10 }}>
               <CardComponent color={colors.background1} styles={{ padding: 0, height: '99%' }} isShadow>
                 <Image source={{ uri: event?.photoUrl ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDsou-9Yj0s2NTQ1pGx4zvMQj12BW1NUvgLA&s' }} style={{
-                  height: '55%', objectFit: 'fill',
+                  height: 180, objectFit: 'fill',
                   borderTopLeftRadius: 12,
                   borderTopRightRadius: 12
                 }} />

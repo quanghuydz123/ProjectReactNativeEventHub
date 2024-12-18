@@ -8,7 +8,7 @@ import eventAPI from "../../apis/eventAPI"
 import { ContainerComponent, CricleComponent, DataLoaderComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components"
 import ListEventComponent from "../../components/ListEventComponent"
 import LoadingComponent from "../../components/LoadingComponent"
-import { SearchNormal, Sort } from "iconsax-react-native"
+import { SearchNormal, Sort, TrendUp } from "iconsax-react-native"
 import { colors } from "../../constrants/color"
 import {debounce, lte, toString} from 'lodash'
 import socket from "../../utils/socket"
@@ -54,7 +54,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const { categories, lat, long, distance,title,limit,categoriesSelected,sortType }: routeParams = route.params || {}
   // const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(true)
-  const [result,setResult] = useState<EventModelNew[]>()
+  const [result,setResult] = useState<EventModelNew[]>([])
   const [dataRoute,setDateRoute] = useState<routeParams>(route.params || {})
   const [isOpenModelizeFilter,setIsOpenModalizeFilter] = useState(false)
   const [allCategory, setAllCategory] = useState<CategoryModel[]>(categories)
@@ -63,6 +63,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [addressFilter,setAddressFilter] = useState('')
   const [searchKey,setSearchKey] = useState('')
   const [isEnabledSortByView, setIsEnabledSortByView] = useState(sortType === 'view' ? true : false);
+  const [limitGetEvent,setLimitGetEvent] = useState(10)
+  const [isLoadingLimit,setIsLoadingLimit] = useState(false)
   const [priceRenge, setPriceRenge] = useState<{
     low: number,
     high: number
@@ -128,11 +130,20 @@ const auth = useSelector(authSelector)
   }, [])
   useEffect(()=>{
     if(first){
-      getEvents()
+      getEvents({})
     }else{
       setFirst(true)
     }
   },[filterEvent])
+  useEffect(()=>{
+    if(first){
+      if((result.length - limitGetEvent >= -10) && (result.length - limitGetEvent <= 0)){
+        getEvents({isGetLimit:true})
+      }
+    }else{
+      setFirst(true)
+    }
+  },[limitGetEvent])
   useEffect(()=>{
     if(isEnabledSortByView){
       handleOnChangeValudeFilter('sortType','view')
@@ -220,29 +231,33 @@ const auth = useSelector(authSelector)
       console.log(error)
     }
   }
-  const getEvents = async () => {
+  const getEvents = async ({isGetLimit}:{isGetLimit?:boolean}) => {
     const api = apis.event.getAll({lat:filterEvent.position.lat,searchValue:searchKey,
       long:filterEvent.position.lng,distance:'10',categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType,limit:limitGetEvent.toString()
       })
-    setIsLoading(true)
+    setIsLoading(isGetLimit ? false : true)
+    setIsLoadingLimit(isGetLimit ? true : false)
     try {
       const res = await eventAPI.HandleEvent(api)
       if (res && res.data && res.status === 200) {
         setResult(res.data as EventModelNew[])
       }
       setIsLoading(false)
+      setIsLoadingLimit(false)
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
       console.log("ExploreEvent", errorMessage)
       setIsLoading(false)
+      setIsLoadingLimit(false)
     }
   }
+  console.log("asd",isLoadingLimit)
   const handleSearchEvent = async ()=>{
     const api = apis.event.getAll({lat:filterEvent.position.lat,
       long:filterEvent.position.lng,distance:'10',
       searchValue:searchKey,categoriesFilter:filterEvent.categoriesFilter,
-      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType
+      startAt:dateTime.startAt,endAt:dateTime.endAt,maxPrice:toString(priceRenge.high),minPrice:toString(priceRenge.low),sortType:filterEvent.sortType,limit:limitGetEvent.toString()
     })
     setIsLoading(true)
     try {
@@ -264,10 +279,11 @@ const auth = useSelector(authSelector)
       position = await handleCallApiGetLatAndLong()
     }
     await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories,'position',position)
-
   }
   const handleResetFilterEvent = ()=>{
     setIsOpenModalizeFilter(false)
+    setFilterEvent(initFilterEvent)
+    setIsEnabledSortByView(false)
   }
   return (
     <ContainerComponent back title={dataRoute.title ?? 'Danh sách sự kiện'} bgColor={colors.black} colorTitle={colors.white}>
@@ -296,7 +312,13 @@ const auth = useSelector(authSelector)
         <DataLoaderComponent isFlex data={result} isLoading={isLoading} 
             messageEmpty="Không có sự kiện nào phù hợp"
             children={
-              <ListEventComponent numColumns={2} bgColor={colors.black} isShownVertical items={result ?? []} />
+              <ListEventComponent 
+              isLoading={isLoadingLimit} 
+              numColumns={2} 
+              bgColor={colors.black} 
+              isShownVertical 
+              onEndReached={()=>setLimitGetEvent(prev => prev + 10)}
+              items={result ?? []} />
 
             }/>
         
@@ -305,7 +327,8 @@ const auth = useSelector(authSelector)
       selectedCategories={idsSelectedCategories} 
       onSelectCategories={(val)=>setIdsSelectedCategories(val)} 
       categories={allCategory} visible={isOpenModelizeFilter} 
-      onClose={()=>handleResetFilterEvent()}
+      onClose={()=>setIsOpenModalizeFilter(false)}
+      onResetFilter={handleResetFilterEvent}
       onComfirm={handleCofirmFilterEvent}
       selectedDateTime={dateTime}
       onSelectDateTime={(val)=>setDateTime(val)}

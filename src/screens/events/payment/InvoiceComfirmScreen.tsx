@@ -179,7 +179,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     }
     return (
         <>
-            <ContainerComponent back title={'Bảng câu hỏi'} bgColor={colors.black} isScroll isHiddenSpaceTop>
+            <ContainerComponent back title={'Xác nhận thông tin'} bgColor={colors.black} isScroll isHiddenSpaceTop>
                 <RowComponent justify='space-between' styles={{ paddingHorizontal: 30, backgroundColor: colors.background1, height: appInfo.sizes.HEIGHT * 0.08 }} >
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <CricleComponent children={<><Fontisto name='check' size={8} color={colors.black} /></>} size={16} color={colors.white} styles={{ borderWidth: 0.5, borderColor: colors.gray }} />
