@@ -51,7 +51,8 @@ EventHub là ứng dụng di động để quảng bá sự kiện dành cho nh�
 1. Mở **Visual Studio Code** và truy cập thư mục ServerVNPAY.
 2. Cài đặt các dependencies với câu lệnh: npm install.
 3. Nhập lệnh npm start để chạy server
-
+    - `<Địa chỉ máy chủ>` mặc định là `localhost`.
+    - `<Cổng>` mặc định là `8888`
 ### Bước 5: Cấu Hình Frontend App
 1. Mở **Visual Studio Code** và truy cập thư mục Frontend App.
 2. Cài đặt các dependencies với câu lệnh: npm install.
