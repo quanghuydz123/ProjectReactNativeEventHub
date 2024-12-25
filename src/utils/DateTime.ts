@@ -157,7 +157,7 @@ export class DateTime {
     
         const months = Math.floor(days / 30);
         if (months < 12) {
-            return `${months} tháng`;
+            return `${months + 1} tháng`;
         }
     
         const years = Math.floor(days / 365);

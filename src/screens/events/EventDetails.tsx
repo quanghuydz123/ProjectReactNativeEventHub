@@ -293,6 +293,8 @@ const EventDetails = ({ navigation, route }: any) => {
         const res = await notificationAPI.HandleNotification(api, { SenderID: auth.id, RecipientIds: userSelected, eventId: event?._id }, 'post')
         if (res && res.status === 200 && res.data) {
           // socket.emit('getNotifications', { idUser: auth.id })
+          setIsOpenModalizeInityUser(false)
+          setUserSelected([])
         }
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)

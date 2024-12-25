@@ -419,6 +419,7 @@ const HomeScreen = ({ navigation, route }: any) => {
     setIsViewNotifications(!isCheck)
   }
   const handleCallAPIGetNotifications = async (idUser?: string) => {
+    console.log("handleCallAPIGetNotificationsadasdss")
     if (auth.accesstoken) {
       const api = apis.notification.getNotificationsById({ idUser: idUser ?? auth.id })
       try {

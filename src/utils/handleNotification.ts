@@ -34,9 +34,10 @@ export class HandleNotification {
             if (fcmTokens && !fcmTokens.includes(token)) {
                 fcmTokens.push(token)
                 await this.Update(auth.id,fcmTokens,dispatch)
-            }else{
-                console.log("dúng rồi")
             }
+            // else{
+            //     console.log("dúng rồi")
+            // }
 
         }
 

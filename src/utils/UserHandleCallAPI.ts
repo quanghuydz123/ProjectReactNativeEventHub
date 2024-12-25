@@ -7,7 +7,7 @@ export class UserHandleCallAPI{
         try {
           const res:any = await userAPI.HandleUser(api, {}, 'get');
           if(res && res.data){
-            setData(res.data.users)
+            setData(res.data)
           }
         } catch (error:any) {
           const errorMessage = JSON.parse(error.message)

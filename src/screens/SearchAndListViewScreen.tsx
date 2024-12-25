@@ -18,6 +18,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { sizeGlobal } from "../constrants/sizeGlobal"
 import { UserModel } from "../models/UserModel"
 import { InvoiceDetailsModel } from "../models/InvoiceDetailsModel"
+import React from "react"
 const SearchAndListViewScreen = ({ navigation, route }: any) => {
     const { items, type, title, bgColor,pdH,titleChild }: {
         items: EventModelNew[] | OrganizerModel[] |

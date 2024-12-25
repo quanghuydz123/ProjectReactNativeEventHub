@@ -159,7 +159,6 @@ const EditProfileScreen = ({ navigation, route }: any) => {
     //     setFileSelected(undefined)
     //     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
     // }
-    console.log(profileData.address)
     return (
         <ContainerComponent isScroll back title="Cập nhập thông tin">
             <SectionComponent>

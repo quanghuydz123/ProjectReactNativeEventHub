@@ -21,7 +21,6 @@ const ListEventComponent = (props: Props) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    console.log("ok")
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

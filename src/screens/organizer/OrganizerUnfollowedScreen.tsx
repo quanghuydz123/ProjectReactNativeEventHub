@@ -12,7 +12,7 @@ import { fontFamilies } from "../../constrants/fontFamilies"
 import { appInfo } from "../../constrants/appInfo"
 import { FollowModel } from "../../models/FollowModel"
 import checkLogin from "../../utils/checkLogin"
-
+import React from "react"
 const removeVietnameseTones = (str:string) => {
     return str
         .normalize('NFD')

@@ -7,6 +7,7 @@ import authenticationAPI from "../../apis/authApi"
 import { useDispatch, useSelector } from "react-redux"
 import { authSelector, AuthState, updateIsHasPassword } from "../../reduxs/reducers/authReducers"
 import { ToastMessaging } from "../../utils/showToast"
+import React from 'react';
 
 const UpdatePasswordScreen = ({ navigation, route }: any) => {
     const { type }: {
@@ -51,7 +52,6 @@ const UpdatePasswordScreen = ({ navigation, route }: any) => {
             setErrorMessage(errorMessage?.message ?? 'Lỗi rồi')
         }
     }
-    console.log("data",data)
     return (
         <ContainerComponent bgColor={colors.backgroundBluishWhite} title={type === 'updatePassword' ? 'Cập nhập mật khẩu' : 'Đổi mật khẩu'} back>
             <SectionComponent>

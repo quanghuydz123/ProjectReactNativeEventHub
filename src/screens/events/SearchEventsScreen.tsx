@@ -144,13 +144,13 @@ const auth = useSelector(authSelector)
       setFirst(true)
     }
   },[limitGetEvent])
-  useEffect(()=>{
-    if(isEnabledSortByView){
-      handleOnChangeValudeFilter('sortType','view')
-    }else{
-      handleOnChangeValudeFilter('sortType','')
-    }
-  },[isEnabledSortByView])
+  // useEffect(()=>{
+  //   if(isEnabledSortByView){
+  //     handleOnChangeValudeFilter('sortType','view')
+  //   }else{
+  //     handleOnChangeValudeFilter('sortType','')
+  //   }
+  // },[isEnabledSortByView])
   useEffect(()=>{
     const filterCopy:FilterEvent = {...filterEvent}
     filterCopy['categoriesFilter'] = categoriesSelected
@@ -180,6 +180,13 @@ const auth = useSelector(authSelector)
       Object.keys(filterEvent.position).forEach((keyChild)=> {
         filterCopy[`${keyPosition}`][`${keyChild}`] = position[`${keyChild}`]
       })
+    }
+    if(isEnabledSortByView){
+      filterCopy[`sortType`] = 'view'
+      // handleOnChangeValudeFilter('sortType','view')
+    }else{
+      filterCopy[`sortType`] = ''
+      // handleOnChangeValudeFilter('sortType','')
     }
     setFilterEvent(filterCopy)
   }
@@ -279,6 +286,12 @@ const auth = useSelector(authSelector)
       position = await handleCallApiGetLatAndLong()
     }
     await handleOnChangeValudeFilter('categoriesFilter',idsSelectedCategories,'position',position)
+
+    // if(isEnabledSortByView){
+    //   handleOnChangeValudeFilter('sortType','view')
+    // }else{
+    //   handleOnChangeValudeFilter('sortType','')
+    // }
   }
   const handleResetFilterEvent = ()=>{
     setIsOpenModalizeFilter(false)

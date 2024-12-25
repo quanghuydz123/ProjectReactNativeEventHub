@@ -340,7 +340,6 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
   </CardComponent>
   }
-  console.log(auth.isHasPassword)
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>

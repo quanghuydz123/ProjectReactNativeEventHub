@@ -170,7 +170,7 @@ const AddNewEvent = ()=>{
     try {
       const res:any = await userAPI.HandleUser(api, {}, 'get');
       if(res && res.data){
-        setAllUser(res.data.users)
+        setAllUser(res.data)
       }
     } catch (error:any) {
       const errorMessage = JSON.parse(error.message)

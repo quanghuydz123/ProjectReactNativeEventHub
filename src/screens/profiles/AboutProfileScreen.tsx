@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { View, TouchableOpacity, Animated, Image, FlatList } from "react-native"
-
+import React from "react"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
 import { useDispatch, useSelector } from "react-redux"

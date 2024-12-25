@@ -70,7 +70,6 @@ const DrawerCustom = ({ navigation }: any) => {
         handleLogout()
         break
       case 'MyProfile':
-        console.log("profile")
         break
       case 'AddEvent':
         navigation.navigate('AddEvent')
