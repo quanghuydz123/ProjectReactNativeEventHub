@@ -15,6 +15,7 @@ import { DateTime } from "../../../utils/DateTime"
 import { convertMoney } from "../../../utils/convertMoney"
 import { apis } from "../../../constrants/apis"
 import ticketAPI from "../../../apis/ticketAPI"
+import React from "react"
 interface Props {
     invoice: InvoiceDetailsModel,
     idInvoice: string
@@ -128,7 +129,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
         </CardComponent>
     }
     const renderTypeTicket = (ticket: TicketsPurchase, length: number) => {
-        return <RowComponent justify="space-between" styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
+        return <RowComponent key={ticket._id} justify="space-between" styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
             <View style={{ paddingLeft: 6, paddingRight: 10, flex: 3, paddingVertical: 4 }}>
                 <RowComponent >
 

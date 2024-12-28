@@ -149,8 +149,8 @@ const ModalFilterEvent = (props: Props) => {
                 
                 FooterComponent={
                     <RowComponent justify="center">
-                        <ButtonComponent onPress={onResetFilter} text="Hủy lưu" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
-                        <ButtonComponent onPress={onComfirm} text="Đồng ý" type="primary" styles={{ width: '85%' }} />
+                        <ButtonComponent onPress={onResetFilter} text="Xóa bộ lọc" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
+                        <ButtonComponent onPress={onComfirm} text="Áp dụng" type="primary" styles={{ width: '85%' }} />
                     </RowComponent>
                 }
                 // HeaderComponent={

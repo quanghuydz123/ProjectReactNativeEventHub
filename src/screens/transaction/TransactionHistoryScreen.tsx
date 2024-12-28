@@ -21,13 +21,44 @@ import { LoadingModal } from "../../../modals";
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import CardComponent from "../../components/CardComponent";
+interface FilterTransaction {
+  time:{
+    month:'all' | '12' | '11' | '10',
+    year:Number
+  }
+}
 const TransactionHistoryScreen = ({ navigation, route }: any) => {
   const [search, setSearch] = useState('')
   const auth: AuthState = useSelector(authSelector)
   const [invoices, setInvoices] = useState<Invoice[][]>(auth?.invoices)
   const [isLoading, setIsLoading] = useState(false)
   const [openModalize, setOpenModalize] = useState(false)
-
+  const [filterValue,setFilterValue] = useState<FilterTransaction>({
+    time:{
+      month:'all',
+      year:2024
+    }
+  })
+  // useEffect(()=>{
+  //   if(search === ''){
+  //     handleCallAPI()
+  //   }
+  // },[search])
+  // const handleCallAPI = async ()=>{
+  //   const api = apis.invoice.getByIdUser({ idUser: auth.id, searchValue: search })
+  //   setIsLoading(true)
+  //   try {
+  //     const res = await invoiceAPI.HandleInvoice(api)
+  //     if (res && res.data && res.status === 200) {
+  //       setInvoices(res.data)
+  //     }
+  //     setIsLoading(false)
+  //   } catch (error: any) {
+  //     setIsLoading(false)
+  //     const errorMessage = JSON.parse(error.message)
+  //     console.log("TransactionHistoryScreen", errorMessage.message)
+  //   }
+  // }
   useEffect(() => {
     setInvoices(auth?.invoices)
   }, [auth])
@@ -39,20 +70,21 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
       modalieRef.current?.close()
     }
   }, [openModalize])
-  const handleCallAPISearchInvoice = async () => {
-    const api = apis.invoice.getByIdUser({ idUser: auth.id, searchValue: search })
-    setIsLoading(true)
-    try {
-      const res = await invoiceAPI.HandleInvoice(api)
-      if (res && res.data && res.status === 200) {
-        setInvoices(res.data)
+  const handleCallAPIGetInvoice = async () => {
+      const api = apis.invoice.getByIdUser({ idUser: auth.id, searchValue: search, filterMonthTime:filterValue.time.month })
+      setIsLoading(true)
+      try {
+        const res = await invoiceAPI.HandleInvoice(api)
+        if (res && res.data && res.status === 200) {
+          setInvoices(res.data)
+        }
+        setIsLoading(false)
+      } catch (error: any) {
+        setIsLoading(false)
+        const errorMessage = JSON.parse(error.message)
+        console.log("TransactionHistoryScreen", errorMessage.message)
       }
-      setIsLoading(false)
-    } catch (error: any) {
-      setIsLoading(false)
-      const errorMessage = JSON.parse(error.message)
-      console.log("TransactionHistoryScreen", errorMessage.message)
-    }
+    
   }
   const renderInvoice = (invoice: Invoice, index: number) => {
     return (
@@ -74,7 +106,7 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
             <TextComponent text={`${DateTime.GetTime(invoice.createdAt)} - ${DateTime.GetDate2(invoice.createdAt)}`} size={12} />
             <RowComponent justify="space-between">
               <TextComponent text={`Số lượng vé: ${invoice.totalTicket}`} size={12} />
-              <TextComponent text={invoice?.totalPrice === 0 ? 'Miễn phí' :`-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} color={colors.primary} size={15} />
+              <TextComponent text={invoice?.totalPrice === 0 ? 'Miễn phí' : `-${convertMoney(invoice?.totalPrice ?? 0)}`} font={fontFamilies.medium} color={colors.primary} size={15} />
             </RowComponent>
           </View>
         </RowComponent>
@@ -116,7 +148,7 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
         bgColor={colors.white}
         isNotShowArrow
 
-        onEnd={() => handleCallAPISearchInvoice()}
+        onEnd={() => handleCallAPIGetInvoice()}
         titlePlaceholder="Tìm kiếm giao dịch"
         styles={{
 
@@ -144,7 +176,18 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
           onClose={() => setOpenModalize(false)}
           modalStyle={{ paddingVertical: 12, backgroundColor: colors.backgroundBluishWhite }}
           // modalHeight={appInfo.sizes.HEIGHT * 0.8}
-          FooterComponent={<>
+          // FooterComponent={}
+           FooterComponent={
+              <RowComponent justify="center" styles={{paddingHorizontal:12}}>
+                  <ButtonComponent onPress={()=>setOpenModalize(false)} text="Xóa bộ lọc" type="primary" styles={{ width: '85%', backgroundColor: 'white' }} textColor={colors.colorText} />
+                  <ButtonComponent onPress={()=>{
+                    setOpenModalize(false)
+                    handleCallAPIGetInvoice()
+                  }} text="Áp dụng" type="primary" styles={{ width: '85%' }} />
+              </RowComponent>
+          }
+        >
+<>
             <SectionComponent>
               <TextComponent text={'Bộ lọc lịch sự giao dịch'} size={18} font={fontFamilies.medium} />
               <SpaceComponent height={8} />
@@ -152,29 +195,74 @@ const TransactionHistoryScreen = ({ navigation, route }: any) => {
               <RowComponent styles={{ flexWrap: 'wrap' }}>
                 <CardComponent styles={{
                   width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18,
-                  borderWidth: 1,
-                  borderColor: colors.primary,
-                  backgroundColor:'#d6f7e6'
-                }}>
-                  <TextComponent text={'Tất cả'} size={13} textAlign="center"/>
+                  borderWidth: filterValue.time.month === 'all' ? 1 : 0,
+                  borderColor: filterValue.time.month === 'all' ? colors.primary : colors.white,
+                  backgroundColor: filterValue.time.month === 'all' ?'#d6f7e6' : colors.white
+                }}
+                onPress={()=>setFilterValue(prev => ({
+                  ...prev,
+                  time:{
+                    month:'all',
+                    year:2024
+                  }
+                }))}
+                >
+                  <TextComponent text={'Tất cả'} size={13} textAlign="center" />
                 </CardComponent>
                 <SpaceComponent width={8} />
-                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 }}>
-                  <TextComponent text={'Tháng 12/2024'} size={13} textAlign="center"/>
+                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 ,
+                  borderWidth: filterValue.time.month === '12' ? 1 : 0,
+                  borderColor: filterValue.time.month === '12' ? colors.primary : colors.white,
+                  backgroundColor: filterValue.time.month === '12' ?'#d6f7e6' : colors.white
+
+                }}
+                onPress={()=>setFilterValue(prev => ({
+                  ...prev,
+                  time:{
+                    month:'12',
+                    year:2024
+                  }
+                }))}
+                >
+                  <TextComponent text={'Tháng 12/2024'} size={13} textAlign="center" />
                 </CardComponent>
                 <SpaceComponent width={8} />
-                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 }}>
-                  <TextComponent text={'Tháng 11/2024'} size={13} textAlign="center"/>
+                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 ,
+                  borderWidth: filterValue.time.month === '11' ? 1 : 0,
+                  borderColor: filterValue.time.month === '11' ? colors.primary : colors.white,
+                  backgroundColor: filterValue.time.month === '11' ?'#d6f7e6' : colors.white
+
+                }}
+                onPress={()=>setFilterValue(prev => ({
+                  ...prev,
+                  time:{
+                    month:'11',
+                    year:2024
+                  }
+                }))}
+                >
+                  <TextComponent text={'Tháng 11/2024'} size={13} textAlign="center" />
                 </CardComponent>
                 <SpaceComponent width={8} />
-                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 }}>
-                  <TextComponent text={'Tháng 10/2024'} size={13} textAlign="center"/>
+                <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.29, paddingVertical: 18 ,
+                  borderWidth: filterValue.time.month === '10' ? 1 : 0,
+                  borderColor: filterValue.time.month === '10' ? colors.primary : colors.white,
+                  backgroundColor: filterValue.time.month === '10' ?'#d6f7e6' : colors.white
+                  
+                }}
+                onPress={()=>setFilterValue(prev => ({
+                  ...prev,
+                  time:{
+                    month:'10',
+                    year:2024
+                  }
+                }))}
+                >
+                  <TextComponent text={'Tháng 10/2024'} size={13} textAlign="center" />
                 </CardComponent>
               </RowComponent>
             </SectionComponent>
-          </>}
-        >
-
+          </>
         </Modalize>
       </Portal>
       <LoadingModal visible={isLoading} />
