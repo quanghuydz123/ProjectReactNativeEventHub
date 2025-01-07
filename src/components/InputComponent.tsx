@@ -77,6 +77,7 @@ const InputComponent = forwardRef<any, Props>((props:Props,ref:any) => {
           onBlur={onBlur}
           onFocus={onFocus}
           
+          
         />
         {suffix && suffix}
         <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>

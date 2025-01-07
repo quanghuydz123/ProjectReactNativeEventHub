@@ -5,7 +5,7 @@ import AuthNavigator from "./AuthNavigator";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuth, authSelector } from "../reduxs/reducers/authReducers";
-import { NewScreen, SplashScreen } from "../screens";
+import { SplashScreen } from "../screens";
 import NetInfo from "@react-native-community/netinfo";
 import { constantSelector, updateNameScreen } from "../reduxs/reducers/constantReducers";
 const AppRouters = ({nameScreenPresent}:{nameScreenPresent:string})=>{

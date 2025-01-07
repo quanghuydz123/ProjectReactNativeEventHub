@@ -21,7 +21,6 @@ import TestQrcannerScreen from "../screens/TestQrcannerScreen";
 import ViewedEventScreen from "../screens/profiles/ViewedEventScreen";
 import OrganizerNavigator from "./OrganizerNavigator";
 import TicketNavigator from "./TicketNavigator";
-
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
   const { getItem: getRememberItem } = useAsyncStorage('isRemember');

@@ -14,7 +14,10 @@ export const apis = {
         updatePositionUser:()=>`/update-position-user`,
         updateFcmToken:()=>`/update-fcmtoken`,
         updateProfile:()=>`/update-profile`,
-        getEventInterestedByIdUser:({idUser}:{idUser:string})=>`/get-event-interested-byIdUser?idUser=${idUser}`
+        getEventInterestedByIdUser:({idUser}:{idUser:string})=>`/get-event-interested-byIdUser?idUser=${idUser}`,
+        addHistorySearch:()=>`/add-history-search`,
+        deleteHistorySearch:()=>`/delete-history-search`,
+        updateHistorySearch:()=>`/update-history-search`
 
     },
     notification:{
@@ -108,7 +111,7 @@ export const apis = {
         commentEvent:()=>`/comment-event`,
         replyCommentEvent:()=>`/replyComment-event`,
         getByIdEvent:({idEvent,idUser,idAuthor}:{idEvent:string,idUser:string,idAuthor:string})=>`/get-byIdEvent?idEvent=${idEvent}&idUser=${idUser}&idAuthor=${idAuthor}`,
-        deleteComment:()=>`/delete-comment`
+        deleteComment:()=>`/delete-comment`,
     }   
 
 }

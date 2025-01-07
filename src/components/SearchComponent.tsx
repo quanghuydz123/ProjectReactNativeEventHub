@@ -16,10 +16,13 @@ interface Props {
   isNotShowArrow?: boolean,
   onEnd?:()=>void,
   bgColor?:string,
-  textColor?:string
+  textColor?:string,
+  onFocus?:()=>void,
+  onBlur?:()=>void,
+  ref?:any
 }
 const SearchComponent = (props: Props) => {
-  const { value, onSearch, onPressArrow, styles, titlePlaceholder, textColor,isNotShowArrow,onEnd,bgColor } = props
+  const { value, onSearch, onPressArrow, styles,onFocus, titlePlaceholder, textColor,isNotShowArrow,onEnd,bgColor,onBlur,ref } = props
   return <RowComponent styles={[styles]} justify="flex-end">
     {!isNotShowArrow && (
       <>
@@ -31,6 +34,7 @@ const SearchComponent = (props: Props) => {
       flex: 1,
     }}>
       <InputComponent
+        ref={ref}
         styles={[{
           marginBottom: 0,
           borderRadius:100,
@@ -38,6 +42,8 @@ const SearchComponent = (props: Props) => {
           borderColor:colors.white,
           minHeight:40
         }]}
+        onBlur={onBlur}
+        onFocus={onFocus}
         textColor={textColor}
         affix={<SearchNormal size={20} color={colors.gray} />}
         value={value}

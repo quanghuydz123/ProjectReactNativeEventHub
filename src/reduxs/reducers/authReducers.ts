@@ -63,7 +63,12 @@ export interface AuthState {
         }[]
     },
     invoices:Invoice[][],
-    isHasPassword:boolean
+    isHasPassword:boolean,
+    searchHistory:{
+        _id:string,
+        keyword:string,
+        searchedAt:Date
+    }[]
 
 }
 
@@ -113,7 +118,8 @@ const initialState: AuthState = {
         users:[]
     },
     invoices:[],
-    isHasPassword:true
+    isHasPassword:true,
+    searchHistory:[]
 }
 
 const authSlice = createSlice({
@@ -169,9 +175,13 @@ const authSlice = createSlice({
         updateIsHasPassword:(state,action)=>{
             state.authData.isHasPassword = true
         },
+        updateSearchHistory:(state,action)=>{
+            const { searchHistory } = action.payload
+            state.authData.searchHistory = searchHistory
+        },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateSearchHistory,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

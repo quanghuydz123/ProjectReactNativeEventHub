@@ -581,8 +581,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             />
           </View> */}
           <RowComponent styles={{ flex: 1 }}
-            onPress={() => navigation.navigate('SearchEventsScreen', {
-            })}>
+            onPress={() => navigation.navigate('SearchEventsScreen', {})}>
             <SearchNormal size={20} color={colors.white} />
             {/* <Animated.View style={[{ backgroundColor: colors.gray2, marginHorizontal: 10, height: 20, width: 1 }, featureNameAnimation]} /> */}
             <SpaceComponent width={12} />
@@ -801,7 +800,7 @@ const HomeScreen = ({ navigation, route }: any) => {
             messageEmpty={'Không có thể loại nào cả'}
           />
            <SpaceComponent height={30} />
-          <TabBarComponent title="Các sự kiện xem nhiều nhất" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện sắp xảy ra',sortType:'view', categories: categories, follows: allFollower })} />
+          <TabBarComponent title="Các sự kiện xem nhiều nhất" onPress={() => navigation.navigate('SearchEventsScreen', { title: 'Các sự kiện xem nhiều nhất',sortType:'view', categories: categories, follows: allFollower })} />
           {
             <DataLoaderComponent data={allEventSortByView} isLoading={isLoadingSortByView} height={appInfo.sizes.HEIGHT * 0.3} children={
               <FlatList
