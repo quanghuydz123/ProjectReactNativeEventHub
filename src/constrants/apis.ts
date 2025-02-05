@@ -17,8 +17,8 @@ export const apis = {
         getEventInterestedByIdUser:({idUser}:{idUser:string})=>`/get-event-interested-byIdUser?idUser=${idUser}`,
         addHistorySearch:()=>`/add-history-search`,
         deleteHistorySearch:()=>`/delete-history-search`,
-        updateHistorySearch:()=>`/update-history-search`
-
+        updateHistorySearch:()=>`/update-history-search`,   
+        checkInDaily:()=>`/check-in-daily`
     },
     notification:{
         handleSendNotificationInviteUserToEvent:()=>`/invite-users-to-event`,

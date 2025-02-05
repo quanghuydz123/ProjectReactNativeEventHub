@@ -125,6 +125,28 @@ export class DateTime {
         const date = new Date(num)
         return `Tháng ${numberToString(date.getMonth() + 1)}/${date.getFullYear()}`
     }
+    static renderTextByDay = ({day,dayCheckRecent,IsDailyCheck}:{day:number,dayCheckRecent:number,IsDailyCheck:boolean}) => {
+        const date = new Date()
+        switch (day){
+            case 0:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' :`Ngày 1`
+            case 1:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' :`Ngày 2`
+            case 2:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' : `Ngày 3`
+            case 3:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' : `Ngày 4`
+            case 4:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' : `Ngày 5`
+            case 5:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' : `Ngày 6`
+            case 6:
+                return dayCheckRecent + 1 === day ? IsDailyCheck ? 'Ngày mai' : 'Hôm nay' : `Ngày 7`
+            default:
+                return ``
+        }
+        
+    }
     static getDateTimeMesssage = (dateString: Date) => {
         const now = new Date();
         const date = new Date(dateString); // Convert to Date object

@@ -90,7 +90,6 @@ const HomeScreen = ({ navigation, route }: any) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
-
   // const maxHeight = animatedValue.interpolate({
   //   inputRange: [0, LOWER_HEADER_HEIGHT],
   //   outputRange: [96,0],

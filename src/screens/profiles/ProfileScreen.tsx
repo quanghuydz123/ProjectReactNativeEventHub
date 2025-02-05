@@ -1,9 +1,9 @@
-import { Button, FlatList, Text, View } from "react-native"
+import { Button, FlatList, Modal, Text, TouchableOpacity, View } from "react-native"
 import React, { ReactNode, useEffect, useMemo, useState } from "react"
 import { ButtonComponent, CategoriesList, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
 import userAPI from "../../apis/userApi";
 import { useDispatch, useSelector } from "react-redux";
-import { addAuth, authSelector, AuthState, removeAuth, updateCategoriesInterested } from "../../reduxs/reducers/authReducers";
+import { addAuth, authSelector, AuthState, removeAuth, updateCategoriesInterested, updateStatusCheckInDaily } from "../../reduxs/reducers/authReducers";
 import { UserModel } from "../../models/UserModel";
 import { LoadingModal, SelectModalize, SelectedImageModal } from "../../../modals";
 import AvatarItem from "../../components/AvatarItem";
@@ -32,21 +32,22 @@ import UserGroup from '../../assets/svgs/user-group-svgrepo-com.svg'
 import checkLogin from "../../utils/checkLogin";
 import { EventModelNew } from "../../models/EventModelNew";
 import eventAPI from "../../apis/eventAPI";
-import ticketAPI from "../../apis/ticketAPI";
-import { InvoiceDetailsModel } from "../../models/InvoiceDetailsModel";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { HandleNotification } from "../../utils/handleNotification";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { CoinChild, CoinF ,CoinFH} from "../../assets/svgs";
+import Entypo from 'react-native-vector-icons/Entypo'
+import { DateTime } from "../../utils/DateTime";
 const ProfileScreen = ({ navigation, route }: any) => {
   const auth: AuthState = useSelector(authSelector)
   const [profile, setProfile] = useState<{
-    fullname:string,
-    phoneNumber:string,
-    bio:string,
-    _id:string,
-    photoUrl:string,
-    email:string,
+    fullname: string,
+    phoneNumber: string,
+    bio: string,
+    _id: string,
+    photoUrl: string,
+    email: string,
   }>()
   const [isLoading, setIsLoading] = useState(false)
   const [fileSelected, setFileSelected] = useState<ImageOrVideo>()
@@ -59,38 +60,67 @@ const ProfileScreen = ({ navigation, route }: any) => {
   const [searchCategory, setSearchCategory] = useState('')
   const [numberOfFollowers, setNumberOfFollowers] = useState(0)
   const [isLoadingFollow, setIsLoadingFollow] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
+  const days = [
+    {
+      day:0,
+      coin:100
+    },
+    {
+      day:1,
+      coin:100
+    },{
+      day:2,
+      coin:100
+    }
+    ,{
+      day:3,
+      coin:100
+    }
+    ,{
+      day:4,
+      coin:100
+    },{
+      day:5,
+      coin:100
+    },
+    {
+      day:6,
+      coin:500
+    }
+  ]
   // const [invoicePaid,setinvoicePaid] = useState<InvoiceDetailsModel[]>([])
   const dispatch = useDispatch()
-   const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
-    useEffect(()=>{
-        haneleGetAPIRelatedEvents()
-    },[])
-    useEffect(()=>{
-      setProfile({
-        fullname:auth.fullname,
-        phoneNumber:auth.phoneNumber,
-        bio:auth.bio,
-        _id:auth.id,
-        photoUrl:auth.photoUrl,
-        email:auth.email
-      })
-    },[auth])
-    const haneleGetAPIRelatedEvents = async () => {
-        const api = apis.event.getAll({limit:'4'})
-        // setIsLoading(isLoading ? isLoading : false)
-        try {
-          const res: any = await eventAPI.HandleEvent(api, {}, 'get');
-          if (res && res.data && res.status === 200) {
-            setRelatedEvents(res.data as EventModelNew[])
-          }
-          // setIsLoading(false)
-    
-        } catch (error: any) {
-          // setIsLoading(false)
-          const errorMessage = JSON.parse(error.message)
-          console.log("HomeScreen", errorMessage)
-        }
+  const [relatedEvents, setRelatedEvents] = useState<EventModelNew[]>([])
+  useEffect(() => {
+    haneleGetAPIRelatedEvents()
+  }, [])
+  useEffect(() => {
+    setProfile({
+      fullname: auth.fullname,
+      phoneNumber: auth.phoneNumber,
+      bio: auth.bio,
+      _id: auth.id,
+      photoUrl: auth.photoUrl,
+      email: auth.email
+    })
+  }, [auth])
+  const haneleGetAPIRelatedEvents = async () => {
+    const api = apis.event.getAll({ limit: '4' })
+    // setIsLoading(isLoading ? isLoading : false)
+    try {
+      const res: any = await eventAPI.HandleEvent(api, {}, 'get');
+      if (res && res.data && res.status === 200) {
+        setRelatedEvents(res.data as EventModelNew[])
       }
+      // setIsLoading(false)
+
+    } catch (error: any) {
+      // setIsLoading(false)
+      const errorMessage = JSON.parse(error.message)
+      console.log("HomeScreen", errorMessage)
+    }
+  }
   useEffect(() => {
     handleGetAllCategory()
   }, [])
@@ -244,12 +274,12 @@ const ProfileScreen = ({ navigation, route }: any) => {
   }
 
   const handleCallApiUpdateImageProfile = async (profile: {
-    fullname:string,
-    phoneNumber:string,
-    bio:string,
-    _id:string,
-    photoUrl:string,
-}, url?: string) => {
+    fullname: string,
+    phoneNumber: string,
+    bio: string,
+    _id: string,
+    photoUrl: string,
+  }, url?: string) => {
     const api = apis.user.updateProfile()
     try {
       const res: any = await userAPI.HandleUser(api, { _id: profile?._id, photoUrl: url ? url : profile.photoUrl }, 'put')
@@ -314,6 +344,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
   //   return ``
   // },[follower])
   const handleLogout = async () => {
+    setIsLoading(true)
     if (auth.loginMethod === 'google') {
       GoogleSignin.signOut()//đăng xuất google
     }
@@ -330,16 +361,59 @@ const ProfileScreen = ({ navigation, route }: any) => {
     }
     await AsyncStorage.removeItem('auth')
     dispatch(removeAuth())
+    setIsLoading(false)
   }
-  const renderCardHalf = ({title,icon,onPress}:{title:string,icon:ReactNode,onPress?:()=>void})=>{
-    return  <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.09, width: appInfo.sizes.WIDTH * 0.46, paddingVertical:12 }} isShadow onPress={onPress}>
-    <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-      {icon}
-      <TextComponent text={title} font={fontFamilies.medium} />
-    </View>
 
-  </CardComponent>
+  const renderCardHalf = ({ title, icon, onPress }: { title: string, icon: ReactNode, onPress?: () => void }) => {
+    return <CardComponent styles={{ height: appInfo.sizes.HEIGHT * 0.09, width: appInfo.sizes.WIDTH * 0.46, paddingVertical: 12 }} isShadow onPress={onPress}>
+      <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
+        {icon}
+        <TextComponent text={title} font={fontFamilies.medium} />
+      </View>
+
+    </CardComponent>
   }
+  const handleCallAPICheckIn = async ()=>{
+    setIsLoading(true)
+    try {
+      const api = apis.user.checkInDaily()
+      const res = await userAPI.HandleUser(api,{idUser:auth.id,coins:days[auth.lastCheckIn + 1].coin},'put')
+      if(res && res.status === 200 && res.data){
+        dispatch(updateStatusCheckInDaily({lastCheckIn:res.data?.lastCheckIn,totalCoins:res.data?.totalCoins}))
+        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, IsDailyCheck:true,lastCheckIn:res.data?.lastCheckIn,totalCoins:res.data?.totalCoins}))
+        setIsLoading(false)
+        setModalVisible(true)
+      }
+    } catch (error:any) {
+      setIsLoading(false)
+      const errorMessage = JSON.parse(error.message)
+      console.log(errorMessage.message ?? 'Lỗi rồi')
+    }
+  }
+  const renderD = ({day, dayCheckRencent = -1,coin }: {day:number, dayCheckRencent:number,coin:number }) => {
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: day !==6 ? 1 : 1.5 }}>
+        <View style={{ backgroundColor: '#f5f5f5', justifyContent: 'center', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 6, borderRadius: 4, flex: 1, width: '90%' }}>
+          <TextComponent size={12} font={fontFamilies.semiBold} text={`+${coin}`} />
+          <SpaceComponent height={6} />
+          { dayCheckRencent >= day ?
+          <CricleComponent size={28} color={colors.white} styles={{borderWidth:1.5,borderColor:colors.primary}}>
+            <Entypo name="check" size={15}/>
+          </CricleComponent>
+          : day !== 6 ? <CoinChild /> : <CoinF />}
+        </View>
+        <View>
+          <TextComponent 
+          size={10} 
+          font={fontFamilies.medium} 
+          color={dayCheckRencent >= day ? colors.gray4 : dayCheckRencent + 1 === day ? colors.primary : colors.colorText} 
+          text={DateTime.renderTextByDay({day:day,dayCheckRecent:dayCheckRencent,IsDailyCheck:auth.IsDailyCheck})} 
+          />
+        </View>
+      </View>
+    )
+  }
+  
   return (
     <ContainerComponent title="Tài khoản" isScroll bgColor={colors.backgroundBluishWhite}>
       <SectionComponent isNoPaddingBottom>
@@ -384,14 +458,14 @@ const ProfileScreen = ({ navigation, route }: any) => {
           <TextComponent text={profile?.bio || ''} styles={{minHeight:50}}  /> */}
             </View>
             {(auth.loginMethod === 'google' && auth.isHasPassword === false) && <CardComponent>
-                <RowComponent styles={{alignItems:'flex-start',paddingRight:12}}>
-                <AntDesign size={10} name="warning" style={{marginTop:4}}/>
-                <SpaceComponent width={6}/>
+              <RowComponent styles={{ alignItems: 'flex-start', paddingRight: 12 }}>
+                <AntDesign size={10} name="warning" style={{ marginTop: 4 }} />
+                <SpaceComponent width={6} />
                 <Text>
-                    Tài khoản của bạn chưa có mật khẩu để đăng nhập, vui lòng
-                    <Text style={{color:colors.blue}} onPress={() => navigation.navigate('UpdatePasswordScreen',{type:'updatePassword'})}> cập nhập tại đây</Text>
+                  Tài khoản của bạn chưa có mật khẩu để đăng nhập, vui lòng
+                  <Text style={{ color: colors.blue }} onPress={() => navigation.navigate('UpdatePasswordScreen', { type: 'updatePassword' })}> cập nhập tại đây</Text>
                 </Text>
-                </RowComponent>
+              </RowComponent>
             </CardComponent>}
           </> :
             <SectionComponent>
@@ -405,8 +479,39 @@ const ProfileScreen = ({ navigation, route }: any) => {
               <TextComponent text={'Để trả nghiệm toàn bộ tính năng'} size={14} textAlign="center" font={fontFamilies.medium} />
             </SectionComponent>
           }
+          {auth.accesstoken && <View style={{ position: 'absolute', top: 20, left: 10 }}>
+            <RowComponent>
+              <CoinF />
+              <SpaceComponent width={4} />
+              <TextComponent text={auth.totalCoins} size={28} color={colors.primary} font={fontFamilies.semiBold} />
+            </RowComponent>
+          </View>}
         </CardComponent>
       </SectionComponent>
+     {auth.accesstoken &&  <SectionComponent isNoPaddingBottom>
+        <CardComponent isShadow>
+          <RowComponent>
+            <TextComponent flex={1} text="Điểm danh nhận xu" title size={18} />
+          </RowComponent>
+          <SpaceComponent height={8} />
+          <RowComponent>
+            {
+              days.map((item)=>renderD({day:item.day,coin:item.coin,dayCheckRencent:auth.lastCheckIn}))
+            }
+          </RowComponent>
+          <SpaceComponent height={12} />
+          <ButtonComponent
+            disable={auth.IsDailyCheck ? true : false}
+            colorDisable={colors.gray8}
+            
+            text={auth.IsDailyCheck ? `Bạn đã điểm danh rồi` :`Nhận ngay ${auth.lastCheckIn !==6 ? 100 : 500} xu`}
+            type="primary"
+            mrBottom={6} width={appInfo.sizes.WIDTH * 0.6}
+            styles={{ borderRadius: 100,borderWidth:0 }}
+            onPress={() => handleCallAPICheckIn()}
+          />
+        </CardComponent>
+      </SectionComponent>}
       {auth.accesstoken && <SectionComponent isNoPaddingBottom>
         <CardComponent isShadow >
           <RowComponent>
@@ -441,52 +546,62 @@ const ProfileScreen = ({ navigation, route }: any) => {
       </SectionComponent>}
       {auth.accesstoken && <SectionComponent isNoPaddingBottom>
         <RowComponent>
-          {renderCardHalf({title:'Vé đã mua',icon:<Ticket />,onPress:()=>{
-            if(checkLogin(auth,navigation)){
-              navigation.navigate('TicketNavigator',{
-                relatedEvents:relatedEvents,
-              })
+          {renderCardHalf({
+            title: 'Vé đã mua', icon: <Ticket />, onPress: () => {
+              if (checkLogin(auth, navigation)) {
+                navigation.navigate('TicketNavigator', {
+                  relatedEvents: relatedEvents,
+                })
+              }
             }
-          }})}
-          
-          <SpaceComponent width={8} />
-          {renderCardHalf({title:'Danh sách theo dõi',icon: <UserGroup />, onPress:() => {
-            if(checkLogin(auth,navigation)){
-              navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })
-            }
-          }})}
+          })}
 
-          
+          <SpaceComponent width={8} />
+          {renderCardHalf({
+            title: 'Danh sách theo dõi', icon: <UserGroup />, onPress: () => {
+              if (checkLogin(auth, navigation)) {
+                navigation.push('FriendsScreen', { screen: 'ListFriendsScreen' })
+              }
+            }
+          })}
+
+
         </RowComponent>
-          
-        <RowComponent>
-         {renderCardHalf({title:'Sự kiện đã quan tâm',icon: <Star />,onPress:() => {
-            if(checkLogin(auth,navigation)){
-              navigation.navigate('InterestedEventScreen',{bgColor:''})
-            }
-          }})}
 
-         
+        <RowComponent>
+          {renderCardHalf({
+            title: 'Sự kiện đã quan tâm', icon: <Star />, onPress: () => {
+              if (checkLogin(auth, navigation)) {
+                navigation.navigate('InterestedEventScreen', { bgColor: '' })
+              }
+            }
+          })}
+
+
           <SpaceComponent width={8} />
 
-          {renderCardHalf({title:'Sự kiện xem gần đây',icon: <BookMark />,onPress:()=>navigation.navigate('ViewedEventScreen',{bgColor:''})})}
+          {renderCardHalf({ title: 'Sự kiện xem gần đây', icon: <BookMark />, onPress: () => navigation.navigate('ViewedEventScreen', { bgColor: '' }) })}
 
-          
+
         </RowComponent>
         <RowComponent>
-         {renderCardHalf({title:'Đổi mật khẩu',icon: <MaterialCommunityIcons name="security" size={22} color={colors.blue} />,onPress:() => {
-            if(checkLogin(auth,navigation)){
-              navigation.navigate('UpdatePasswordScreen',{type:'changePassword'})
+          {renderCardHalf({
+            title: 'Đổi mật khẩu', icon: <MaterialCommunityIcons name="security" size={22} color={colors.blue} />, onPress: () => {
+              if (checkLogin(auth, navigation)) {
+                navigation.navigate('UpdatePasswordScreen', { type: 'changePassword' })
+              }
             }
-          }})}
+          })}
 
-         
+
           <SpaceComponent width={8} />
 
-          {renderCardHalf({title:'Đăng xuất',icon: <Feather name="log-out" size={22} color={colors.orange} />,
-          onPress:()=>handleLogout()})}
+          {renderCardHalf({
+            title: 'Đăng xuất', icon: <Feather name="log-out" size={22} color={colors.orange} />,
+            onPress: () => handleLogout()
+          })}
 
-          
+
         </RowComponent>
       </SectionComponent>}
       {/* <SectionComponent>
@@ -494,7 +609,43 @@ const ProfileScreen = ({ navigation, route }: any) => {
           <TextComponent text={'Hỗ trợ'} size={18} font={fontFamilies.medium} />
         </CardComponent>
       </SectionComponent> */}
-      <SpaceComponent height={16}/>
+      <SpaceComponent height={16} />
+      <Modal visible={modalVisible} transparent statusBarTranslucent>
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }}>
+          <View style={{justifyContent:'center',alignItems:'center',paddingVertical:70,paddingHorizontal:50}}>
+              <TextComponent text={'Chúc mừng'} size={36} font={fontFamilies.bold} color={colors.yellow} />
+              <View style={{paddingVertical:20}}>
+                <CoinFH />
+              </View>
+              <Text style={{color:colors.white,fontSize:20,fontFamily:fontFamilies.medium}}>
+                Bạn đã nhận được{" "}
+                <Text style={{color:colors.yellow ,fontFamily:fontFamilies.semiBold}}>
+                   100
+                </Text>
+                {" "}
+                xu
+              </Text>
+              <SpaceComponent height={12}/>
+              <CardComponent styles={{borderRadius:100,backgroundColor:'rgba(0,0,0,0.4)',paddingVertical:4,paddingHorizontal:8}} >
+                <RowComponent>
+                  <CricleComponent size={16} color={colors.gray}>
+                    <AntDesign name="exclamation" color={colors.white} size={16} />
+                  </CricleComponent>
+                  <SpaceComponent width={12}/>
+                <Text style={{color:colors.yellow,fontSize:11,fontFamily:fontFamilies.semiBold}}>
+                  100 xu = 100 VNĐ{" "}
+                  <Text style={{color:colors.white,fontFamily:''}}>
+                    có thể dùng để mua vé
+                  </Text>
+                </Text>
+                </RowComponent>
+              </CardComponent>
+              <TouchableOpacity style={{position:'absolute',top:0,right:0}} onPress={()=>setModalVisible(false)}>
+                <MaterialIcons name="cancel" size={46} color={colors.white}/>
+              </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       {/* {auth.accesstoken && <ButtonComponent text="Đăng xuất" type="primary" color={colors.gray8} textColor={colors.black} />} */}
       <LoadingModal visible={isLoading} message="Hệ thống đang xử lý" />
       {/* <LoadingModal visible={isLoading} /> */}

@@ -27,7 +27,8 @@ interface Props {
     width?:any,
     alignItems?:'center' | 'flex-start' | 'flex-end',
     mrBottom?:number,
-    isCheckLogin?:boolean
+    isCheckLogin?:boolean,
+    colorDisable?:string
 
 }
 const ButtonComponent = (props: Props) => {
@@ -48,7 +49,8 @@ const ButtonComponent = (props: Props) => {
         width,
         alignItems,
         mrBottom,
-        isCheckLogin
+        isCheckLogin,
+        colorDisable
     } = props
     const auth = useSelector(authSelector)
     
@@ -72,7 +74,7 @@ const ButtonComponent = (props: Props) => {
                     disabled={disable}
                     onPress={onPress}
                     style={[globalStyles.button, globalStyles.shadow, {
-                        backgroundColor: color ? color : disable ? colors.black : colors.primary,
+                        backgroundColor: color ? color : disable ? colorDisable ? colorDisable : colors.black  : colors.primary,
                         marginBottom: mrBottom ?? 17,
                         width: width ?? '90%',
                         paddingVertical:disable ? 10 : 10,

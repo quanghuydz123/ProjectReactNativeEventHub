@@ -1,11 +1,7 @@
 import { Button, Text, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, CricleComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../components";
-import QRCode from "react-native-qrcode-svg";
-import Accordion from 'react-native-collapsible/Accordion';
 import { colors } from "../../constrants/color";
-import ListTicketComponent from "../events/components/ListTicketComponent";
-import LottieView from "lottie-react-native";
 import SearchComponent from "../../components/SearchComponent";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { fontFamilies } from "../../constrants/fontFamilies";

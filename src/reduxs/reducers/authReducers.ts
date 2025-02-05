@@ -64,6 +64,9 @@ export interface AuthState {
     },
     invoices:Invoice[][],
     isHasPassword:boolean,
+    lastCheckIn:number,
+    IsDailyCheck:boolean,
+    totalCoins:number,
     searchHistory:{
         _id:string,
         keyword:string,
@@ -118,6 +121,9 @@ const initialState: AuthState = {
         users:[]
     },
     invoices:[],
+    IsDailyCheck:false,
+    lastCheckIn:-1,
+    totalCoins:0,
     isHasPassword:true,
     searchHistory:[]
 }
@@ -179,9 +185,17 @@ const authSlice = createSlice({
             const { searchHistory } = action.payload
             state.authData.searchHistory = searchHistory
         },
+        updateStatusCheckInDaily:(state,action)=>{
+            const {  lastCheckIn, totalCoins } = action.payload
+            state.authData.lastCheckIn = lastCheckIn
+            state.authData.totalCoins = totalCoins
+            state.authData.IsDailyCheck = true
+
+
+        },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateSearchHistory,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateSearchHistory,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices,updateStatusCheckInDaily } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

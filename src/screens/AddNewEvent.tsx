@@ -186,7 +186,6 @@ const AddNewEvent = ()=>{
     setFileSelected(undefined)
     val.type === 'url' ? handleOnchageValue('photoUrl',val.value) : handleFileSelected(val.value)
   }
-  console.log("event",eventData)
   return (
     <ContainerComponent isScroll title="Thêm sự kiện">
       <SectionComponent>
