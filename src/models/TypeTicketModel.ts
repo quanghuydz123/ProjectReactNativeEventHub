@@ -1,3 +1,7 @@
+
+import { PromotionModel } from "./PromotionModel"
+
+
 export interface TypeTicketModel {
     _id: string
     name:string,
@@ -6,6 +10,8 @@ export interface TypeTicketModel {
     type:'Free' | 'Paid',
     price:number,
     startSaleTime:Date,
+    promotion:PromotionModel[],
     endSaleTime:Date,
-    status:'NotStarted' | 'OnSale' | "Ended" | "SoldOut" | "Canceled"
+    status:'NotStarted' | 'OnSale' | "Ended" | "SoldOut" | "Canceled",
+
 }

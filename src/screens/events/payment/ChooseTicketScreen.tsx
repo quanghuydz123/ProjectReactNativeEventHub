@@ -2,7 +2,7 @@ import { Button, Text, TouchableOpacity, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { ButtonComponent, ContainerComponent, InputSpinnerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../../components";
 import { EventModelNew } from "../../../models/EventModelNew";
-import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney";
+import { convertMoney, renderPriceDisCountTypeTicket, renderPriceTypeTicket } from "../../../utils/convertMoney";
 import axios from "axios";
 import { LoadingModal } from "../../../../modals";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +38,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
     const [disableButton, setDisableButton] = useState(true)
     const [totalTicketChose, setTotalTicketChose] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
+    const [totalDiscount, setTotalDiscount] = useState(0)
     const eventChose: billingState = useSelector(billingSelector)
     const [errorMessage,setErrorMessage] = useState('')
     const [isChoose,setisChoose] = useState(false)
@@ -137,14 +138,15 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
 
                 const totalTickets = updatedTickets.reduce((sum, item) => sum + item.amount, 0);
                 const totalAmount = updatedTickets.reduce((sum, item) => sum + item.amount * renderPriceTypeTicket(item.ticket), 0);
+                const totalDiscount = updatedTickets.reduce((sum, item) => sum + item.amount * renderPriceDisCountTypeTicket(item.ticket), 0);
 
                 setTotalTicketChose(totalTickets);
                 setTotalPrice(totalAmount);
+                setTotalDiscount(totalDiscount);
 
                 return updatedTickets;
             });
         }, [amountChose, typeTicket]);
-        // console.log(ticketChose.map((item)=>({ticket:item.ticket._id,amount:item.amount})))
        
         return (
             <>
@@ -160,7 +162,7 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                             size={15}
                         />
 
-                        <TextComponent text={convertMoney(typeTicket.type === 'Paid' ? typeTicket.price : 0)} size={14} font={fontFamilies.regular} color={colors.white} />
+                        <TextComponent text={convertMoney(renderPriceTypeTicket(typeTicket))} size={14} font={fontFamilies.regular} color={colors.white} />
                     </View>
                     {renderInputSpinner()}
                 </RowComponent>
@@ -225,7 +227,8 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                     ticketChose: ticketChose,
                     ticketsReserve:res.data,
                     idUser:auth.id,
-                    orderTime:15 * 60 
+                    orderTime:15 * 60 ,
+                    totalDiscount:totalDiscount
                 }))
                 setLoading(false)
 
@@ -364,10 +367,10 @@ const ChooseTicketScreen = ({ navigation, route }: any) => {
                                 <SpaceComponent height={10} />
                                 {eventChose.showTimes.typeTickets.map((typeTicket) => {
                                     const renderPrice = () => {
-                                        let text = convertMoney(typeTicket.price)
+                                        let text = convertMoney(renderPriceTypeTicket(typeTicket))
                                         const existingIndex = ticketChose.findIndex((item) => item.ticket._id === typeTicket._id)
                                         if (existingIndex !== -1) {
-                                            text = `${ticketChose[existingIndex].amount} x ${convertMoney(typeTicket.price)}`
+                                            text = `${ticketChose[existingIndex].amount} x ${convertMoney(renderPriceTypeTicket(typeTicket))}`
                                         }
                                         return text
                                     }

@@ -100,7 +100,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                                 />
                             </RowComponent>
                             <SpaceComponent height={4}/>
-                            <TextComponent text={`${ticket.typeTicketDetails.name} - ${convertMoney(ticket.typeTicketDetails.price)}`} color={colors.primary} size={15} font={fontFamilies.medium} />
+                            <TextComponent text={`${ticket.typeTicketDetails.name}`} color={colors.primary} size={15} font={fontFamilies.medium} />
                         </View>
                         <SpaceComponent height={12} />
                         <View>
@@ -129,6 +129,26 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
         </CardComponent>
     }
     const renderTypeTicket = (ticket: TicketsPurchase, length: number) => {
+        const renderPriceDiscount = ()=>{
+            if(ticket?.promotion){
+                if(ticket.discountType === 'Percentage'){
+                    return ticket.price * ticket.discountValue / 100 * length
+                }else{
+                    return ticket.discountValue * length
+                }
+            }
+            return 0
+        }
+        const renderPrice = ()=>{
+            if(ticket?.promotion){
+                if(ticket.discountType === 'Percentage'){
+                    return convertMoney(ticket.price * (100 - ticket.discountValue) / 100 * length)
+                }else{
+                    return convertMoney(ticket.price - ticket.discountValue * length)
+                }
+            }
+            return convertMoney(ticket?.price * length)
+        }
         return <RowComponent key={ticket._id} justify="space-between" styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
             <View style={{ paddingLeft: 6, paddingRight: 10, flex: 3, paddingVertical: 4 }}>
                 <RowComponent >
@@ -145,8 +165,11 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
             <View style={{ padding: 8, flex: 1, borderLeftWidth: 1, borderRightWidth: 1, borderLeftColor: colors.gray4, borderRightColor: colors.gray4 }}>
                 <TextComponent text={length} textAlign="center" flex={1} size={12} color={colors.white} />
             </View>
+            <View style={{ padding: 8, flex: 2, borderRightWidth: 1, borderLeftColor: colors.gray4, borderRightColor: colors.gray4 }}>
+                <TextComponent text={convertMoney(renderPriceDiscount())} textAlign="right"  size={12} color={colors.white} />
+            </View>
             <View style={{ padding: 8, flex: 2 }}>
-                <TextComponent text={convertMoney(ticket?.price * length)} textAlign="right" size={12} color={colors.white} />
+                <TextComponent text={renderPrice()} textAlign="right" size={12} color={colors.white} />
             </View>
         </RowComponent>
     }
@@ -241,6 +264,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                             <RowComponent justify="space-between" styles={{ borderBottomWidth: 1, borderColor: colors.gray4, backgroundColor: colors.background2, flex: 1 }}>
                                 <TextComponent text={'Loại vé'} font={fontFamilies.medium} styles={{ padding: 8 }} textAlign="center" flex={3} size={12} color={colors.white} />
                                 <TextComponent text={'Số lượng'} font={fontFamilies.medium} styles={{ padding: 8, borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.gray4 }} textAlign="center" flex={1} size={12} color={colors.white} />
+                                <TextComponent text={'Giảm giá'} font={fontFamilies.medium} styles={{ padding: 8,  borderRightWidth: 1, borderColor: colors.gray4 }} textAlign="center" flex={2} size={12} color={colors.white} />
                                 <TextComponent text={'Thành tiền'} font={fontFamilies.medium} textAlign="center" styles={{ padding: 8 }} flex={2} size={12} color={colors.white} />
                             </RowComponent>
 
@@ -249,26 +273,26 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                                     return renderTypeTicket(ticket[0], ticket.length)
                                 })
                             }
-                            <RowComponent styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
-                                <View style={{ flex: 4 }}>
+                            {/* <RowComponent styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
+                                <View style={{ flex: 6.1 }}>
                                     <TextComponent text={'Tạm tính tổng'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
                                 </View>
 
                                 <View style={{ flex: 2, borderLeftWidth: 1, borderLeftColor: colors.gray4 }}>
                                     <TextComponent text={convertMoney(invoice?.invoiceDetails?.totalPrice ?? 0)} styles={{ padding: 8, backgroundColor: colors.background1 }} textAlign="right" color={colors.white} size={12} />
                                 </View>
-                            </RowComponent>
+                            </RowComponent> */}
                             <RowComponent styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
-                                <View style={{ flex: 4 }}>
+                                <View style={{ flex: 6.1  }}>
                                     <TextComponent text={'Giảm Giá'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
                                 </View>
 
                                 <View style={{ flex: 2, borderLeftWidth: 1, borderLeftColor: colors.gray4 }}>
-                                    <TextComponent text={'0 đ'} styles={{ padding: 8, backgroundColor: colors.background1 }} textAlign="right" color={colors.white} size={12} />
+                                    <TextComponent text={convertMoney(invoice?.invoiceDetails?.totalDiscount ?? 0)} styles={{ padding: 8, backgroundColor: colors.background1 }} textAlign="right" color={colors.white} size={12} />
                                 </View>
                             </RowComponent>
                             <RowComponent styles={{ backgroundColor: colors.background1, flex: 1 }}>
-                                <View style={{ flex: 4 }}>
+                                <View style={{ flex: 6.1  }}>
                                     <TextComponent text={'Tổng tiền'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
                                 </View>
 

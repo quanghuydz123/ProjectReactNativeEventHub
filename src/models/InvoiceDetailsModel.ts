@@ -16,9 +16,12 @@ export interface InvoiceDetailsModel {
         totalPrice: number
         status: string
         createdAt: Date
+        totalDiscount:number
+
     },
     showTimeDetails:ShowTimeModel,
-    eventDetails:EventModelNew
+    eventDetails:EventModelNew,
+
     
 }
 
@@ -33,5 +36,8 @@ export interface TicketsPurchase{
     showTime: string
     current_owner: string
     event: string,
-    typeTicketDetails:TypeTicketModel
+    typeTicketDetails:TypeTicketModel,
+    discountType:'FixedAmount' | 'Percentage',
+    discountValue:number,
+    promotion:string
 }

@@ -145,6 +145,7 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
         totalPrice: billing.totalPrice,
         ticketsReserve: billing.ticketsReserve,
         address: auth.address,
+        totalDiscount:billing.totalDiscount,
         fullAddress: [
           auth?.address?.houseNumberAndStreet,
           auth?.address?.ward?.name,

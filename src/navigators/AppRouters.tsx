@@ -43,8 +43,8 @@ const AppRouters = ({ nameScreenPresent }: { nameScreenPresent: string }) => {
           const api = apis.user.getById(JSON.parse(res).id)
           const user = await userAPI.HandleUser(api)
           if (user && user.status === 200 && user.data) {
-            await AsyncStorage.setItem('auth', JSON.stringify({ ...user.data, accesstoken: JSON.parse(res).accesstoken }))
-            dispatch(addAuth({ ...user.data, accesstoken: JSON.parse(res).accesstoken }))
+            await AsyncStorage.setItem('auth', JSON.stringify({ ...user.data, accesstoken: JSON.parse(res).accesstoken,loginMethod:JSON.parse(res).loginMethod }))
+            dispatch(addAuth({ ...user.data, accesstoken: JSON.parse(res).accesstoken,loginMethod:JSON.parse(res).loginMethod  }))
           }
         }
       } catch (error: any) {

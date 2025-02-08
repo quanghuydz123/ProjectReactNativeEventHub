@@ -77,6 +77,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
             totalPrice: showTimeChose.totalPrice,
             ticketsReserve: showTimeChose.ticketsReserve,
             address: auth.address,
+            totalDiscount:showTimeChose.totalDiscount,
             fullAddress: [
               auth?.address?.houseNumberAndStreet,
               auth?.address?.ward?.name,

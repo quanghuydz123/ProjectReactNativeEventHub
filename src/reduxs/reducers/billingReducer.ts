@@ -18,7 +18,8 @@ export interface billingState {
     }],
     ticketsReserve?:string[],
     relatedEvents?:EventModelNew[],
-    orderTime:number
+    orderTime:number,
+    totalDiscount:number
 
 }
 
@@ -37,7 +38,8 @@ const initialState: billingState = {
             status:'Ended',
             endSaleTime:new Date(),
             type:'Paid',
-            amount:0
+            amount:0,
+            promotion:[]
         }]
     },
     idEvent:'',
@@ -47,7 +49,8 @@ const initialState: billingState = {
     ticketsReserve:[],
     relatedEvents:[],
     orderTime:0,
-    totalPrice:0
+    totalPrice:0,
+    totalDiscount:0
     
 }
 
@@ -62,12 +65,13 @@ const billingSlice = createSlice({
         state.billingData = action.payload
     },
     addtotalPriceAndTicket: (state, action) => {
-        const {totalTicketChose,totalPrice,ticketChose,ticketsReserve,minutes,seconds,orderTime} = action.payload
+    const {totalTicketChose,totalPrice,ticketChose,ticketsReserve,minutes,seconds,orderTime,totalDiscount} = action.payload
         state.billingData.totalPrice = totalPrice,
         state.billingData.totalTicket = totalTicketChose
         state.billingData.ticketChose = ticketChose
         state.billingData.ticketsReserve = ticketsReserve
         state.billingData.orderTime = orderTime
+        state.billingData.totalDiscount = totalDiscount
     },
     addEventRelated: (state, action) => {
         const {relatedEvents} = action.payload

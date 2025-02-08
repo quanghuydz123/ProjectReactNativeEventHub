@@ -234,14 +234,29 @@ const ListTicketComponent = (props:Props) => {
       />
     )
   }
-  const renderHeaderChild = (section: TypeTicketModel, index: number, isActive: boolean, sections: any) => {
+  
+  const renderPriceTicket = (section: TypeTicketModel)=>{
     const renderColorMoney = ()=>{
+      console.log(section.promotion)
       let color = colors.primary
       if(section.status==='Ended' || section.status==='SoldOut' || section.status==='NotStarted' || section.status==='Canceled'){
         color=colors.gray4
       }
       return color
     }
+    if(section.promotion.length > 0){
+      if(section.promotion[0].status === 'Ongoing' || section.promotion[0].status === 'NotStarted'){
+        return <RowComponent>
+          <TextComponent text={convertMoney(renderPriceTypeTicket(section))} textAlign="right" color={renderColorMoney()} font={fontFamilies.semiBold} />
+          <SpaceComponent width={2}/>
+          <TextComponent text={convertMoney(section.type === 'Free' ? 0 : section.price)} styles={{paddingTop:4,textDecorationLine:'line-through' , textDecorationStyle: 'solid'}}  size={10} textAlign="right" color={colors.gray4} font={fontFamilies.medium} />
+        </RowComponent>
+      }
+    }
+    return <TextComponent text={convertMoney(renderPriceTypeTicket(section))} textAlign="right" styles={{marginRight:section.description ? 18 : 0}} color={renderColorMoney()} font={fontFamilies.semiBold} />
+  }
+  const renderHeaderChild = (section: TypeTicketModel, index: number, isActive: boolean, sections: any) => {
+    
     return (
       <RowComponent styles={{width:'100%',paddingLeft:30,paddingRight:30,paddingVertical:20,
       backgroundColor:index%2===0 ? colors.background2 : colors.background1,
@@ -250,10 +265,10 @@ const ListTicketComponent = (props:Props) => {
       }}>
         {section.description && <SimpleLineIcons name={isActive ? "arrow-down" : "arrow-right"} size={10} color={colors.white} />}
         {section.description && <SpaceComponent width={8} />}
-        <RowComponent justify="space-between" styles={{width:'100%'}}>
-          <TextComponent text={section?.name} size={12} color={colors.white}  font={fontFamilies.semiBold} />
+        <RowComponent justify="space-between" styles={{width:'100%'}} >
+          <TextComponent text={section?.name} flex={1} size={12} color={colors.white}  font={fontFamilies.semiBold} />
           <View >
-            <TextComponent text={convertMoney(renderPriceTypeTicket(section))} textAlign="right" styles={{marginRight:section.description ? 18 : 0}} color={renderColorMoney()} font={fontFamilies.semiBold} />
+            {renderPriceTicket(section)}
             <SpaceComponent height={2}/>
            {renderContentStatusTypeTicket(section)}
           </View>
