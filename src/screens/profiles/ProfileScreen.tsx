@@ -286,7 +286,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       if (res && res.data && res.statusCode === 200) {
         const resStorage = await AsyncStorage.getItem('auth')
         const jsonResStorage = JSON.parse(resStorage || '')
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
         dispatch(addAuth({ ...auth, ...res.data.user }))
         // socket.emit('updateUser', { isUser: auth?.id })
         setIsLoading(false)
@@ -323,7 +323,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
     try {
       const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idsCategory: idsFollowerCategory }, 'post')
       if (res && res.data && res.status === 200) {
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, categoriesInterested: res.data.user.categoriesInterested }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, categoriesInterested: res.data.user.categoriesInterested }))
         dispatch(updateCategoriesInterested({ categoriesInterested: res.data.user.categoriesInterested }))
       }
       setIsLoading(false)
@@ -380,7 +380,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,coins:days[auth.lastCheckIn + 1].coin},'put')
       if(res && res.status === 200 && res.data){
         dispatch(updateStatusCheckInDaily({lastCheckIn:res.data?.lastCheckIn,totalCoins:res.data?.totalCoins}))
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, IsDailyCheck:true,lastCheckIn:res.data?.lastCheckIn,totalCoins:res.data?.totalCoins}))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, IsDailyCheck:true,lastCheckIn:res.data?.lastCheckIn,totalCoins:res.data?.totalCoins}))
         setIsLoading(false)
         setModalVisible(true)
       }

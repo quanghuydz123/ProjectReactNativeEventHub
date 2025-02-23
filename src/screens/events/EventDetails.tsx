@@ -184,7 +184,7 @@ const EventDetails = ({ navigation, route }: any) => {
         }
         viewedEvents.unshift({ event: data })
         dispatch(addViewedEvent({ viewedEvents: viewedEvents }))
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, viewedEvents: viewedEvents }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, viewedEvents: viewedEvents }))
       }
     } catch (error: any) {
       const errorMessage = JSON.parse(error.message)
@@ -246,7 +246,7 @@ const EventDetails = ({ navigation, route }: any) => {
       try {
         const res: any = await userAPI.HandleUser(api, { idUser: auth.id, idEvent: event?._id }, 'post')
         if (res && res.status === 200) {
-          await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested: res.data.user.eventsInterested }))
+          // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, eventsInterested: res.data.user.eventsInterested }))
           dispatch(updateEventsInterested({ eventsInterested: res.data.user.eventsInterested }))
         }
       } catch (error: any) {

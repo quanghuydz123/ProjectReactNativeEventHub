@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { appInfo } from "../constrants/appInfo";
 import RowComponent from "./RowComponent";
 import CardComponent from "./CardComponent";
@@ -115,4 +115,4 @@ const TicketComponent = (props:Props) => {
 }
 
 
-export default TicketComponent
+export default memo(TicketComponent)

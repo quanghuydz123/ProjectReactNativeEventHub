@@ -52,7 +52,7 @@ const PaymentSucessScreen = ({ navigation, route }: any) => {
       const res = await invoiceAPI.HandleInvoice(api)
       if (res && res.data && res.status === 200) {
         dispatch(updateInvoices({ invoices: res.data }))
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, invoices: res.data }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, invoices: res.data }))
       }
       setIsLoading(false)
     } catch (error: any) {

@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native"
-import React, { useState } from "react"
+import React, { memo, useState } from "react"
 import QRCode from "react-native-qrcode-svg";
 import Accordion from 'react-native-collapsible/Accordion';
 import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TagComponent, TextComponent } from "../../../components";
@@ -342,4 +342,4 @@ const ListTicketComponent = (props:Props) => {
     />
   )
 }
-export default ListTicketComponent;
+export default memo(ListTicketComponent);

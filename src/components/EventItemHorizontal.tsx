@@ -19,14 +19,18 @@ interface Props {
     bgColor?: string,
     titleColor?:string,
     textCalendarColor?:string,
+    width?:number,
+    paddingVertical?:number,
+    paddingHorizontal?:number,
+    onPress?:()=>void
 
 }
 const EventItemHorizontal = (props: Props) => {
-    const { item, bgColor,titleColor ,textCalendarColor} = props
+    const { item, bgColor,titleColor ,paddingVertical,paddingHorizontal,textCalendarColor,width,onPress} = props
     const navigation: any = useNavigation()
     
     return (
-        <CardComponent styles={{ paddingVertical: 0, paddingHorizontal: 0, backgroundColor: bgColor ?? colors.white }} onPress={() => { navigation.push('EventDetails', { id: item._id }); }}>
+        <CardComponent styles={{ paddingVertical: paddingVertical ? paddingVertical : 0, paddingHorizontal: paddingHorizontal ? paddingHorizontal : 0, backgroundColor: bgColor ?? colors.white, width: width ? width : 'auto' }} onPress={onPress ? onPress : () => { navigation.push('EventDetails', { id: item._id }); }}>
             <RowComponent>
                 <View>
                     <Image source={{ uri: item?.photoUrl }} style={{ width: appInfo.sizes.WIDTH * 0.35, height: appInfo.sizes.HEIGHT*0.12, borderRadius: 12, resizeMode: 'stretch' }} />

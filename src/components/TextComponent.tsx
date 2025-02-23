@@ -37,7 +37,8 @@ const TextComponent = (props: Props) => {
       fontFamily: font ?? (title ? fontFamilies.medium : ''),
       lineHeight,
       textAlign: textAlign ?? 'left',
-      paddingVertical:paddingVertical ?? paddingVertical
+      paddingVertical:paddingVertical ?? paddingVertical,
+      
     },
     styles
   ];

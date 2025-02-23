@@ -135,7 +135,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
             if (res && res.data && res.statusCode === 200) {
                 const resStorage = await AsyncStorage.getItem('auth')
                 const jsonResStorage = JSON.parse(resStorage || '')
-                await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
+                // await AsyncStorage.setItem('auth', JSON.stringify({ ...jsonResStorage, ...res.data.user }))
                 dispatch(addAuth({ ...auth, ...res.data.user }))
                 ToastMessaging.Success({visibilityTime:2000})
                 setIsLoading(false)

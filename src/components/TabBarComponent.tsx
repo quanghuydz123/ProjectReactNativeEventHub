@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, View, ViewStyle } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import RowComponent from "./RowComponent"
 import TextComponent from "./TextComponent"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -33,4 +33,4 @@ const TabBarComponent = (props:Props)=>{
     </RowComponent>
   )
 }
-export default TabBarComponent;
+export default memo(TabBarComponent);

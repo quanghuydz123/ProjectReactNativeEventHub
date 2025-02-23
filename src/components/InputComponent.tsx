@@ -83,7 +83,7 @@ const InputComponent = forwardRef<any, Props>((props:Props,ref:any) => {
         <TouchableOpacity onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onChange('')}>
           {isPassword ? (
             <FontAwesome name={isShowPassword ? 'eye-slash' : 'eye'} size={22} color={colors.gray} />
-          ) : value && allowClear && <AntDesign style={{ marginTop: multiline ? 4 : 0,backgroundColor:colors.gray4,borderRadius:100,padding:4 }} name="close" size={12} color={colors.white} />}
+          ) : value && allowClear && <AntDesign  style={{ marginTop: multiline ? 4 : 0,backgroundColor:colors.gray4,borderRadius:100,padding:4 }} name="close" size={12} color={colors.white} />}
         </TouchableOpacity>
       </View>
     </View>

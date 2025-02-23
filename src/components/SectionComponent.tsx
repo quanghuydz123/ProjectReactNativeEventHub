@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import SpaceComponent from "./SpaceComponent"
 import { colors } from "../constrants/color"
@@ -36,4 +36,4 @@ const SectionComponent = (props: Props) => {
     </TouchableOpacityComponent>
   )
 }
-export default SectionComponent;
+export default memo(SectionComponent);

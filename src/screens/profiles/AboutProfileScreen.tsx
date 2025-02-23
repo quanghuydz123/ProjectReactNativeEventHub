@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { View, TouchableOpacity, Animated, Image, FlatList } from "react-native"
+import { View, TouchableOpacity, Animated, Image, FlatList, Linking } from "react-native"
 import React from "react"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
@@ -120,26 +120,26 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       }
     }
   }
-  const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
-    if (auth.id) {
-      const api = apis.follow.getById(auth.id)
-      setIsLoading(isLoading ? isLoading : false)
+  // const handleCallApiGetFollowerById = async (isLoading?: boolean) => {
+  //   if (auth.id) {
+  //     const api = apis.follow.getById(auth.id)
+  //     setIsLoading(isLoading ? isLoading : false)
 
-      try {
-        const res: any = await followAPI.HandleFollwer(api, {}, 'get');
-        if (res && res.data && res.status === 200) {
-          // setFollower(res.data.followers)
-        }
-        setIsLoading(false)
+  //     try {
+  //       const res: any = await followAPI.HandleFollwer(api, {}, 'get');
+  //       if (res && res.data && res.status === 200) {
+  //         // setFollower(res.data.followers)
+  //       }
+  //       setIsLoading(false)
 
-      } catch (error: any) {
-        const errorMessage = JSON.parse(error.message)
-        console.log("FollowerScreen", errorMessage)
-        setIsLoading(false)
+  //     } catch (error: any) {
+  //       const errorMessage = JSON.parse(error.message)
+  //       console.log("FollowerScreen", errorMessage)
+  //       setIsLoading(false)
 
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
   const handleUpdateAuthFollow = async ()=>{
     const users = [...auth.follow?.users || []]
     if(isCheckFollow){
@@ -149,10 +149,10 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
       users.push({idUser:uidOthor})
     }
     dispatch(updateFollow({users:users}))
-    await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, follow: {
-      ...auth.follow, // Giữ nguyên các thuộc tính khác của `follow`
-      users: [...users]  // Cập nhật `users`
-    }}))
+    // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, follow: {
+    //   ...auth.follow, // Giữ nguyên các thuộc tính khác của `follow`
+    //   users: [...users]  // Cập nhật `users`
+    // }}))
   } 
   const handleFollowUser = async () => {
     const api = apis.follow.updateFollowUserOther()
@@ -280,7 +280,16 @@ const AboutProfileScreen = ({ navigation, route }: any) => {
               icon={<AntDesign name="message1" size={18} color={colors.primary} />}
               onPress={()=>{
                 if(checkLogin(auth,navigation)){
-                  console.log("lok")
+                    const url = `fb://page/739243`;
+                    Linking.canOpenURL(url)
+                      .then((supported) => {
+                        if (!supported) {
+                          console.log('Không thể mở URL:', url);
+                        } else {
+                          return Linking.openURL(url);
+                        }
+                      })
+                      .catch((err) => console.error('Lỗi rồi'));
                 }
               }}
               iconFlex="left"

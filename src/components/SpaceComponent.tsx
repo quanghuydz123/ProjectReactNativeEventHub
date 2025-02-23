@@ -1,5 +1,5 @@
 import { StyleProp, Text, View, ViewStyle } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 interface Props { // phải định nghĩa ra trước
     width?: any,
     height?: any,
@@ -15,4 +15,4 @@ const SpaceComponent = (props: Props) => {
         backgroundColor:color,
     },styles]} />
 }
-export default SpaceComponent;
+export default memo(SpaceComponent);

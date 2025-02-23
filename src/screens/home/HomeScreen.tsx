@@ -399,10 +399,10 @@ const HomeScreen = ({ navigation, route }: any) => {
       const api = apis.user.updatePositionUser()
       try {
         const res: any = await userAPI.HandleUser(api, { id: auth.id, lat, lng }, 'put');
-        const authItem: any = await getItemAuth()
-        if (res && res.data && res.status === 200) {
-          await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), position: res.data.user.position }))
-        }
+        // const authItem: any = await getItemAuth()
+        // if (res && res.data && res.status === 200) {
+        //   await AsyncStorage.setItem('auth', JSON.stringify({ ...JSON.parse(authItem), position: res.data.user.position }))
+        // }
         dispatch(addPositionUser({ lat: res.data.user.position.lat, lng: res.data.user.position.lng }))
       } catch (error: any) {
         const errorMessage = JSON.parse(error.message)

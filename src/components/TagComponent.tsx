@@ -1,5 +1,5 @@
 import { Button, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import React, { ReactNode } from "react"
+import React, { memo, ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import TextComponent from "./TextComponent"
 import SpaceComponent from "./SpaceComponent"
@@ -39,4 +39,4 @@ const TagComponent = (props:Props)=>{
     </TouchableOpacityComponent>
   )
 }
-export default TagComponent;
+export default memo(TagComponent);

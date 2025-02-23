@@ -36,6 +36,7 @@ const InterestedEventScreen = ({ navigation, route }: any) => {
     useEffect(()=>{
         handleCallAPIGetEventInterested()
     },[auth.id])
+    
     const handleCallAPIGetEventInterested = async ()=>{
         setIsLoadng(true)
         const api = apis.user.getEventInterestedByIdUser({idUser:auth.id})
@@ -56,7 +57,10 @@ const InterestedEventScreen = ({ navigation, route }: any) => {
             <SectionComponent styles={{ paddingBottom: 8 }}>
                 <SearchComponent 
                     isNotShowArrow 
-                    onSearch={(val) => setSearchKey(val)} 
+                    onSearch={(val) => {
+
+                        setSearchKey(val)
+                    }} 
                     value={searchKey} 
                     onEnd={() => console.log('ok')} 
                     bgColor={bgColor ? colors.background : colors.gray8}

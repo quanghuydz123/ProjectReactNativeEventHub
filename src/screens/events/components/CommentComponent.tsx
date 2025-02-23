@@ -1,6 +1,6 @@
 import BottomSheet, { BottomSheetFlatList, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useState, useRef, useCallback, forwardRef, useMemo, useEffect } from "react";
+import { useState, useRef, useCallback, forwardRef, useMemo, useEffect, memo } from "react";
 import { TextInput, BackHandler, View, FlatList, StyleSheet, TouchableOpacity, Text, Modal } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SectionComponent, RowComponent, SpaceComponent, TextComponent, InputComponent, ButtonComponent } from "../../../components";
@@ -47,6 +47,7 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
     const [modalUpdateCommentVisible, setModalUpdateCommentVisible] = useState(false);
     const [valueContent,setValueContent] = useState('')
     const handleSheetChanges = useCallback((index: number) => {
+        console.log("asdasd",index)
         setIndex(index)
         setIsShowing(index < 1 ? false : true);
         // if (index === -1 && isInputFocused) {
@@ -516,4 +517,4 @@ const CommentComponent = forwardRef<any, Props>((props: Props, ref: any) => {
 })
 
 
-export default CommentComponent
+export default memo(CommentComponent)

@@ -38,7 +38,7 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
     try {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,idKeyword,keyword},'put')
       if(res && res.status === 200 && res.data){
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
         dispatch(updateSearchHistory({ searchHistory: res.data }))
       }
     } catch (error:any) {
@@ -51,7 +51,7 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
     try {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,idKeyword:idKeyword},'delete')
       if(res && res.status === 200 && res.data){
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
         dispatch(updateSearchHistory({ searchHistory: res.data }))
       }
     } catch (error:any) {

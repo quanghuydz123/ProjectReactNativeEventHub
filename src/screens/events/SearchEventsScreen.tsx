@@ -297,7 +297,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     try {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,keyword:searchKey},'post')
       if(res && res.status === 200 && res.data){
-        await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
+        // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
         dispatch(updateSearchHistory({ searchHistory: res.data }))
       }
     } catch (error:any) {

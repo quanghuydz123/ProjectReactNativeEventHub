@@ -258,9 +258,9 @@ const ModalFilterEvent = (props: Props) => {
                             </View>
                         </RowComponent>
                     </SectionComponent >
-                    <View>
+                    {/* <View>
                         <ChoiceLocationComponent title="Vị trí" value={selectedAddress} onSelect={(val: string) => handleOnSelectLocation(val)} />
-                    </View>
+                    </View> */}
                     {/* <TextComponent text={`Giá ${selectedPriceRenge.low} - ${selectedPriceRenge.high} (VNĐ)`} title size={14} /> */}
                    {/* <RowComponent>
                     <View>
