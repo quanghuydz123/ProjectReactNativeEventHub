@@ -17,7 +17,7 @@ export interface InvoiceDetailsModel {
         status: string
         createdAt: Date
         totalDiscount:number
-
+        totalDiscountByCoin:number
     },
     showTimeDetails:ShowTimeModel,
     eventDetails:EventModelNew,

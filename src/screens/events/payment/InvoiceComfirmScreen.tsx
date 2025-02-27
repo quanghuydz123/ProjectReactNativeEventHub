@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity, View } from "react-native"
+import { Image, Switch, Text, TouchableOpacity, View } from "react-native"
 import { ButtonComponent, ContainerComponent, CricleComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../../../components"
 import { colors } from "../../../constrants/color"
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -8,8 +8,8 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import CardComponent from "../../../components/CardComponent"
 import { appInfo } from "../../../constrants/appInfo"
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { billingSelector, billingState } from "../../../reduxs/reducers/billingReducer"
-import { useSelector } from "react-redux"
+import { billingSelector, billingState, toggleApplyCoinDiscount } from "../../../reduxs/reducers/billingReducer"
+import { useDispatch, useSelector } from "react-redux"
 import { DateTime } from "../../../utils/DateTime"
 import { convertMoney, renderPriceTypeTicket } from "../../../utils/convertMoney"
 import { TypeTicketModel } from "../../../models/TypeTicketModel"
@@ -27,24 +27,35 @@ import TimeDownComponent from "./TimeDownComponent"
 import { AlertComponent } from "../../../components/Alert"
 import { apis } from "../../../constrants/apis"
 import invoiceAPI from "../../../apis/invoiceAPI"
+import { CoinChild, CoinF ,CoinFH} from "../../../assets/svgs";
 const InvoiceComfirmScreen = ({ navigation, route }: any) => {
     const showTimeChose: billingState = useSelector(billingSelector)
     const [openModalize, setOpenModalize] = useState(false)
     const modalieRef = useRef<Modalize>()
-    const [methodPayment, setMethodPayment] = useState('first');
+    const dispatch = useDispatch()
+    // const [methodPayment, setMethodPayment] = useState('first');
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [isLoading,setIsLoading] = useState(false)
-    const [invoices,setInvoices] = useState<Invoice[][]>([])
+    // const [invoices,setInvoices] = useState<Invoice[][]>([])
+    const [isEnabled, setIsEnabled] = useState(showTimeChose.isApplyCoinDiscount);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState)
     const auth:AuthState = useSelector(authSelector)
+    const [isFrist,setIsFrist] = useState(true)
     // useEffect(()=>{
     //     handleCallAPISearchInvoice()
     // },[])
+    useEffect(()=>{
+        if(!isFrist){
+            dispatch(toggleApplyCoinDiscount({totalDiscountByCoin:renderMoney,isApply:isEnabled}))
+        }else{
+            setIsFrist(false)
+        }
+    },[isEnabled])
     useEffect(() => {
         if (paymentUrl) {
             navigation.navigate('PaymentScreen', { url: paymentUrl })
         }
     }, [paymentUrl])
-   
     const createPaymentUrl = async () => {
         setIsLoading(true);
         try {
@@ -78,6 +89,7 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
             ticketsReserve: showTimeChose.ticketsReserve,
             address: auth.address,
             totalDiscount:showTimeChose.totalDiscount,
+            totalDiscountByCoin:showTimeChose.totalDiscountByCoin,
             fullAddress: [
               auth?.address?.houseNumberAndStreet,
               auth?.address?.ward?.name,
@@ -178,6 +190,12 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
             console.log("QuestionScreen", errorMessage)
         }
     }
+    const renderMoney = useMemo(()=>{
+        if(Math.floor((showTimeChose.totalPrice + showTimeChose.totalDiscountByCoin) * 0.5) >= auth.totalCoins){
+            return auth.totalCoins
+        }
+        return Math.floor((showTimeChose.totalPrice + showTimeChose.totalDiscountByCoin) * 0.5)
+    },[])
     return (
         <>
             <ContainerComponent back title={'Xác nhận thông tin'} bgColor={colors.black} isScroll isHiddenSpaceTop>
@@ -298,6 +316,27 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
 
                     </CardComponent>
                 </SectionComponent>
+               {showTimeChose.totalPrice > 5000 && <SectionComponent>
+                    <CardComponent color={colors.background1}>
+                        <TextComponent text={`Ưu đãi (Bạn đang có ${auth.totalCoins} shop xu)`} color={colors.primary} font={fontFamilies.medium} size={16} />
+                        <SpaceComponent height={10}/>
+                        <RowComponent justify="space-between">
+                            <RowComponent>
+                                <CoinF />
+                                <SpaceComponent width={8}/>
+                                <TextComponent text={`Dùng ${renderMoney} Shop Xu`} font={fontFamilies.medium} size={14} color={colors.white}/>
+                            </RowComponent>
+                            <Switch
+                                trackColor={{false: '#767577', true: '#81b0ff'}}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </RowComponent>
+
+                    </CardComponent>
+                </SectionComponent>}
                 <SectionComponent>
                     <CardComponent color={colors.background1}>
                         <TextComponent text={'Phương thức thanh toán'} color={colors.primary} font={fontFamilies.medium} size={16} />
@@ -328,6 +367,10 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                         {showTimeChose.ticketChose?.map((item) => {
                             return renderTypeTicket(item)
                         })}
+                        <RowComponent justify='space-between' >
+                            <TextComponent text={'Giảm giá bằng shop xu'} size={16} font={fontFamilies.medium} />
+                            <TextComponent text={convertMoney(showTimeChose.totalDiscountByCoin || 0)} size={14} />
+                        </RowComponent>
                         <SpaceComponent height={8} />
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
@@ -382,6 +425,10 @@ const InvoiceComfirmScreen = ({ navigation, route }: any) => {
                             {showTimeChose.ticketChose?.map((item) => {
                                 return renderTypeTicket(item)
                             })}
+                              <RowComponent justify='space-between' >
+                            <TextComponent text={'Giảm giá bằng shop xu'} size={16} font={fontFamilies.medium} />
+                            <TextComponent text={convertMoney(showTimeChose.totalDiscountByCoin || 0)} size={14} />
+                        </RowComponent>
                             <SpaceComponent height={8} />
                             <RowComponent justify='space-between' >
                                 <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />

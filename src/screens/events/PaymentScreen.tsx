@@ -9,7 +9,7 @@ import { Snackbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { constantSelector, constantState } from "../../reduxs/reducers/constantReducers";
 import { appInfo } from "../../constrants/appInfo";
-import { authSelector, AuthState, Invoice, updateInvoices } from "../../reduxs/reducers/authReducers";
+import { authSelector, AuthState, Invoice, updateInvoices, updateTotalCoins } from "../../reduxs/reducers/authReducers";
 import { apis } from "../../constrants/apis";
 import invoiceAPI from "../../apis/invoiceAPI";
 import { billingSelector, billingState } from "../../reduxs/reducers/billingReducer";
@@ -102,16 +102,16 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
   const handleUpdateInvoice = async ({ idInvoice, createdAt, invoiceCode }: { idInvoice: string, createdAt: Date, invoiceCode: string }) => {
     try {
       // const invoices:Invoice[][] = auth?.invoices ?? [];
-      const invoiceNew: Invoice = {
-        _id: idInvoice,
-        invoiceCode: invoiceCode,
-        totalTicket: billing.totalTicket ?? 0,
-        totalPrice: billing.totalPrice ?? 0,
-        user: auth.id,
-        status: "Success",
-        createdAt: createdAt,
-        titleEvent: billing.titleEvent
-      }
+      // const invoiceNew: Invoice = {
+      //   _id: idInvoice,
+      //   invoiceCode: invoiceCode,
+      //   totalTicket: billing.totalTicket ?? 0,
+      //   totalPrice: billing.totalPrice ?? 0,
+      //   user: auth.id,
+      //   status: "Success",
+      //   createdAt: createdAt,
+      //   titleEvent: billing.titleEvent
+      // }
       // if (invoices.length > 0 && invoices[0].length > 0) {
       //   const lastInvoiceMonth = new Date(invoices[0][0].createdAt).getMonth();
       //   const newInvoiceMonth = new Date(invoiceNew.createdAt).getMonth();
@@ -137,7 +137,7 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
     try {
       setIsLoading(true)
       const api = apis.invoice.createInvoice()
-      const res = await invoiceAPI.HandleInvoice(api, {
+      const res:any = await invoiceAPI.HandleInvoice(api, {
         idUser: auth.id,
         fullname: auth.fullname,
         email: auth.email,
@@ -146,6 +146,7 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
         ticketsReserve: billing.ticketsReserve,
         address: auth.address,
         totalDiscount:billing.totalDiscount,
+        totalDiscountByCoin:billing.totalDiscountByCoin,
         fullAddress: [
           auth?.address?.houseNumberAndStreet,
           auth?.address?.ward?.name,
@@ -158,6 +159,7 @@ const PaymentScreen = ({ navigation, route }: { navigation: any, route: any }) =
 
       }, 'post')
       if (res && res.status === 200 && res.data) {
+        dispatch(updateTotalCoins({totalCoins:res.totalCoins ?? 0}))
         handleUpdateInvoice({ idInvoice: res.data._id, createdAt: res.data.createdAt, invoiceCode: res.data.invoiceCode })
       } else {
         handleCancelInvoice()

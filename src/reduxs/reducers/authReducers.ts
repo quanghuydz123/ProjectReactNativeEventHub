@@ -190,12 +190,14 @@ const authSlice = createSlice({
             state.authData.lastCheckIn = lastCheckIn
             state.authData.totalCoins = totalCoins
             state.authData.IsDailyCheck = true
-
-
+        },
+        updateTotalCoins:(state,action)=>{
+            const {   totalCoins } = action.payload
+            state.authData.totalCoins = totalCoins
         },
     }
 });
 
 export const authReducer = authSlice.reducer;
-export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateSearchHistory,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices,updateStatusCheckInDaily } = authSlice.actions;
+export const { addAuth, removeAuth, addPositionUser,updateFcmToken,updateFollow,updateEventsInterested,updateSearchHistory,updateIsHasPassword,updateCategoriesInterested,addViewedEvent,updateInvoices,updateStatusCheckInDaily,updateTotalCoins } = authSlice.actions;
 export const authSelector = (state: any) => state.authReducer.authData;

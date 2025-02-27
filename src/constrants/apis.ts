@@ -45,6 +45,7 @@ export const apis = {
         updatePassword:()=>`/updatePassword`
 
     },
+    
     event:{
         getById:(eid:string)=>`/get-event-byId?eid=${eid}`,
         getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter,startAt,endAt,minPrice,maxPrice,sortType}:

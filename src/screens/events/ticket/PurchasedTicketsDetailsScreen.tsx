@@ -282,9 +282,20 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
                                     <TextComponent text={convertMoney(invoice?.invoiceDetails?.totalPrice ?? 0)} styles={{ padding: 8, backgroundColor: colors.background1 }} textAlign="right" color={colors.white} size={12} />
                                 </View>
                             </RowComponent> */}
+                             <RowComponent styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
+                            
+                            <View style={{ flex: 6.1  }}>
+                                <TextComponent text={'Giảm giá bằng shop xu'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
+                            </View>
+
+                            <View style={{ flex: 2, borderLeftWidth: 1, borderLeftColor: colors.gray4 }}>
+                                <TextComponent text={convertMoney(invoice?.invoiceDetails?.totalDiscountByCoin ?? 0)} styles={{ padding: 8, backgroundColor: colors.background1 }} textAlign="right" color={colors.white} size={12} />
+                            </View>
+                        </RowComponent>
                             <RowComponent styles={{ backgroundColor: colors.background1, flex: 1, borderBottomWidth: 1, borderBottomColor: colors.gray4 }}>
+                            
                                 <View style={{ flex: 6.1  }}>
-                                    <TextComponent text={'Giảm Giá'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
+                                    <TextComponent text={'Giảm giá vé'} font={fontFamilies.medium} styles={{ padding: 8 }} color={colors.white} size={12} />
                                 </View>
 
                                 <View style={{ flex: 2, borderLeftWidth: 1, borderLeftColor: colors.gray4 }}>

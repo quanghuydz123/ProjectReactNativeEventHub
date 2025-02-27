@@ -32,7 +32,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
     const constant: constantState = useSelector(constantSelector)
     // const [nameScreen,setNameScreen] = useState(constant.nameScreen)
     const billing: billingState = useSelector(billingSelector)
-    const [isLoading,setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         if (openModalize) {
             modalieRef.current?.open()
@@ -62,7 +62,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
             console.log("QuestionScreen", errorMessage)
         }
     }
-    const alertCencelInvoice = ()=>{
+    const alertCencelInvoice = () => {
         AlertComponent({
             title: 'Hủy đơn hàng',
             message: 'Bạn sẽ mất vị trí mình đã lựa chọn. Đơn hàng đang trong qua trình thanh toán cũng bị ảnh hưởng',
@@ -105,7 +105,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                 <SpaceComponent height={6} />
             </>
         )
-    },[])
+    }, [])
 
     return (
         <>
@@ -212,6 +212,10 @@ const QuestionScreen = ({ navigation, route }: any) => {
                         {showTimeChose.ticketChose?.map((item) => {
                             return renderTypeTicket(item)
                         })}
+                        <RowComponent justify='space-between' >
+                            <TextComponent text={'Giảm giá bằng shop xu'} size={16} font={fontFamilies.medium} />
+                            <TextComponent text={convertMoney(showTimeChose.totalDiscountByCoin || 0)} size={14} />
+                        </RowComponent>
                         <SpaceComponent height={8} />
                         <RowComponent justify='space-between' >
                             <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />
@@ -237,7 +241,7 @@ const QuestionScreen = ({ navigation, route }: any) => {
                     <ButtonComponent text='Tiếp tục' onPress={() => navigation.navigate('InvoiceComfirmScreen')} type='primary' mrBottom={0} width={'auto'} styles={{ paddingVertical: 8 }} />
                 </RowComponent>
             </SectionComponent>
-            <LoadingModal  visible={isLoading}/>
+            <LoadingModal visible={isLoading} />
             <Portal>
                 <Modalize
                     adjustToContentHeight
@@ -267,6 +271,10 @@ const QuestionScreen = ({ navigation, route }: any) => {
                             {showTimeChose.ticketChose?.map((item) => {
                                 return renderTypeTicket(item)
                             })}
+                            <RowComponent justify='space-between' >
+                                <TextComponent text={'Giảm giá bằng shop xu'} size={16} font={fontFamilies.medium} />
+                                <TextComponent text={convertMoney(showTimeChose.totalDiscountByCoin || 0)} size={14} />
+                            </RowComponent>
                             <SpaceComponent height={8} />
                             <RowComponent justify='space-between' >
                                 <TextComponent text={'Tạm tính'} size={18} font={fontFamilies.medium} />

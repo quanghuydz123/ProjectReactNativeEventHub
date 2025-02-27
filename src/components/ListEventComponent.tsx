@@ -31,6 +31,9 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
   const { items, isShownVertical, bgColor, numColumns, onEndReached, isLoading,isShowSuggest,setSearchKey} = props
   const [refreshing, setRefreshing] = React.useState(false);
   const auth:AuthState = useSelector(authSelector)
+  const [isLoadingDeleteSearch,setIsLoadingDeleteSearch] = useState<{idSearch:string}>({
+    idSearch:''
+  })
   const dispatch = useDispatch()
 
   const handleUpdateHistorySearch = async (idKeyword:string,keyword:string) => {
@@ -47,6 +50,9 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
     }
   }
   const handleDeleteHistorySearch = async (idKeyword:string) => {
+    setIsLoadingDeleteSearch({
+      idSearch:idKeyword,
+    })
     const api = apis.user.deleteHistorySearch()
     try {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,idKeyword:idKeyword},'delete')
@@ -54,30 +60,41 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
         // await AsyncStorage.setItem('auth', JSON.stringify({ ...auth, searchHistory: res.data }))
         dispatch(updateSearchHistory({ searchHistory: res.data }))
       }
+       setIsLoadingDeleteSearch({
+      idSearch:'',
+    })
     } catch (error:any) {
+       setIsLoadingDeleteSearch({
+      idSearch:'',
+    })
       const errorMessage = JSON.parse(error.message)
       console.log("ListEventComponent", errorMessage)
     }
   }
   const renderItemHistory = (searchItem:{_id:string,keyword:string,searchedAt:Date})=>{
-    return <RowComponent 
-    key={searchItem._id}
-    justify="space-between" 
-    styles={{paddingVertical:6}}>
-    <RowComponent styles={{flex:1}}
-    onPress={()=>{
-      handleUpdateHistorySearch(searchItem._id,searchItem.keyword)
-      setSearchKey(searchItem.keyword)
-    }}
-    >
-      <Fontisto color={colors.white} name="clock" size={20}/>
-      <SpaceComponent width={8}/>
-      <TextComponent flex={1} numberOfLine={2} text={searchItem.keyword} color={colors.white} size={15}/>
-    </RowComponent>
-    <Feather style={{paddingHorizontal:8}} onPress={()=>handleDeleteHistorySearch(searchItem._id)} color={colors.gray} name="trash-2" size={18}/>
-  </RowComponent>
+    return (
+      <>
+      {(isLoadingDeleteSearch.idSearch !== searchItem._id ) ? <RowComponent 
+          key={searchItem._id}
+          justify="space-between" 
+          styles={{paddingVertical:6}}>
+          <RowComponent styles={{flex:1}}
+          onPress={()=>{
+            handleUpdateHistorySearch(searchItem._id,searchItem.keyword)
+            setSearchKey(searchItem.keyword)
+          }}
+          >
+            <Fontisto color={colors.white} name="clock" size={20}/>
+            <SpaceComponent width={8}/>
+            <TextComponent flex={1} numberOfLine={2} text={searchItem.keyword} color={colors.white} size={15}/>
+          </RowComponent>
+          <Feather style={{paddingHorizontal:8}} onPress={()=>handleDeleteHistorySearch(searchItem._id)} color={colors.gray} name="trash-2" size={18}/>
+        </RowComponent> : <><ActivityIndicator /><SpaceComponent height={4}/>
+        </>}
+      </>
+    )
   }
-  const renderItemTrend = ()=>{
+  const renderItemTrend = useCallback(()=>{
     return <RowComponent 
     onPress={()=>setSearchKey('muay thai')}
     styles={{paddingVertical:6}}>
@@ -87,7 +104,7 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
       <TextComponent text={'muay thai'} color={colors.white} size={15}/>
     </RowComponent>
   </RowComponent>
-  }
+  },[])
   return (
     <View style={{ flex: 1 }}>
       <FlatList

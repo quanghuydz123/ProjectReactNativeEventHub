@@ -546,7 +546,7 @@ const MapScreen = ({ navigation }: any) => {
                   <AntDesign name="close" size={16} />
                 </CricleComponent>
               </RowComponent>
-              <TextComponent text={`Cách vị trí bạn ${calculateDistance({userPosition: { lng: userLocation[0], lat: userLocation[1] },addressPosition:eventChose?.position ?? {lat:0, lng:0}}).toFixed(2) } km`}/>
+              <TextComponent text={`Cách vị trí bạn ${userLocation && calculateDistance({userPosition: { lng: userLocation[0] || 0, lat: userLocation[1] || 0 },addressPosition:eventChose?.position ?? {lat:0, lng:0}}).toFixed(2) } km`}/>
             </SectionComponent>
           </BottomSheetView>
           <BottomSheetScrollView showsVerticalScrollIndicator={false}>

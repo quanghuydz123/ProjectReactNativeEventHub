@@ -483,7 +483,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
             <RowComponent>
               <CoinF />
               <SpaceComponent width={4} />
-              <TextComponent text={auth.totalCoins} size={28} color={colors.primary} font={fontFamilies.semiBold} />
+              <TextComponent text={auth.totalCoins} size={22} color={colors.primary} font={fontFamilies.semiBold} />
             </RowComponent>
           </View>}
         </CardComponent>
