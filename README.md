@@ -82,3 +82,26 @@ EventHub là ứng dụng di động để quảng bá sự kiện dành cho nh�
   - [Nguyễn Quang Huy](https://github.com/quanghuydz123)
   - [Đặng Hoàng Toàn](https://github.com/dangtoan16)
 
+
+LƯỢC ĐỒ USECASE.
+1.	Lược đồ usecase người dùng.
+
+![image](https://github.com/user-attachments/assets/e9965a6e-eba5-4ec1-970f-8824ddf69790)
+
+![image](https://github.com/user-attachments/assets/e17c9458-0ca6-432f-9f02-bc01da9e6040)
+
+
+
+2.	Lược đồ usecase người tổ chức sự kiện.
+Người tổ chức sự kiện gồm có các chức năng của người dùng và có các chức năng đặc trưng như sau:
+
+![image](https://github.com/user-attachments/assets/f1bc7992-9bbf-4ab1-a9d9-887c970ae364)
+
+
+
+
+
+ 
+			
+
+
