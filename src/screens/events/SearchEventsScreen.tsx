@@ -23,6 +23,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { constantSelector, constantState, updateEvents } from "../../reduxs/reducers/constantReducers"
 import userAPI from "../../apis/userApi"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { KeyWordModel } from "../../models/KeyWordModel"
+import keywordAPI from "../../apis/keywordAPI"
 interface routeParams {
   follows: FollowModel[],
   lat: string,
@@ -32,6 +34,7 @@ interface routeParams {
   limit: string,
   categories: CategoryModel[],
   categoriesSelected: string[],
+  keywordsSelected:string[],
   sortType?: 'view',
   isSearchParams: boolean
 }
@@ -43,11 +46,13 @@ interface FilterEvent {
     lat?: string,
     lng?: string
   },
+  keywordsFilter?:string[],
   sortType?: 'view'
 }
 const initFilterEvent: FilterEvent = {
   limit: '',
   categoriesFilter: [],
+  keywordsFilter:[],
   distance: '',
   position: {
     lat: '',
@@ -55,15 +60,16 @@ const initFilterEvent: FilterEvent = {
   },
 }
 const SearchEventsScreen = ({ navigation, route }: any) => {
-  const { categories, lat, long, distance, title, limit, categoriesSelected, sortType }: routeParams = route.params || {}
+  const { categories, lat, long, distance, title, limit, categoriesSelected, keywordsSelected,sortType }: routeParams = route.params || {}
   // const [events, setEvents] = useState<EventModelNew[]>(items)
   const [isLoading, setIsLoading] = useState(true)
   const [result, setResult] = useState<EventModelNew[]>([])
   const [isOpenModelizeFilter, setIsOpenModalizeFilter] = useState(false)
   const [allCategory, setAllCategory] = useState<CategoryModel[]>(categories)
   const [first, setFirst] = useState(true)
-  const [isFirstGetFilter, setIsFirstGetFilter] = useState(true)
   const [idsSelectedCategories, setIdsSelectedCategories] = useState<string[]>([])
+  const [idsSelectedKeywords, setIdsSelectedKeywords] = useState<string[]>([])
+
   const [addressFilter, setAddressFilter] = useState('')
   const [searchKey, setSearchKey] = useState('')
   const [isEnabledSortByView, setIsEnabledSortByView] = useState(sortType === 'view' ? true : false);
@@ -71,9 +77,9 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [isLoadingLimit, setIsLoadingLimit] = useState(false)
   const [isShowSuggest, setIsShowSuggest] = useState(true)
   const flatListRef = React.useRef<any>()
-  const [isFilter,setIsFilter] = useState(false)
   const constant:constantState = useSelector(constantSelector)
   const dispatch = useDispatch()
+  const [keywords,setKeywords] = useState<KeyWordModel[]>([])
   const [priceRenge, setPriceRenge] = useState<{
     low: number,
     high: number
@@ -92,7 +98,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const [filterEvent, setFilterEvent] = useState<FilterEvent>(initFilterEvent)
   useEffect(() => {
     handleSetFilterEvent()
-
+    handleGetKeyWords()
     if (!allCategory) {
       handleGetAllCategory()
     }
@@ -138,9 +144,19 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   //   }
   // },[isEnabledSortByView])
   useEffect(() => {
+    if(keywordsSelected && keywordsSelected.length > 0){
+      const filterCopy: FilterEvent = { ...filterEvent }
+      filterCopy['keywordsFilter'] = keywordsSelected
+      setFilterEvent(filterCopy)
+    }
+  }, [keywordsSelected])
+
+  useEffect(() => {
+   if(categoriesSelected && categoriesSelected.length > 0){
     const filterCopy: FilterEvent = { ...filterEvent }
     filterCopy['categoriesFilter'] = categoriesSelected
     setFilterEvent(filterCopy)
+   }
   }, [categoriesSelected])
 
   const handleSetFilterEvent = async () => {
@@ -162,6 +178,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
   const handleOnChangeValudeFilter = async (key: string, value: string | string[], keyPosition?: string, position?: any) => {
     const filterCopy: any = { ...filterEvent }
     filterCopy[`${key}`] = value
+    filterCopy[`keywordsFilter`] = idsSelectedKeywords
+
     if (position) {
       Object.keys(filterEvent.position).forEach((keyChild) => {
         filterCopy[`${keyPosition}`][`${keyChild}`] = position[`${keyChild}`]
@@ -176,6 +194,23 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     }
     setFilterEvent(filterCopy)
   }
+  const handleGetKeyWords = async () => {
+    const api = apis.keyword.getAll()
+    try {
+      const res = await keywordAPI.HandleKeyword(api)
+      if (res && res.data && res.status === 200) {
+        setKeywords(res.data)
+      }
+    } catch (error: any) {
+      const errorMessage = JSON.parse(error.message)
+      if (errorMessage.statusCode === 403) {
+        console.log(errorMessage.message)
+      } else {
+        console.log('Lỗi rồi')
+      }
+    }
+  }
+
   const handleGetAllCategory = async () => {
     const api = apis.category.getAll()
     try {
@@ -228,7 +263,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     const api = apis.event.getAll({
       lat: filterEvent.position.lat, searchValue:    searchKey,
       long: filterEvent.position.lng, distance: '10', categoriesFilter: filterEvent.categoriesFilter,
-      startAt: dateTime.startAt, endAt: dateTime.endAt, maxPrice: toString(priceRenge.high), minPrice: toString(priceRenge.low), sortType: filterEvent.sortType, limit: limitGetEvent.toString()
+      startAt: dateTime.startAt, endAt: dateTime.endAt, maxPrice: toString(priceRenge.high), minPrice: toString(priceRenge.low), sortType: filterEvent.sortType, 
+      limit: limitGetEvent.toString(),keywordsFilter:filterEvent.keywordsFilter
     })
     setIsLoading(isGetLimit ? false : true)
     setIsLoadingLimit(isGetLimit ? true : false)
@@ -252,7 +288,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       lat: filterEvent.position.lat,
       long: filterEvent.position.lng, distance: '10',
       searchValue: searchValue ? searchValue : searchKey, categoriesFilter: filterEvent.categoriesFilter,
-      startAt: dateTime.startAt, endAt: dateTime.endAt, maxPrice: toString(priceRenge.high), minPrice: toString(priceRenge.low), sortType: filterEvent.sortType, limit: limitGetEvent.toString()
+      startAt: dateTime.startAt, endAt: dateTime.endAt, maxPrice: toString(priceRenge.high), minPrice: toString(priceRenge.low), sortType: filterEvent.sortType, 
+      limit: limitGetEvent.toString(),keywordsFilter:filterEvent.keywordsFilter
     })
     setIsLoading(true)
     try {
@@ -293,6 +330,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
     setIsEnabledSortByView(false)
   }
   const handleAddHistorySearch = async () => {
+  
     const api = apis.user.addHistorySearch()
     try {
       const res = await userAPI.HandleUser(api,{idUser:auth.id,keyword:searchKey},'post')
@@ -339,7 +377,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
           />
           <SpaceComponent width={4} />
           <TagComponent
-            onPress={() => { setIsOpenModalizeFilter(true), setIdsSelectedCategories(filterEvent.categoriesFilter ?? []) }}
+            onPress={() => { setIsOpenModalizeFilter(true), setIdsSelectedCategories(filterEvent.categoriesFilter ?? []),setIdsSelectedKeywords(filterEvent.keywordsFilter ?? []) }}
 
             label="Lọc"
             icon={<CricleComponent size={20} color={colors.primary}><FontAwesome name="filter" size={18} color={colors.white} /></CricleComponent>}
@@ -376,6 +414,8 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
       <ModalFilterEvent
         selectedCategories={idsSelectedCategories}
         onSelectCategories={(val) => setIdsSelectedCategories(val)}
+        selectedKeywords={idsSelectedKeywords}
+        onSelectKeywords={(val)=>setIdsSelectedKeywords(val)}
         categories={allCategory} visible={isOpenModelizeFilter}
         onClose={() => setIsOpenModalizeFilter(false)}
         onResetFilter={handleResetFilterEvent}
@@ -388,6 +428,7 @@ const SearchEventsScreen = ({ navigation, route }: any) => {
         selectedPriceRenge={priceRenge}
         isEnabledSortByView={isEnabledSortByView}
         onEnableSortByView={(val) => setIsEnabledSortByView(val)}
+        keywords={keywords ?? []}
       />
     </ContainerComponent>
   )

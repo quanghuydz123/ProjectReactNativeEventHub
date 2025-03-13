@@ -533,7 +533,33 @@ const EventDetails = ({ navigation, route }: any) => {
           </CardComponent>
         </SectionComponent> */}
         <SectionComponent>
-          <CardComponent isShadow title='Giới thiệu' styles={{ paddingBottom: 26 }}>
+          <CardComponent isShadow styles={{ paddingBottom: 26 }}>
+            <View style={{}}>
+              <TextComponent text={'Giới thiệu'} font={fontFamilies.bold}   title size={18}/>
+              {event?.keywords && event.keywords.length > 0 && <View style={{flexDirection:'row',flexWrap:'wrap',marginTop:10}}>
+                {
+                  event.keywords.map((item)=>{
+                    return (
+                      <View style={{paddingRight:4,paddingVertical:4}}>
+                      <TagComponent 
+                          label={item?.name ?? ''} 
+                          bgColor={colors.white} 
+                          textColor={colors.colorText} 
+                          styles={{borderWidth:1,borderColor:colors.background}} 
+                          onPress={()=>navigation.navigate('SearchEventsScreen',{keywordsSelected:[item._id]})}
+                          
+                          />
+                          
+                          
+                      </View>
+                    )
+                  })
+                }
+              </View>}
+              <SpaceComponent height={10}/>
+              <SpaceComponent height={1} styles={{ }} color={colors.gray2} />
+              <SpaceComponent height={10}/>
+            </View>
             <View style={{ maxHeight: isShowDes ? 5000 : 480, overflow: 'hidden' }}>
               {/* <TextComponent text={event?.description ?? ''} /> */}
               {descriptionEvent ? <RenderHTML

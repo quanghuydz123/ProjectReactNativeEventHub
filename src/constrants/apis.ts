@@ -48,9 +48,9 @@ export const apis = {
     
     event:{
         getById:(eid:string)=>`/get-event-byId?eid=${eid}`,
-        getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter,startAt,endAt,minPrice,maxPrice,sortType}:
+        getAll:({lat,long,distance,limit,limitDate,searchValue,categoriesFilter,keywordsFilter,startAt,endAt,minPrice,maxPrice,sortType}:
     {lat?:string,long?:string,distance?:string,limit?:string,limitDate?:string
-        ,searchValue?:string,categoriesFilter?:string[],startAt?:string,endAt?:string,minPrice?:string,maxPrice?:string,sortType?:'view'})=>{
+        ,searchValue?:string,categoriesFilter?:string[],keywordsFilter?:string[],startAt?:string,endAt?:string,minPrice?:string,maxPrice?:string,sortType?:'view'})=>{
                 const params = new URLSearchParams();
                 if (lat !== undefined) params.append('lat', lat);
                 if (long !== undefined) params.append('long', long);
@@ -66,6 +66,11 @@ export const apis = {
                 if (categoriesFilter !== undefined) {
                     categoriesFilter.forEach(category => {
                         params.append('categoriesFilter', category);
+                    });
+                }
+                if (keywordsFilter !== undefined) {
+                    keywordsFilter.forEach(keyword => {
+                        params.append('keywordsFilter', keyword);
                     });
                 }
                 return `/get-events?${params.toString()}`;
@@ -107,6 +112,9 @@ export const apis = {
             return `/get-byIdUser?${params.toString()}`
         },
         getByIdInvoice:({idInvoice}:{idInvoice:string})=>`/get-byIdInvoice?idInvoice=${idInvoice}`
+    },
+    keyword:{
+        getAll:()=>'/get-all'
     },
     comment:{
         commentEvent:()=>`/comment-event`,

@@ -726,14 +726,14 @@ const HomeScreen = ({ navigation, route }: any) => {
 
             <TouchableOpacity onPress={() => {
               if (checkLogin()) {
-                console.log("ok")
+                navigation.navigate('NewScreen')
               }
             }} style={{ alignItems: 'center' }}>
               <CricleComponent color={'rgb(255,255,255)'} borderRadius={10} size={32}
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
                   if (checkLogin()) {
-                    console.log("ok")
+                    navigation.navigate('NewScreen')
                   }
                 }}
               >

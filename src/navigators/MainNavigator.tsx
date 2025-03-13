@@ -21,6 +21,7 @@ import TestQrcannerScreen from "../screens/TestQrcannerScreen";
 import ViewedEventScreen from "../screens/profiles/ViewedEventScreen";
 import OrganizerNavigator from "./OrganizerNavigator";
 import TicketNavigator from "./TicketNavigator";
+import NewScreen from "../screens/NewScreen";
 const MainNavigator = ({navigation}:any) => {
   const { getItem } = useAsyncStorage('auth')
   const { getItem: getRememberItem } = useAsyncStorage('isRemember');
@@ -139,6 +140,7 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="PurchasedTicketsDetailsScreen" component={PurchasedTicketsDetailsScreen}/>
         <Stack.Screen name="InterestedEventScreen" component={InterestedEventScreen}/>
         <Stack.Screen name="UpdatePasswordScreen" component={UpdatePasswordScreen}/>
+        <Stack.Screen name="NewScreen" component={NewScreen}/>
 
       </Stack.Navigator>
       {!isOnline && AlertComponent({title:'Thông báo'

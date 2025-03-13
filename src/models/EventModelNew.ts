@@ -1,3 +1,4 @@
+import { KeyWordModel } from "./KeyWordModel"
 import { OrganizerModel } from "./OrganizerModel"
 import { ShowTimeModel } from "./ShowTimeModel"
 import { UserModel } from "./UserModel"
@@ -29,6 +30,7 @@ export interface EventModelNew {
       },
       houseNumberAndStreet:string
     },
+    keywords:KeyWordModel[]
     usersInterested?:[{
       user:UserModel,
       createdAt:Date
