@@ -10,7 +10,7 @@ export interface TypeTicketModel {
     type:'Free' | 'Paid',
     price:number,
     startSaleTime:Date,
-    promotion:PromotionModel[],
+    promotion?:PromotionModel,
     endSaleTime:Date,
     status:'NotStarted' | 'OnSale' | "Ended" | "SoldOut" | "Canceled",
 

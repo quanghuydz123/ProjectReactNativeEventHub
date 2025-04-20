@@ -237,15 +237,14 @@ const ListTicketComponent = (props:Props) => {
   
   const renderPriceTicket = (section: TypeTicketModel)=>{
     const renderColorMoney = ()=>{
-      console.log(section.promotion)
       let color = colors.primary
       if(section.status==='Ended' || section.status==='SoldOut' || section.status==='NotStarted' || section.status==='Canceled'){
         color=colors.gray4
       }
       return color
     }
-    if(section.promotion.length > 0){
-      if(section.promotion[0].status === 'Ongoing' || section.promotion[0].status === 'NotStarted'){
+    if(section?.promotion){
+      if(section.promotion.status === 'Ongoing'){
         return <RowComponent>
           <TextComponent text={convertMoney(renderPriceTypeTicket(section))} textAlign="right" color={renderColorMoney()} font={fontFamilies.semiBold} />
           <SpaceComponent width={2}/>

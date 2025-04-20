@@ -129,6 +129,7 @@ const PurchasedTicketsDetailsScreen = ({ navigation, route }: any) => {
         </CardComponent>
     }
     const renderTypeTicket = (ticket: TicketsPurchase, length: number) => {
+        console.log(ticket)
         const renderPriceDiscount = ()=>{
             if(ticket?.promotion){
                 if(ticket.discountType === 'Percentage'){

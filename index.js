@@ -13,7 +13,6 @@ messaging().setBackgroundMessageHandler(async mess =>{ //Xử khi người dùng
 })
 
 messaging().onNotificationOpenedApp(mess => {//Xử khi người dùng tắt app (Nhưng vẫn chạy ngầm) và ấn thông báo
-    console.log("mes2",mess)
     if(mess.data.type==='InviteUserToEvent' || mess.data.type==='NewEvent'){
         handleLinking(`com.appeventhubmoinhat123://app/detail/${mess.data.id}`)
     }

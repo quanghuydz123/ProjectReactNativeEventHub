@@ -20,12 +20,15 @@ export const renderPrice = (showTime:ShowTimeModel) => {
 
 export const renderPriceTypeTicket = (typeTicket:TypeTicketModel) => {
     const renderPrice = ()=>{
-      if(typeTicket?.promotion?.length > 0){
-        if(typeTicket.promotion[0].status === 'Ongoing' || typeTicket.promotion[0].status === 'NotStarted'){
-          if(typeTicket.promotion[0].discountType === 'Percentage'){
-            return typeTicket.price * (100 - typeTicket.promotion[0].discountValue) / 100
+      if(typeTicket?.promotion){
+        if(typeTicket.promotion.status === 'Ongoing'){
+          if(typeTicket.promotion.discountType === 'Percentage'){
+            return typeTicket.price * (100 - typeTicket.promotion.discountValue) / 100
           }else{
-            return typeTicket.price - typeTicket.promotion[0].discountValue
+            if(typeTicket.price - typeTicket.promotion.discountValue < 0){
+              return 0
+            }
+            return typeTicket.price - typeTicket.promotion.discountValue
           }
         }
       }
@@ -37,12 +40,12 @@ export const renderPriceTypeTicket = (typeTicket:TypeTicketModel) => {
 
 export const renderPriceDisCountTypeTicket = (typeTicket:TypeTicketModel) => {
   const renderPrice = ()=>{
-    if(typeTicket?.promotion?.length > 0){
-      if(typeTicket.promotion[0].status === 'Ongoing' || typeTicket.promotion[0].status === 'NotStarted'){
-        if(typeTicket.promotion[0].discountType === 'Percentage'){
-          return typeTicket.price * typeTicket.promotion[0].discountValue / 100
+    if(typeTicket?.promotion){
+      if(typeTicket.promotion.status === 'Ongoing'){
+        if(typeTicket.promotion.discountType === 'Percentage'){
+          return typeTicket.price * typeTicket.promotion.discountValue / 100
         }else{
-          return typeTicket.promotion[0].discountValue
+          return typeTicket.promotion.discountValue
         }
       }
     }

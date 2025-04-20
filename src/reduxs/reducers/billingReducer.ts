@@ -41,7 +41,6 @@ const initialState: billingState = {
             endSaleTime:new Date(),
             type:'Paid',
             amount:0,
-            promotion:[]
         }]
     },
     idEvent:'',

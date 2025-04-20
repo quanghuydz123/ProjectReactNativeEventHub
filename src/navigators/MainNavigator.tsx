@@ -143,9 +143,9 @@ const MainNavigator = ({navigation}:any) => {
         <Stack.Screen name="NewScreen" component={NewScreen}/>
 
       </Stack.Navigator>
-      {!isOnline && AlertComponent({title:'Thông báo'
+      {/* {!isOnline && AlertComponent({title:'Thông báo'
         ,message:'Quý khách vui lòng kiểm tra kết nối Internet/3G/Wifi',
-        onConfirm:()=>{BackHandler.exitApp()}})}
+        onConfirm:()=>{BackHandler.exitApp()}})} */}
       </>
   )
 }
