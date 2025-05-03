@@ -1,112 +1,146 @@
-import { ActivityIndicator, Button, FlatList, RefreshControl, Text, TouchableOpacity, View } from "react-native"
-import React, { useCallback, useEffect, useRef, useState } from "react"
-import { ButtonComponent, ContainerComponent, CricleComponent, DataLoaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from "../components";
-import { globalStyles } from "../styles/globalStyles";
-import { useDispatch, useSelector } from "react-redux";
-import { addAuth, authSelector } from "../reduxs/reducers/authReducers";
-import AvatarItem from "../components/AvatarItem";
-import { colors } from "../constrants/color";
-import { appInfo } from "../constrants/appInfo";
-import Entypo from 'react-native-vector-icons/Entypo'
-import { UserModel } from "../models/UserModel";
-import { EventModelNew } from "../models/EventModelNew";
-import { NotificationModel } from "../models/NotificationModel";
-import notificationAPI from "../apis/notificationAPI";
-import socket from "../utils/socket";
-import { DateTime } from "../utils/DateTime";
-import { LoadingModal } from "../../modals";
-import { Portal } from "react-native-portalize";
-import { Modalize } from "react-native-modalize";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { apis } from "../constrants/apis";
-import { sizeGlobal } from "../constrants/sizeGlobal";
-const NotificationsScreen = ({ navigation, route }: any) => {
-  const { notificationRoute }: { notificationRoute: NotificationModel[] } = route.params || {}
-  const [notifications, setNotifications] = useState<NotificationModel[]>(notificationRoute)
-  const [isLoading, setIsLoadng] = useState(false)
-  const [isLoadingModal, setIsLoadingModal] = useState(false)
-  const user = useSelector(authSelector)
+import {
+  ActivityIndicator,
+  Button,
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  ButtonComponent,
+  ContainerComponent,
+  CricleComponent,
+  DataLoaderComponent,
+  RowComponent,
+  SectionComponent,
+  SpaceComponent,
+  TextComponent,
+} from '../components';
+import {globalStyles} from '../styles/globalStyles';
+import {useDispatch, useSelector} from 'react-redux';
+import {addAuth, authSelector} from '../reduxs/reducers/authReducers';
+import AvatarItem from '../components/AvatarItem';
+import {colors} from '../constrants/color';
+import {appInfo} from '../constrants/appInfo';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {UserModel} from '../models/UserModel';
+import {EventModelNew} from '../models/EventModelNew';
+import {NotificationModel} from '../models/NotificationModel';
+import notificationAPI from '../apis/notificationAPI';
+import socket from '../utils/socket';
+import {DateTime} from '../utils/DateTime';
+import {LoadingModal} from '../../modals';
+import {Portal} from 'react-native-portalize';
+import {Modalize} from 'react-native-modalize';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {apis} from '../constrants/apis';
+import {sizeGlobal} from '../constrants/sizeGlobal';
+const NotificationsScreen = ({navigation, route}: any) => {
+  const [notifications, setNotifications] = useState<NotificationModel[]>([]);
+  const [isLoading, setIsLoadng] = useState(false);
+  const [isLoadingFrist, setIsLoadngFrist] = useState(true);
+  const [isLoadingModal, setIsLoadingModal] = useState(false);
+  const user = useSelector(authSelector);
   const modalizeRef = useRef<Modalize>(null);
-  const [isFirst, setIsFirst] = useState(false)
-  const [toggle, setToggle] = useState(false)
-  const [notificationSelected, setSotificationSelected] = useState<NotificationModel>()
+  const [isFirst, setIsFirst] = useState(false);
+  const [toggle, setToggle] = useState(false);
+  const [notificationSelected, setSotificationSelected] =
+    useState<NotificationModel>();
   const [refreshing, setRefreshing] = useState(false);
-  const dispatch = useDispatch()
-  const auth = useSelector(authSelector)
-  const [limitGetNotifi,setLimitGetNotifi] = useState(10)
-  console.log("notifications",notifications.length)
-  useEffect(()=>{
-      handleCallAPIUpdateIsViewdNotifications()
-  },[])
+  const [limitGetNotifi, setLimitGetNotifi] = useState(10);
   useEffect(() => {
-    if(isFirst){
-      if(notifications){
-        if((notifications.length - limitGetNotifi >= -10) && (notifications.length - limitGetNotifi <= 0)){
-          handleCallAPIGetNotifications({isLoading:true})
+    handleCallAPIUpdateIsViewdNotifications();
+  }, []);
+  useEffect(() => {
+    if (isFirst) {
+      if (notifications) {
+        if (
+          notifications.length - limitGetNotifi >= -10 &&
+          notifications.length - limitGetNotifi <= 0
+        ) {
+          handleCallAPIGetNotifications({isLoading: true});
         }
       }
+    } else {
+      handleCallAPIGetNotifications({isLoadingFrist: true});
     }
-    // handleCallAPIGetNotifications(true)
-  }, [limitGetNotifi])
+  }, [limitGetNotifi]);
   useEffect(() => {
     if (isFirst) {
       modalizeRef.current?.open();
+    } else {
+      setIsFirst(true);
     }
-    else {
-      setIsFirst(true)
-    }
-  }, [notificationSelected, toggle])
-  const handleCallAPIGetNotifications = async ({isLoading,idUser}:{isLoading?:boolean,idUser?:string}) => {
+  }, [notificationSelected, toggle]);
+  const handleCallAPIGetNotifications = async ({
+    isLoading,
+    isLoadingFrist,
+    idUser,
+  }: {
+    isLoading?: boolean;
+    isLoadingFrist?: boolean;
+    idUser?: string;
+  }) => {
     if (user.accesstoken) {
-      const api = apis.notification.getNotificationsById({ idUser: idUser ?? user.id,limit:limitGetNotifi.toString() })
-      setIsLoadng(isLoading ? isLoading : false)
+      const api = apis.notification.getNotificationsById({
+        idUser: idUser ?? user.id,
+        limit: limitGetNotifi.toString(),
+      });
+      setIsLoadng(isLoading ? isLoading : false);
+      setIsLoadngFrist(isLoadingFrist ? isLoadingFrist : false);
       try {
-        const res: any = await notificationAPI.HandleNotification(api)
+        const res: any = await notificationAPI.HandleNotification(api);
         if (res && res.data && res.status === 200) {
-          setNotifications(res.data.notifications)
+          setNotifications(res.data.notifications);
         }
-        setIsLoadng(false)
+        setIsLoadng(false);
+        setIsLoadngFrist(false);
       } catch (error: any) {
-        const errorMessage = JSON.parse(error.message)
+        const errorMessage = JSON.parse(error.message);
         if (errorMessage.statusCode === 403) {
-          console.log(errorMessage.message)
+          console.log(errorMessage.message);
         } else {
-          console.log('Lỗi rồi')
+          console.log('Lỗi rồi');
         }
-        setIsLoadng(false)
+        setIsLoadng(false);
+        setIsLoadngFrist(false);
       }
     }
-  }
+  };
   useEffect(() => {
-
-    const handleGetNotifications = (idUser?:string) => {
-      handleCallAPIGetNotifications({idUser:idUser})
+    const handleGetNotifications = (idUser?: string) => {
+      handleCallAPIGetNotifications({idUser: idUser});
       console.log('notification cập nhật1');
     };
-    socket.on('getNotifications', ({idUser})=>{
-      handleGetNotifications(idUser)
-    })
+    socket.on('getNotifications', ({idUser}) => {
+      handleGetNotifications(idUser);
+    });
     return () => {
       socket.off('getNotifications', handleGetNotifications);
     };
-  }, [])
+  }, []);
   const handleCallAPIUpdateIsViewdNotifications = async () => {
-    const api = apis.notification.updateisViewdNotifications()
+    const api = apis.notification.updateisViewdNotifications();
     try {
-      const res: any = await notificationAPI.HandleNotification(api, { uid: user.id }, 'put')
+      const res: any = await notificationAPI.HandleNotification(
+        api,
+        {uid: user.id},
+        'put',
+      );
       if (res && res.status === 200) {
         // socket.emit('getNotifications',{idUser: auth?.id})
-
       }
     } catch (error: any) {
-      const errorMessage = JSON.parse(error.message)
+      const errorMessage = JSON.parse(error.message);
       if (errorMessage.statusCode === 403) {
-        console.log(errorMessage.message)
+        console.log(errorMessage.message);
       } else {
-        console.log('Lỗi rồi')
+        console.log('Lỗi rồi');
       }
     }
-  }
+  };
   // const handleRejectNotification = async (notification: NotificationModel) => {
   //   const api = apis.notification.updateStatusNotifications()
   //   setIsLoadingModal(true)
@@ -147,9 +181,9 @@ const NotificationsScreen = ({ navigation, route }: any) => {
   //   }
   // }
   const handleOpenModalize = (notificatoin: NotificationModel) => {
-    setSotificationSelected(notificatoin)
-    setToggle(!toggle)
-  }
+    setSotificationSelected(notificatoin);
+    setToggle(!toggle);
+  };
   // const renderStatusNotification = (notification: NotificationModel) => {
   //   switch (notification.status) {
   //     case 'unanswered':
@@ -314,185 +348,330 @@ const NotificationsScreen = ({ navigation, route }: any) => {
     //       <></>
     //     )
     // }
-    if(value.type==='inviteEvent'){
-        return (
-          <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
-              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-                onPress={() => navigation.navigate('EventDetails', { id: value.eventId?._id })}>
-
-                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID?.fullname} `}
-                  <Text style={[globalStyles.text]}>
-                    đã mời bạn tham gia sự kiện {value?.eventId?.title} hãy tham gia ngay !!!
-                  </Text>
+    if (value.type === 'inviteEvent') {
+      return (
+        <View
+          key={`${value._id}`}
+          style={{
+            flex: 1,
+            paddingHorizontal: 12,
+            backgroundColor: value.isRead ? colors.white : '#eff8ff',
+          }}>
+          <RowComponent
+            key={`${value._id}`}
+            styles={{
+              flex: 1,
+              minHeight: appInfo.sizes.HEIGHT / 8,
+              paddingTop: 10,
+              alignItems: 'flex-start',
+            }}>
+            <AvatarItem
+              size={sizeGlobal.avatarItem}
+              styles={{}}
+              photoUrl={value.senderID?.photoUrl}
+              isShowIconAbsolute
+              typeIcon="inviteEvent"
+            />
+            <TouchableOpacity
+              style={{flex: 1, paddingHorizontal: 12, minHeight: '100%'}}
+              onPress={() =>
+                navigation.navigate('EventDetails', {id: value.eventId?._id})
+              }>
+              <Text
+                style={[globalStyles.text, {fontWeight: 'bold'}]}
+                numberOfLines={3}>
+                {`${value.senderID?.fullname} `}
+                <Text style={[globalStyles.text]}>
+                  đã mời bạn tham gia sự kiện {value?.eventId?.title} hãy tham
+                  gia ngay !!!
                 </Text>
-                <SpaceComponent height={2} />
-                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-                {/* <RowComponent>
+              </Text>
+              <SpaceComponent height={2} />
+              <TextComponent
+                text={
+                  DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ??
+                  0
+                }
+                color={colors.gray}
+                size={12}
+              />
+              {/* <RowComponent>
                         <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
                         styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
                         <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
                       </RowComponent> */}
-              </TouchableOpacity>
-              <ButtonComponent
-
-                onPress={() => handleOpenModalize(value)}
-                styles={{ paddingVertical: 4 }}
-                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-                iconFlex="right" />
-            </RowComponent>
-
-          </View>
-        )
-    }else if(value.type==='paymentTicket'){
-      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-      <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} onPress={()=>navigation.navigate('PurchasedTicketsDetailsScreen',{idInvoice:value?.invoiceId})}>
-        <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={'https://img.freepik.com/premium-vector/success-payment-icon-flat-style-approved-money-vector-illustration-isolated-background-successful-pay-sign-business-concept_157943-1354.jpg'} isShowIconAbsolute typeIcon="paymentTicket" />
-        <View style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-        >
-          <Text style={[globalStyles.text]}>
-              {value.content}
-          </Text>
-          {/* <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
+            </TouchableOpacity>
+            <ButtonComponent
+              onPress={() => handleOpenModalize(value)}
+              styles={{paddingVertical: 4}}
+              icon={
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={12}
+                  color={colors.colorText}
+                />
+              }
+              iconFlex="right"
+            />
+          </RowComponent>
+        </View>
+      );
+    } else if (value.type === 'paymentTicket') {
+      return (
+        <View
+          key={`${value._id}`}
+          style={{
+            flex: 1,
+            paddingHorizontal: 12,
+            backgroundColor: value.isRead ? colors.white : '#eff8ff',
+          }}>
+          <RowComponent
+            key={`${value._id}`}
+            styles={{
+              flex: 1,
+              minHeight: appInfo.sizes.HEIGHT / 8,
+              paddingTop: 10,
+              alignItems: 'flex-start',
+            }}
+            onPress={() =>
+              navigation.navigate('PurchasedTicketsDetailsScreen', {
+                idInvoice: value?.invoiceId,
+              })
+            }>
+            <AvatarItem
+              size={sizeGlobal.avatarItem}
+              styles={{}}
+              photoUrl={
+                'https://img.freepik.com/premium-vector/success-payment-icon-flat-style-approved-money-vector-illustration-isolated-background-successful-pay-sign-business-concept_157943-1354.jpg'
+              }
+              isShowIconAbsolute
+              typeIcon="paymentTicket"
+            />
+            <View style={{flex: 1, paddingHorizontal: 12, minHeight: '100%'}}>
+              <Text style={[globalStyles.text]}>{value.content}</Text>
+              {/* <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
             {`${value.senderID?.fullname} `}
             <Text style={[globalStyles.text]}>
               {value.content}
             </Text>
           </Text> */}
-          <SpaceComponent height={2} />
-          <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
+              <SpaceComponent height={2} />
+              <TextComponent
+                text={
+                  DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ??
+                  0
+                }
+                color={colors.gray}
+                size={12}
+              />
+            </View>
+            <ButtonComponent
+              onPress={() => handleOpenModalize(value)}
+              styles={{paddingVertical: 4}}
+              icon={
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={12}
+                  color={colors.colorText}
+                />
+              }
+              iconFlex="right"
+            />
+          </RowComponent>
         </View>
-        <ButtonComponent
-
-          onPress={() => handleOpenModalize(value)}
-          styles={{ paddingVertical: 4 }}
-          icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-          iconFlex="right" />
-      </RowComponent>
-
-    </View>
-    }else if(value.type==='newEvent'){
-      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-            <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-              <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="inviteEvent" />
-              <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-                onPress={() => navigation.navigate('EventDetails', { id: value.eventId?._id })}>
-
-                <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-                  {`${value.senderID?.fullname} `}
-                  <Text style={[globalStyles.text]}>
-                    {value.content}
-                  </Text>
-                </Text>
-                <SpaceComponent height={2} />
-                <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-                {/* <RowComponent>
+      );
+    } else if (value.type === 'newEvent') {
+      return (
+        <View
+          key={`${value._id}`}
+          style={{
+            flex: 1,
+            paddingHorizontal: 12,
+            backgroundColor: value.isRead ? colors.white : '#eff8ff',
+          }}>
+          <RowComponent
+            key={`${value._id}`}
+            styles={{
+              flex: 1,
+              minHeight: appInfo.sizes.HEIGHT / 8,
+              paddingTop: 10,
+              alignItems: 'flex-start',
+            }}>
+            <AvatarItem
+              size={sizeGlobal.avatarItem}
+              styles={{}}
+              photoUrl={value.senderID?.photoUrl}
+              isShowIconAbsolute
+              typeIcon="inviteEvent"
+            />
+            <TouchableOpacity
+              style={{flex: 1, paddingHorizontal: 12, minHeight: '100%'}}
+              onPress={() =>
+                navigation.navigate('EventDetails', {id: value.eventId?._id})
+              }>
+              <Text
+                style={[globalStyles.text, {fontWeight: 'bold'}]}
+                numberOfLines={3}>
+                {`${value.senderID?.fullname} `}
+                <Text style={[globalStyles.text]}>{value.content}</Text>
+              </Text>
+              <SpaceComponent height={2} />
+              <TextComponent
+                text={
+                  DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ??
+                  0
+                }
+                color={colors.gray}
+                size={12}
+              />
+              {/* <RowComponent>
                         <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
                         styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
                         <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
                       </RowComponent> */}
-              </TouchableOpacity>
-              <ButtonComponent
-
-                onPress={() => handleOpenModalize(value)}
-                styles={{ paddingVertical: 4 }}
-                icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-                iconFlex="right" />
-            </RowComponent>
-
-          </View>
-    }else{
-      return <View key={`${value._id}`} style={{ flex: 1, paddingHorizontal: 12, backgroundColor: value.isRead ? colors.white : '#eff8ff' }}>
-      <RowComponent key={`${value._id}`} styles={{ flex: 1, minHeight: appInfo.sizes.HEIGHT / 8, paddingTop: 10, alignItems: 'flex-start' }} >
-        <AvatarItem size={sizeGlobal.avatarItem} styles={{}} photoUrl={value.senderID?.photoUrl} isShowIconAbsolute typeIcon="allowFollow" />
-        <TouchableOpacity style={{ flex: 1, paddingHorizontal: 12, minHeight: '100%' }}
-        >
-
-          <Text style={[globalStyles.text, { fontWeight: 'bold' }]} numberOfLines={3}>
-            {`${value.senderID?.fullname} `}
-            <Text style={[globalStyles.text]}>
-              {value.content}
-            </Text>
-          </Text>
-          <SpaceComponent height={2} />
-          <TextComponent text={DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ?? 0} color={colors.gray} size={12} />
-          {/* <RowComponent>
+            </TouchableOpacity>
+            <ButtonComponent
+              onPress={() => handleOpenModalize(value)}
+              styles={{paddingVertical: 4}}
+              icon={
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={12}
+                  color={colors.colorText}
+                />
+              }
+              iconFlex="right"
+            />
+          </RowComponent>
+        </View>
+      );
+    } else {
+      return (
+        <View
+          key={`${value._id}`}
+          style={{
+            flex: 1,
+            paddingHorizontal: 12,
+            backgroundColor: value.isRead ? colors.white : '#eff8ff',
+          }}>
+          <RowComponent
+            key={`${value._id}`}
+            styles={{
+              flex: 1,
+              minHeight: appInfo.sizes.HEIGHT / 8,
+              paddingTop: 10,
+              alignItems: 'flex-start',
+            }}>
+            <AvatarItem
+              size={sizeGlobal.avatarItem}
+              styles={{}}
+              photoUrl={value.senderID?.photoUrl}
+              isShowIconAbsolute
+              typeIcon="allowFollow"
+            />
+            <TouchableOpacity
+              style={{flex: 1, paddingHorizontal: 12, minHeight: '100%'}}>
+              <Text
+                style={[globalStyles.text, {fontWeight: 'bold'}]}
+                numberOfLines={3}>
+                {`${value.senderID?.fullname} `}
+                <Text style={[globalStyles.text]}>{value.content}</Text>
+              </Text>
+              <SpaceComponent height={2} />
+              <TextComponent
+                text={
+                  DateTime.GetDateUpdate(new Date(value.createdAt).getTime()) ??
+                  0
+                }
+                color={colors.gray}
+                size={12}
+              />
+              {/* <RowComponent>
             <ButtonComponent text="Từ chối" type="primary" color="white" textColor={colors.colorText}
             styles={{minHeight:20,paddingVertical:12,borderWidth:1,borderColor:colors.gray2}}/>
             <ButtonComponent text="Chấp nhập" type="primary" styles={{minHeight:20,paddingVertical:12}}/>
           </RowComponent> */}
-        </TouchableOpacity>
-        <ButtonComponent
-
-          onPress={() => handleOpenModalize(value)}
-          styles={{ paddingVertical: 4 }}
-          icon={<Entypo name="dots-three-horizontal" size={12} color={colors.colorText} />}
-          iconFlex="right" />
-      </RowComponent>
-
-    </View>
+            </TouchableOpacity>
+            <ButtonComponent
+              onPress={() => handleOpenModalize(value)}
+              styles={{paddingVertical: 4}}
+              icon={
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={12}
+                  color={colors.colorText}
+                />
+              }
+              iconFlex="right"
+            />
+          </RowComponent>
+        </View>
+      );
     }
-    
-  }
+  };
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    console.log("ok")
+    console.log('ok');
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
-  
+
   return (
     <ContainerComponent back title="Thông báo">
       {
-        !false && notifications ? (notifications.length > 0 ? <SectionComponent styles={{ paddingHorizontal: 0, flex: 1 }}>
-          <TextComponent text={'Trước đó'} title size={16} styles={{ paddingHorizontal: 12 }} />
+        <SectionComponent styles={{paddingHorizontal: 0, flex: 1}}>
+          <TextComponent
+            text={'Trước đó'}
+            title
+            size={16}
+            styles={{paddingHorizontal: 12}}
+          />
           <SpaceComponent height={8} />
-          <DataLoaderComponent isFlex data={notifications} isLoading={false}
-            messageEmpty="Không có sự kiện nào phù hợp"
+          <DataLoaderComponent
+            isFlex
+            data={notifications}
+            isLoading={isLoadingFrist}
+            messTextColor="black"
+            messageEmpty="Không có thông báo nào"
             children={
               <FlatList
                 showsVerticalScrollIndicator={false}
                 refreshControl={
-                  <RefreshControl enabled={true} refreshing={refreshing} onRefresh={onRefresh} />
+                  <RefreshControl
+                    enabled={true}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
                 }
                 data={notifications}
-                renderItem={({ item, index }) => renderNofitications(item)}
-                onEndReached={()=>setLimitGetNotifi(prev => prev + 10)}
-                ListFooterComponent={()=><View>
-                        {isLoading && <ActivityIndicator />}
-                </View>}
-                ListFooterComponentStyle={{paddingBottom:20}}
+                renderItem={({item, index}) => renderNofitications(item)}
+                onEndReached={() => setLimitGetNotifi(prev => prev + 10)}
+                ListFooterComponent={() => (
+                  <View>{isLoading && <ActivityIndicator />}</View>
+                )}
+                ListFooterComponentStyle={{paddingBottom: 20}}
                 // onEndReachedThreshold={0.5}
                 // onScrollBeginDrag={()=>setIsLoadng(false)}
               />
-
-            } />
-
-
-        </SectionComponent> : <SectionComponent styles={[globalStyles.center, { flex: 1 }]}>
-          <TextComponent text={'Không có thông báo nào'} />
-        </SectionComponent>)
-          : <><View style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-            paddingVertical: 75,
-          }}>
-
-            <ActivityIndicator />
-          </View></>
+            }
+          />
+        </SectionComponent>
       }
       <LoadingModal visible={isLoadingModal} />
       <Portal>
-        <Modalize ref={modalizeRef} adjustToContentHeight >
-          <SectionComponent styles={{ minHeight: 150, paddingHorizontal: 12 }}>
+        <Modalize ref={modalizeRef} adjustToContentHeight>
+          <SectionComponent styles={{minHeight: 150, paddingHorizontal: 12}}>
             <SpaceComponent height={6} />
-            <AvatarItem size={sizeGlobal.avatarItem} styles={{ alignItems: 'center' }} photoUrl={notificationSelected?.senderID?.photoUrl} />
+            <AvatarItem
+              size={sizeGlobal.avatarItem}
+              styles={{alignItems: 'center'}}
+              photoUrl={notificationSelected?.senderID?.photoUrl}
+            />
             <SpaceComponent height={6} />
-            <Text style={[globalStyles.text, { textAlign: 'center', lineHeight: 16 }]} numberOfLines={3}>
+            <Text
+              style={[globalStyles.text, {textAlign: 'center', lineHeight: 16}]}
+              numberOfLines={3}>
               {`${notificationSelected?.senderID?.fullname} `}
               <Text style={[globalStyles.text]}>
                 {notificationSelected?.content}
@@ -500,8 +679,15 @@ const NotificationsScreen = ({ navigation, route }: any) => {
             </Text>
             <SpaceComponent height={16} />
             <RowComponent>
-              <CricleComponent styles={{ borderWidth: 0.5, borderColor: colors.gray5 }} size={36} color={colors.gray5}>
-                <MaterialCommunityIcons name="delete" size={24} color={colors.black} />
+              <CricleComponent
+                styles={{borderWidth: 0.5, borderColor: colors.gray5}}
+                size={36}
+                color={colors.gray5}>
+                <MaterialCommunityIcons
+                  name="delete"
+                  size={24}
+                  color={colors.black}
+                />
               </CricleComponent>
               <SpaceComponent width={12} />
               <TextComponent text={'Gỡ thông báo này'} title size={16} />
@@ -510,6 +696,6 @@ const NotificationsScreen = ({ navigation, route }: any) => {
         </Modalize>
       </Portal>
     </ContainerComponent>
-  )
-}
+  );
+};
 export default NotificationsScreen;
