@@ -5417,6 +5417,11 @@ react-native-element-dropdown@^2.12.2:
   dependencies:
     lodash "^4.17.21"
 
+react-native-email-link@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.npmjs.org/react-native-email-link/-/react-native-email-link-1.16.1.tgz"
+  integrity sha512-uTolJXOa6HKPEiRAQuLKN/OhVwUA4xS++yPV6YiCtRBWxl2q3FUlrJt1G6plfMAEU4qNhmwZnH3tCJ9WNYIDhg==
+
 react-native-geocoding@^0.5.0:
   version "0.5.0"
   resolved "https://registry.npmjs.org/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz"
@@ -5708,7 +5713,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.0, react@^18.2.0, "react@> 15.0.0", "react@>= 17.0.1", react@>=16.13.1, react@>=16.3.0, react@>=16.6.1, react@>=16.8, react@>=16.8.6, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.0, react@^18.2.0, "react@> 15.0.0", "react@>= 17.0.1", react@>=16.13.1, react@>=16.3.0, react@>=16.6.1, react@>=16.8, react@>=16.8.0, react@>=16.8.6, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   dependencies:
     loose-envify "^1.1.0"

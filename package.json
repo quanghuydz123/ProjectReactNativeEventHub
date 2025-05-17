@@ -44,6 +44,7 @@
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.12.2",
+    "react-native-email-link": "^1.16.1",
     "react-native-geocoding": "^0.5.0",
     "react-native-gesture-handler": "^2.16.2",
     "react-native-get-random-values": "^1.11.0",
