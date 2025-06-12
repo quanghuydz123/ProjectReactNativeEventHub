@@ -1,31 +1,24 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {
-  CategoriesList,
   ContainerComponent,
   CricleComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
-  TabBarComponent,
   TagComponent,
   TextComponent,
 } from '../../components';
 import {
   Animated,
-  BackHandler,
   FlatList,
   Image,
   Modal,
-  StyleSheet,
-  Switch,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import MapboxGL from '@rnmapbox/maps';
 import {point, featureCollection} from '@turf/helpers';
-import {size} from 'lodash';
 import Feather from 'react-native-vector-icons/Feather';
 import {colors} from '../../constrants/color';
 import SearchComponent from '../../components/SearchComponent';
@@ -42,18 +35,13 @@ import axios from 'axios';
 import {GeoCodeModel} from '../../models/GeoCodeModel';
 import calculateDistance from '../../utils/calculateDistance';
 import {EventModelNew, Position} from '../../models/EventModelNew';
-import LocationPin from '../../assets/svgs/location-pin.svg';
-import {Modalize} from 'react-native-modalize';
 import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetScrollView,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import EventItem from '../../components/EventItem';
 import {apis} from '../../constrants/apis';
 import eventAPI from '../../apis/eventAPI';
-import {CategoryModel} from '../../models/CategoryModel';
-import categoryAPI from '../../apis/categoryAPI';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AvatarGroup from '../../components/AvatarGroup';
 import {DateTime} from '../../utils/DateTime';
@@ -61,7 +49,7 @@ import LoadingUI from '../../components/LoadingUI';
 import RenderHTML from 'react-native-render-html';
 import {renderPrice} from '../../utils/convertMoney';
 import LinearGradient from 'react-native-linear-gradient';
-MapboxGL.setAccessToken(`${process.env.API_KEY_MAP}}`);
+MapboxGL.setAccessToken(process.env.API_KEY_MAP);
 interface DataSearchAddress {
   title: string;
   position: {
@@ -745,7 +733,7 @@ const MapScreen = ({navigation}: any) => {
                   ]}
                 />
                 <SpaceComponent width={12} />
-                <TagComponent
+                {/* <TagComponent
                   bgColor={'#d3f5ff'}
                   label={'Đường đi'}
                   onPress={() => console.log('ok')}
@@ -765,7 +753,7 @@ const MapScreen = ({navigation}: any) => {
                       paddingHorizontal: 10,
                     },
                   ]}
-                />
+                /> */}
               </RowComponent>
               <SpaceComponent height={12} />
               <Image

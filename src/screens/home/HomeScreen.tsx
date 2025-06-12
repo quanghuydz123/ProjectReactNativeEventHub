@@ -73,6 +73,7 @@ import EventItemHorizontal from '../../components/EventItemHorizontal';
 import {OrganizerModel} from '../../models/OrganizerModel';
 import organizerAPI from '../../apis/organizerAPI';
 import AvatarItem from '../../components/AvatarItem';
+import {AlertComponent} from '../../components/Alert';
 const AnimatedFontAwesome5 = Animated.createAnimatedComponent(FontAwesome5);
 const AnimatedMaterialCommunityIcons = Animated.createAnimatedComponent(
   MaterialCommunityIcons,
@@ -897,7 +898,11 @@ const HomeScreen = ({navigation, route}: any) => {
                 featureIconAnimation={featureIconCircleCustomAnimation}
                 onPress={() => {
                   if (checkLogin()) {
-                    navigation.navigate('NewScreen');
+                    AlertComponent({
+                      title: 'Thông báo',
+                      message: 'Comming soon',
+                      onConfirm: () => {},
+                    });
                   }
                 }}>
                 <AnimatedMaterialCommunityIcons
