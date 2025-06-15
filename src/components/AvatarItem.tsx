@@ -17,7 +17,7 @@ interface Props {
     bdRadius?: number,
     onPress?: () => void,
     isShowIconAbsolute?: boolean,
-    typeIcon?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other',
+    typeIcon?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow' | 'shareTicket' | 'rejectFollow' | 'allowFollow' | 'other',
     textName?:string,
     bgColor?:string,
     sizeName?:number,
@@ -27,7 +27,7 @@ const AvatarItem = (props: Props) => {
     const { photoUrl, size, colorBorderWidth, index,textColor, styles, borderWidth,bgColor, bdRadius,sizeName, onPress,textName, isShowIconAbsolute, typeIcon } = props
     const ml = size ? -(size / 2)+4 : -12
     const TouchableOpacityComponent: React.ComponentType<any> = onPress ? TouchableOpacity : View;
-    const renderIconAbsolute = (type?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow' | 'rejectFollow' | 'allowFollow' | 'other') => {
+    const renderIconAbsolute = (type?: 'inviteEvent' | 'paymentTicket' | 'like' | 'follow'| 'shareTicket' | 'rejectFollow' | 'allowFollow' | 'other') => {
         let content = <></>
         switch (type) {
             case 'inviteEvent':

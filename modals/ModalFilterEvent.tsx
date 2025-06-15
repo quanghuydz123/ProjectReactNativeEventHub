@@ -71,6 +71,18 @@ const ModalFilterEvent = (props: Props) => {
     {
         key: 'thisWeek',
         text: 'Trong tuần'
+    },
+    {
+        key: '1month',
+        text: 'Trong tháng'
+    },
+     {
+        key: '3month',
+        text: '3 tháng tới'
+    },
+    {
+        key: '6month',
+        text: '6 Tháng tới'
     }
     ]
 
@@ -78,6 +90,7 @@ const ModalFilterEvent = (props: Props) => {
     //     setAllCategory(categories)
 
     // }, [categories])
+
     useEffect(() => {
         if (filterDate === 'today') {
             const d = new Date()
@@ -104,8 +117,49 @@ const ModalFilterEvent = (props: Props) => {
                 startAt: `${startAtWeek} 00:00:00`,
                 endAt: `${endAtWeek} 23:59:59`
             })
+        }else if(filterDate === '1month'){
+            const now = new Date();
+
+            const start = new Date(now.getFullYear(), now.getMonth(), 1);
+            const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+            const startAt = `${start.getFullYear()}-${numberToString(start.getMonth() + 1)}-${numberToString(start.getDate())}`;
+            const endAt = `${end.getFullYear()}-${numberToString(end.getMonth() + 1)}-${numberToString(end.getDate())}`;
+
+            onSelectDateTime({
+                startAt: `${startAt} 00:00:00`,
+                endAt: `${endAt} 23:59:59`
+            });
         }
-    }, [filterDate])
+        else if(filterDate === '3month'){
+            const now = new Date();
+
+            const start = new Date(now.getFullYear(), now.getMonth(), 1);
+            const end = new Date(now.getFullYear(), now.getMonth()+ 3 + 1, 0);
+
+            const startAt = `${start.getFullYear()}-${numberToString(start.getMonth() + 1)}-${numberToString(start.getDate())}`;
+            const endAt = `${end.getFullYear()}-${numberToString(end.getMonth() + 1)}-${numberToString(end.getDate())}`;
+
+            onSelectDateTime({
+                startAt: `${startAt} 00:00:00`,
+                endAt: `${endAt} 23:59:59`
+            });
+        }
+        else if(filterDate === '6month'){
+            const now = new Date();
+
+            const start = new Date(now);
+            const end = new Date(now.getFullYear(), now.getMonth() + 6 + 1, 0); 
+
+            const startAt = `${start.getFullYear()}-${numberToString(start.getMonth() + 1)}-${numberToString(start.getDate())}`;
+            const endAt = `${end.getFullYear()}-${numberToString(end.getMonth() + 1)}-${numberToString(end.getDate())}`;
+
+            onSelectDateTime({
+                startAt: `${startAt} 00:00:00`,
+                endAt: `${endAt} 23:59:59`
+            });
+            }
+        }, [filterDate])
     useEffect(() => {
         if (visible) {
             modalieRef.current?.open()
@@ -251,19 +305,18 @@ const ModalFilterEvent = (props: Props) => {
                     <View>
                         <SpaceComponent height={12} />
                         <TextComponent text={'Thời gian diễn ra'} title size={14} />
-                        <RowComponent justify="flex-start" styles={{ marginVertical: 12 }}>
+                        <RowComponent justify="flex-start" styles={{ marginVertical: 12,flexWrap:'wrap' }}>
                             {
                                 timeChoises.map((item, index) => <>
                                     <TouchableOpacity
                                         onPress={() => handleChoiseFilterDate(item.key)}
                                         key={`time${index}`} style={[globalStyles.button,
                                         {
-                                            borderColor: colors.gray2, borderWidth: 1, minHeight: 30
+                                            borderColor: colors.gray2, borderWidth: 1, minHeight: 30,minWidth:'33%'
                                             , backgroundColor: selectedDateTime.startAt ? filterDate === item.key ? colors.primary : colors.white : colors.white
                                         }]}>
                                         <TextComponent text={item.text} font={fontFamilies.medium} color={selectedDateTime.startAt ? filterDate === item.key ? colors.white : colors.colorText : colors.colorText} />
                                     </TouchableOpacity>
-                                    <SpaceComponent width={12} />
                                 </>
                                 )
                             }

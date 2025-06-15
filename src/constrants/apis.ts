@@ -164,8 +164,13 @@ export const apis = {
       if (typeFilter !== undefined) params.append('typeFilter', typeFilter);
       return `/get-byIdUser?${params.toString()}`;
     },
-    getByIdInvoice: ({idInvoice}: {idInvoice: string}) =>
-      `/get-byIdInvoice?idInvoice=${idInvoice}`,
+    getByIdInvoice: ({idInvoice,idOwner}: {idInvoice: string,idOwner?:string}) =>
+     {
+      const params = new URLSearchParams();
+      if (idInvoice !== undefined) params.append('idInvoice', idInvoice);
+      if (idOwner !== undefined) params.append('idOwner', idOwner);
+      return  `/get-byIdInvoice?${params.toString()}`
+     }
   },
   keyword: {
     getAll: () => '/get-all',

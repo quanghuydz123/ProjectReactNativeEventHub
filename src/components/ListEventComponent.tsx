@@ -114,8 +114,8 @@ const ListEventComponent = forwardRef<any, Props>((props:Props,ref:any) => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={isShowSuggest ? <View>
           {auth?.searchHistory?.slice(0, 5)?.map((item) => renderItemHistory(item))}
-          {renderItemTrend()}
-          {renderItemTrend()}
+          {/* {renderItemTrend()}
+          {renderItemTrend()} */}
 
         </View> : <></>}
         ListHeaderComponentStyle={{

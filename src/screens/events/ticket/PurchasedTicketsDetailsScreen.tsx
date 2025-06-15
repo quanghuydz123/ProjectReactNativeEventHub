@@ -35,7 +35,8 @@ const PurchasedTicketsDetailsScreen = ({navigation, route}: any) => {
   const {
     invoiceParams,
     idInvoice,
-  }: {invoiceParams: InvoiceDetailsModel; idInvoice: string} = route.params || {
+    idOwner
+  }: {invoiceParams: InvoiceDetailsModel; idInvoice: string,idOwner?:string} = route.params || {
     invoiceParams: null,
     idInvoice: null,
   };
@@ -47,6 +48,7 @@ const PurchasedTicketsDetailsScreen = ({navigation, route}: any) => {
   const [ticketPurchased, seTicketPurchased] = useState<TicketsPurchase[][]>(
     [],
   );
+  console.log(idInvoice,idOwner)
   useEffect(() => {
     if (!invoice) {
       handleCallAPIGetDetails();
@@ -78,10 +80,11 @@ const PurchasedTicketsDetailsScreen = ({navigation, route}: any) => {
   }, [invoice]);
 
   const handleCallAPIGetDetails = async () => {
-    const api = apis.ticket.getByIdInvoice({idInvoice: idInvoice});
+    const api = apis.ticket.getByIdInvoice({idInvoice: idInvoice,idOwner:idOwner});
     setIsLoading(true);
     try {
       const res = await ticketAPI.HandleTicket(api);
+      console.log("data",api)
       if (res && res.data && res.status === 200) {
         setinvoice(res.data[0]);
       }
