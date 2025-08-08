@@ -886,9 +886,11 @@ const HomeScreen = ({navigation, route}: any) => {
           <Animated.View style={[styles.feature, scanViewAnimation]}>
             <TouchableOpacity
               onPress={() => {
-                if (checkLogin()) {
-                  navigation.navigate('NewScreen');
-                }
+                 AlertComponent({
+                      title: 'Thông báo',
+                      message: 'Comming soon',
+                      onConfirm: () => {},
+                });
               }}
               style={{alignItems: 'center'}}>
               <CricleComponent

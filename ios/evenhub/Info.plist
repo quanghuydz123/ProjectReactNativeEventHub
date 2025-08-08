@@ -2,94 +2,112 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>evenhub</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Tìm sự kiện đang diễn ra</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Tìm sự kiện đang diễn ra</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Chúng tôi cần truy cập vào thư viện ảnh của bạn để cho phép bạn tải lên hình ảnh.</string>
-	<key>NSCameraUsageDescription</key>
-  	<string>YOUR TEXT</string>
-	<array>
-		<string>arm64</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>eventhub</string>
-			</array>
-		</dict>
-	</array>
-	<key>UIAppFonts</key>
-	
-	<array>
-		<string>AirbnbCereal_W_Bd.otf</string>
-		<string>AirbnbCereal_W_Bk.otf</string>
-		<string>AirbnbCereal_W_Blk.otf</string>
-		<string>AirbnbCereal_W_Lt.otf</string>
-		<string>AirbnbCereal_W_Md.otf</string>
-		<string>AirbnbCereal_W_XBd.otf</string>
-		<string>AntDesign.ttf</string>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>Feather.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>FontAwesome5_Brands.ttf</string>
-		<string>FontAwesome5_Regular.ttf</string>
-		<string>FontAwesome5_Solid.ttf</string>
-		<string>FontAwesome6_Brands.ttf</string>
-		<string>FontAwesome6_Regular.ttf</string>
-		<string>FontAwesome6_Solid.ttf</string>
-		<string>Fontisto.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-	</array>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>evenhub</string>
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleIdentifier</key>
+  <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>$(PRODUCT_NAME)</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$(MARKETING_VERSION)</string>
+  <key>CFBundleSignature</key>
+  <string>????</string>
+  <key>CFBundleVersion</key>
+  <string>$(CURRENT_PROJECT_VERSION)</string>
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
+
+  <!-- Quyền truy cập mạng -->
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSAllowsLocalNetworking</key>
+    <true/>
+  </dict>
+
+  <!-- Quyền vị trí -->
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Tìm sự kiện đang diễn ra</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Tìm sự kiện đang diễn ra</string>
+
+  <!-- Quyền camera -->
+  <key>NSCameraUsageDescription</key>
+  <string>Chúng tôi cần quyền truy cập camera để bạn có thể chụp ảnh sự kiện.</string>
+
+  <!-- Quyền thư viện ảnh -->
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Chúng tôi cần truy cập vào thư viện ảnh của bạn để cho phép bạn tải lên hình ảnh.</string>
+
+  <!-- Quyền thông báo -->
+  <key>NSUserNotificationUsageDescription</key>
+  <string>Chúng tôi cần quyền gửi thông báo để bạn không bỏ lỡ sự kiện quan trọng.</string>
+
+  <!-- Giao diện -->
+  <key>UILaunchStoryboardName</key>
+  <string>LaunchScreen</string>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>arm64</string>
+  </array>
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <false/>
+
+  <!-- Deeplink (Tương đương android:scheme) -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.AppEventHubmoinhat123</string>
+        <string>com.appeventhubmoinhat123</string>
+      </array>
+    </dict>
+  </array>
+
+  <!-- Font -->
+  <key>UIAppFonts</key>
+  <array>
+    <string>AirbnbCereal_W_Bd.otf</string>
+    <string>AirbnbCereal_W_Bk.otf</string>
+    <string>AirbnbCereal_W_Blk.otf</string>
+    <string>AirbnbCereal_W_Lt.otf</string>
+    <string>AirbnbCereal_W_Md.otf</string>
+    <string>AirbnbCereal_W_XBd.otf</string>
+    <string>AntDesign.ttf</string>
+    <string>Entypo.ttf</string>
+    <string>EvilIcons.ttf</string>
+    <string>Feather.ttf</string>
+    <string>FontAwesome.ttf</string>
+    <string>FontAwesome5_Brands.ttf</string>
+    <string>FontAwesome5_Regular.ttf</string>
+    <string>FontAwesome5_Solid.ttf</string>
+    <string>FontAwesome6_Brands.ttf</string>
+    <string>FontAwesome6_Regular.ttf</string>
+    <string>FontAwesome6_Solid.ttf</string>
+    <string>Fontisto.ttf</string>
+    <string>Foundation.ttf</string>
+    <string>Ionicons.ttf</string>
+    <string>MaterialCommunityIcons.ttf</string>
+    <string>MaterialIcons.ttf</string>
+    <string>Octicons.ttf</string>
+    <string>SimpleLineIcons.ttf</string>
+    <string>Zocial.ttf</string>
+  </array>
 </dict>
 </plist>
