@@ -72,6 +72,8 @@ const DrawerNavigate = ({ navigation }: any) => {
       <Drawer.Navigator screenOptions={{
         headerShown: false,
         drawerPosition: 'left',
+        drawerType: 'front', // hoặc 'slide' để overlay
+        overlayColor: 'rgba(0,0,0,0.5)', // màu mờ nền khi mở drawer
       }}
         drawerContent={props => <DrawerCustom {...props} />} // cấu hình giao diện cho drawer
       >

@@ -156,7 +156,7 @@ const TabNavigator = ({navigation}:any) => {
       position:'absolute',
       width:width,
       backgroundColor:colors.primary,
-      bottom:60,
+      bottom:Platform.OS === 'ios' ? 78 : 60,
       left:0,
       borderRadius:100,
       marginHorizontal:12,

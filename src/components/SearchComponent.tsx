@@ -24,7 +24,6 @@ interface Props {
 }
 const SearchComponent = (props: Props) => {
   const { value, onSearch, onPressArrow, styles,onFocus,minHeight, titlePlaceholder, textColor,isNotShowArrow,onEnd,bgColor,onBlur,ref } = props
-  console.log('search')
   return <RowComponent styles={[styles]} justify="flex-end">
     {!isNotShowArrow && (
       <>

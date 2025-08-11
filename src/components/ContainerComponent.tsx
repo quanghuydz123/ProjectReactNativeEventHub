@@ -1,4 +1,4 @@
-import { Button, ImageBackground, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View, } from "react-native"
+import { Button, ImageBackground, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View, } from "react-native"
 import React, { ReactNode } from "react"
 import { globalStyles } from "../styles/globalStyles"
 import { useNavigation } from "@react-navigation/native"
@@ -33,7 +33,7 @@ const ContainerComponent = (props: Props) => {
     const navigation: any = useNavigation()
     const RightComponent: React.ComponentType<any> = onPressRight ? TouchableOpacity : View;
     const returnContainer = isScroll ? (
-        <ScrollView ref={scrollRef} style={{ flex: 1, backgroundColor: bgColor ?? 'white' }} showsVerticalScrollIndicator={false}>
+        <ScrollView ref={scrollRef} bounces={false} style={{ flex: 1, backgroundColor: bgColor ?? 'white' }} showsVerticalScrollIndicator={false}>
             {children}
         </ScrollView>
     ) : (
@@ -44,7 +44,7 @@ const ContainerComponent = (props: Props) => {
 
     const headerComponent = () => {
         return <View style={{ flex: 1 }}>
-            <View style={{ paddingTop:pdTop ??  30, backgroundColor: bgColorTitle ?? colors.primary }}>
+            <View style={{ paddingTop:pdTop ?? Platform.OS === 'ios' ? 0 : 30, backgroundColor: bgColorTitle ?? colors.primary }}>
                 {(title || back || right) &&
                     <RowComponent styles={{
                         paddingHorizontal: 16
@@ -74,12 +74,15 @@ const ContainerComponent = (props: Props) => {
             <SafeAreaView style={{ flex: 1 }}>{headerComponent()}</SafeAreaView>
         </ImageBackground>) :
         (
-            <SafeAreaView style={[globalStyles.container]}>
-                <StatusBar barStyle={'dark-content'} />
-                <View style={{ flex: 1 }}>
+            <>
+                <SafeAreaView style={{ backgroundColor:colors.primary }}>
+                    <StatusBar barStyle="dark-content"  />
+                </SafeAreaView>
+                <View style={{ flex: 1,backgroundColor:colors.white }}>
                     {headerComponent()}
                 </View>
-            </SafeAreaView>
+            </>
+         
 
         )
 }

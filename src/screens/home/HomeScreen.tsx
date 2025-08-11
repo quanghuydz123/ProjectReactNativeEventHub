@@ -932,6 +932,7 @@ const HomeScreen = ({navigation, route}: any) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        bounces={false}   
         ref={scrollViewRef}
         onScroll={handleScrollView}
         onScrollEndDrag={e => {
@@ -1303,14 +1304,14 @@ const styles = StyleSheet.create({
     height: 32,
   },
   upperHeaderPlaceholder: {
-    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP,
+    height: UPPER_HEADER_HEIGHT + UPPER_HEADER_PADDING_TOP - (Platform.OS === 'ios' ? 30 : 0),
     paddingTop: UPPER_HEADER_PADDING_TOP,
   },
   header: {
     position: 'absolute',
     width: '100%',
     backgroundColor: colors.primary,
-    paddingTop: 30,
+    paddingTop: Platform.OS === 'ios' ? 34 : 30,
     zIndex: 1,
   },
   upperHeader: {

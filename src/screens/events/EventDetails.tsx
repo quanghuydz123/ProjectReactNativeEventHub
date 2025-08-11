@@ -506,7 +506,8 @@ const EventDetails = ({navigation, route}: any) => {
           ) : (
             <></>
           )
-        }>
+        }
+        >
         <View style={[{flex: 1, height: 'auto'}, styles.shadow]}>
           <ImageBackground
             source={{
@@ -883,7 +884,7 @@ const EventDetails = ({navigation, route}: any) => {
           visible={isLoading || isLoadingChoseShowTime}
           message="Hệ thống đang xử lý"
           bgColor={isLoading ? colors.background : 'rgba(0,0,0,0.5)'}
-          styles={{marginTop: isLoading ? 78 : 0}}
+          styles={{marginTop: isLoading ? Platform.OS === 'ios' ? 106 : 78 : 0}}
         />
         <SelectModalize
           adjustToContentHeight
